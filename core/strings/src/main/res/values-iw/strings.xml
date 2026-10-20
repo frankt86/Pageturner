@@ -240,6 +240,7 @@
     <string name="library.book.offline">לא זמין אופליין</string>
     <string name="library.category.completed.title">הושלמו</string>
     <string name="library.category.current.title">בהאזנה</string>
+    <string name="library.category.ebooks.title">ספרים דיגיטליים</string>
     <string name="library.category.not_started.title">טרם הותחלו</string>
     <string name="library.continue_listening">המשך האזנה</string>
     <string name="library.empty.add_first_book">בואו נוסיף את תיקיית הקולספר שלכם כדי שתוכלו להתחיל להאזין!</string>
@@ -335,6 +336,12 @@
     <string name="playback.speed.increase">מהר יותר</string>
     <string name="playback.speed.title">מהירות השמעה</string>
     <string name="playback.volume_boost.off">כבוי</string>
+    <string name="reader.failed">לא ניתן לפתוח את הספר הזה</string>
+    <string name="reader.nothing_to_read_aloud">אין כאן טקסט להקראה</string>
+    <string name="reader.page">%1$d מתוך %2$d</string>
+    <string name="reader.read_aloud">הקראה</string>
+    <string name="reader.read_aloud_unavailable">הקראה אינה זמינה במכשיר הזה</string>
+    <string name="reader.stop_reading_aloud">עצירת ההקראה</string>
     <string name="review.prompt.action.feedback">שיתוף משוב</string>
     <string name="review.prompt.action.later">לא עכשיו</string>
     <string name="review.prompt.action.rate">דירוג ב-Google Play</string>

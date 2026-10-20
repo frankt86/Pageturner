@@ -253,6 +253,7 @@
     <string name="library.book.offline">Недоступно офлайн</string>
     <string name="library.category.completed.title">Прослушанные</string>
     <string name="library.category.current.title">Слушаю</string>
+    <string name="library.category.ebooks.title">Электронные книги</string>
     <string name="library.category.not_started.title">Непрослушанные</string>
     <string name="library.continue_listening">Продолжить прослушивание</string>
     <string name="library.empty.add_first_book">Давайте выберем папку с аудиокнигами!</string>
@@ -352,6 +353,12 @@
     <string name="playback.speed.increase">Быстрее</string>
     <string name="playback.speed.title">Скорость воспроизведения</string>
     <string name="playback.volume_boost.off">Выкл.</string>
+    <string name="reader.failed">Не удалось открыть эту книгу</string>
+    <string name="reader.nothing_to_read_aloud">Здесь нет текста для чтения вслух</string>
+    <string name="reader.page">%1$d из %2$d</string>
+    <string name="reader.read_aloud">Читать вслух</string>
+    <string name="reader.read_aloud_unavailable">Чтение вслух недоступно на этом устройстве</string>
+    <string name="reader.stop_reading_aloud">Остановить чтение вслух</string>
     <string name="review.prompt.action.feedback">Оставить отзыв</string>
     <string name="review.prompt.action.later">Не сейчас</string>
     <string name="review.prompt.action.rate">Оценить в Google Play</string>

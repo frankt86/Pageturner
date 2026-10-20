@@ -2,6 +2,7 @@
 
 package voice.features.bookOverview.views
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -49,6 +50,7 @@ internal fun Library(
   gridState: LazyGridState,
   onBookClick: (BookId) -> Unit,
   onBookLongClick: (BookId) -> Unit,
+  onEbookClick: (Uri) -> Unit,
   onPlayClick: () -> Unit,
   onPermissionBugCardClick: () -> Unit,
   onShowFoldersClick: () -> Unit,
@@ -125,7 +127,7 @@ internal fun Library(
       val headerIndex = entranceIndex()
       item(key = category, span = { GridItemSpan(maxLineSpan) }, contentType = "header") {
         Header(
-          category = category,
+          title = stringResource(category.nameRes),
           count = books.size,
           modifier = Modifier
             .entrance(entrance, headerIndex)
@@ -168,6 +170,34 @@ internal fun Library(
         }
       }
     }
+    if (viewState.ebooks.isNotEmpty()) {
+      val headerIndex = entranceIndex()
+      item(key = EBOOKS_KEY, span = { GridItemSpan(maxLineSpan) }, contentType = "header") {
+        Header(
+          title = stringResource(R.string.library_category_ebooks_title),
+          count = viewState.ebooks.size,
+          modifier = Modifier
+            .entrance(entrance, headerIndex)
+            .padding(top = 32.dp, bottom = 12.dp, start = 4.dp),
+        )
+      }
+      val ebookIndexes = viewState.ebooks.map { entranceIndex() }
+      itemsIndexed(
+        items = viewState.ebooks,
+        key = { _, ebook -> ebook.uri.toString() },
+        span = { _, _ -> GridItemSpan(maxLineSpan) },
+        contentType = { _, _ -> "ebook" },
+      ) { index, ebook ->
+        EbookRow(
+          ebook = ebook,
+          onClick = { onEbookClick(ebook.uri) },
+          shape = segmentedShape(index, viewState.ebooks.size),
+          modifier = Modifier
+            .entrance(entrance, ebookIndexes[index])
+            .padding(bottom = 2.dp),
+        )
+      }
+    }
     item(span = { GridItemSpan(maxLineSpan) }, contentType = "navigationBarSpacer") {
       Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
     }
@@ -177,6 +207,8 @@ internal fun Library(
 private const val MAX_ENTRANCE_INDEX = 6
 
 internal const val HERO_KEY = "hero"
+
+private const val EBOOKS_KEY = "ebooks"
 
 @Composable
 private fun LibraryGreeting(

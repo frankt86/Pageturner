@@ -1,6 +1,7 @@
 package voice.features.bookOverview.overview
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.runtime.Composable
@@ -25,11 +26,13 @@ import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.Book
 import voice.core.data.BookId
+import voice.core.data.Ebook
 import voice.core.data.GridMode
 import voice.core.data.KioskModeDemoData
 import voice.core.data.folders.AudiobookFolders
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.CurrentBookStore
+import voice.core.data.store.EbooksStore
 import voice.core.data.store.FolderPickerMovedDialogShownStore
 import voice.core.data.store.GridModeStore
 import voice.core.featureflag.ExperimentalPlaybackPersistenceQualifier
@@ -61,6 +64,8 @@ class BookOverviewViewModel(
   private val folderPickerMovedDialogShownStore: DataStore<Boolean>,
   @GridModeStore
   private val gridModeStore: DataStore<GridMode>,
+  @EbooksStore
+  private val ebooksStore: DataStore<List<Ebook>>,
   private val gridCount: GridCount,
   private val navigator: Navigator,
   private val appInfoProvider: AppInfoProvider,
@@ -98,6 +103,13 @@ class BookOverviewViewModel(
     // half loaded state (e.g. no hero card, or top bar icons that disappear again).
     val books = remember { repo.flow() }
       .collectAsState(initial = null).value
+    val ebooks = remember {
+      ebooksStore.data.map { ebooks ->
+        ebooks.filter { it.available }
+          .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+          .map { EbookItemViewState(uri = it.uri, name = it.name, format = it.format, progress = it.progress) }
+      }
+    }.collectAsState(initial = null).value
     val currentBook = remember { currentBookStoreDataStore.data.map(::CurrentBook) }
       .collectAsState(initial = null).value
     val scanning = remember { mediaScanner.scannerActive }
@@ -116,6 +128,7 @@ class BookOverviewViewModel(
       audiobookFolders.withoutAccess().map { folders -> folders.values.any { it.isNotEmpty() } }
     }.collectAsState(initial = null).value
     if (books == null ||
+      ebooks == null ||
       currentBook == null ||
       folderPickerMovedDialogShown == null ||
       gridMode == null ||
@@ -126,7 +139,7 @@ class BookOverviewViewModel(
     // a deleted book can stay the current one
     val currentBookId = currentBook.id?.takeIf { id -> books.any { it.id == id } }
 
-    val showEmptyLibrary = !hasStoragePermissionBug && !scannerActive && books.isEmpty()
+    val showEmptyLibrary = !hasStoragePermissionBug && !scannerActive && books.isEmpty() && ebooks.isEmpty()
     LaunchedEffect(showEmptyLibrary) {
       if (showEmptyLibrary) emptyLibraryTracker.track()
     }
@@ -184,6 +197,7 @@ class BookOverviewViewModel(
         !folderPickerMovedDialogShown &&
         appInfoProvider.installTime < FolderPickerMigrationInstallTimeCutoff,
       dialog = dialog,
+      ebooks = ebooks,
     )
   }
 
@@ -226,6 +240,10 @@ class BookOverviewViewModel(
 
   fun onBookClick(id: BookId) {
     navigator.goTo(Destination.Playback(id))
+  }
+
+  fun onEbookClick(uri: Uri) {
+    navigator.goTo(Destination.Reader(uri))
   }
 
   fun onBookLongClick(id: BookId) {

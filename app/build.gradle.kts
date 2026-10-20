@@ -158,6 +158,7 @@ dependencies {
   implementation(projects.core.documentfile)
   implementation(projects.features.onboarding)
   implementation(projects.features.bookmark)
+  implementation(projects.features.reader)
   implementation(projects.features.widget)
   implementation(projects.core.audiobookshelf)
   implementation(projects.core.foldersync)

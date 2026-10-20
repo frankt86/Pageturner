@@ -227,6 +227,7 @@
     <string name="library.book.offline">آفلاین در دسترس نیست</string>
     <string name="library.category.completed.title">تمام‌شده</string>
     <string name="library.category.current.title">جاری</string>
+    <string name="library.category.ebooks.title">کتاب‌های الکترونیکی</string>
     <string name="library.category.not_started.title">هنوز شروع نشده</string>
     <string name="library.continue_listening">ادامهٔ گوش دادن</string>
     <string name="library.empty.add_first_book">پوشه کتاب صوتی خود را اضافه کنید تا بتوانید شروع به گوش دادن کنید!</string>
@@ -318,6 +319,12 @@
     <string name="playback.speed.increase">سریع‌تر</string>
     <string name="playback.speed.title">سرعت پخش</string>
     <string name="playback.volume_boost.off">خاموش</string>
+    <string name="reader.failed">این کتاب باز نشد</string>
+    <string name="reader.nothing_to_read_aloud">اینجا متنی برای خواندن با صدای بلند نیست</string>
+    <string name="reader.page">%1$d از %2$d</string>
+    <string name="reader.read_aloud">خواندن با صدای بلند</string>
+    <string name="reader.read_aloud_unavailable">خواندن با صدای بلند در این دستگاه در دسترس نیست</string>
+    <string name="reader.stop_reading_aloud">توقف خواندن با صدای بلند</string>
     <string name="review.prompt.action.feedback">اشتراک بازخورد</string>
     <string name="review.prompt.action.later">الان نه</string>
     <string name="review.prompt.action.rate">امتیاز دادن در Google Play</string>

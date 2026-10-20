@@ -72,3 +72,7 @@ public annotation class LastPlaybackSpeedStore
 
 @Qualifier
 public annotation class LockScreenSliderStore
+
+/** The EPUB and PDF files found in the library folders, with where the reader left off. */
+@Qualifier
+public annotation class EbooksStore

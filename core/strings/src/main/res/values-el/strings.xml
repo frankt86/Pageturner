@@ -227,6 +227,7 @@
     <string name="library.book.offline">Μη διαθέσιμο εκτός σύνδεσης</string>
     <string name="library.category.completed.title">Ολοκληρωμένα</string>
     <string name="library.category.current.title">Τρέχοντα</string>
+    <string name="library.category.ebooks.title">Ηλεκτρονικά βιβλία</string>
     <string name="library.category.not_started.title">Μη διαβασμένα</string>
     <string name="library.continue_listening">Συνέχεια ακρόασης</string>
     <string name="library.empty.add_first_book">Ας προσθέσουμε το φάκελο των ηχητικών βιβλίων για να αρχίσετε την ακρόαση!</string>
@@ -318,6 +319,12 @@
     <string name="playback.speed.increase">Πιο γρήγορα</string>
     <string name="playback.speed.title">Ταχύτητα αναπαραγωγής</string>
     <string name="playback.volume_boost.off">Απενεργοποίηση</string>
+    <string name="reader.failed">Δεν ήταν δυνατό το άνοιγμα αυτού του βιβλίου</string>
+    <string name="reader.nothing_to_read_aloud">Δεν υπάρχει κείμενο εδώ για ανάγνωση φωναχτά</string>
+    <string name="reader.page">%1$d από %2$d</string>
+    <string name="reader.read_aloud">Ανάγνωση φωναχτά</string>
+    <string name="reader.read_aloud_unavailable">Η ανάγνωση φωναχτά δεν είναι διαθέσιμη σε αυτήν τη συσκευή</string>
+    <string name="reader.stop_reading_aloud">Διακοπή ανάγνωσης φωναχτά</string>
     <string name="review.prompt.action.feedback">Κοινοποίηση σχολίων</string>
     <string name="review.prompt.action.later">Όχι τώρα</string>
     <string name="review.prompt.action.rate">Αξιολόγηση στο Google Play</string>

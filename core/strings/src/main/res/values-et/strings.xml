@@ -227,6 +227,7 @@
     <string name="library.book.offline">Pole võrguühenduseta saadaval</string>
     <string name="library.category.completed.title">Kuulatud</string>
     <string name="library.category.current.title">Kuulamisel</string>
+    <string name="library.category.ebooks.title">E-raamatud</string>
     <string name="library.category.not_started.title">Kuulamise ootel</string>
     <string name="library.continue_listening">Jätka kuulamist</string>
     <string name="library.empty.add_first_book">Lisame nüüd üheskoos heliraamatute kausta ja sa saad alustada kuulamisega!</string>
@@ -318,6 +319,12 @@
     <string name="playback.speed.increase">Kiiremini</string>
     <string name="playback.speed.title">Taasesituse kiirus</string>
     <string name="playback.volume_boost.off">Väljas</string>
+    <string name="reader.failed">Seda raamatut ei õnnestunud avada</string>
+    <string name="reader.nothing_to_read_aloud">Siin pole teksti, mida ette lugeda</string>
+    <string name="reader.page">%1$d / %2$d</string>
+    <string name="reader.read_aloud">Loe ette</string>
+    <string name="reader.read_aloud_unavailable">Ettelugemine pole selles seadmes saadaval</string>
+    <string name="reader.stop_reading_aloud">Lõpeta ettelugemine</string>
     <string name="review.prompt.action.feedback">Jaga tagasisidet</string>
     <string name="review.prompt.action.later">Mitte praegu</string>
     <string name="review.prompt.action.rate">Hinda Google Plays</string>

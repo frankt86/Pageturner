@@ -15,16 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import voice.features.bookOverview.overview.BookOverviewCategory
 import java.text.NumberFormat
 
 @Composable
 internal fun Header(
-  category: BookOverviewCategory,
+  title: String,
   count: Int,
   modifier: Modifier = Modifier,
 ) {
@@ -33,7 +31,7 @@ internal fun Header(
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Text(
-      text = stringResource(id = category.nameRes),
+      text = title,
       style = MaterialTheme.typography.titleLargeEmphasized,
     )
     Spacer(Modifier.width(10.dp))
