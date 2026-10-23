@@ -10,7 +10,7 @@ permissions:
 
 concurrency:
   group: debug-apk
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   publish:
@@ -33,9 +33,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           cp app/build/outputs/apk/free/release/app-free-release.apk app-free-debug.apk
-          gh release delete debug --yes --cleanup-tag || true
-          gh release create debug app-free-debug.apk \
-            --prerelease \
-            --target "$GITHUB_SHA" \
-            --title "Debug build" \
-            --notes "Latest debug build of main (${GITHUB_SHA::7}). Installs next to the store version of Voice."
+          notes="Latest debug build of main (${GITHUB_SHA::7}). Installs next to the store version of Voice."
+          # replaces the file in place, so the download link never goes missing while a new build is published
+          if gh release view debug > /dev/null 2>&1; then
+            gh release upload debug app-free-debug.apk --clobber
+            gh release edit debug --notes "$notes"
+          else
+            gh release create debug app-free-debug.apk --prerelease --target "$GITHUB_SHA" --title "Debug build" --notes "$notes"
+          fi
