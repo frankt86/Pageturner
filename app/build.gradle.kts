@@ -70,6 +70,10 @@ android {
   } else {
     null
   }
+  // a fixed debug key, so a newer test build installs over the last one
+  signingConfigs.getByName("debug") {
+    storeFile = file("debug.keystore")
+  }
 
   buildTypes {
     getByName("release") {
@@ -78,6 +82,8 @@ android {
     }
     getByName("debug") {
       isMinifyEnabled = false
+      // installs next to the store version, so trying it doesn't touch the library
+      applicationIdSuffix = ".debug"
     }
     all {
       if (appSigningConfig != null) {
