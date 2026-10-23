@@ -1,6 +1,6 @@
 name: Screenshots
 
-# Renders the screenshot previews of the library, player and reader into docs/screenshots and commits them.
+# Renders the screenshot previews of the library, player and reader into docs/images and commits them.
 on:
   workflow_dispatch:
   push:
@@ -20,11 +20,11 @@ jobs:
         run: ./gradlew :features:bookOverview:snapshot :features:playbackScreen:snapshot :features:reader:snapshot
       - name: Commit
         run: |
-          mkdir -p docs/screenshots
-          find features -path "*/build/snapshots/*" -name "*Screenshot*.png" -exec cp {} docs/screenshots/ \;
-          ls -la docs/screenshots
+          mkdir -p docs/images
+          find features -path "*/build/snapshots/*" -name "*Screenshot*.png" -exec cp {} docs/images/ \;
+          ls -la docs/images
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/screenshots
+          git add docs/images
           git diff --cached --quiet || git commit -m "Render the screenshots"
           git push
