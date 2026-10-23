@@ -60,6 +60,8 @@ import voice.core.strings.R as StringsR
 /** Changes to the color and note are kept when the sheet is swiped away, like with Done. */
 @Composable
 internal fun HighlightSheet(
+  // the size of the reader's controls
+  scale: Float,
   highlight: Highlight,
   text: String,
   highlightNames: Map<HighlightColor, String>,
@@ -77,51 +79,53 @@ internal fun HighlightSheet(
       enabledValues = setOf(Hidden, Expanded),
     ),
   ) {
-    Column(
-      Modifier
-        .fillMaxWidth()
-        .navigationBarsPadding()
-        .padding(start = 24.dp, end = 24.dp, bottom = 16.dp),
-    ) {
-      Text(
-        text = buildAnnotatedString {
-          withStyle(SpanStyle(background = color.background(highlightOpacity))) { append(text) }
-        },
-        style = MaterialTheme.typography.bodyLarge.bookText(),
-        maxLines = 6,
-        overflow = TextOverflow.Ellipsis,
-      )
-      Spacer(Modifier.height(16.dp))
-      ColorPicker(
-        selected = color,
-        names = highlightNames,
-        onSelect = { color = it },
-      )
-      Spacer(Modifier.height(16.dp))
-      OutlinedTextField(
-        value = note,
-        onValueChange = { note = it },
-        label = { Text(stringResource(StringsR.string.reader_highlight_note)) },
-        textStyle = MaterialTheme.typography.bodyLarge.bookText(),
-        maxLines = 5,
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-        modifier = Modifier.fillMaxWidth(),
-      )
-      Spacer(Modifier.height(24.dp))
-      Row(verticalAlignment = Alignment.CenterVertically) {
-        TextButton(
-          onClick = onDelete,
-          colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
-        ) {
-          Icon(VoiceIcons.Delete, contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
-          Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-          Text(stringResource(StringsR.string.reader_highlight_delete))
-        }
-        Spacer(Modifier.weight(1F))
-        Button(onClick = done, shapes = ButtonDefaults.shapes()) {
-          Icon(VoiceIcons.Check, contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
-          Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-          Text(stringResource(StringsR.string.common_action_done))
+    ScaledControls(scale) {
+      Column(
+        Modifier
+          .fillMaxWidth()
+          .navigationBarsPadding()
+          .padding(start = 24.dp, end = 24.dp, bottom = 16.dp),
+      ) {
+        Text(
+          text = buildAnnotatedString {
+            withStyle(SpanStyle(background = color.background(highlightOpacity))) { append(text) }
+          },
+          style = MaterialTheme.typography.bodyLarge.bookText(),
+          maxLines = 6,
+          overflow = TextOverflow.Ellipsis,
+        )
+        Spacer(Modifier.height(16.dp))
+        ColorPicker(
+          selected = color,
+          names = highlightNames,
+          onSelect = { color = it },
+        )
+        Spacer(Modifier.height(16.dp))
+        OutlinedTextField(
+          value = note,
+          onValueChange = { note = it },
+          label = { Text(stringResource(StringsR.string.reader_highlight_note)) },
+          textStyle = MaterialTheme.typography.bodyLarge.bookText(),
+          maxLines = 5,
+          keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+          modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(Modifier.height(24.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          TextButton(
+            onClick = onDelete,
+            colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
+          ) {
+            Icon(VoiceIcons.Delete, contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
+            Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+            Text(stringResource(StringsR.string.reader_highlight_delete))
+          }
+          Spacer(Modifier.weight(1F))
+          Button(onClick = done, shapes = ButtonDefaults.shapes()) {
+            Icon(VoiceIcons.Check, contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
+            Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+            Text(stringResource(StringsR.string.common_action_done))
+          }
         }
       }
     }

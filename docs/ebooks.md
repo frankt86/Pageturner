@@ -21,7 +21,8 @@ Long-press an ebook to:
 Tap an ebook to open it where you left off.
 
 - **Turning pages:** drag from the right edge and the page corner curls over like paper, following your finger. Drag from the
-  left to bring the previous page back. A tap on the outer third of the screen, or the volume keys, turns a page too.
+  left to bring the previous page back. A tap on the outer third of the screen, the volume keys, the page and arrow keys
+  of a keyboard or a Bluetooth page turner turn a page too. What each tap does can be changed under **Controls**.
 - **Two pages:** on an unfolded foldable, a tablet or a phone on its side, the book opens to two pages side by side. The right
   page curls over the spine and shows the next page on its back. Your place stays the same when you fold or unfold.
 - **Full screen:** tap the middle of the page to hide or show the bars.
@@ -48,7 +49,7 @@ The **Display** button holds:
 - **Ligatures** joins letter pairs like fi as in printed books; turn it off to keep every letter apart.
 - **Reset text settings** puts all of these back to how they were at first.
 - **Brightness**, just for the reader, or the system setting.
-- **Volume keys turn pages**, on or off.
+- **Controls**, see below.
 - **Reading mode:** **Pages** to turn, or **Scroll** to read the book as one long text from top to bottom, see below.
 - **Page turn:** the page curls over like paper, slides sideways, or the next one shows at once. Only for pages.
 - **Time per page**, for turning pages by themselves, from 10 seconds to 2 minutes.
@@ -70,7 +71,9 @@ Under **Progress**:
   bottom of the page as well. **Never** hides both, and the page number at the bottom of the page.
 - **Progress bar:** a thin **Line**, a **Bar**, or **Chapters**, which splits the bar into one part per chapter.
 - **Page footer:** what the bottom of each page shows next to the chapter: the **Page** of the book, the page of the
-  **Chapter**, the **Percent** read, or the **Time left** in the chapter.
+  **Chapter**, the **Percent** read, the **Time left** or the **Pages left** in the chapter, or **Nothing**.
+- **Show the time** and **Show the battery** add the clock and the battery level to the bottom of the page.
+- **Page header:** a line at the top of each page with the book's **Title** or the **Chapter**, or **Nothing**.
 - **Show chapters, bookmarks and highlights on the bar** draws small marks where each chapter starts and where your bookmarks
   and highlights are.
 
@@ -113,7 +116,31 @@ The time left comes from how fast you read. Pageturner measures it as you turn p
 minutes and jumps, and keeps an average of your last hour of reading across all books. Until it knows you, it guesses about
 1,200 characters a minute.
 
-The screen stays on while you read.
+### Controls
+
+**Controls**, next to **Colors and themes** in **Display**, holds:
+
+- **Taps:** what a tap on the left, in the middle and on the right of the page does: **Previous page**, **Next page**,
+  **Show or hide bars** or **Nothing**. **Left-handed** swaps the left and the right side. In the scroll mode, the sides
+  move a screen instead of a page.
+- **Double tap:** **Nothing**, **Show or hide bars** or **Bookmark** the page. With a double tap set, a single tap waits a
+  moment to tell them apart. Long-press still selects text.
+- **Keys and mouse:** **Turn pages with the volume keys**, on or off. Page Up and Page Down, the arrow keys, the space bar
+  (Shift and space goes back) and Bluetooth page turners, which send these keys, always turn pages. **Ctrl+F** searches,
+  **Ctrl+B** bookmarks the page, **Ctrl+D** opens **Display** and **Esc** goes back. Keys can't be changed.
+- **Mouse wheel:** **Scroll** as usual, or **Turn pages**, one page for each step of the wheel. In the scroll mode, a step
+  moves a screen.
+- **Buttons:** pick which buttons the top bar shows, and move them up or down to change their order. **Display** always
+  stays, it's the way back here. **Buttons at the bottom** puts them in a bar at the bottom of the screen, within reach of
+  your thumb.
+- **Size of bars and menus** makes the bars, the page bar and these sheets larger or smaller, without changing the
+  book's text.
+- **Keep the screen on:** **System** turns the screen off like the rest of your phone. **While reading** keeps it on as
+  long as the book is open. **Until idle** keeps it on until you haven't touched the screen for 5, 10 or 30 minutes, and
+  always while the book is read aloud or turns by itself.
+- **Accidental touches:** **Shortest swipe to turn a page** lets shorter swipes fall back. **Ignore touches at the edges**
+  leaves out touches that start close to the left or right edge, like a palm holding the phone. **Ask before jumping over
+  more than** 10, 50 or 100 pages on the page bar asks "Go to page 120?" first.
 
 ### PDF pages
 
@@ -159,6 +186,8 @@ bold and italic text, tables, links and footnotes. It's built on [Readium](https
 - The font list also has **Literata**, the serif the app uses for the books' words.
 - Until you change them, alignment, hyphenation and the spacing settings leave the book's own.
 - Tap the left or right side, swipe or use the volume keys to turn the page, and tap the middle to show or hide the bars.
+  The taps, keys, mouse wheel and the rest of **Controls** work the same. **Shortest swipe** only applies with the curl or
+  no animation, as Readium slides the pages itself.
 - The page bar counts the book in pages that stay the same whatever the screen or text size, and jumps anywhere.
 - When the book lists the pages of its printed edition, the page bar shows the **Print page** you're on. Where a printed page
   starts is placed by the book's text, so it can be off by a screen.

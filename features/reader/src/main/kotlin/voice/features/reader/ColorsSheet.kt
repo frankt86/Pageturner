@@ -84,6 +84,8 @@ internal enum class ColorsContent {
 
 @Composable
 internal fun ColorsSheet(
+  // the size of the reader's controls
+  scale: Float,
   settings: ReaderSettings,
   content: ColorsContent,
   themesFileFailed: Boolean,
@@ -94,14 +96,16 @@ internal fun ColorsSheet(
 ) {
   // no scrim, so the pages show each change while it's made
   ModalBottomSheet(onDismissRequest = onDismiss, scrimColor = Color.Transparent) {
-    ColorSettings(
-      settings = settings,
-      content = content,
-      themesFileFailed = themesFileFailed,
-      onThemesExport = onThemesExport,
-      onThemesImport = onThemesImport,
-      onSettingsChange = onSettingsChange,
-    )
+    ScaledControls(scale) {
+      ColorSettings(
+        settings = settings,
+        content = content,
+        themesFileFailed = themesFileFailed,
+        onThemesExport = onThemesExport,
+        onThemesImport = onThemesImport,
+        onSettingsChange = onSettingsChange,
+      )
+    }
   }
 }
 

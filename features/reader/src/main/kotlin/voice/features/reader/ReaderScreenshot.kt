@@ -122,19 +122,24 @@ private fun ReaderPreview(
       topBar = {
         ReaderTopBar(
           title = state.content.title,
-          readingAloud = true,
-          bookmarked = true,
-          showSearch = true,
-          auto = AutoMode.Turn,
-          autoRunning = false,
           onCloseClick = {},
-          onReadAloudClick = {},
-          onContentsClick = {},
-          onDisplayClick = {},
-          onBookmarkClick = {},
-          onSearchClick = {},
-          onAutoClick = {},
-        )
+        ) {
+          ReaderActionButtons(
+            actions = settings.toolbarActions(),
+            loaded = true,
+            readingAloud = true,
+            bookmarked = true,
+            showSearch = true,
+            auto = AutoMode.Turn,
+            autoRunning = false,
+            onReadAloudClick = {},
+            onContentsClick = {},
+            onDisplayClick = {},
+            onBookmarkClick = {},
+            onSearchClick = {},
+            onAutoClick = {},
+          )
+        }
       },
     ) { contentPadding ->
       Book(
@@ -157,7 +162,6 @@ private fun ReaderPreview(
               pages = pages,
               pagesPerSpread = pagesPerSpread,
               barsVisible = true,
-              onTurn = {},
               onJump = { _, _ -> },
             )
           }

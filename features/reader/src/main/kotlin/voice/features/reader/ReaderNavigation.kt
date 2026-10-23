@@ -5,7 +5,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -13,10 +12,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,17 +25,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -43,7 +36,9 @@ import androidx.compose.ui.unit.dp
 import voice.core.data.EbookPosition
 import voice.core.data.ProgressBarStyle
 import voice.core.data.ProgressVisibility
+import voice.core.data.ReaderSettings
 import voice.core.ui.bookText
+import kotlin.math.abs
 import kotlin.math.roundToInt
 import voice.core.strings.R as StringsR
 
@@ -66,24 +61,17 @@ internal fun List<Page>.pagesLeftInChapter(
   return subList(lastShown + 1, size).takeWhile { it.section == section }.size
 }
 
-/**
- * The bar to go anywhere in the book, shown while [barsVisible], and the volume keys turning the
- * pages. Reading aloud keeps the volume keys for the volume.
- */
+/** The bar to go anywhere in the book, shown while [barsVisible]. */
 @Composable
 internal fun BoxScope.ReaderControls(
   state: ReaderState.Loaded,
   pages: List<Page>,
   pagesPerSpread: Int,
   barsVisible: Boolean,
-  onTurn: (step: Int) -> Unit,
   onJump: (Page, Float) -> Unit,
 ) {
   if (pages.isEmpty()) return
   val index = pages.indexOfPosition(state.position)
-  if (state.settings.volumeKeysTurnPages && !state.readingAloud) {
-    VolumeKeyPageTurns(onTurn)
-  }
   val chapters = remember(pages) { pages.chapterStarts().map { fractionOf(it, pages.size) } }
   if (state.settings.progressVisibility == ProgressVisibility.Always) {
     ProgressLine(
@@ -96,7 +84,10 @@ internal fun BoxScope.ReaderControls(
         .padding(horizontal = 16.dp, vertical = 4.dp),
     )
   }
-  BottomBar(visible = barsVisible && state.settings.progressVisibility != ProgressVisibility.Hidden) {
+  BottomBar(
+    visible = barsVisible && state.settings.progressVisibility != ProgressVisibility.Hidden,
+    settings = state.settings,
+  ) {
     ReaderNavigationBar(
       state = state,
       pages = pages,
@@ -108,47 +99,30 @@ internal fun BoxScope.ReaderControls(
   }
 }
 
-/** Shows [content] at the bottom of the book while [visible]. */
+/**
+ * Shows [content] at the bottom of the book while [visible], at the size of the reader's controls, and above the buttons
+ * when they're at the bottom.
+ */
 @Composable
 internal fun BoxScope.BottomBar(
   visible: Boolean,
+  settings: ReaderSettings,
   content: @Composable () -> Unit,
 ) {
-  AnimatedVisibility(
-    visible = visible,
-    enter = fadeIn() + slideInVertically { it / 2 },
-    exit = fadeOut() + slideOutVertically { it / 2 },
-    modifier = Modifier
-      .align(Alignment.BottomCenter)
-      .padding(16.dp)
-      .widthIn(max = 560.dp)
-      .fillMaxWidth(),
-  ) {
-    content()
-  }
-}
-
-@Composable
-internal fun VolumeKeyPageTurns(onTurn: (step: Int) -> Unit) {
-  val focusRequester = remember { FocusRequester() }
-  val latestOnTurn by rememberUpdatedState(onTurn)
-  Box(
-    Modifier
-      .onPreviewKeyEvent { event ->
-        val step = when (event.key) {
-          Key.VolumeDown -> 1
-          Key.VolumeUp -> -1
-          else -> return@onPreviewKeyEvent false
-        }
-        if (event.type == KeyEventType.KeyDown) latestOnTurn(step)
-        // the key up too, or the phone shows its volume panel
-        true
-      }
-      .focusRequester(focusRequester)
-      .focusable(),
-  )
-  LaunchedEffect(focusRequester) {
-    focusRequester.requestFocus()
+  val alignment = Modifier.align(Alignment.BottomCenter)
+  ScaledControls(settings.interfaceScale) {
+    AnimatedVisibility(
+      visible = visible,
+      enter = fadeIn() + slideInVertically { it / 2 },
+      exit = fadeOut() + slideOutVertically { it / 2 },
+      modifier = alignment
+        .padding(16.dp)
+        .padding(bottom = if (settings.oneHanded) BottomActionsHeight else 0.dp)
+        .widthIn(max = 560.dp)
+        .fillMaxWidth(),
+    ) {
+      content()
+    }
   }
 }
 
@@ -181,6 +155,7 @@ private fun ReaderNavigationBar(
     style = state.settings.progressBar,
     chapters = if (content is ReaderContent.Epub) chapters else emptyList(),
     marks = marks,
+    confirmJumpPages = state.settings.confirmJumpPages,
     onJump = onJump,
   )
 }
@@ -198,11 +173,14 @@ internal fun PageBar(
   style: ProgressBarStyle,
   chapters: List<Float>,
   marks: BarMarks?,
+  // a jump over more pages asks first, null never asks
+  confirmJumpPages: Int?,
   onJump: (Int) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   var dragTarget by remember { mutableStateOf<Int?>(null) }
-  val shown = dragTarget ?: currentIndex
+  var askedJump by remember { mutableStateOf<Int?>(null) }
+  val shown = dragTarget ?: askedJump ?: currentIndex
   Surface(
     modifier = modifier,
     shape = MaterialTheme.shapes.extraLarge,
@@ -241,8 +219,27 @@ internal fun PageBar(
             dragTarget = value.roundToInt()
           }
           val onValueChangeFinished = {
-            dragTarget?.let(onJump)
+            dragTarget?.let { target ->
+              if (confirmJumpPages != null && abs(target - currentIndex) > confirmJumpPages) {
+                askedJump = target
+              } else {
+                onJump(target)
+              }
+            }
             dragTarget = null
+          }
+          askedJump?.let { target ->
+            JumpDialog(
+              page = target + 1,
+              onConfirm = {
+                askedJump = null
+                onJump(target)
+              },
+              onDismiss = {
+                askedJump = null
+                sliderState.value = currentIndex.toFloat()
+              },
+            )
           }
           Box {
             val sliderModifier = Modifier.semantics { contentDescription = description }
@@ -282,4 +279,26 @@ internal fun PageBar(
       ProgressDetails(progress(shown))
     }
   }
+}
+
+@Composable
+private fun JumpDialog(
+  page: Int,
+  onConfirm: () -> Unit,
+  onDismiss: () -> Unit,
+) {
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = { Text(stringResource(StringsR.string.reader_jump_title, page)) },
+    confirmButton = {
+      TextButton(onClick = onConfirm) {
+        Text(stringResource(StringsR.string.reader_jump))
+      }
+    },
+    dismissButton = {
+      TextButton(onClick = onDismiss) {
+        Text(stringResource(StringsR.string.common_dialog_cancel))
+      }
+    },
+  )
 }

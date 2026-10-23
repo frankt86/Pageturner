@@ -10,7 +10,6 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -55,7 +54,6 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -67,7 +65,6 @@ import voice.core.data.EbookPosition
 import voice.core.data.Highlight
 import voice.core.data.ProgressVisibility
 import voice.core.data.ScrollBehavior
-import voice.core.ui.bookText
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.round
@@ -137,7 +134,8 @@ internal fun ScrollBook(
   onUserScroll: () -> Unit,
   onHighlightClick: (Highlight) -> Unit,
   onVisiblePagesChange: (List<Page>) -> Unit,
-  onCenterTap: () -> Unit,
+  // with where the tap was across the screen, from 0 to 1
+  onTap: (Float) -> Unit,
   onAutoScrollEnd: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -163,7 +161,7 @@ internal fun ScrollBook(
   val latestOnScroll by rememberUpdatedState(onScroll)
   val latestOnVisiblePagesChange by rememberUpdatedState(onVisiblePagesChange)
   val latestOnHighlightClick by rememberUpdatedState(onHighlightClick)
-  val latestOnCenterTap by rememberUpdatedState(onCenterTap)
+  val latestOnTap by rememberUpdatedState(onTap)
   val latestOnAutoScrollEnd by rememberUpdatedState(onAutoScrollEnd)
   val latestOnUserScroll by rememberUpdatedState(onUserScroll)
   val latestBehavior by rememberUpdatedState(state.settings.scrollBehavior)
@@ -251,6 +249,9 @@ internal fun ScrollBook(
     SnapFling(drag, minVelocity) { screenStep(listState.layoutInfo, latestLine) }
   }
   Column(modifier) {
+    if (content is ReaderContent.Epub) {
+      pageHeader(state, state.position.section)?.let { PageHeader(it, Modifier.padding(horizontal = margins.side)) }
+    }
     Box(
       Modifier
         .weight(1F)
@@ -269,6 +270,7 @@ internal fun ScrollBook(
         flingBehavior = if (state.settings.scrollBehavior == ScrollBehavior.Snap) snapFling else ScrollableDefaults.flingBehavior(),
         modifier = Modifier
           .fillMaxSize()
+          .ignoreEdgeTouches(state.settings.edgeMargin.dp)
           .nestedScroll(drag)
           .pointerInput(Unit) {
             awaitPointerEventScope {
@@ -302,11 +304,7 @@ internal fun ScrollBook(
             onHighlightClick = { latestOnHighlightClick(it) },
             onSelect = { haptics.performHapticFeedback(HapticFeedbackType.LongPress) },
             onOtherTap = { offset, size ->
-              when {
-                offset.x < size.width / 3F -> step(-1)
-                offset.x > size.width * 2 / 3F -> step(1)
-                else -> latestOnCenterTap()
-              }
+              latestOnTap(offset.x / size.width)
               true
             },
           ),
@@ -339,31 +337,14 @@ internal fun ScrollBook(
     }
     if (content is ReaderContent.Epub && state.settings.progressVisibility != ProgressVisibility.Hidden && pages.isNotEmpty()) {
       val index = pages.indexOfPosition(state.position)
-      Row(
-        verticalAlignment = Alignment.CenterVertically,
+      PageFooter(
+        chapter = content.chapterTitle(state.position.section),
+        footer = footerText(state.settings.footer, content.readingProgress(pages, index, pagesPerSpread = 1, pace = state.pace)),
+        settings = state.settings,
         modifier = Modifier
-          .fillMaxWidth()
           .height(PageNumberHeight)
           .padding(horizontal = margins.side),
-      ) {
-        Text(
-          text = content.chapterTitle(state.position.section),
-          style = MaterialTheme.typography.labelMedium.bookText(),
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-          modifier = Modifier
-            .weight(1F)
-            .padding(end = 12.dp),
-        )
-        footerText(state.settings.footer, content.readingProgress(pages, index, pagesPerSpread = 1, pace = state.pace))?.let {
-          Text(
-            text = it,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-          )
-        }
-      }
+      )
     }
   }
 }

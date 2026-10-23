@@ -65,6 +65,7 @@ import voice.core.data.ProgressBarStyle
 import voice.core.data.ProgressVisibility
 import voice.core.data.ReaderFont
 import voice.core.data.ReaderFooter
+import voice.core.data.ReaderHeader
 import voice.core.data.ReaderOrientation
 import voice.core.data.ReaderPages
 import voice.core.data.ReaderSettings
@@ -80,6 +81,8 @@ import voice.core.strings.R as StringsR
 
 @Composable
 internal fun DisplaySheet(
+  // the size of the reader's controls
+  scale: Float,
   settings: ReaderSettings,
   showTextOptions: Boolean,
   newEngine: Boolean,
@@ -88,20 +91,24 @@ internal fun DisplaySheet(
   onFontImport: (Uri) -> Unit,
   onSettingsChange: (ReaderSettings) -> Unit,
   onColorsClick: () -> Unit,
+  onControlsClick: () -> Unit,
   onDismiss: () -> Unit,
 ) {
   // no scrim, so the pages show each change while it's made
   ModalBottomSheet(onDismissRequest = onDismiss, scrimColor = Color.Transparent) {
-    DisplaySettings(
-      settings = settings,
-      showTextOptions = showTextOptions,
-      newEngine = newEngine,
-      fonts = fonts,
-      fontImportFailed = fontImportFailed,
-      onFontImport = onFontImport,
-      onSettingsChange = onSettingsChange,
-      onColorsClick = onColorsClick,
-    )
+    ScaledControls(scale) {
+      DisplaySettings(
+        settings = settings,
+        showTextOptions = showTextOptions,
+        newEngine = newEngine,
+        fonts = fonts,
+        fontImportFailed = fontImportFailed,
+        onFontImport = onFontImport,
+        onSettingsChange = onSettingsChange,
+        onColorsClick = onColorsClick,
+        onControlsClick = onControlsClick,
+      )
+    }
   }
 }
 
@@ -115,6 +122,7 @@ private fun DisplaySettings(
   onFontImport: (Uri) -> Unit,
   onSettingsChange: (ReaderSettings) -> Unit,
   onColorsClick: () -> Unit,
+  onControlsClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(
@@ -135,9 +143,15 @@ private fun DisplaySettings(
       selected = settings.theme,
       onThemeSelect = { onSettingsChange(settings.copy(theme = it)) },
     )
-    TextButton(onClick = onColorsClick) {
-      Icon(VoiceIcons.Contrast, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
-      Text(stringResource(StringsR.string.reader_colors))
+    FlowRow {
+      TextButton(onClick = onColorsClick) {
+        Icon(VoiceIcons.Contrast, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+        Text(stringResource(StringsR.string.reader_colors))
+      }
+      TextButton(onClick = onControlsClick) {
+        Icon(VoiceIcons.TouchApp, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+        Text(stringResource(StringsR.string.reader_controls))
+      }
     }
     ReadingModeSettings(
       settings = settings,
@@ -169,11 +183,6 @@ private fun DisplaySettings(
     Brightness(
       brightness = settings.brightness,
       onBrightnessChange = { onSettingsChange(settings.copy(brightness = it)) },
-    )
-    SwitchRow(
-      label = stringResource(StringsR.string.reader_volume_keys),
-      checked = settings.volumeKeysTurnPages,
-      onCheckedChange = { onSettingsChange(settings.copy(volumeKeysTurnPages = it)) },
     )
     if (showTextOptions) {
       SwitchRow(
@@ -791,7 +800,7 @@ private fun ProgressSettings(
       onSelect = { onSettingsChange(settings.copy(progressBar = it)) },
     )
     if (showFooter) {
-      OptionChoice(
+      ChipChoice(
         label = stringResource(StringsR.string.reader_footer),
         options = ReaderFooter.entries,
         selected = settings.footer,
@@ -802,10 +811,37 @@ private fun ProgressSettings(
               ReaderFooter.ChapterPage -> StringsR.string.reader_footer_chapter
               ReaderFooter.Percent -> StringsR.string.reader_footer_percent
               ReaderFooter.TimeLeft -> StringsR.string.reader_footer_time
+              ReaderFooter.PagesLeft -> StringsR.string.reader_footer_pages_left
+              ReaderFooter.Nothing -> StringsR.string.reader_nothing
             },
           )
         },
         onSelect = { onSettingsChange(settings.copy(footer = it)) },
+      )
+      SwitchRow(
+        label = stringResource(StringsR.string.reader_clock),
+        checked = settings.clock,
+        onCheckedChange = { onSettingsChange(settings.copy(clock = it)) },
+      )
+      SwitchRow(
+        label = stringResource(StringsR.string.reader_battery),
+        checked = settings.battery,
+        onCheckedChange = { onSettingsChange(settings.copy(battery = it)) },
+      )
+      OptionChoice(
+        label = stringResource(StringsR.string.reader_header),
+        options = ReaderHeader.entries,
+        selected = settings.header,
+        optionLabel = {
+          stringResource(
+            when (it) {
+              ReaderHeader.Nothing -> StringsR.string.reader_nothing
+              ReaderHeader.Title -> StringsR.string.reader_header_title
+              ReaderHeader.Chapter -> StringsR.string.reader_header_chapter
+            },
+          )
+        },
+        onSelect = { onSettingsChange(settings.copy(header = it)) },
       )
     }
     SwitchRow(
@@ -864,6 +900,39 @@ internal fun <T : Any> OptionChoice(
             overflow = TextOverflow.Ellipsis,
           )
         }
+      }
+    }
+  }
+}
+
+/** Like [OptionChoice], for more or longer options, which wrap onto more lines. */
+@Composable
+internal fun <T : Any> ChipChoice(
+  label: String,
+  options: List<T>,
+  selected: T?,
+  optionLabel: @Composable (T) -> String,
+  onSelect: (T) -> Unit,
+) {
+  Column {
+    Text(
+      text = label,
+      style = MaterialTheme.typography.titleSmall,
+    )
+    FlowRow(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 4.dp)
+        .selectableGroup(),
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+      options.forEach { option ->
+        FilterChip(
+          selected = option == selected,
+          onClick = { onSelect(option) },
+          label = { Text(optionLabel(option)) },
+          modifier = Modifier.semantics { role = Role.RadioButton },
+        )
       }
     }
   }
@@ -951,6 +1020,7 @@ private fun DisplaySettingsPreview() {
       onFontImport = {},
       onSettingsChange = {},
       onColorsClick = {},
+      onControlsClick = {},
     )
   }
 }

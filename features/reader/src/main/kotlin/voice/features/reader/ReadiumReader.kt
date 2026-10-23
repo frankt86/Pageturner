@@ -14,7 +14,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,18 +37,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -75,12 +73,12 @@ import org.readium.r2.navigator.input.TapEvent
 import org.readium.r2.navigator.preferences.ColumnCount
 import org.readium.r2.navigator.preferences.ImageFilter
 import org.readium.r2.navigator.preferences.Spread
-import org.readium.r2.navigator.util.DirectionalNavigationAdapter
 import org.readium.r2.shared.ExperimentalReadiumApi
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.util.AbsoluteUrl
 import org.readium.r2.shared.util.toUri
 import voice.core.data.HighlightColor
+import voice.core.data.MouseWheel
 import voice.core.data.PageTransition
 import voice.core.data.ProgressVisibility
 import voice.core.data.ReaderImageFilter
@@ -111,7 +109,8 @@ private const val NAVIGATOR_TAG = "readium_navigator"
 internal fun ReadiumPages(
   book: ReadiumBook,
   settings: ReaderSettings,
-  volumeKeysTurnPages: Boolean,
+  // gets the key code, whether Ctrl and Shift are held and whether the key went down, returns whether it took the key
+  onKey: (keyCode: Int, ctrl: Boolean, shift: Boolean, down: Boolean) -> Boolean,
   transition: PageTransition,
   jumps: Flow<Locator>,
   // each request turns a page, or in the scroll mode scrolls a screen, forward for a positive step
@@ -121,7 +120,8 @@ internal fun ReadiumPages(
   onAutoScrollEnd: () -> Unit,
   onLocatorChange: (Locator) -> Unit,
   onPageTurn: () -> Unit,
-  onCenterTap: () -> Unit,
+  // with where the tap was across the page, from 0 to 1
+  onTap: (Float) -> Unit,
   onHighlightAdd: (Locator, HighlightColor) -> Unit,
   onNoteAdd: (Locator) -> Unit,
   onHighlightClick: (LocatedHighlight) -> Unit,
@@ -134,13 +134,13 @@ internal fun ReadiumPages(
   val preferences = settings.epubPreferences(pageColors)
   val latestPreferences by rememberUpdatedState(preferences)
   val latestBook by rememberUpdatedState(book)
-  val latestOnCenterTap by rememberUpdatedState(onCenterTap)
+  val latestOnTap by rememberUpdatedState(onTap)
+  val latestOnKey by rememberUpdatedState(onKey)
   val latestOnLocatorChange by rememberUpdatedState(onLocatorChange)
   val latestOnPageTurn by rememberUpdatedState(onPageTurn)
   val latestOnHighlightAdd by rememberUpdatedState(onHighlightAdd)
   val latestOnNoteAdd by rememberUpdatedState(onNoteAdd)
   val latestOnHighlightClick by rememberUpdatedState(onHighlightClick)
-  val latestVolumeKeysTurnPages by rememberUpdatedState(volumeKeysTurnPages)
   val latestOnAutoScrollEnd by rememberUpdatedState(onAutoScrollEnd)
   val scroll = settings.readingMode == ReadingMode.Scroll
   val latestScroll by rememberUpdatedState(scroll)
@@ -164,19 +164,21 @@ internal fun ReadiumPages(
     }
   }
   val latestTurn by rememberUpdatedState(turn)
+  val density = LocalDensity.current
+  val wheelTurns = settings.mouseWheel == MouseWheel.Turn
   SideEffect {
     turns.transition = transition
     // Readium slides the pages itself, and scrolled text changes the chapter with a swipe sideways
     container.interceptDrags = !scroll && transition != PageTransition.Slide
     container.onDrag = turns::onDrag
-    container.onVolumeKey = { step ->
-      if (latestVolumeKeysTurnPages) {
-        if (step != 0) latestTurn(step)
-        true
-      } else {
-        false
-      }
+    container.onKey = { keyCode, ctrl, shift, down -> latestOnKey(keyCode, ctrl, shift, down) }
+    container.onWheel = if (wheelTurns) {
+      { step: Int -> latestTurn(step) }
+    } else {
+      null
     }
+    container.minSwipe = with(density) { settings.minSwipe.dp.toPx() }
+    container.edgeMargin = with(density) { settings.edgeMargin.dp.toPx() }
     container.onFingerMove = { if (latestScroll) latestOnPageTurn() }
   }
   Box(modifier) {
@@ -196,10 +198,6 @@ internal fun ReadiumPages(
       color = pageColors?.ink ?: MaterialTheme.colorScheme.onSurface,
       modifier = Modifier.fillMaxSize(),
     )
-    // while the web view has no focus, the volume keys come to Compose
-    if (volumeKeysTurnPages) {
-      VolumeKeyPageTurns { step -> latestTurn(step) }
-    }
   }
   // Readium takes these only when its pages are made, so changing them makes them anew
   // colors wait until they stop changing, so dragging a color slider doesn't make the pages anew all the time
@@ -281,17 +279,11 @@ internal fun ReadiumPages(
       )
       .instantiate(activity.classLoader, EpubNavigatorFragment::class.java.name) as EpubNavigatorFragment
     created = fragment
-    // the arrow keys of a keyboard turn the pages too
-    fragment.addInputListener(DirectionalNavigationAdapter(fragment, tapEdges = emptySet()))
     fragment.addInputListener(
       object : InputListener {
         override fun onTap(event: TapEvent): Boolean {
           val width = fragment.publicationView.width
-          when {
-            event.point.x > width * 2 / 3 -> if (latestScroll) latestTurn(1) else turns.turnTowards(right = true)
-            event.point.x < width / 3 -> if (latestScroll) latestTurn(-1) else turns.turnTowards(right = false)
-            else -> latestOnCenterTap()
-          }
+          if (width > 0) latestOnTap(event.point.x / width)
           return true
         }
       },
@@ -553,7 +545,7 @@ internal fun BoxScope.ReadiumPageBar(
   onJump: (Locator) -> Unit,
 ) {
   if (book.positions.isEmpty()) return
-  BottomBar(visible = visible && settings.progressVisibility != ProgressVisibility.Hidden) {
+  BottomBar(visible = visible && settings.progressVisibility != ProgressVisibility.Hidden, settings = settings) {
     val current = book.positionIndex(book.locator)
     val chapters = remember(book) { book.chapterStarts.map { fractionOf(it, book.positions.size) } }
     val marks = if (settings.progressMarks) {
@@ -585,12 +577,16 @@ internal fun BoxScope.ReadiumPageBar(
       style = settings.progressBar,
       chapters = chapters,
       marks = marks,
+      confirmJumpPages = settings.confirmJumpPages,
       onJump = { index -> onJump(book.positions[index]) },
     )
   }
 }
 
-/** The chapter and what [ReaderSettings.footer] picks under the pages, with a thin line of the book's progress. */
+/**
+ * The chapter and what [ReaderSettings.footer] picks under the pages, and with [ProgressVisibility.Always] a thin line of
+ * the book's progress.
+ */
 @Composable
 internal fun ReadiumFooter(
   book: ReadiumBook,
@@ -615,43 +611,30 @@ internal fun ReadiumFooter(
         .background(MaterialTheme.colorScheme.surface)
         .padding(horizontal = settings.margin.dp),
     ) {
-      Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(28.dp),
-      ) {
-        Text(
-          text = book.locator?.let { book.chapterTitle(it) }.orEmpty(),
-          style = MaterialTheme.typography.labelMedium.bookText(),
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-          modifier = Modifier
-            .weight(1F)
-            .padding(end = 12.dp),
-        )
-        footerText(settings.footer, progress)?.let {
-          Text(
-            text = it,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-          )
-        }
-      }
-      ProgressLine(
-        fraction = progress.bookFraction,
-        style = settings.progressBar,
-        chapters = chapters,
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.padding(bottom = 6.dp),
+      val always = settings.progressVisibility == ProgressVisibility.Always
+      PageFooter(
+        chapter = book.locator?.let { book.chapterTitle(it) }.orEmpty(),
+        footer = if (always) footerText(settings.footer, progress) else null,
+        settings = settings,
+        modifier = Modifier.height(28.dp),
       )
+      if (always) {
+        ProgressLine(
+          fraction = progress.bookFraction,
+          style = settings.progressBar,
+          chapters = chapters,
+          color = MaterialTheme.colorScheme.onSurface,
+          modifier = Modifier.padding(bottom = 6.dp),
+        )
+      }
     }
   }
 }
 
 @Composable
 internal fun ReadiumContentsSheet(
+  // the size of the reader's controls
+  scale: Float,
   book: ReadiumBook,
   onJump: (Locator) -> Unit,
   onBookmarkDelete: (Locator) -> Unit,
@@ -662,19 +645,21 @@ internal fun ReadiumContentsSheet(
   val tabs = ContentsTab.entries
   var selectedTab by rememberSaveable { mutableStateOf(ContentsTab.Contents) }
   ModalBottomSheet(onDismissRequest = onDismiss) {
-    PrimaryTabRow(selectedTabIndex = tabs.indexOf(selectedTab).coerceAtLeast(0)) {
-      tabs.forEach { tab ->
-        Tab(
-          selected = tab == selectedTab,
-          onClick = { selectedTab = tab },
-          text = { Text(tabTitle(tab)) },
-        )
+    ScaledControls(scale) {
+      PrimaryTabRow(selectedTabIndex = tabs.indexOf(selectedTab).coerceAtLeast(0)) {
+        tabs.forEach { tab ->
+          Tab(
+            selected = tab == selectedTab,
+            onClick = { selectedTab = tab },
+            text = { Text(tabTitle(tab)) },
+          )
+        }
       }
-    }
-    when (selectedTab) {
-      ContentsTab.Contents -> ReadiumChapters(book, onJump)
-      ContentsTab.Bookmarks -> ReadiumBookmarks(book, onJump, onBookmarkDelete)
-      ContentsTab.Highlights -> ReadiumHighlights(book, highlightOpacity, onJump, onHighlightDelete)
+      when (selectedTab) {
+        ContentsTab.Contents -> ReadiumChapters(book, onJump)
+        ContentsTab.Bookmarks -> ReadiumBookmarks(book, onJump, onBookmarkDelete)
+        ContentsTab.Highlights -> ReadiumHighlights(book, highlightOpacity, onJump, onHighlightDelete)
+      }
     }
   }
 }

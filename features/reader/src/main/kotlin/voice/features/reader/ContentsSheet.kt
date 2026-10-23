@@ -50,6 +50,8 @@ internal enum class ContentsTab {
 
 @Composable
 internal fun ContentsSheet(
+  // the size of the reader's controls
+  scale: Float,
   state: ReaderState.Loaded,
   onChapterClick: (Int) -> Unit,
   onMarkClick: (EbookPosition) -> Unit,
@@ -62,30 +64,32 @@ internal fun ContentsSheet(
   val tabs = if (content is ReaderContent.Epub) ContentsTab.entries else listOf(ContentsTab.Bookmarks)
   var selectedTab by rememberSaveable { mutableStateOf(tabs.first()) }
   ModalBottomSheet(onDismissRequest = onDismiss) {
-    if (tabs.size > 1) {
-      PrimaryTabRow(selectedTabIndex = tabs.indexOf(selectedTab).coerceAtLeast(0)) {
-        tabs.forEach { tab ->
-          Tab(
-            selected = tab == selectedTab,
-            onClick = { selectedTab = tab },
-            text = { Text(tabTitle(tab)) },
-          )
+    ScaledControls(scale) {
+      if (tabs.size > 1) {
+        PrimaryTabRow(selectedTabIndex = tabs.indexOf(selectedTab).coerceAtLeast(0)) {
+          tabs.forEach { tab ->
+            Tab(
+              selected = tab == selectedTab,
+              onClick = { selectedTab = tab },
+              text = { Text(tabTitle(tab)) },
+            )
+          }
         }
+      } else {
+        Text(
+          text = tabTitle(tabs.first()),
+          style = MaterialTheme.typography.titleLarge,
+          modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+        )
       }
-    } else {
-      Text(
-        text = tabTitle(tabs.first()),
-        style = MaterialTheme.typography.titleLarge,
-        modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
-      )
-    }
-    when (if (selectedTab in tabs) selectedTab else tabs.first()) {
-      ContentsTab.Contents -> if (content is ReaderContent.Epub) {
-        Chapters(content, state.position.section, onChapterClick)
-      }
-      ContentsTab.Bookmarks -> Bookmarks(content, state.bookmarks, onMarkClick, onBookmarkDelete)
-      ContentsTab.Highlights -> if (content is ReaderContent.Epub) {
-        Highlights(content, state.highlights, state.settings.highlightOpacity, onMarkClick, onHighlightDelete)
+      when (if (selectedTab in tabs) selectedTab else tabs.first()) {
+        ContentsTab.Contents -> if (content is ReaderContent.Epub) {
+          Chapters(content, state.position.section, onChapterClick)
+        }
+        ContentsTab.Bookmarks -> Bookmarks(content, state.bookmarks, onMarkClick, onBookmarkDelete)
+        ContentsTab.Highlights -> if (content is ReaderContent.Epub) {
+          Highlights(content, state.highlights, state.settings.highlightOpacity, onMarkClick, onHighlightDelete)
+        }
       }
     }
   }

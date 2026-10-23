@@ -53,12 +53,15 @@ internal class SearchSnippet(
 
 @Composable
 internal fun SearchSheet(
+  // the size of the reader's controls
+  scale: Float,
   content: ReaderContent,
   search: suspend (String) -> List<SearchResult>,
   onResultClick: (SearchResult) -> Unit,
   onDismiss: () -> Unit,
 ) {
   SearchSheet(
+    scale = scale,
     search = search,
     resultTitle = { result ->
       when (content) {
@@ -80,6 +83,8 @@ internal fun SearchSheet(
 
 @Composable
 internal fun <T> SearchSheet(
+  // the size of the reader's controls
+  scale: Float,
   search: suspend (String) -> List<T>,
   resultTitle: @Composable (T) -> String,
   resultSnippet: (T) -> SearchSnippet,
@@ -107,39 +112,41 @@ internal fun <T> SearchSheet(
       enabledValues = setOf(Hidden, Expanded),
     ),
   ) {
-    val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(focusRequester) { focusRequester.requestFocus() }
-    OutlinedTextField(
-      value = query,
-      onValueChange = { query = it },
-      placeholder = { Text(stringResource(StringsR.string.reader_search)) },
-      leadingIcon = { Icon(VoiceIcons.Search, contentDescription = null) },
-      singleLine = true,
-      keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 24.dp, vertical = 8.dp)
-        .focusRequester(focusRequester),
-    )
-    val found = results
-    if (found != null && found.isEmpty() && trimmed.length >= 2) {
-      Text(
-        text = stringResource(StringsR.string.reader_search_empty),
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        textAlign = TextAlign.Center,
+    ScaledControls(scale) {
+      val focusRequester = remember { FocusRequester() }
+      LaunchedEffect(focusRequester) { focusRequester.requestFocus() }
+      OutlinedTextField(
+        value = query,
+        onValueChange = { query = it },
+        placeholder = { Text(stringResource(StringsR.string.reader_search)) },
+        leadingIcon = { Icon(VoiceIcons.Search, contentDescription = null) },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         modifier = Modifier
           .fillMaxWidth()
-          .padding(horizontal = 32.dp, vertical = 48.dp),
+          .padding(horizontal = 24.dp, vertical = 8.dp)
+          .focusRequester(focusRequester),
       )
-    }
-    LazyColumn {
-      items(found.orEmpty()) { result ->
-        SearchResultRow(
-          title = resultTitle(result),
-          snippet = resultSnippet(result),
-          onClick = { onResultClick(result) },
+      val found = results
+      if (found != null && found.isEmpty() && trimmed.length >= 2) {
+        Text(
+          text = stringResource(StringsR.string.reader_search_empty),
+          style = MaterialTheme.typography.bodyLarge,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          textAlign = TextAlign.Center,
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp, vertical = 48.dp),
         )
+      }
+      LazyColumn {
+        items(found.orEmpty()) { result ->
+          SearchResultRow(
+            title = resultTitle(result),
+            snippet = resultSnippet(result),
+            onClick = { onResultClick(result) },
+          )
+        }
       }
     }
   }
