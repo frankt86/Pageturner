@@ -65,14 +65,11 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -436,6 +433,20 @@ private fun Spreads(
   previewTurn: Float?,
 ) {
   if (pages.isEmpty()) return
+  if (pagesPerSpread == 1) {
+    val current = pages.indexOfPosition(state.position)
+    CurlPages(
+      count = pages.size,
+      current = current,
+      onTurn = { index -> onPageTurn(pages[index], (index + 1F) / pages.size) },
+      backColor = MaterialTheme.colorScheme.surface,
+      modifier = Modifier.fillMaxSize(),
+      previewTurn = previewTurn,
+    ) { index ->
+      PageSlot(state, pages, index, textStyle, Modifier.fillMaxSize())
+    }
+    return
+  }
   val currentSpread = pages.indexOfPosition(state.position) / pagesPerSpread
   val spreadCount = (pages.size + pagesPerSpread - 1) / pagesPerSpread
   val pagerState = rememberPagerState(initialPage = currentSpread) { spreadCount }
@@ -470,11 +481,7 @@ private fun Spreads(
   }
   val scope = rememberCoroutineScope()
   Box(Modifier.fillMaxSize()) {
-    if (pagesPerSpread == 1) {
-      PageTurn(state, pages, turning, progress, textStyle)
-    } else {
-      SpreadTurn(state, pages, turning, progress, textStyle)
-    }
+    SpreadTurn(state, pages, turning, progress, textStyle)
     // the pager only follows the finger, the pages are drawn above and turn like paper
     HorizontalPager(
       state = pagerState,
@@ -500,70 +507,6 @@ private fun Spreads(
     ) {
       Box(Modifier.fillMaxSize())
     }
-  }
-}
-
-// one page lies on the next and its corner side is folded back over it, the fold moving with the finger
-@Composable
-private fun PageTurn(
-  state: ReaderState.Loaded,
-  pages: List<Page>,
-  turning: Int,
-  progress: () -> Float,
-  textStyle: TextStyle,
-) {
-  val back = MaterialTheme.colorScheme.surfaceContainer
-  Box(Modifier.fillMaxSize()) {
-    PageSlot(state, pages, turning + 1, textStyle, Modifier.fillMaxSize())
-    PageSlot(
-      state = state,
-      pages = pages,
-      index = turning,
-      textStyle = textStyle,
-      modifier = Modifier
-        .fillMaxSize()
-        .drawWithContent {
-          val turned = progress()
-          if (turned <= 0F) {
-            drawContent()
-            return@drawWithContent
-          }
-          val fold = size.width * (1F - turned)
-          val flapStart = fold - size.width * turned
-          val shadowWidth = 32.dp.toPx() * (1F - turned)
-          clipRect(right = fold) {
-            this@drawWithContent.drawContent()
-          }
-          drawRect(
-            brush = Brush.horizontalGradient(
-              listOf(Color.Black.copy(alpha = 0.25F), Color.Transparent),
-              startX = fold,
-              endX = fold + shadowWidth,
-            ),
-            topLeft = Offset(fold, 0F),
-            size = Size(shadowWidth, size.height),
-          )
-          drawRect(
-            brush = Brush.horizontalGradient(
-              listOf(Color.Transparent, Color.Black.copy(alpha = 0.2F)),
-              startX = flapStart - shadowWidth,
-              endX = flapStart,
-            ),
-            topLeft = Offset(flapStart - shadowWidth, 0F),
-            size = Size(shadowWidth, size.height),
-          )
-          drawRect(back, topLeft = Offset(flapStart, 0F), size = Size(fold - flapStart, size.height))
-          drawRect(
-            brush = Brush.horizontalGradient(
-              listOf(Color.Black.copy(alpha = 0.04F), Color.Black.copy(alpha = 0.12F)),
-              startX = flapStart,
-              endX = fold,
-            ),
-            topLeft = Offset(flapStart, 0F),
-            size = Size(fold - flapStart, size.height),
-          )
-        },
-    )
   }
 }
 
