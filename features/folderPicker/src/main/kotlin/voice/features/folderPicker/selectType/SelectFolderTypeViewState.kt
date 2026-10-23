@@ -11,7 +11,11 @@ internal data class SelectFolderTypeViewState(
   val options: List<Option>,
   val editing: Boolean,
   val onboarding: Boolean,
+  /** EPUB and PDF files in the folder, which are added however the audiobooks are found. */
+  val ebookCount: Int = 0,
 ) {
+
+  val bookCount: Int get() = books.size + ebookCount
 
   data class Book(
     val name: String,
