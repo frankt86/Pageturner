@@ -103,7 +103,7 @@ class BookOverviewViewModel(
     // half loaded state (e.g. no hero card, or top bar icons that disappear again).
     val books = remember { repo.flow() }
       .collectAsState(initial = null).value
-    val ebooks = remember { ebooksStore.data.map { ebooks -> ebooks.filter { it.available } } }
+    val ebooks = remember { ebooksStore.data.map { ebooks -> ebooks.filter { it.available && !it.hidden } } }
       .collectAsState(initial = null).value
     val currentBook = remember { currentBookStoreDataStore.data.map(::CurrentBook) }
       .collectAsState(initial = null).value
@@ -248,9 +248,8 @@ class BookOverviewViewModel(
 
   fun onBookLongClick(id: BookId) {
     scope.launch {
-      if (ebooksStore.data.first().none { it.bookId == id }) {
-        navigator.goTo(Destination.BookActions(id))
-      }
+      val ebook = ebooksStore.data.first().firstOrNull { it.bookId == id }
+      navigator.goTo(if (ebook != null) Destination.EbookActions(ebook.uri) else Destination.BookActions(id))
     }
   }
 

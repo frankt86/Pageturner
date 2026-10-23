@@ -38,14 +38,17 @@ internal class EbookScanner(
     store.updateData { previous ->
       val previousByUri = previous.associateBy { it.uri }
       val foundUris = found.mapTo(mutableSetOf()) { it.uri }
+      val gone = previous.filter { it.uri !in foundUris }
+        // a removed book comes back once its folder is added again
+        .map { it.copy(available = false, hidden = false) }
       found.map { ebook ->
         val known = previousByUri[ebook.uri]
         // once read from the book, its own title wins over the file name
         known?.copy(name = if (known.metadataRead) known.name else ebook.name, available = true) ?: ebook
-      } + previous.filter { it.uri !in foundUris }.map { it.copy(available = false) }
+      } + gone
     }
     store.data.first()
-      .filter { it.available && !it.metadataRead }
+      .filter { it.available && !it.hidden && !it.metadataRead }
       .forEach { ebook ->
         val metadata = readMetadata(ebook)
         store.updateData { ebooks ->

@@ -48,6 +48,7 @@ enum class BottomSheetItem(
   RetryDownload(StringsR.string.book_download_retry, VoiceIcons.Replay),
   RemoveDownload(StringsR.string.book_download_remove, VoiceIcons.Delete),
   DeleteBook(StringsR.string.book_delete_bottom_sheet_title, VoiceIcons.Delete),
+  RemoveFromLibrary(StringsR.string.book_remove_from_library, VoiceIcons.VisibilityOff),
   BookCategoryMarkAsNotStarted(StringsR.string.book_category_action_mark_not_started, VoiceIcons.HourglassEmpty),
   BookCategoryMarkAsCurrent(StringsR.string.book_category_action_mark_current, VoiceIcons.NotStarted),
   BookCategoryMarkAsCompleted(StringsR.string.book_category_action_mark_completed, VoiceIcons.Done),

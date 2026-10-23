@@ -2,7 +2,7 @@
 
 Pick the folder with your audiobooks. Pageturner looks at how the files inside are organized and shows you the books it found before
 adding them. If the books don't look right, tap **Change how books are found** and pick one of the three options below. You can
-change this later in the settings under **Audiobook folders** by tapping the folder. Your progress and bookmarks stay with your books.
+change this later in the settings under **Book folders** by tapping the folder. Your progress and bookmarks stay with your books.
 
 EPUB and PDF files in these folders show up as [ebooks](ebooks.md), however the folder is organized.
 

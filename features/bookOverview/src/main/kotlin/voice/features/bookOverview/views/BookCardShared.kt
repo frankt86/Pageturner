@@ -48,6 +48,7 @@ internal fun BookCover(
   finished: Boolean = false,
   unavailable: Boolean = false,
   download: DownloadBadge? = null,
+  ebook: Boolean = false,
 ) {
   Box(modifier = modifier) {
     AsyncImage(
@@ -63,6 +64,25 @@ internal fun BookCover(
       contentScale = ContentScale.Crop,
       contentDescription = null,
     )
+    if (ebook) {
+      Box(
+        modifier = Modifier
+          .align(Alignment.TopStart)
+          .offset(x = (-4).dp, y = (-4).dp)
+          .size(24.dp)
+          .background(MaterialTheme.colorScheme.surface, CircleShape)
+          .padding(2.dp)
+          .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape),
+        contentAlignment = Alignment.Center,
+      ) {
+        Icon(
+          modifier = Modifier.size(14.dp),
+          imageVector = VoiceIcons.Book,
+          contentDescription = stringResource(StringsR.string.library_book_ebook),
+          tint = MaterialTheme.colorScheme.onSecondaryContainer,
+        )
+      }
+    }
     // one badge per cover, what a download or the connection says matters more than being finished
     if (finished && download == null && !unavailable) {
       Box(
