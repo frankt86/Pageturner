@@ -61,7 +61,7 @@ private fun Context.follow(
     ReviewAnswer.Email -> {
       val body = listOf(
         "\n\n—",
-        "Voice $versionName",
+        "Pageturner $versionName",
         "Android ${Build.VERSION.RELEASE} (${Build.VERSION.SDK_INT})",
         "${Build.MANUFACTURER} ${Build.MODEL}",
       ).joinToString(separator = "\n")

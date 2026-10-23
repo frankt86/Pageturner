@@ -1,6 +1,6 @@
 # Organizing Audiobooks
 
-Pick the folder with your audiobooks. Voice looks at how the files inside are organized and shows you the books it found before
+Pick the folder with your audiobooks. Pageturner looks at how the files inside are organized and shows you the books it found before
 adding them. If the books don't look right, tap **Change how books are found** and pick one of the three options below. You can
 change this later in the settings under **Audiobook folders** by tapping the folder. Your progress and bookmarks stay with your books.
 
@@ -24,7 +24,7 @@ subfolder) are audiobooks as well.
 └─ LittlePrince.mp3
 ```
 
-Voice recognizes three audiobooks: `TheHobbit`, `MobyDick`, and the single-file book `LittlePrince`.
+Pageturner recognizes three audiobooks: `TheHobbit`, `MobyDick`, and the single-file book `LittlePrince`.
 
 ## 2. **One book**
 
@@ -40,7 +40,7 @@ The selected folder itself is one audiobook, with files inside treated as chapte
 └─ Chapter3.mp3
 ```
 
-Voice recognizes one audiobook: `PrideAndPrejudice`.
+Pageturner recognizes one audiobook: `PrideAndPrejudice`.
 
 ## 3. **Folders are authors**
 
@@ -63,4 +63,4 @@ First-level folders represent authors (or series), and their subfolders represen
         └─ chapter2.mp3
 ```
 
-Voice recognizes authors (`Woolf`, `Tolkien`) and their audiobooks (`MrsDalloway`, `ToTheLighthouse`, `TheHobbit`).
+Pageturner recognizes authors (`Woolf`, `Tolkien`) and their audiobooks (`MrsDalloway`, `ToTheLighthouse`, `TheHobbit`).

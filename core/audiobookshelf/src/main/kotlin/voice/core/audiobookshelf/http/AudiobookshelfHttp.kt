@@ -38,7 +38,7 @@ internal class AudiobookshelfHttp(
   appInfoProvider: AppInfoProvider,
 ) {
 
-  private val userAgent = "Voice/${appInfoProvider.versionName}"
+  private val userAgent = "Pageturner/${appInfoProvider.versionName}"
 
   val client: OkHttpClient = OkHttpClient.Builder()
     .connectTimeout(10, TimeUnit.SECONDS)
