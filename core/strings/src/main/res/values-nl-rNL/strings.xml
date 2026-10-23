@@ -351,6 +351,7 @@
     <string name="reader.line_spacing">Regelafstand</string>
     <string name="reader.look_up">Opzoeken</string>
     <string name="reader.margins">Marges</string>
+    <string name="reader.new_engine">Nieuwe boekengine (bèta)</string>
     <string name="reader.nothing_to_read_aloud">Er is hier geen tekst om voor te lezen</string>
     <string name="reader.page">%1$d van %2$d</string>
     <string name="reader.read_aloud">Voorlezen</string>

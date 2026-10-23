@@ -103,7 +103,7 @@ internal fun BoxScope.ReaderControls(
 }
 
 @Composable
-private fun VolumeKeyPageTurns(onTurn: (step: Int) -> Unit) {
+internal fun VolumeKeyPageTurns(onTurn: (step: Int) -> Unit) {
   val focusRequester = remember { FocusRequester() }
   val latestOnTurn by rememberUpdatedState(onTurn)
   Box(

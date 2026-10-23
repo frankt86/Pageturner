@@ -333,6 +333,7 @@
     <string name="reader.line_spacing">行距</string>
     <string name="reader.look_up">查词</string>
     <string name="reader.margins">页边距</string>
+    <string name="reader.new_engine">新版图书引擎（测试版）</string>
     <string name="reader.nothing_to_read_aloud">这里没有可朗读的文字</string>
     <string name="reader.page">%1$d / %2$d</string>
     <string name="reader.read_aloud">朗读</string>

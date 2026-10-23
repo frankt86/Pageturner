@@ -119,26 +119,46 @@ private fun DisplaySettings(
       brightness = settings.brightness,
       onBrightnessChange = { onSettingsChange(settings.copy(brightness = it)) },
     )
-    Row(
-      verticalAlignment = Alignment.CenterVertically,
-      modifier = Modifier
-        .fillMaxWidth()
-        .toggleable(
-          value = settings.volumeKeysTurnPages,
-          role = Role.Switch,
-          onValueChange = { onSettingsChange(settings.copy(volumeKeysTurnPages = it)) },
-        )
-        .padding(vertical = 8.dp),
-    ) {
-      Text(
-        text = stringResource(StringsR.string.reader_volume_keys),
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier
-          .weight(1F)
-          .padding(end = 16.dp),
+    SwitchRow(
+      label = stringResource(StringsR.string.reader_volume_keys),
+      checked = settings.volumeKeysTurnPages,
+      onCheckedChange = { onSettingsChange(settings.copy(volumeKeysTurnPages = it)) },
+    )
+    if (showTextOptions) {
+      SwitchRow(
+        label = stringResource(StringsR.string.reader_new_engine),
+        checked = settings.newBookEngine,
+        onCheckedChange = { onSettingsChange(settings.copy(newBookEngine = it)) },
       )
-      Switch(checked = settings.volumeKeysTurnPages, onCheckedChange = null)
     }
+  }
+}
+
+@Composable
+private fun SwitchRow(
+  label: String,
+  checked: Boolean,
+  onCheckedChange: (Boolean) -> Unit,
+) {
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier
+      .fillMaxWidth()
+      .toggleable(
+        value = checked,
+        role = Role.Switch,
+        onValueChange = onCheckedChange,
+      )
+      .padding(vertical = 8.dp),
+  ) {
+    Text(
+      text = label,
+      style = MaterialTheme.typography.bodyLarge,
+      modifier = Modifier
+        .weight(1F)
+        .padding(end = 16.dp),
+    )
+    Switch(checked = checked, onCheckedChange = null)
   }
 }
 

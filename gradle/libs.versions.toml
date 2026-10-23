@@ -18,6 +18,7 @@ retrofit = "3.0.0"
 metro = "1.4.5"
 navigation3 = "1.2.0"
 androidx-lifecycle = "2.11.0"
+readium = "3.4.0"
 
 [libraries]
 commonsCompress = "org.apache.commons:commons-compress:1.28.0"
@@ -34,6 +35,8 @@ robolectric = "org.robolectric:robolectric:4.17"
 composablePreviewScanner = "io.github.sergio-sastre.ComposablePreviewScanner:android:0.9.3"
 coil = "io.coil-kt:coil-compose:2.7.0"
 appCompat = "androidx.appcompat:appcompat:1.8.0"
+fragment = "androidx.fragment:fragment-ktx:1.9.0"
+desugarJdkLibs = "com.android.tools:desugar_jdk_libs:2.1.5"
 androidxCore = "androidx.core:core-ktx:1.19.1"
 kotlin-pluginForGradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-powerAssert = { module = "org.jetbrains.kotlin:kotlin-power-assert", version.ref = "kotlin" }
@@ -83,6 +86,10 @@ workManager = "androidx.work:work-runtime:2.12.0"
 
 lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
 lifecycle-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+
+readium-shared = { module = "org.readium.kotlin-toolkit:readium-shared", version.ref = "readium" }
+readium-streamer = { module = "org.readium.kotlin-toolkit:readium-streamer", version.ref = "readium" }
+readium-navigator = { module = "org.readium.kotlin-toolkit:readium-navigator", version.ref = "readium" }
 
 compose-bom = "androidx.compose:compose-bom:2026.09.00"
 compose-ui-ui = { module = "androidx.compose.ui:ui" }

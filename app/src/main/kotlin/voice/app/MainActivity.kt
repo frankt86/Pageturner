@@ -47,6 +47,7 @@ import voice.core.ui.LocalSharedTransitionScope
 import voice.core.ui.LocalSplashScreenHolds
 import voice.core.ui.SplashScreenHolds
 import voice.core.ui.VoiceTheme
+import voice.features.reader.readerFragmentFactory
 import voice.navigation.Destination
 import voice.navigation.NavigationCommand
 import voice.navigation.Navigator
@@ -91,6 +92,8 @@ class MainActivity : AppCompatActivity() {
   @OptIn(ExperimentalSharedTransitionApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     rootGraphAs<MainActivityGraph>().inject(this)
+    // before super, which puts back the ebook reader's pages
+    supportFragmentManager.fragmentFactory = readerFragmentFactory()
     super.onCreate(savedInstanceState)
 
     enableEdgeToEdge()

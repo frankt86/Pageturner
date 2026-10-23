@@ -351,6 +351,7 @@
     <string name="reader.line_spacing">Reavahe</string>
     <string name="reader.look_up">Otsi tähendust</string>
     <string name="reader.margins">Veerised</string>
+    <string name="reader.new_engine">Uus raamatumootor (beeta)</string>
     <string name="reader.nothing_to_read_aloud">Siin pole teksti, mida ette lugeda</string>
     <string name="reader.page">%1$d / %2$d</string>
     <string name="reader.read_aloud">Loe ette</string>

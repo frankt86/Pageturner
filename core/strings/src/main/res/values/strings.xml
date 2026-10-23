@@ -603,6 +603,8 @@
     <string name="reader.look_up">Look up</string>
     <!-- Label of the slider in the display sheet of the ebook reader that sets the empty space left and right of the text. -->
     <string name="reader.margins">Margins</string>
+    <!-- Switch in the display sheet of the ebook reader, only for EPUB books. When it's on, books are shown with a new engine that keeps the book's own layout, images and links. It's still being tested, so bookmarks, highlights, search and reading aloud aren't there yet. -->
+    <string name="reader.new_engine">New book engine (beta)</string>
     <!-- Snackbar in the ebook reader when there is no text to read aloud, e.g. a scanned PDF. -->
     <string name="reader.nothing_to_read_aloud">There\'s no text here to read aloud</string>
     <!-- Page number at the bottom of an ebook page, e.g. "12 of 240". -->
