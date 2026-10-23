@@ -95,6 +95,8 @@ private val EditItems = listOf(
   BottomSheetItem.FileCover,
 )
 
+private val RemovalItems = listOf(BottomSheetItem.DeleteBook, BottomSheetItem.RemoveFromLibrary)
+
 /** The order a book moves through, so the picker reads like a timeline. */
 private val StatusOrder = listOf(BookOverviewCategory.NOT_STARTED, BookOverviewCategory.CURRENT, BookOverviewCategory.FINISHED)
 
@@ -128,6 +130,7 @@ internal fun BookActionsContent(
     Spacer(Modifier.height(24.dp))
     StatusPicker(
       current = category,
+      ebook = book.isEbook,
       onSelect = onStatusChange,
       modifier = Modifier.entrance(entrance, 1),
     )
@@ -148,15 +151,17 @@ internal fun BookActionsContent(
         }
       }
     }
-    if (BottomSheetItem.DeleteBook in items) {
+    val removal = RemovalItems.firstOrNull { it in items }
+    if (removal != null) {
       Spacer(Modifier.height(12.dp))
       ActionRow(
-        item = BottomSheetItem.DeleteBook,
-        style = BottomSheetItem.DeleteBook.style(),
+        item = removal,
+        style = removal.style(),
         shape = RoundedCornerShape(24.dp),
-        onClick = { onItemClick(BottomSheetItem.DeleteBook) },
+        onClick = { onItemClick(removal) },
         modifier = Modifier.entrance(entrance, 2 + edits.size),
         titleColor = MaterialTheme.colorScheme.error,
+        supportingText = removal.supportingText(download, bookSize),
       )
     }
   }
@@ -223,15 +228,17 @@ private fun BookHeader(
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
         )
-        Spacer(Modifier.width(8.dp))
-        Text(
-          text = stringResource(StringsR.string.playback_book_progress_remaining, book.remainingTime),
-          style = MaterialTheme.typography.labelMedium.copy(fontFeatureSettings = "tnum"),
-          color = colors.onSurfaceVariant,
-          maxLines = 1,
-          softWrap = false,
-          overflow = TextOverflow.Ellipsis,
-        )
+        if (!book.isEbook) {
+          Spacer(Modifier.width(8.dp))
+          Text(
+            text = stringResource(StringsR.string.playback_book_progress_remaining, book.remainingTime),
+            style = MaterialTheme.typography.labelMedium.copy(fontFeatureSettings = "tnum"),
+            color = colors.onSurfaceVariant,
+            maxLines = 1,
+            softWrap = false,
+            overflow = TextOverflow.Ellipsis,
+          )
+        }
       }
     }
   }
@@ -273,7 +280,7 @@ private class StatusStyle(
 )
 
 @Composable
-private fun BookOverviewCategory.style(): StatusStyle {
+private fun BookOverviewCategory.style(ebook: Boolean): StatusStyle {
   val colors = MaterialTheme.colorScheme
   return when (this) {
     BookOverviewCategory.NOT_STARTED -> StatusStyle(
@@ -284,7 +291,7 @@ private fun BookOverviewCategory.style(): StatusStyle {
       onBlob = colors.onSecondary,
     )
     BookOverviewCategory.CURRENT -> StatusStyle(
-      icon = VoiceIcons.Headphones,
+      icon = if (ebook) VoiceIcons.Book else VoiceIcons.Headphones,
       shape = MaterialShapes.Sunny,
       tile = colors.primaryContainer,
       blob = colors.primary,
@@ -303,6 +310,7 @@ private fun BookOverviewCategory.style(): StatusStyle {
 @Composable
 private fun StatusPicker(
   current: BookOverviewCategory,
+  ebook: Boolean,
   onSelect: (BookOverviewCategory) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -318,6 +326,7 @@ private fun StatusPicker(
     StatusOrder.forEach { category ->
       StatusTile(
         category = category,
+        ebook = ebook,
         selected = category == selected,
         onClick = {
           if (category != selected) {
@@ -337,12 +346,13 @@ private fun StatusPicker(
 @Composable
 private fun StatusTile(
   category: BookOverviewCategory,
+  ebook: Boolean,
   selected: Boolean,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val colors = MaterialTheme.colorScheme
-  val style = category.style()
+  val style = category.style(ebook)
   val morph = remember(style.shape) { Morph(MaterialShapes.Circle, style.shape) }
   val progress by animateFloatAsState(
     targetValue = if (selected) 1F else 0F,
@@ -441,7 +451,9 @@ private fun BottomSheetItem.style(): ActionStyle {
     BottomSheetItem.Title -> ActionStyle(MaterialShapes.Pentagon, colors.secondaryContainer, colors.onSecondaryContainer)
     BottomSheetItem.InternetCover -> ActionStyle(MaterialShapes.Clover4Leaf, colors.tertiaryContainer, colors.onTertiaryContainer)
     BottomSheetItem.FileCover -> ActionStyle(MaterialShapes.Cookie4Sided, colors.primaryContainer, colors.onPrimaryContainer)
-    BottomSheetItem.DeleteBook -> ActionStyle(MaterialShapes.Cookie9Sided, colors.errorContainer, colors.onErrorContainer)
+    BottomSheetItem.DeleteBook,
+    BottomSheetItem.RemoveFromLibrary,
+    -> ActionStyle(MaterialShapes.Cookie9Sided, colors.errorContainer, colors.onErrorContainer)
     BottomSheetItem.Download,
     BottomSheetItem.StopDownload,
     BottomSheetItem.RetryDownload,
@@ -553,6 +565,7 @@ private fun BottomSheetItem.supportingText(
       }
     }
     BottomSheetItem.RetryDownload -> stringResource(StringsR.string.book_download_failed)
+    BottomSheetItem.RemoveFromLibrary -> stringResource(StringsR.string.book_remove_from_library_summary)
     BottomSheetItem.RemoveDownload -> (download as? BookDownloadState.Downloaded)?.let {
       stringResource(StringsR.string.audiobookshelf_settings_downloads_used, Formatter.formatShortFileSize(context, it.bytes))
     }

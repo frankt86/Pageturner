@@ -22,9 +22,16 @@ public data class Ebook(
   val lastOpened: Long = 0,
   /** Whether the title, author and cover were read from the file yet. */
   val metadataRead: Boolean = false,
+  /** The name the listener gave the book, which wins over the one from the file. */
+  val customName: String? = null,
+  /** Removed from the library by the listener, while the file stays. */
+  val hidden: Boolean = false,
   val bookmarks: List<EbookPosition> = emptyList(),
   val highlights: List<Highlight> = emptyList(),
-)
+) {
+
+  val title: String get() = customName ?: name
+}
 
 /**
  * In an EPUB, the chapter and the character in it. In a PDF, the page and the character in its text.

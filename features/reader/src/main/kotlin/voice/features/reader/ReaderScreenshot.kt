@@ -10,6 +10,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import voice.core.data.EbookPosition
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
+import voice.core.data.ReaderFont
+import voice.core.data.ReaderSettings
+import voice.core.data.ReaderTheme
 import voice.core.ui.VoiceTheme
 
 private val chapterOne = """
@@ -73,7 +76,22 @@ private fun ReaderTurnLatePreview() {
 }
 
 @Composable
-private fun ReaderPreview(previewTurn: Float?) {
+@Preview(widthDp = 411, heightDp = 891, name = "folded")
+@Preview(widthDp = 841, heightDp = 701, name = "unfolded")
+private fun ReaderSepiaControlsPreview() {
+  ReaderPreview(
+    previewTurn = null,
+    settings = ReaderSettings(theme = ReaderTheme.Sepia, font = ReaderFont.Sans),
+    showControls = true,
+  )
+}
+
+@Composable
+private fun ReaderPreview(
+  previewTurn: Float?,
+  settings: ReaderSettings = ReaderSettings(),
+  showControls: Boolean = false,
+) {
   val readAloud = chapterOne.indexOf("“My dear Mr. Bennet,”")
   val state = ReaderState.Loaded(
     content = ReaderContent.Epub(
@@ -84,7 +102,7 @@ private fun ReaderPreview(previewTurn: Float?) {
     position = EbookPosition(),
     readingAloud = true,
     readingRange = readAloud until chapterOne.indexOf('\n', readAloud),
-    textSize = DEFAULT_TEXT_SIZE,
+    settings = settings,
     voice = VoiceState(
       natural = true,
       naturalReady = true,
@@ -102,13 +120,12 @@ private fun ReaderPreview(previewTurn: Float?) {
         ReaderTopBar(
           title = state.content.title,
           readingAloud = true,
-          showTextOptions = true,
           bookmarked = true,
           showSearch = true,
           onCloseClick = {},
           onReadAloudClick = {},
           onContentsClick = {},
-          onTextSizeClick = {},
+          onDisplayClick = {},
           onBookmarkClick = {},
           onSearchClick = {},
         )
@@ -125,6 +142,18 @@ private fun ReaderPreview(previewTurn: Float?) {
           .padding(contentPadding),
         paginateNow = true,
         previewTurn = previewTurn,
+        overlay = { pages, pagesPerSpread, _ ->
+          if (showControls) {
+            ReaderControls(
+              state = state,
+              pages = pages,
+              pagesPerSpread = pagesPerSpread,
+              barsVisible = true,
+              onTurn = {},
+              onJump = { _, _ -> },
+            )
+          }
+        },
       )
     }
   }

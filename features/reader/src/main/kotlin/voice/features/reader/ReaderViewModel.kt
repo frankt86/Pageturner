@@ -25,10 +25,11 @@ import voice.core.data.EbookFormat
 import voice.core.data.EbookPosition
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
+import voice.core.data.ReaderSettings
 import voice.core.data.store.EbooksStore
 import voice.core.data.store.ReaderNaturalVoiceStore
+import voice.core.data.store.ReaderSettingsStore
 import voice.core.data.store.ReaderSpeechRateStore
-import voice.core.data.store.ReaderTextSizeStore
 import voice.core.ebook.parseEpub
 import voice.core.logging.api.Logger
 import voice.navigation.Navigator
@@ -64,7 +65,7 @@ internal sealed interface ReaderState {
     val readingAloud: Boolean,
     /** The part of the text read aloud right now, in the section of [position]. */
     val readingRange: IntRange?,
-    val textSize: Float,
+    val settings: ReaderSettings,
     val voice: VoiceState,
     val bookmarks: List<EbookPosition> = emptyList(),
     val highlights: List<Highlight> = emptyList(),
@@ -92,8 +93,8 @@ internal enum class ReaderMessage {
 class ReaderViewModel(
   @EbooksStore
   private val store: DataStore<List<Ebook>>,
-  @ReaderTextSizeStore
-  private val textSizeStore: DataStore<Float>,
+  @ReaderSettingsStore
+  private val settingsStore: DataStore<ReaderSettings>,
   @ReaderNaturalVoiceStore
   private val naturalVoiceStore: DataStore<Boolean>,
   @ReaderSpeechRateStore
@@ -112,7 +113,7 @@ class ReaderViewModel(
   private var readAloudJob by mutableStateOf<Job?>(null)
   private var readAloud: ReadAloud? = null
   private var readingRange by mutableStateOf<IntRange?>(null)
-  private var textSize by mutableFloatStateOf(DEFAULT_TEXT_SIZE)
+  private var settings by mutableStateOf(ReaderSettings())
   private val neuralVoice by lazy { NeuralVoice(application) }
   private var naturalVoice by mutableStateOf(true)
   private var naturalReady by mutableStateOf(false)
@@ -129,7 +130,7 @@ class ReaderViewModel(
 
   init {
     scope.launch {
-      textSizeStore.data.collect { textSize = it }
+      settingsStore.data.collect { settings = it }
     }
     scope.launch {
       speechRateStore.data.collect { speechRate = it }
@@ -166,14 +167,14 @@ class ReaderViewModel(
       EbookFormat.Epub -> {
         val epub = contentResolver.openInputStream(uri)!!.use { parseEpub(it) }
         ReaderContent.Epub(
-          title = epub.title ?: ebook.name,
+          title = ebook.customName ?: epub.title ?: ebook.name,
           chapters = epub.chapters.map { it.text },
           chapterTitles = epub.chapters.map { it.title },
         )
       }
       EbookFormat.Pdf -> {
         val fileDescriptor = contentResolver.openFileDescriptor(uri, "r")!!
-        ReaderContent.Pdf(title = ebook.name, pdf = PdfFile(fileDescriptor))
+        ReaderContent.Pdf(title = ebook.title, pdf = PdfFile(fileDescriptor))
       }
     }
   }
@@ -188,7 +189,7 @@ class ReaderViewModel(
         position = position,
         readingAloud = readAloudJob != null,
         readingRange = readingRange,
-        textSize = textSize,
+        settings = settings,
         voice = VoiceState(
           natural = naturalVoice,
           naturalReady = naturalReady,
@@ -286,9 +287,9 @@ class ReaderViewModel(
     }
   }
 
-  internal fun onTextSizeChange(size: Float) {
-    textSize = size
-    scope.launch { textSizeStore.updateData { size } }
+  internal fun onSettingsChange(settings: ReaderSettings) {
+    this.settings = settings
+    scope.launch { settingsStore.updateData { settings } }
   }
 
   fun onCloseClick() {
@@ -421,7 +422,5 @@ class ReaderViewModel(
     fun create(uri: Uri): ReaderViewModel
   }
 }
-
-internal const val DEFAULT_TEXT_SIZE = 18F
 
 private val positionOrder = compareBy<EbookPosition>({ it.section }, { it.offset })

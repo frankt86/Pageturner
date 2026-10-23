@@ -18,6 +18,7 @@ import kotlinx.serialization.builtins.serializer
 import voice.core.data.BookId
 import voice.core.data.Ebook
 import voice.core.data.GridMode
+import voice.core.data.ReaderSettings
 import voice.core.data.ThemeColorScheme
 import voice.core.data.ThemeMode
 import voice.core.data.sleeptimer.SleepTimerPreference
@@ -265,12 +266,16 @@ public object StoreModule {
 
   @Provides
   @SingleIn(AppScope::class)
-  @ReaderTextSizeStore
-  private fun readerTextSize(factory: VoiceDataStoreFactory): DataStore<Float> {
+  @ReaderSettingsStore
+  private fun readerSettings(
+    factory: VoiceDataStoreFactory,
+    application: Application,
+  ): DataStore<ReaderSettings> {
     return factory.create(
-      serializer = Float.serializer(),
-      defaultValue = 18F,
-      fileName = "readerTextSize",
+      serializer = ReaderSettings.serializer(),
+      defaultValue = ReaderSettings(),
+      fileName = "readerSettings",
+      migrations = listOf(ReaderTextSizeMigration(application)),
     )
   }
 

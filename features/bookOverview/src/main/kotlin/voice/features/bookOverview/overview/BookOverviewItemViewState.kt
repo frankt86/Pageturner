@@ -59,7 +59,7 @@ internal fun Book.toItemViewState(
 internal val Ebook.bookId: BookId get() = BookId(uri.toString())
 
 internal fun Ebook.toItemViewState() = BookOverviewItemViewState(
-  name = name,
+  name = title,
   author = author,
   cover = cover?.let { File(it).toURI().toString() },
   id = bookId,
