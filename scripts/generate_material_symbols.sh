@@ -4,7 +4,9 @@ set -euo pipefail
 readonly PACKAGE="voice.core.ui.icons"
 readonly OUT_DIR="core/ui/src/main/kotlin/voice/core/ui/icons"
 readonly BASE_URL="https://fonts.gstatic.com/render/v1/Material+Symbols+Outlined/24dp"
-readonly VARIANT="opsz,wght,FILL,GRAD,ROND@24,400,0,0,50"
+# the third argument of generate_icon is the FILL axis, 1 for a filled icon
+readonly VARIANT_BEFORE_FILL="opsz,wght,FILL,GRAD,ROND@24,400"
+readonly VARIANT_AFTER_FILL="0,50"
 readonly GENERATED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 
 mkdir -p "${OUT_DIR}"
@@ -28,7 +30,8 @@ EOF
 generate_icon() {
   local icon_name="$1"
   local property_name="$2"
-  local source_url="${BASE_URL}/${icon_name}.kt?var=${VARIANT}"
+  local fill="${3:-0}"
+  local source_url="${BASE_URL}/${icon_name}.kt?var=${VARIANT_BEFORE_FILL},${fill},${VARIANT_AFTER_FILL}"
 
   {
     printf '\n'
@@ -59,6 +62,7 @@ generate_icon bedtime Bedtime
 generate_icon bedtime_off BedtimeOff
 generate_icon book Book
 generate_icon bookmark Bookmark
+generate_icon bookmark BookmarkFilled 1
 generate_icon bookmark_add BookmarkAdd
 generate_icon bug_report BugReport
 generate_icon call Call

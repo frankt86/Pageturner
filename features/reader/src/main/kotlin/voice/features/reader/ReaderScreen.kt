@@ -11,8 +11,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -32,8 +30,6 @@ import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,7 +38,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -50,6 +45,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -65,26 +61,27 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
@@ -99,6 +96,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import voice.core.common.rootGraphAs
+import voice.core.data.Highlight
+import voice.core.data.HighlightColor
 import voice.core.ui.bookText
 import voice.core.ui.icons.VoiceIcons
 import voice.navigation.Destination
@@ -166,6 +165,9 @@ internal fun ReaderScreen(uri: Uri) {
   var sheet by rememberSaveable { mutableStateOf<ReaderSheet?>(null) }
   // the bars show when the book opens and get out of the way once reading starts
   var barsVisible by rememberSaveable { mutableStateOf(true) }
+  val selection = remember { PageSelection() }
+  var visiblePages by remember { mutableStateOf(emptyList<Page>()) }
+  var editedHighlight by remember { mutableStateOf<Highlight?>(null) }
   ReaderWindow(immersive = !barsVisible && loaded != null, brightness = loaded?.settings?.brightness)
   val turnPage = { page: Page, progress: Float ->
     barsVisible = false
@@ -196,6 +198,9 @@ internal fun ReaderScreen(uri: Uri) {
       is ReaderState.Loaded -> Book(
         state = state,
         onPageTurn = turnPage,
+        selection = selection,
+        onHighlightClick = { editedHighlight = it },
+        onVisiblePagesChange = { visiblePages = it },
         onCenterTap = { barsVisible = !barsVisible },
         // the insets of hidden bars too, or showing them would lay out all pages anew
         modifier = Modifier
@@ -213,6 +218,26 @@ internal fun ReaderScreen(uri: Uri) {
         },
       )
     }
+    val selected = selection.range
+    val epub = loaded?.content as? ReaderContent.Epub
+    if (selected != null && epub != null) {
+      SelectionToolbar(
+        selectedText = epub.text(selected),
+        onHighlightClick = { color ->
+          val _ = viewModel.onHighlightAdd(selected, color)
+          selection.clear()
+        },
+        onNoteClick = {
+          editedHighlight = viewModel.onHighlightAdd(selected, HighlightColor.Yellow)
+          selection.clear()
+        },
+        onLookUp = selection::clear,
+        modifier = Modifier
+          .align(Alignment.BottomCenter)
+          .safeDrawingPadding()
+          .padding(16.dp),
+      )
+    }
     AnimatedVisibility(
       visible = barsVisible || loaded == null,
       enter = fadeIn() + slideInVertically { -it },
@@ -221,13 +246,16 @@ internal fun ReaderScreen(uri: Uri) {
       ReaderTopBar(
         title = loaded?.content?.title,
         readingAloud = loaded?.readingAloud,
-        showTextOptions = loaded?.content is ReaderContent.Epub,
+        bookmarked = loaded?.bookmarks?.any { bookmark -> visiblePages.any { it.contains(bookmark) } },
+        showSearch = loaded?.content?.searchable == true,
         onCloseClick = viewModel::onCloseClick,
         onReadAloudClick = {
           if (loaded?.readingAloud == true) viewModel.stopReadingAloudClick() else sheet = ReaderSheet.ReadAloud
         },
         onContentsClick = { sheet = ReaderSheet.Contents },
         onDisplayClick = { sheet = ReaderSheet.Display },
+        onBookmarkClick = { viewModel.onBookmarkClick(visiblePages) },
+        onSearchClick = { sheet = ReaderSheet.Search },
       )
     }
     SnackbarHost(
@@ -258,19 +286,48 @@ internal fun ReaderScreen(uri: Uri) {
       onDismiss = { sheet = null },
     )
   }
-  if (loaded != null && content != null) {
+  if (loaded != null) {
     when (sheet) {
       ReaderSheet.Contents -> ContentsSheet(
-        content = content,
-        currentSection = loaded.position.section,
+        state = loaded,
         onChapterClick = { section ->
           sheet = null
           viewModel.onChapterClick(section)
+        },
+        onMarkClick = { position ->
+          sheet = null
+          viewModel.onMarkClick(position)
+        },
+        onBookmarkDelete = viewModel::onBookmarkDelete,
+        onHighlightDelete = viewModel::onHighlightDelete,
+        onDismiss = { sheet = null },
+      )
+      ReaderSheet.Search -> SearchSheet(
+        content = loaded.content,
+        search = viewModel::search,
+        onResultClick = { result ->
+          sheet = null
+          viewModel.onSearchResultClick(result)
         },
         onDismiss = { sheet = null },
       )
       ReaderSheet.Display, ReaderSheet.ReadAloud, null -> Unit
     }
+  }
+  val highlight = editedHighlight
+  if (highlight != null && content != null) {
+    HighlightSheet(
+      highlight = highlight,
+      text = content.text(BookRange(highlight.section, highlight.start, highlight.end)),
+      onDone = { changed ->
+        editedHighlight = null
+        if (changed != highlight) viewModel.onHighlightChange(highlight, changed)
+      },
+      onDelete = {
+        editedHighlight = null
+        viewModel.onHighlightDelete(highlight)
+      },
+    )
   }
 }
 
@@ -278,17 +335,22 @@ private enum class ReaderSheet {
   Contents,
   Display,
   ReadAloud,
+  Search,
 }
 
 @Composable
 internal fun ReaderTopBar(
   title: String?,
   readingAloud: Boolean?,
-  showTextOptions: Boolean,
+  // null while the book loads
+  bookmarked: Boolean?,
+  showSearch: Boolean,
   onCloseClick: () -> Unit,
   onReadAloudClick: () -> Unit,
   onContentsClick: () -> Unit,
   onDisplayClick: () -> Unit,
+  onBookmarkClick: () -> Unit,
+  onSearchClick: () -> Unit,
 ) {
   TopAppBar(
     title = {
@@ -312,7 +374,23 @@ internal fun ReaderTopBar(
       }
     },
     actions = {
-      if (showTextOptions) {
+      if (showSearch) {
+        IconButton(onClick = onSearchClick) {
+          Icon(
+            imageVector = VoiceIcons.Search,
+            contentDescription = stringResource(StringsR.string.reader_search),
+          )
+        }
+      }
+      if (bookmarked != null) {
+        IconButton(onClick = onBookmarkClick) {
+          Icon(
+            imageVector = if (bookmarked) VoiceIcons.BookmarkFilled else VoiceIcons.Bookmark,
+            contentDescription = stringResource(
+              if (bookmarked) StringsR.string.reader_bookmark_remove else StringsR.string.reader_bookmark_add,
+            ),
+          )
+        }
         IconButton(onClick = onContentsClick) {
           Icon(
             imageVector = VoiceIcons.ViewList,
@@ -350,6 +428,9 @@ private val SpineWidth = 24.dp
 internal fun Book(
   state: ReaderState.Loaded,
   onPageTurn: (Page, Float) -> Unit,
+  selection: PageSelection,
+  onHighlightClick: (Highlight) -> Unit,
+  onVisiblePagesChange: (List<Page>) -> Unit,
   modifier: Modifier = Modifier,
   onCenterTap: () -> Unit = {},
   // previews can't wait for the pages laid out in the background
@@ -387,6 +468,9 @@ internal fun Book(
           pagesPerSpread = pagesPerSpread,
           textStyle = textStyle,
           onPageTurn = onPageTurn,
+          selection = selection,
+          onHighlightClick = onHighlightClick,
+          onVisiblePagesChange = onVisiblePagesChange,
           onCenterTap = onCenterTap,
           turnRequests = turnRequests,
           previewTurn = previewTurn,
@@ -434,24 +518,51 @@ private fun Spreads(
   pagesPerSpread: Int,
   textStyle: TextStyle,
   onPageTurn: (Page, Float) -> Unit,
+  selection: PageSelection,
+  onHighlightClick: (Highlight) -> Unit,
+  onVisiblePagesChange: (List<Page>) -> Unit,
   onCenterTap: () -> Unit,
   turnRequests: Flow<Int>,
   previewTurn: Float?,
 ) {
   if (pages.isEmpty()) return
+  val latestState by rememberUpdatedState(state)
+  val latestOnHighlightClick by rememberUpdatedState(onHighlightClick)
+  val latestOnVisiblePagesChange by rememberUpdatedState(onVisiblePagesChange)
+  val haptics = LocalHapticFeedback.current
+  fun Modifier.pageGestures(
+    shownPages: () -> IntRange,
+    onOtherTap: (Offset, IntSize) -> Boolean,
+  ) = selectableText(
+    selection = selection,
+    shownPages = shownPages,
+    state = { latestState },
+    onHighlightClick = { latestOnHighlightClick(it) },
+    onSelect = { haptics.performHapticFeedback(HapticFeedbackType.LongPress) },
+    onOtherTap = onOtherTap,
+  )
+
   if (pagesPerSpread == 1) {
     val current = pages.indexOfPosition(state.position)
+    val latestCurrent by rememberUpdatedState(current)
+    LaunchedEffect(current) {
+      selection.clear()
+      latestOnVisiblePagesChange(listOf(pages[current]))
+    }
     CurlPages(
       count = pages.size,
       current = current,
       onTurn = { index -> onPageTurn(pages[index], (index + 1F) / pages.size) },
       backColor = MaterialTheme.colorScheme.surface,
-      modifier = Modifier.fillMaxSize(),
+      modifier = Modifier
+        .fillMaxSize()
+        // the pages turn themselves on a tap at the side and show the bars on a tap in the middle
+        .pageGestures(shownPages = { latestCurrent..latestCurrent }, onOtherTap = { _, _ -> false }),
       onCenterTap = onCenterTap,
       turnRequests = turnRequests,
       previewTurn = previewTurn,
     ) { index ->
-      PageSlot(state, pages, index, textStyle, Modifier.fillMaxSize())
+      PageSlot(state, pages, index, textStyle, selection, Modifier.fillMaxSize())
     }
     return
   }
@@ -485,6 +596,12 @@ private fun Spreads(
     }
   }
 
+  LaunchedEffect(currentSpread) {
+    selection.clear()
+    val first = currentSpread * pagesPerSpread
+    latestOnVisiblePagesChange(pages.subList(first, (first + pagesPerSpread).coerceAtMost(pages.size)))
+  }
+
   val turning by remember {
     derivedStateOf {
       floor(pagerState.currentPage + pagerState.currentPageOffsetFraction).toInt().coerceIn(0, spreadCount - 1)
@@ -495,29 +612,34 @@ private fun Spreads(
   }
   val scope = rememberCoroutineScope()
   Box(Modifier.fillMaxSize()) {
-    SpreadTurn(state, pages, turning, progress, textStyle)
+    SpreadTurn(state, pages, turning, progress, textStyle, selection)
     // the pager only follows the finger, the pages are drawn above and turn like paper
     HorizontalPager(
       state = pagerState,
+      userScrollEnabled = selection.range == null,
       modifier = Modifier
         .fillMaxSize()
-        .pointerInput(pagerState) {
-          // like turning a paper page, a tap near the edge turns it
-          detectTapGestures { offset ->
+        .pageGestures(
+          shownPages = {
+            val first = pagerState.currentPage * pagesPerSpread
+            first until (first + pagesPerSpread).coerceAtMost(pages.size)
+          },
+          onOtherTap = { offset, size ->
+            // like turning a paper page, a tap near the edge turns it
             val edge = size.width / 4
             val target = when {
               offset.x < edge -> pagerState.currentPage - 1
               offset.x > size.width - edge -> pagerState.currentPage + 1
-              else -> {
-                latestOnCenterTap()
-                return@detectTapGestures
-              }
+              else -> null
             }
-            if (target in 0 until pagerState.pageCount) {
+            if (target == null) {
+              latestOnCenterTap()
+            } else if (target in 0 until pagerState.pageCount) {
               scope.launch { pagerState.animateScrollToPage(target) }
             }
-          }
-        },
+            true
+          },
+        ),
     ) {
       Box(Modifier.fillMaxSize())
     }
@@ -532,6 +654,7 @@ private fun SpreadTurn(
   turning: Int,
   progress: () -> Float,
   textStyle: TextStyle,
+  selection: PageSelection,
 ) {
   val first = turning * 2
   Box(Modifier.fillMaxSize()) {
@@ -541,6 +664,7 @@ private fun SpreadTurn(
         pages = pages,
         index = first,
         textStyle = textStyle,
+        selection = selection,
         modifier = Modifier
           .weight(1F)
           .fillMaxHeight()
@@ -552,6 +676,7 @@ private fun SpreadTurn(
         pages = pages,
         index = first + 3,
         textStyle = textStyle,
+        selection = selection,
         modifier = Modifier
           .weight(1F)
           .fillMaxHeight()
@@ -564,6 +689,7 @@ private fun SpreadTurn(
         pages = pages,
         index = first + 2,
         textStyle = textStyle,
+        selection = selection,
         modifier = Modifier
           .weight(1F)
           .fillMaxHeight()
@@ -582,6 +708,7 @@ private fun SpreadTurn(
         pages = pages,
         index = first + 1,
         textStyle = textStyle,
+        selection = selection,
         modifier = Modifier
           .weight(1F)
           .fillMaxHeight()
@@ -610,6 +737,7 @@ private fun PageSlot(
   pages: List<Page>,
   index: Int,
   textStyle: TextStyle,
+  selection: PageSelection,
   modifier: Modifier = Modifier,
 ) {
   Box(modifier.background(MaterialTheme.colorScheme.surface)) {
@@ -622,6 +750,9 @@ private fun PageSlot(
         textStyle = textStyle,
         margin = state.settings.margin.dp,
         readingRange = state.readingRange.takeIf { pages[index].section == state.position.section },
+        highlights = state.highlights,
+        searchMatch = state.searchMatch,
+        selection = selection,
       )
     }
   }
@@ -647,6 +778,9 @@ private fun BookPage(
   textStyle: TextStyle,
   margin: Dp,
   readingRange: IntRange?,
+  highlights: List<Highlight>,
+  searchMatch: BookRange?,
+  selection: PageSelection,
 ) {
   val pageLabel = stringResource(StringsR.string.reader_page, pageNumber, pageCount)
   when (content) {
@@ -655,27 +789,31 @@ private fun BookPage(
         .fillMaxSize()
         .padding(horizontal = margin, vertical = PageVerticalPadding),
     ) {
-      val highlight = MaterialTheme.colorScheme.primaryContainer
-      val text = remember(content, page, readingRange, highlight) {
-        val raw = content.chapters[page.section].substring(page.start, page.end)
-        val trimmed = raw.trimStart('\n')
-        val shift = page.start + raw.length - trimmed.length
-        buildAnnotatedString {
-          append(trimmed)
-          if (readingRange != null) {
-            val start = (readingRange.first - shift).coerceAtLeast(0)
-            val end = (readingRange.last + 1 - shift).coerceAtMost(trimmed.length)
-            if (start < end) addStyle(SpanStyle(background = highlight), start, end)
-          }
-        }
+      val marks = pageMarks(page.section, readingRange, highlights, searchMatch, selection.range)
+      val textStart = remember(content, page) {
+        val chapter = content.chapters[page.section]
+        var start = page.start
+        while (start < page.end && chapter[start] == '\n') start++
+        start
+      }
+      val text = remember(content, page, textStart, marks) {
+        markedText(content.chapters[page.section].substring(textStart, page.end), textStart, marks)
+      }
+      val pageText = remember { PageText() }
+      SideEffect {
+        pageText.section = page.section
+        pageText.offset = textStart
+        selection.register(pageNumber - 1, pageText)
       }
       Text(
         text = text,
         style = textStyle,
         overflow = TextOverflow.Clip,
+        onTextLayout = { pageText.layout = it },
         modifier = Modifier
           .weight(1F)
-          .fillMaxWidth(),
+          .fillMaxWidth()
+          .onGloballyPositioned { pageText.coordinates = it },
       )
       Row(
         Modifier
@@ -724,36 +862,4 @@ private fun BookPage(
 @Composable
 internal fun ReaderContent.Epub.chapterTitle(section: Int): String {
   return chapterTitles.getOrNull(section) ?: stringResource(StringsR.string.reader_chapter, section + 1)
-}
-
-@Composable
-private fun ContentsSheet(
-  content: ReaderContent.Epub,
-  currentSection: Int,
-  onChapterClick: (Int) -> Unit,
-  onDismiss: () -> Unit,
-) {
-  ModalBottomSheet(onDismissRequest = onDismiss) {
-    Text(
-      text = stringResource(StringsR.string.reader_contents),
-      style = MaterialTheme.typography.titleLarge,
-      modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
-    )
-    val listState = rememberLazyListState(initialFirstVisibleItemIndex = currentSection)
-    LazyColumn(state = listState) {
-      items(content.sectionCount) { section ->
-        val current = section == currentSection
-        Text(
-          text = content.chapterTitle(section),
-          style = MaterialTheme.typography.bodyLarge.bookText(),
-          fontWeight = if (current) FontWeight.Bold else null,
-          modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onChapterClick(section) }
-            .background(if (current) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent)
-            .padding(horizontal = 24.dp, vertical = 14.dp),
-        )
-      }
-    }
-  }
 }

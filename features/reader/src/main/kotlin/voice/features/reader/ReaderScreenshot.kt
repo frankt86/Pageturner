@@ -4,9 +4,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import voice.core.data.EbookPosition
+import voice.core.data.Highlight
+import voice.core.data.HighlightColor
 import voice.core.data.ReaderFont
 import voice.core.data.ReaderSettings
 import voice.core.data.ReaderTheme
@@ -107,6 +110,9 @@ private fun ReaderPreview(
       downloadFailed = false,
       speechRate = 1F,
     ),
+    highlights = listOf(
+      Highlight(section = 0, start = 0, end = chapterOne.indexOf(','), color = HighlightColor.Yellow),
+    ),
   )
   VoiceTheme {
     Scaffold(
@@ -114,17 +120,23 @@ private fun ReaderPreview(
         ReaderTopBar(
           title = state.content.title,
           readingAloud = true,
-          showTextOptions = true,
+          bookmarked = true,
+          showSearch = true,
           onCloseClick = {},
           onReadAloudClick = {},
           onContentsClick = {},
           onDisplayClick = {},
+          onBookmarkClick = {},
+          onSearchClick = {},
         )
       },
     ) { contentPadding ->
       Book(
         state = state,
         onPageTurn = { _, _ -> },
+        selection = remember { PageSelection() },
+        onHighlightClick = {},
+        onVisiblePagesChange = {},
         modifier = Modifier
           .fillMaxSize()
           .padding(contentPadding),

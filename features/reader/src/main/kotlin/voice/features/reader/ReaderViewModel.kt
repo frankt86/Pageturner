@@ -12,6 +12,7 @@ import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -22,6 +23,8 @@ import voice.core.common.MainScope
 import voice.core.data.Ebook
 import voice.core.data.EbookFormat
 import voice.core.data.EbookPosition
+import voice.core.data.Highlight
+import voice.core.data.HighlightColor
 import voice.core.data.ReaderSettings
 import voice.core.data.store.EbooksStore
 import voice.core.data.store.ReaderNaturalVoiceStore
@@ -30,6 +33,7 @@ import voice.core.data.store.ReaderSpeechRateStore
 import voice.core.ebook.parseEpub
 import voice.core.logging.api.Logger
 import voice.navigation.Navigator
+import kotlin.time.Duration.Companion.seconds
 
 internal sealed interface ReaderContent {
   val title: String
@@ -63,6 +67,10 @@ internal sealed interface ReaderState {
     val readingRange: IntRange?,
     val settings: ReaderSettings,
     val voice: VoiceState,
+    val bookmarks: List<EbookPosition> = emptyList(),
+    val highlights: List<Highlight> = emptyList(),
+    /** Shown for a moment after jumping to a search result. */
+    val searchMatch: BookRange? = null,
   ) : ReaderState
 }
 
@@ -112,6 +120,10 @@ class ReaderViewModel(
   private var downloadProgress by mutableStateOf<Float?>(null)
   private var downloadFailed by mutableStateOf(false)
   private var speechRate by mutableFloatStateOf(1F)
+  private var bookmarks by mutableStateOf(emptyList<EbookPosition>())
+  private var highlights by mutableStateOf(emptyList<Highlight>())
+  private var searchMatch by mutableStateOf<BookRange?>(null)
+  private var searchMatchJob: Job? = null
 
   private val messageChannel = Channel<ReaderMessage>(Channel.CONFLATED)
   internal val messages: Flow<ReaderMessage> = messageChannel.receiveAsFlow()
@@ -136,6 +148,8 @@ class ReaderViewModel(
       try {
         val loaded = withContext(dispatcherProvider.io) { load(ebook) }
         position = ebook.position
+        bookmarks = ebook.bookmarks
+        highlights = ebook.highlights
         content = loaded
         store.updateData { ebooks ->
           ebooks.map { if (it.uri == uri) it.copy(lastOpened = System.currentTimeMillis()) else it }
@@ -183,6 +197,9 @@ class ReaderViewModel(
           downloadFailed = downloadFailed,
           speechRate = speechRate,
         ),
+        bookmarks = bookmarks,
+        highlights = highlights,
+        searchMatch = searchMatch,
       )
     }
   }
@@ -198,6 +215,76 @@ class ReaderViewModel(
   internal fun onChapterClick(section: Int) {
     stopReadingAloud()
     moveTo(EbookPosition(section, 0))
+  }
+
+  internal fun onBookmarkClick(visiblePages: List<Page>) {
+    val page = visiblePages.firstOrNull() ?: return
+    val onPage = bookmarks.filter { bookmark -> visiblePages.any { it.contains(bookmark) } }
+    bookmarks = if (onPage.isEmpty()) {
+      (bookmarks + EbookPosition(page.section, page.start)).sortedWith(positionOrder)
+    } else {
+      bookmarks - onPage.toSet()
+    }
+    saveMarks()
+  }
+
+  internal fun onBookmarkDelete(bookmark: EbookPosition) {
+    bookmarks = bookmarks - bookmark
+    saveMarks()
+  }
+
+  internal fun onMarkClick(position: EbookPosition) {
+    stopReadingAloud()
+    moveTo(position)
+  }
+
+  internal fun onHighlightAdd(
+    range: BookRange,
+    color: HighlightColor,
+  ): Highlight {
+    val highlight = Highlight(section = range.section, start = range.start, end = range.end, color = color)
+    highlights = (highlights + highlight).sortedWith(compareBy<Highlight>({ it.section }, { it.start }))
+    saveMarks()
+    return highlight
+  }
+
+  internal fun onHighlightChange(
+    old: Highlight,
+    new: Highlight,
+  ) {
+    highlights = highlights.map { if (it == old) new else it }
+    saveMarks()
+  }
+
+  internal fun onHighlightDelete(highlight: Highlight) {
+    highlights = highlights - highlight
+    saveMarks()
+  }
+
+  internal suspend fun search(query: String): List<SearchResult> {
+    val content = content ?: return emptyList()
+    return searchBook(content, query)
+  }
+
+  internal fun onSearchResultClick(result: SearchResult) {
+    stopReadingAloud()
+    moveTo(EbookPosition(result.match.section, result.match.start))
+    searchMatchJob?.cancel()
+    searchMatch = result.match
+    searchMatchJob = scope.launch {
+      delay(3.seconds)
+      searchMatch = null
+    }
+  }
+
+  private fun saveMarks() {
+    val bookmarks = bookmarks
+    val highlights = highlights
+    scope.launch {
+      store.updateData { ebooks ->
+        ebooks.map { if (it.uri == uri) it.copy(bookmarks = bookmarks, highlights = highlights) else it }
+      }
+    }
   }
 
   internal fun onSettingsChange(settings: ReaderSettings) {
@@ -335,3 +422,5 @@ class ReaderViewModel(
     fun create(uri: Uri): ReaderViewModel
   }
 }
+
+private val positionOrder = compareBy<EbookPosition>({ it.section }, { it.offset })
