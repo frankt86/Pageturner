@@ -37,6 +37,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -134,16 +135,22 @@ private fun ColorPicker(
       Box(
         modifier = Modifier
           .size(48.dp)
-          .selectable(selected = isSelected, onClick = { onSelect(color) }, role = Role.RadioButton)
-          .semantics { contentDescription = name }
+          .clip(CircleShape)
           .border(2.dp, if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent, CircleShape)
-          .padding(6.dp)
-          .background(color.ink(), CircleShape),
+          .selectable(selected = isSelected, onClick = { onSelect(color) }, role = Role.RadioButton)
+          .semantics { contentDescription = name },
         contentAlignment = Alignment.Center,
       ) {
-        if (isSelected) {
-          // the check mark, not only the ring, tells which one is picked
-          Icon(VoiceIcons.Check, contentDescription = null, tint = Color.Black.copy(alpha = 0.7F))
+        Box(
+          modifier = Modifier
+            .size(36.dp)
+            .background(color.ink(), CircleShape),
+          contentAlignment = Alignment.Center,
+        ) {
+          if (isSelected) {
+            // the check mark, not only the ring, tells which one is picked
+            Icon(VoiceIcons.Check, contentDescription = null, tint = Color.Black.copy(alpha = 0.7F))
+          }
         }
       }
     }

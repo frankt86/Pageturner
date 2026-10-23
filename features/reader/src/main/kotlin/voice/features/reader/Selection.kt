@@ -2,7 +2,6 @@ package voice.features.reader
 
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -10,17 +9,21 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.AwaitPointerEventScope
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.PointerInputScope
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.unit.IntSize
 import voice.core.data.EbookPosition
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
@@ -231,39 +234,87 @@ internal class PageSelection {
 }
 
 /**
- * Like detectTapGestures, but a long press starts a selection and the finger then moves its end. While something is
- * selected, a drag moves the closer end of the selection and a tap ends it.
+ * Long-press selection and taps on highlights for the pages. The page turning below gets every other touch.
+ * The lambdas are called for each touch, so they have to read the latest state themselves.
  */
-internal suspend fun PointerInputScope.detectPageGestures(
+internal fun Modifier.selectableText(
+  selection: PageSelection,
+  shownPages: () -> IntRange,
+  state: () -> ReaderState.Loaded,
+  onHighlightClick: (Highlight) -> Unit,
+  onSelect: () -> Unit,
+  // whether it handled the tap, else it goes on to the page turning
+  onOtherTap: (Offset, IntSize) -> Boolean,
+): Modifier = onGloballyPositioned { selection.root = it }
+  .pointerInput(selection) {
+    detectPageGestures(
+      selecting = { selection.range != null },
+      onTap = { offset ->
+        val highlight = selection.highlightAt(offset, shownPages(), state().highlights)
+        when {
+          selection.range != null -> {
+            selection.clear()
+            true
+          }
+          highlight != null -> {
+            onHighlightClick(highlight)
+            true
+          }
+          else -> onOtherTap(offset, size)
+        }
+      },
+      onLongPress = { offset ->
+        selection.selectWord(state().content, offset, shownPages()).also { selected ->
+          if (selected) onSelect()
+        }
+      },
+      onSelectionGrab = { offset -> selection.grab(offset, shownPages()) },
+      onSelectionDrag = { offset -> selection.extend(state().content, offset, shownPages()) },
+    )
+  }
+
+// everything runs in the initial pass, before the page turning below sees the touch, so it can keep it from turning
+private suspend fun PointerInputScope.detectPageGestures(
   selecting: () -> Boolean,
-  onTap: (Offset) -> Unit,
+  onTap: (Offset) -> Boolean,
   onLongPress: (Offset) -> Boolean,
   onSelectionGrab: (Offset) -> Unit,
   onSelectionDrag: (Offset) -> Unit,
 ) {
   awaitEachGesture {
-    val down = awaitFirstDown(requireUnconsumed = false)
+    val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
     if (selecting()) {
+      // while something is selected, a drag moves the closer end of the selection and a tap ends it
+      down.consume()
       onSelectionGrab(down.position)
       if (!followPointer(down, viewConfiguration.touchSlop, onSelectionDrag)) {
-        onTap(down.position)
+        val _ = onTap(down.position)
       }
       return@awaitEachGesture
     }
     var cancelled = false
     val up = withTimeoutOrNull(viewConfiguration.longPressTimeoutMillis) {
-      waitForUpOrCancellation().also { cancelled = it == null }
+      awaitTapUp(down).also { cancelled = it == null }
     }
     if (up != null) {
-      up.consume()
-      onTap(up.position)
+      if (onTap(up.position)) up.consume()
     } else if (!cancelled && onLongPress(down.position)) {
       val _ = followPointer(down, slop = 0F, onMove = onSelectionDrag)
     }
   }
 }
 
-// consumes before the pager sees the events, so it doesn't turn the page while selecting. Returns whether it moved.
+// null when the finger moves away, then it's a page turn
+private suspend fun AwaitPointerEventScope.awaitTapUp(down: PointerInputChange): PointerInputChange? {
+  while (true) {
+    val change = awaitPointerEvent(PointerEventPass.Initial).changes.firstOrNull { it.id == down.id } ?: return null
+    if (change.isConsumed) return null
+    if (!change.pressed) return change
+    if ((change.position - down.position).getDistance() > viewConfiguration.touchSlop) return null
+  }
+}
+
+// consumes the touch, so the page doesn't turn while selecting. Returns whether the finger moved.
 private suspend fun AwaitPointerEventScope.followPointer(
   down: PointerInputChange,
   slop: Float,

@@ -31,7 +31,7 @@ internal fun SelectionToolbar(
   selectedText: String,
   onHighlightClick: (HighlightColor) -> Unit,
   onNoteClick: () -> Unit,
-  onLookUpDone: () -> Unit,
+  onLookUp: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val context = LocalContext.current
@@ -58,7 +58,7 @@ internal fun SelectionToolbar(
     TextButton(
       onClick = {
         lookUp(context, selectedText)
-        onLookUpDone()
+        onLookUp()
       },
     ) {
       Text(stringResource(StringsR.string.reader_look_up))

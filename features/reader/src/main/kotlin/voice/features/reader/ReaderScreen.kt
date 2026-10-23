@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -55,20 +54,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
@@ -79,6 +75,7 @@ import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -217,7 +214,7 @@ internal fun ReaderScreen(uri: Uri) {
               editedHighlight = viewModel.onHighlightAdd(selected, HighlightColor.Yellow)
               selection.clear()
             },
-            onLookUpDone = selection::clear,
+            onLookUp = selection::clear,
             modifier = Modifier
               .align(Alignment.BottomCenter)
               .padding(16.dp),
@@ -486,6 +483,44 @@ private fun Spreads(
   previewTurn: Float?,
 ) {
   if (pages.isEmpty()) return
+  val latestState by rememberUpdatedState(state)
+  val latestOnHighlightClick by rememberUpdatedState(onHighlightClick)
+  val latestOnVisiblePagesChange by rememberUpdatedState(onVisiblePagesChange)
+  val haptics = LocalHapticFeedback.current
+  fun Modifier.pageGestures(
+    shownPages: () -> IntRange,
+    onOtherTap: (Offset, IntSize) -> Boolean,
+  ) = selectableText(
+    selection = selection,
+    shownPages = shownPages,
+    state = { latestState },
+    onHighlightClick = { latestOnHighlightClick(it) },
+    onSelect = { haptics.performHapticFeedback(HapticFeedbackType.LongPress) },
+    onOtherTap = onOtherTap,
+  )
+
+  if (pagesPerSpread == 1) {
+    val current = pages.indexOfPosition(state.position)
+    val latestCurrent by rememberUpdatedState(current)
+    LaunchedEffect(current) {
+      selection.clear()
+      latestOnVisiblePagesChange(listOf(pages[current]))
+    }
+    CurlPages(
+      count = pages.size,
+      current = current,
+      onTurn = { index -> onPageTurn(pages[index], (index + 1F) / pages.size) },
+      backColor = MaterialTheme.colorScheme.surface,
+      modifier = Modifier
+        .fillMaxSize()
+        // the pages turn themselves on a tap at the side
+        .pageGestures(shownPages = { latestCurrent..latestCurrent }, onOtherTap = { _, _ -> false }),
+      previewTurn = previewTurn,
+    ) { index ->
+      PageSlot(state, pages, index, textStyle, selection, Modifier.fillMaxSize())
+    }
+    return
+  }
   val currentSpread = pages.indexOfPosition(state.position) / pagesPerSpread
   val spreadCount = (pages.size + pagesPerSpread - 1) / pagesPerSpread
   val pagerState = rememberPagerState(initialPage = currentSpread) { spreadCount }
@@ -506,6 +541,11 @@ private fun Spreads(
       }
     }
   }
+  LaunchedEffect(currentSpread) {
+    selection.clear()
+    val first = currentSpread * pagesPerSpread
+    latestOnVisiblePagesChange(pages.subList(first, (first + pagesPerSpread).coerceAtMost(pages.size)))
+  }
 
   val turning by remember {
     derivedStateOf {
@@ -515,126 +555,37 @@ private fun Spreads(
   val progress = {
     previewTurn ?: (pagerState.currentPage + pagerState.currentPageOffsetFraction - turning).coerceIn(0F, 1F)
   }
-  val latestOnVisiblePagesChange by rememberUpdatedState(onVisiblePagesChange)
-  LaunchedEffect(currentSpread) {
-    selection.clear()
-    val first = currentSpread * pagesPerSpread
-    latestOnVisiblePagesChange(pages.subList(first, (first + pagesPerSpread).coerceAtMost(pages.size)))
-  }
-  val latestState by rememberUpdatedState(state)
-  val latestOnHighlightClick by rememberUpdatedState(onHighlightClick)
-  val haptics = LocalHapticFeedback.current
-  val shownPages = {
-    val first = pagerState.currentPage * pagesPerSpread
-    first until (first + pagesPerSpread).coerceAtMost(pages.size)
-  }
-
   val scope = rememberCoroutineScope()
   Box(Modifier.fillMaxSize()) {
-    if (pagesPerSpread == 1) {
-      PageTurn(state, pages, turning, progress, textStyle, selection)
-    } else {
-      SpreadTurn(state, pages, turning, progress, textStyle, selection)
-    }
+    SpreadTurn(state, pages, turning, progress, textStyle, selection)
     // the pager only follows the finger, the pages are drawn above and turn like paper
     HorizontalPager(
       state = pagerState,
       userScrollEnabled = selection.range == null,
       modifier = Modifier
         .fillMaxSize()
-        .onGloballyPositioned { selection.root = it }
-        .pointerInput(pagerState, selection) {
-          detectPageGestures(
-            selecting = { selection.range != null },
-            onTap = { offset ->
-              val highlight = selection.highlightAt(offset, shownPages(), latestState.highlights)
-              val edge = size.width / 4
-              when {
-                selection.range != null -> selection.clear()
-                highlight != null -> latestOnHighlightClick(highlight)
-                // like turning a paper page, a tap near the edge turns it
-                offset.x < edge -> scope.launch { pagerState.turnTo(pagerState.currentPage - 1) }
-                offset.x > size.width - edge -> scope.launch { pagerState.turnTo(pagerState.currentPage + 1) }
-              }
-            },
-            onLongPress = { offset ->
-              selection.selectWord(latestState.content, offset, shownPages()).also { selected ->
-                if (selected) haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-              }
-            },
-            onSelectionGrab = { offset -> selection.grab(offset, shownPages()) },
-            onSelectionDrag = { offset -> selection.extend(latestState.content, offset, shownPages()) },
-          )
-        },
+        .pageGestures(
+          shownPages = {
+            val first = pagerState.currentPage * pagesPerSpread
+            first until (first + pagesPerSpread).coerceAtMost(pages.size)
+          },
+          onOtherTap = { offset, size ->
+            // like turning a paper page, a tap near the edge turns it
+            val edge = size.width / 4
+            val target = when {
+              offset.x < edge -> pagerState.currentPage - 1
+              offset.x > size.width - edge -> pagerState.currentPage + 1
+              else -> null
+            }
+            if (target != null && target in 0 until pagerState.pageCount) {
+              scope.launch { pagerState.animateScrollToPage(target) }
+            }
+            target != null
+          },
+        ),
     ) {
       Box(Modifier.fillMaxSize())
     }
-  }
-}
-
-// one page lies on the next and its corner side is folded back over it, the fold moving with the finger
-@Composable
-private fun PageTurn(
-  state: ReaderState.Loaded,
-  pages: List<Page>,
-  turning: Int,
-  progress: () -> Float,
-  textStyle: TextStyle,
-  selection: PageSelection,
-) {
-  val back = MaterialTheme.colorScheme.surfaceContainer
-  Box(Modifier.fillMaxSize()) {
-    PageSlot(state, pages, turning + 1, textStyle, selection, Modifier.fillMaxSize())
-    PageSlot(
-      state = state,
-      pages = pages,
-      index = turning,
-      textStyle = textStyle,
-      selection = selection,
-      modifier = Modifier
-        .fillMaxSize()
-        .drawWithContent {
-          val turned = progress()
-          if (turned <= 0F) {
-            drawContent()
-            return@drawWithContent
-          }
-          val fold = size.width * (1F - turned)
-          val flapStart = fold - size.width * turned
-          val shadowWidth = 32.dp.toPx() * (1F - turned)
-          clipRect(right = fold) {
-            this@drawWithContent.drawContent()
-          }
-          drawRect(
-            brush = Brush.horizontalGradient(
-              listOf(Color.Black.copy(alpha = 0.25F), Color.Transparent),
-              startX = fold,
-              endX = fold + shadowWidth,
-            ),
-            topLeft = Offset(fold, 0F),
-            size = Size(shadowWidth, size.height),
-          )
-          drawRect(
-            brush = Brush.horizontalGradient(
-              listOf(Color.Transparent, Color.Black.copy(alpha = 0.2F)),
-              startX = flapStart - shadowWidth,
-              endX = flapStart,
-            ),
-            topLeft = Offset(flapStart - shadowWidth, 0F),
-            size = Size(shadowWidth, size.height),
-          )
-          drawRect(back, topLeft = Offset(flapStart, 0F), size = Size(fold - flapStart, size.height))
-          drawRect(
-            brush = Brush.horizontalGradient(
-              listOf(Color.Black.copy(alpha = 0.04F), Color.Black.copy(alpha = 0.12F)),
-              startX = flapStart,
-              endX = fold,
-            ),
-            topLeft = Offset(flapStart, 0F),
-            size = Size(fold - flapStart, size.height),
-          )
-        },
-    )
   }
 }
 
@@ -715,10 +666,6 @@ private fun SpreadTurn(
       )
     }
   }
-}
-
-private suspend fun PagerState.turnTo(page: Int) {
-  if (page in 0 until pageCount) animateScrollToPage(page)
 }
 
 private fun Modifier.shade(alpha: () -> Float): Modifier = drawWithContent {
