@@ -9,7 +9,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -41,6 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -57,11 +57,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -76,6 +73,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
+import androidx.compose.ui.unit.sp
 import androidx.navigation3.runtime.NavEntry
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -90,6 +89,9 @@ import org.readium.r2.shared.publication.Locator
 import voice.core.common.rootGraphAs
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
+import voice.core.data.ReaderOrientation
+import voice.core.data.ReaderPages
+import voice.core.data.ReaderSettings
 import voice.core.ui.bookText
 import voice.core.ui.icons.VoiceIcons
 import voice.navigation.Destination
@@ -162,7 +164,11 @@ internal fun ReaderScreen(uri: Uri) {
     val _ = readiumJumps.tryEmit(locator)
   }
   var editedReadiumHighlight by remember { mutableStateOf<LocatedHighlight?>(null) }
-  ReaderWindow(immersive = !barsVisible && loaded != null, brightness = loaded?.settings?.brightness)
+  ReaderWindow(
+    immersive = !barsVisible && loaded != null,
+    brightness = loaded?.settings?.brightness,
+    orientation = loaded?.settings?.orientation ?: ReaderOrientation.Auto,
+  )
   val turnPage = { page: Page, progress: Float ->
     barsVisible = false
     viewModel.onPageTurned(page, progress)
@@ -193,7 +199,8 @@ internal fun ReaderScreen(uri: Uri) {
         Box(
           Modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout)),
+            .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout))
+            .padding(top = state.settings.topMargin?.dp ?: 0.dp, bottom = state.settings.bottomMargin?.dp ?: 0.dp),
         ) {
           ReadiumPages(
             book = state.readium,
@@ -520,6 +527,26 @@ internal fun ReaderTopBar(
 }
 
 private val PageVerticalPadding = 8.dp
+
+/** The space around the text of a page. */
+@Immutable
+internal data class PageMargins(
+  val side: Dp,
+  val top: Dp,
+  val bottom: Dp,
+)
+
+@Composable
+private fun ReaderSettings.pageMargins(pageWidth: Dp): PageMargins {
+  val sideMargin = margin.dp
+  // about 65 characters per line
+  val maxTextWidth = with(LocalDensity.current) { (textSize * 32).sp.toDp() }
+  return PageMargins(
+    side = if (shortLines) max(sideMargin, (pageWidth - maxTextWidth) / 2) else sideMargin,
+    top = topMargin?.dp ?: PageVerticalPadding,
+    bottom = bottomMargin?.dp ?: PageVerticalPadding,
+  )
+}
 private val PageNumberHeight = 32.dp
 private val SpineWidth = 24.dp
 
@@ -540,15 +567,21 @@ internal fun Book(
   overlay: @Composable BoxScope.(pages: List<Page>, pagesPerSpread: Int, turn: (Int) -> Unit) -> Unit = { _, _, _ -> },
 ) {
   BoxWithConstraints(modifier) {
-    // an unfolded foldable, a tablet or a phone on its side has room for a spread like an open book
-    val twoPages = maxWidth >= 600.dp && maxWidth >= maxHeight * 0.8F
-    val pageWidth = if (twoPages) (maxWidth - SpineWidth) / 2 else maxWidth
+    val twoPages = when (state.settings.pages) {
+      // an unfolded foldable, a tablet or a phone on its side has room for a spread like an open book
+      ReaderPages.Auto -> maxWidth >= 600.dp && maxWidth >= maxHeight * 0.8F
+      ReaderPages.One -> false
+      ReaderPages.Two -> true
+    }
+    val spineWidth = state.settings.pageGap?.dp ?: SpineWidth
+    val pageWidth = if (twoPages) (maxWidth - spineWidth) / 2 else maxWidth
     val textStyle = state.settings.pageTextStyle()
+    val margins = state.settings.pageMargins(pageWidth)
     val pages = pages(
       content = state.content,
       textStyle = textStyle,
-      textWidth = pageWidth - state.settings.margin.dp * 2,
-      textHeight = maxHeight - PageVerticalPadding * 2 - PageNumberHeight,
+      textWidth = pageWidth - margins.side * 2,
+      textHeight = maxHeight - margins.top - margins.bottom - PageNumberHeight,
       paginateNow = paginateNow,
     )
     if (pages == null) {
@@ -566,6 +599,8 @@ internal fun Book(
           pages = pages,
           pagesPerSpread = pagesPerSpread,
           textStyle = textStyle,
+          margins = margins,
+          spineWidth = spineWidth,
           onPageTurn = onPageTurn,
           selection = selection,
           onHighlightClick = onHighlightClick,
@@ -616,6 +651,8 @@ private fun Spreads(
   pages: List<Page>,
   pagesPerSpread: Int,
   textStyle: TextStyle,
+  margins: PageMargins,
+  spineWidth: Dp,
   onPageTurn: (Page, Float) -> Unit,
   selection: PageSelection,
   onHighlightClick: (Highlight) -> Unit,
@@ -664,10 +701,10 @@ private fun Spreads(
     onCenterTap = onCenterTap,
     turnRequests = turnRequests,
     previewTurn = previewTurn,
-    spineWidth = SpineWidth,
-    spine = { Spine() },
+    spineWidth = spineWidth,
+    spine = { Spine(spineWidth) },
   ) { index ->
-    PageSlot(state, pages, index, textStyle, selection, Modifier.fillMaxSize())
+    PageSlot(state, pages, index, textStyle, margins, selection, Modifier.fillMaxSize())
   }
 }
 
@@ -677,6 +714,7 @@ private fun PageSlot(
   pages: List<Page>,
   index: Int,
   textStyle: TextStyle,
+  margins: PageMargins,
   selection: PageSelection,
   modifier: Modifier = Modifier,
 ) {
@@ -688,7 +726,7 @@ private fun PageSlot(
         pageNumber = index + 1,
         pageCount = pages.size,
         textStyle = textStyle,
-        margin = state.settings.margin.dp,
+        margins = margins,
         readingRange = state.readingRange.takeIf { pages[index].section == state.position.section },
         highlights = state.highlights,
         searchMatch = state.searchMatch,
@@ -699,11 +737,11 @@ private fun PageSlot(
 }
 
 @Composable
-private fun Spine() {
+private fun Spine(width: Dp) {
   val shade = MaterialTheme.colorScheme.outlineVariant
   Box(
     Modifier
-      .width(SpineWidth)
+      .width(width)
       .fillMaxHeight()
       .background(Brush.horizontalGradient(listOf(Color.Transparent, shade, Color.Transparent))),
   )
@@ -716,7 +754,7 @@ private fun BookPage(
   pageNumber: Int,
   pageCount: Int,
   textStyle: TextStyle,
-  margin: Dp,
+  margins: PageMargins,
   readingRange: IntRange?,
   highlights: List<Highlight>,
   searchMatch: BookRange?,
@@ -727,7 +765,7 @@ private fun BookPage(
     is ReaderContent.Epub -> Column(
       Modifier
         .fillMaxSize()
-        .padding(horizontal = margin, vertical = PageVerticalPadding),
+        .padding(start = margins.side, end = margins.side, top = margins.top, bottom = margins.bottom),
     ) {
       val marks = pageMarks(page.section, readingRange, highlights, searchMatch, selection.range)
       val textStart = remember(content, page) {
@@ -778,24 +816,14 @@ private fun BookPage(
         )
       }
     }
-    is ReaderContent.Pdf -> BoxWithConstraints(
-      Modifier
+    is ReaderContent.Pdf -> ZoomablePdfPage(
+      pdf = content.pdf,
+      index = page.section,
+      contentDescription = pageLabel,
+      modifier = Modifier
         .fillMaxSize()
         .padding(8.dp),
-      contentAlignment = Alignment.Center,
-    ) {
-      val bitmap by produceState<ImageBitmap?>(null, content, page.section, constraints.maxWidth, constraints.maxHeight) {
-        value = content.pdf.render(page.section, constraints.maxWidth, constraints.maxHeight)?.asImageBitmap()
-      }
-      bitmap?.let {
-        Image(
-          bitmap = it,
-          contentDescription = pageLabel,
-          contentScale = ContentScale.Fit,
-          modifier = Modifier.fillMaxSize(),
-        )
-      }
-    }
+    )
   }
 }
 

@@ -61,8 +61,12 @@ import org.readium.r2.navigator.DecorableNavigator
 import org.readium.r2.navigator.Decoration
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
 import org.readium.r2.navigator.epub.EpubPreferences
+import org.readium.r2.navigator.epub.css.Length
+import org.readium.r2.navigator.epub.css.RsProperties
 import org.readium.r2.navigator.input.InputListener
 import org.readium.r2.navigator.input.TapEvent
+import org.readium.r2.navigator.preferences.ColumnCount
+import org.readium.r2.navigator.preferences.Spread
 import org.readium.r2.navigator.util.DirectionalNavigationAdapter
 import org.readium.r2.shared.ExperimentalReadiumApi
 import org.readium.r2.shared.publication.Locator
@@ -71,6 +75,7 @@ import org.readium.r2.shared.util.toUri
 import voice.core.data.HighlightColor
 import voice.core.data.PageTransition
 import voice.core.data.ReaderFont
+import voice.core.data.ReaderPages
 import voice.core.data.ReaderSettings
 import voice.core.data.ReaderTheme
 import voice.core.logging.api.Logger
@@ -155,7 +160,13 @@ internal fun ReadiumPages(
       VolumeKeyPageTurns { step -> turns.turn(step) }
     }
   }
-  DisposableEffect(book, activity, container) {
+  // Readium takes these only when its pages are made, so changing them makes them anew
+  val cssProperties = RsProperties(
+    // about 65 characters per line
+    maxLineLength = if (settings.shortLines) Length.Rem(32.0) else null,
+    colGap = settings.pageGap?.let { Length.Px(it.toDouble()) },
+  )
+  DisposableEffect(book, activity, container, cssProperties) {
     val fragmentManager = activity.supportFragmentManager
     fragmentManager.findFragmentByTag(NAVIGATOR_TAG)?.let { stale ->
       fragmentManager.commitNow(allowStateLoss = true) { remove(stale) }
@@ -209,6 +220,7 @@ internal fun ReadiumPages(
           }
         },
         configuration = EpubNavigatorFragment.Configuration(
+          readiumCssRsProperties = cssProperties,
           selectionActionModeCallback = selectionCallback,
           shouldApplyInsetsPadding = false,
         ),
@@ -332,6 +344,17 @@ private fun ReaderSettings.epubPreferences(): EpubPreferences {
     // the line spacing only applies without the publisher's own
     publisherStyles = false,
     scroll = false,
+    columnCount = when (pages) {
+      ReaderPages.Auto -> ColumnCount.AUTO
+      ReaderPages.One -> ColumnCount.ONE
+      ReaderPages.Two -> ColumnCount.TWO
+    },
+    // the same choice for books with fixed pages
+    spread = when (pages) {
+      ReaderPages.Auto -> null
+      ReaderPages.One -> Spread.NEVER
+      ReaderPages.Two -> Spread.ALWAYS
+    },
   )
 }
 

@@ -44,18 +44,18 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 |---|---|---|
 | Paginated reading | [done] | |
 | Single-page and two-page view | [done] | Two pages when the screen is wide. |
-| Adaptive layout | [part] | Add a setting: Auto (today), Always one, Always two. |
+| Adaptive layout | [done] | **Pages** in the Display sheet: Auto, One page, Two pages. |
 | Continuous scrolling (chapter or whole book) | [new] | Readium scroll mode, or a LazyColumn of paragraphs in our engine. |
 | Page transitions: none, slide, curl | [done] | **Page turn** in the Display sheet, for both engines. |
 | Scroll behavior: smooth, stepped, snap | [new] | Only in scroll mode. |
 | Automatic scrolling with speed, pause on touch | [new] | Timer that scrolls N px per second, stops while a finger is down or text is selected. |
 | Automatic page turns at an interval | [new] | Timer that calls the existing turn; pause while menus are open. |
-| Multiple columns, column gap | [new] | Readium column count; in our engine, split the page width. |
-| Margins: top, bottom, left, right separately | [part] | One margin slider today; split into four. |
-| Reading width limit | [new] | Max line length (for example 70 characters) on tablets and unfolded phones. |
-| Orientation: portrait, landscape, auto | [new] | Activity requestedOrientation while the reader is open. |
+| Multiple columns, column gap | [part] | **Pages** sets the column count in the new engine and the pages in the old one. **Space between pages** sets the gap. More than two columns isn't planned. |
+| Margins: top, bottom, left, right separately | [done] | Sides, top and bottom. Left and right stay the same. |
+| Reading width limit | [done] | **Shorter lines on wide screens**, about 65 characters. |
+| Orientation: portrait, landscape, auto | [done] | |
 | Full-screen reading | [done] | Tap the middle hides bars and system bars. |
-| Fixed-layout and PDF controls: zoom, pan, fit width, fit page | [new] | Readium for fixed-layout EPUB; zoomable image for PDF pages. |
+| Fixed-layout and PDF controls: zoom, pan, fit width, fit page | [part] | PDF: pinch zoom, pan, double tap for fit width or fit page. Fixed-layout EPUB opens in the new engine with its own page fitting; **Pages** picks one page or a spread. |
 | Brightness in the reader | [done] | |
 | Screen-awake setting | [part] | Screen stays on today; add Off, While reading, Always. |
 | Tap zones | [part] | Fixed thirds today; add an editor (left, middle, right, top, bottom areas). |

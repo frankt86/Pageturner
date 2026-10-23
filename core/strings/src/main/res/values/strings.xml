@@ -597,18 +597,32 @@
     <string name="reader.highlights">Highlights</string>
     <!-- Shown in the highlights tab of the ebook reader while nothing is highlighted. -->
     <string name="reader.highlights.empty">Nothing highlighted yet. Press and hold a word, then drag to take in more.</string>
+    <!-- Heading of the section in the display sheet of the ebook reader with the pages, margins and screen orientation. -->
+    <string name="reader.layout">Layout</string>
     <!-- Label of the slider in the display sheet of the ebook reader that sets the space between the lines of text. -->
     <string name="reader.line_spacing">Line spacing</string>
     <!-- Button under selected text in the ebook reader that opens the phone's dictionary or translation app for it. -->
     <string name="reader.look_up">Look up</string>
+    <!-- Label of the slider in the display sheet of the ebook reader that sets the empty space below the text. -->
+    <string name="reader.margin_bottom">Bottom margin</string>
+    <!-- Label of the slider in the display sheet of the ebook reader that sets the empty space above the text. -->
+    <string name="reader.margin_top">Top margin</string>
     <!-- Label of the slider in the display sheet of the ebook reader that sets the empty space left and right of the text. -->
     <string name="reader.margins">Margins</string>
     <!-- Switch in the display sheet of the ebook reader, only for EPUB books. When it's on, books are shown with a new engine that keeps the book's own layout, images and links. It's still being tested, so bookmarks, highlights, search and reading aloud aren't there yet. -->
     <string name="reader.new_engine">New book engine (beta)</string>
     <!-- Snackbar in the ebook reader when there is no text to read aloud, e.g. a scanned PDF. -->
     <string name="reader.nothing_to_read_aloud">There\'s no text here to read aloud</string>
+    <!-- Heading of the choice in the display sheet of the ebook reader whether the screen turns with the phone or stays upright or sideways while reading. -->
+    <string name="reader.orientation">Orientation</string>
+    <!-- Choice for the screen orientation in the ebook reader: the screen stays sideways. -->
+    <string name="reader.orientation.landscape">Landscape</string>
+    <!-- Choice for the screen orientation in the ebook reader: the screen stays upright. -->
+    <string name="reader.orientation.portrait">Portrait</string>
     <!-- Page number at the bottom of an ebook page, e.g. "12 of 240". -->
     <string name="reader.page">%1$d of %2$d</string>
+    <!-- Label of the slider in the display sheet of the ebook reader that sets the space between two pages side by side. -->
+    <string name="reader.page_gap">Space between pages</string>
     <!-- Heading of the choice in the display sheet of the ebook reader for how a page turns: curl, slide or none. -->
     <string name="reader.page_turn">Page turn</string>
     <!-- Choice for the page turn in the ebook reader: the page curls over like paper. -->
@@ -617,6 +631,12 @@
     <string name="reader.page_turn.none">None</string>
     <!-- Choice for the page turn in the ebook reader: the page slides sideways. -->
     <string name="reader.page_turn.slide">Slide</string>
+    <!-- Heading of the choice in the display sheet of the ebook reader for one page or two side by side. Auto shows two on wide screens. -->
+    <string name="reader.pages">Pages</string>
+    <!-- Choice in the ebook reader: always show one page at a time. -->
+    <string name="reader.pages.one">One page</string>
+    <!-- Choice in the ebook reader: always show two pages side by side, like an open book. -->
+    <string name="reader.pages.two">Two pages</string>
     <!-- Button in the ebook reader that starts reading the book aloud from the current page. -->
     <string name="reader.read_aloud">Read aloud</string>
     <!-- Snackbar in the ebook reader when the device has no text-to-speech engine. -->
@@ -625,6 +645,8 @@
     <string name="reader.search">Search in book</string>
     <!-- Shown under the search field of the ebook reader when the book doesn't contain what was typed. -->
     <string name="reader.search.empty">No matches</string>
+    <!-- Switch in the display sheet of the ebook reader. When it's on, lines of text stay about 65 characters long on tablets and unfolded phones, which reads more easily. -->
+    <string name="reader.short_lines">Shorter lines on wide screens</string>
     <!-- Button in the ebook reader that stops reading aloud. -->
     <string name="reader.stop_reading_aloud">Stop reading aloud</string>
     <!-- Label of the slider in the display sheet of the ebook reader that makes the book's text bigger or smaller. -->
