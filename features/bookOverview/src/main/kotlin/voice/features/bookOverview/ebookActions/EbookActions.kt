@@ -52,7 +52,12 @@ object EbookActionsProvider {
   }
 }
 
-private val EbookItems = listOf(BottomSheetItem.Title, BottomSheetItem.FileCover, BottomSheetItem.RemoveFromLibrary)
+private val EbookItems = listOf(
+  BottomSheetItem.Title,
+  BottomSheetItem.InternetCover,
+  BottomSheetItem.FileCover,
+  BottomSheetItem.RemoveFromLibrary,
+)
 
 /** Like the menu of an audiobook, it closes once its last sheet is gone. */
 @Composable
@@ -140,6 +145,7 @@ private fun EbookActions(uri: Uri) {
           onItemClick = { item ->
             when (item) {
               BottomSheetItem.Title -> hideThen { viewModel.onRename(state.book) }
+              BottomSheetItem.InternetCover -> hideThen(viewModel::onInternetCover)
               BottomSheetItem.FileCover -> if (!closing) {
                 pickingCover = true
                 getContentLauncher.launch("image/*")

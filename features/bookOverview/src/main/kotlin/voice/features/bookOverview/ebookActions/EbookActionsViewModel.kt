@@ -132,6 +132,10 @@ class EbookActionsViewModel(
     }
   }
 
+  internal fun onInternetCover() {
+    navigator.goTo(Destination.EbookCoverFromInternet(uri))
+  }
+
   internal fun onRemove() {
     update { it.copy(hidden = true) }
   }

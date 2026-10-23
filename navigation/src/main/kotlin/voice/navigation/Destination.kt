@@ -44,6 +44,15 @@ sealed interface Destination {
   }
 
   @Serializable
+  data class EbookCoverFromInternet(
+    val uri:
+    @Serializable(with = UriSerializer::class)
+    Uri,
+  ) : Compose {
+    override val trackingName: String get() = "EbookCoverFromInternet"
+  }
+
+  @Serializable
   data class Reader(
     val uri:
     @Serializable(with = UriSerializer::class)
