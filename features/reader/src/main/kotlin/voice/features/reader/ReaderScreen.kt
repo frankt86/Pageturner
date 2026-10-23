@@ -27,8 +27,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -38,6 +36,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -93,6 +92,7 @@ import voice.core.ui.bookText
 import voice.core.ui.icons.VoiceIcons
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
+import kotlin.math.roundToInt
 import voice.core.strings.R as StringsR
 
 @ContributesTo(AppScope::class)
@@ -547,18 +547,15 @@ private fun ContentsSheet(
     LazyColumn(state = listState) {
       items(content.sectionCount) { section ->
         val current = section == currentSection
-        ListItem(
-          headlineContent = {
-            Text(
-              text = content.chapterTitle(section),
-              style = MaterialTheme.typography.bodyLarge.bookText(),
-              fontWeight = if (current) FontWeight.Bold else null,
-            )
-          },
-          colors = ListItemDefaults.colors(
-            containerColor = if (current) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
-          ),
-          modifier = Modifier.clickable { onChapterClick(section) },
+        Text(
+          text = content.chapterTitle(section),
+          style = MaterialTheme.typography.bodyLarge.bookText(),
+          fontWeight = if (current) FontWeight.Bold else null,
+          modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onChapterClick(section) }
+            .background(if (current) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent)
+            .padding(horizontal = 24.dp, vertical = 14.dp),
         )
       }
     }
@@ -582,11 +579,13 @@ private fun TextSizeSheet(
         style = MaterialTheme.typography.bodyLarge.bookText().copy(fontSize = textSize.sp),
         modifier = Modifier.padding(vertical = 16.dp),
       )
+      val sliderState = rememberSliderState(value = textSize, trackRange = 14F..30F)
       Slider(
-        value = textSize,
-        onValueChange = onTextSizeChange,
-        valueRange = 14F..30F,
-        steps = 7,
+        state = sliderState,
+        onValueChange = {
+          sliderState.value = it
+          onTextSizeChange(it.roundToInt().toFloat())
+        },
       )
     }
   }
