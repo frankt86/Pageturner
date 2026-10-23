@@ -130,7 +130,7 @@ class ReaderViewModel(
   private var speechRate by mutableFloatStateOf(1F)
   private val speakers = naturalSpeakers(Locale.getDefault())
   private var speakerId by mutableIntStateOf(-1)
-  private val speaker: NaturalSpeaker?
+  private val selectedSpeaker: NaturalSpeaker?
     get() = speakers.firstOrNull { it.id == speakerId } ?: speakers.firstOrNull()
   private var bookmarks by mutableStateOf(emptyList<EbookPosition>())
   private var highlights by mutableStateOf(emptyList<Highlight>())
@@ -212,7 +212,7 @@ class ReaderViewModel(
           downloadFailed = downloadFailed,
           speechRate = speechRate,
           speakers = speakers,
-          speaker = speaker,
+          speaker = selectedSpeaker,
         ),
         bookmarks = bookmarks,
         highlights = highlights,
@@ -376,8 +376,8 @@ class ReaderViewModel(
         moveTo(EbookPosition(section, chunk.first))
         readingRange = chunk
         val next = nextChunk(text, chunk.last + 1)?.let { text.substring(it) }
-        val speaker = speaker
-        if (useNaturalVoice && (speaker == null || !neuralVoice.speak(text.substring(chunk), next, speechRate, speaker))) {
+        val naturalSpeaker = selectedSpeaker
+        if (useNaturalVoice && (naturalSpeaker == null || !neuralVoice.speak(text.substring(chunk), next, speechRate, naturalSpeaker))) {
           useNaturalVoice = false
           messageChannel.trySend(ReaderMessage.NaturalVoiceUnavailable)
         }
