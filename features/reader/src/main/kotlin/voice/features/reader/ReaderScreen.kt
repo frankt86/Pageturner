@@ -94,6 +94,8 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import voice.core.common.rootGraphAs
@@ -199,13 +201,13 @@ internal fun ReaderScreen(uri: Uri) {
         modifier = Modifier
           .fillMaxSize()
           .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout)),
-        overlay = { pages, pagesPerSpread ->
+        overlay = { pages, pagesPerSpread, turn ->
           ReaderControls(
             state = state,
             pages = pages,
             pagesPerSpread = pagesPerSpread,
             barsVisible = barsVisible,
-            onPageTurn = turnPage,
+            onTurn = turn,
             onJump = viewModel::onPageTurned,
           )
         },
@@ -354,7 +356,8 @@ internal fun Book(
   paginateNow: Boolean = false,
   // previews can't swipe, this shows the first page turned this far
   previewTurn: Float? = null,
-  overlay: @Composable BoxScope.(pages: List<Page>, pagesPerSpread: Int) -> Unit = { _, _ -> },
+  // turn is called with 1 for the next page and -1 for the previous one
+  overlay: @Composable BoxScope.(pages: List<Page>, pagesPerSpread: Int, turn: (Int) -> Unit) -> Unit = { _, _, _ -> },
 ) {
   BoxWithConstraints(modifier) {
     // an unfolded foldable, a tablet or a phone on its side has room for a spread like an open book
@@ -375,6 +378,7 @@ internal fun Book(
       return@BoxWithConstraints
     }
     val pagesPerSpread = if (twoPages) 2 else 1
+    val turnRequests = remember { MutableSharedFlow<Int>(extraBufferCapacity = 1) }
     ReaderPageTheme(state.settings.theme) {
       key(pages, pagesPerSpread) {
         Spreads(
@@ -384,11 +388,12 @@ internal fun Book(
           textStyle = textStyle,
           onPageTurn = onPageTurn,
           onCenterTap = onCenterTap,
+          turnRequests = turnRequests,
           previewTurn = previewTurn,
         )
       }
     }
-    overlay(pages, pagesPerSpread)
+    overlay(pages, pagesPerSpread) { step -> turnRequests.tryEmit(step) }
   }
 }
 
@@ -430,6 +435,7 @@ private fun Spreads(
   textStyle: TextStyle,
   onPageTurn: (Page, Float) -> Unit,
   onCenterTap: () -> Unit,
+  turnRequests: Flow<Int>,
   previewTurn: Float?,
 ) {
   if (pages.isEmpty()) return
@@ -442,6 +448,7 @@ private fun Spreads(
       backColor = MaterialTheme.colorScheme.surface,
       modifier = Modifier.fillMaxSize(),
       onCenterTap = onCenterTap,
+      turnRequests = turnRequests,
       previewTurn = previewTurn,
     ) { index ->
       PageSlot(state, pages, index, textStyle, Modifier.fillMaxSize())
@@ -452,7 +459,7 @@ private fun Spreads(
   val spreadCount = (pages.size + pagesPerSpread - 1) / pagesPerSpread
   val pagerState = rememberPagerState(initialPage = currentSpread) { spreadCount }
 
-  // follows reading aloud and the volume keys from page to page, and jumps further away
+  // follows reading aloud from page to page, and jumps further away
   LaunchedEffect(currentSpread) {
     when (abs(pagerState.currentPage - currentSpread)) {
       0 -> Unit
@@ -463,6 +470,12 @@ private fun Spreads(
   val latestSpread by rememberUpdatedState(currentSpread)
   val latestOnPageTurn by rememberUpdatedState(onPageTurn)
   val latestOnCenterTap by rememberUpdatedState(onCenterTap)
+  LaunchedEffect(pagerState, turnRequests) {
+    turnRequests.collect { step ->
+      val target = pagerState.currentPage + step
+      if (target in 0 until spreadCount) pagerState.animateScrollToPage(target)
+    }
+  }
   LaunchedEffect(pagerState) {
     snapshotFlow { pagerState.settledPage }.collect { spread ->
       if (spread != latestSpread) {

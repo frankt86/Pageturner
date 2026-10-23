@@ -130,14 +130,14 @@ private fun ReaderPreview(
           .padding(contentPadding),
         paginateNow = true,
         previewTurn = previewTurn,
-        overlay = { pages, pagesPerSpread ->
+        overlay = { pages, pagesPerSpread, _ ->
           if (showControls) {
             ReaderControls(
               state = state,
               pages = pages,
               pagesPerSpread = pagesPerSpread,
               barsVisible = true,
-              onPageTurn = { _, _ -> },
+              onTurn = {},
               onJump = { _, _ -> },
             )
           }

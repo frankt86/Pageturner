@@ -2,7 +2,6 @@ package voice.features.reader
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 
 class ReaderNavigationTest {
 
@@ -13,24 +12,6 @@ class ReaderNavigationTest {
     Page(section = 1, start = 0, end = 10),
     Page(section = 1, start = 10, end = 20),
   )
-
-  @Test
-  fun `the volume keys go one page on or back`() {
-    assertEquals(2, pages.spreadStart(index = 1, pagesPerSpread = 1, step = 1))
-    assertEquals(0, pages.spreadStart(index = 1, pagesPerSpread = 1, step = -1))
-  }
-
-  @Test
-  fun `with two pages side by side the volume keys go a whole spread`() {
-    assertEquals(2, pages.spreadStart(index = 1, pagesPerSpread = 2, step = 1))
-    assertEquals(2, pages.spreadStart(index = 4, pagesPerSpread = 2, step = -1))
-  }
-
-  @Test
-  fun `there is no page before the first or after the last`() {
-    assertNull(pages.spreadStart(index = 0, pagesPerSpread = 1, step = -1))
-    assertNull(pages.spreadStart(index = 4, pagesPerSpread = 1, step = 1))
-  }
 
   @Test
   fun `the progress counts the pages on screen as read`() {

@@ -45,16 +45,6 @@ import voice.core.ui.bookText
 import kotlin.math.roundToInt
 import voice.core.strings.R as StringsR
 
-/** The first page of the spread [step] spreads away from the one holding [index], or null before the first or after the last. */
-internal fun List<Page>.spreadStart(
-  index: Int,
-  pagesPerSpread: Int,
-  step: Int,
-): Int? {
-  val target = (index / pagesPerSpread + step) * pagesPerSpread
-  return target.takeIf { it in indices }
-}
-
 /** How much of the book is read once the spread holding [index] is. */
 internal fun List<Page>.progressAt(
   index: Int,
@@ -84,17 +74,13 @@ internal fun BoxScope.ReaderControls(
   pages: List<Page>,
   pagesPerSpread: Int,
   barsVisible: Boolean,
-  onPageTurn: (Page, Float) -> Unit,
+  onTurn: (step: Int) -> Unit,
   onJump: (Page, Float) -> Unit,
 ) {
   if (pages.isEmpty()) return
   val index = pages.indexOfPosition(state.position)
   if (state.settings.volumeKeysTurnPages && !state.readingAloud) {
-    VolumeKeyPageTurns { step ->
-      pages.spreadStart(index, pagesPerSpread, step)?.let { target ->
-        onPageTurn(pages[target], pages.progressAt(target, pagesPerSpread))
-      }
-    }
+    VolumeKeyPageTurns(onTurn)
   }
   AnimatedVisibility(
     visible = barsVisible,

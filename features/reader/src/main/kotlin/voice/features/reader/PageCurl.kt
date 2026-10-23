@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
@@ -32,6 +33,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.atan2
@@ -86,6 +89,8 @@ internal fun CurlPages(
   backColor: Color,
   modifier: Modifier = Modifier,
   onCenterTap: () -> Unit = {},
+  // each request turns a page forward (positive) or back (negative), like a tap on the edge
+  turnRequests: Flow<Int> = emptyFlow(),
   // previews can't drag, this shows the page curled this far
   previewTurn: Float? = null,
   page: @Composable (index: Int) -> Unit,
@@ -143,6 +148,12 @@ internal fun CurlPages(
         )
         latestOnTurn(turnFrom - 1)
         backward.snapTo(pageSize.turned())
+      }
+    }
+
+    LaunchedEffect(turnRequests, pageSize) {
+      turnRequests.collect { step ->
+        if (step > 0) turnForward(fromCorner = true) else turnBackward(fromCorner = true)
       }
     }
 
