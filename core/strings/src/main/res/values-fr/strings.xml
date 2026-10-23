@@ -338,6 +338,10 @@
     <string name="playback.speed.increase">Plus rapide</string>
     <string name="playback.speed.title">Vitesse de lecture</string>
     <string name="playback.volume_boost.off">Désactivé</string>
+    <string name="reader.auto_scroll">Défilement automatique</string>
+    <string name="reader.auto_scroll.speed">Vitesse de défilement</string>
+    <string name="reader.auto_turn">Tourner les pages automatiquement</string>
+    <string name="reader.auto_turn.interval">Temps par page</string>
     <string name="reader.bookmark.add">Ajouter un marque-page</string>
     <string name="reader.bookmark.delete">Supprimer le marque-page</string>
     <string name="reader.bookmark.remove">Retirer le marque-page</string>
@@ -444,6 +448,9 @@
     <string name="reader.publisher_styles.summary">Conserve les polices et la mise en forme du livre. Seuls la taille du texte et les couleurs changent.</string>
     <string name="reader.read_aloud">Lire à voix haute</string>
     <string name="reader.read_aloud_unavailable">La lecture à voix haute n\'est pas disponible sur cet appareil</string>
+    <string name="reader.reading_mode">Mode de lecture</string>
+    <string name="reader.reading_mode.pages">Pages</string>
+    <string name="reader.reading_mode.scroll">Défilement</string>
     <string name="reader.schedule">Jour et nuit</string>
     <string name="reader.schedule.day">Le jour</string>
     <string name="reader.schedule.earlier">Plus tôt</string>
@@ -452,6 +459,10 @@
     <string name="reader.schedule.night_end">Fin de la nuit</string>
     <string name="reader.schedule.night_start">Début de la nuit</string>
     <string name="reader.schedule.switch">Changer de thème selon l\'heure</string>
+    <string name="reader.scrolling">Défilement</string>
+    <string name="reader.scrolling.instant">Instantané</string>
+    <string name="reader.scrolling.smooth">Fluide</string>
+    <string name="reader.scrolling.snap">Écran par écran</string>
     <string name="reader.search">Rechercher dans le livre</string>
     <string name="reader.search.empty">Aucun résultat</string>
     <string name="reader.short_lines">Lignes plus courtes sur grand écran</string>

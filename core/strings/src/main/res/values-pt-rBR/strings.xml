@@ -338,6 +338,10 @@
     <string name="playback.speed.increase">Mais rápido</string>
     <string name="playback.speed.title">Velocidade de reprodução</string>
     <string name="playback.volume_boost.off">Desligado</string>
+    <string name="reader.auto_scroll">Rolar automaticamente</string>
+    <string name="reader.auto_scroll.speed">Velocidade de rolagem</string>
+    <string name="reader.auto_turn">Virar páginas automaticamente</string>
+    <string name="reader.auto_turn.interval">Tempo por página</string>
     <string name="reader.bookmark.add">Adicionar marcador</string>
     <string name="reader.bookmark.delete">Apagar marcador</string>
     <string name="reader.bookmark.remove">Remover marcador</string>
@@ -444,6 +448,9 @@
     <string name="reader.publisher_styles.summary">Mantém as fontes e a formatação do livro. Só o tamanho do texto e as cores mudam.</string>
     <string name="reader.read_aloud">Ler em voz alta</string>
     <string name="reader.read_aloud_unavailable">A leitura em voz alta não está disponível neste dispositivo</string>
+    <string name="reader.reading_mode">Modo de leitura</string>
+    <string name="reader.reading_mode.pages">Páginas</string>
+    <string name="reader.reading_mode.scroll">Rolagem</string>
     <string name="reader.schedule">Dia e noite</string>
     <string name="reader.schedule.day">De dia</string>
     <string name="reader.schedule.earlier">Mais cedo</string>
@@ -452,6 +459,10 @@
     <string name="reader.schedule.night_end">Fim da noite</string>
     <string name="reader.schedule.night_start">Início da noite</string>
     <string name="reader.schedule.switch">Trocar o tema conforme a hora do dia</string>
+    <string name="reader.scrolling">Rolagem</string>
+    <string name="reader.scrolling.instant">Instantânea</string>
+    <string name="reader.scrolling.smooth">Suave</string>
+    <string name="reader.scrolling.snap">Por tela</string>
     <string name="reader.search">Pesquisar no livro</string>
     <string name="reader.search.empty">Nenhum resultado</string>
     <string name="reader.short_lines">Linhas mais curtas em telas largas</string>

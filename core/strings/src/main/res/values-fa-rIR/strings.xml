@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">سریع‌تر</string>
     <string name="playback.speed.title">سرعت پخش</string>
     <string name="playback.volume_boost.off">خاموش</string>
+    <string name="reader.auto_scroll">پیمایش خودکار</string>
+    <string name="reader.auto_scroll.speed">سرعت پیمایش</string>
+    <string name="reader.auto_turn">ورق زدن خودکار</string>
+    <string name="reader.auto_turn.interval">زمان هر صفحه</string>
     <string name="reader.bookmark.add">نشانه‌گذاری این صفحه</string>
     <string name="reader.bookmark.delete">حذف نشانه</string>
     <string name="reader.bookmark.remove">برداشتن نشانه</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">قلم‌ها و قالب‌بندی کتاب حفظ می‌شود. فقط اندازه متن و رنگ‌ها تغییر می‌کنند.</string>
     <string name="reader.read_aloud">خواندن با صدای بلند</string>
     <string name="reader.read_aloud_unavailable">خواندن با صدای بلند در این دستگاه در دسترس نیست</string>
+    <string name="reader.reading_mode">حالت خواندن</string>
+    <string name="reader.reading_mode.pages">صفحه‌ها</string>
+    <string name="reader.reading_mode.scroll">پیمایش</string>
     <string name="reader.schedule">روز و شب</string>
     <string name="reader.schedule.day">در روز</string>
     <string name="reader.schedule.earlier">زودتر</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">پایان شب</string>
     <string name="reader.schedule.night_start">شروع شب</string>
     <string name="reader.schedule.switch">تغییر پوسته بر اساس ساعت روز</string>
+    <string name="reader.scrolling">پیمایش</string>
+    <string name="reader.scrolling.instant">فوری</string>
+    <string name="reader.scrolling.smooth">نرم</string>
+    <string name="reader.scrolling.snap">صفحه‌به‌صفحه</string>
     <string name="reader.search">جستجو در کتاب</string>
     <string name="reader.search.empty">چیزی پیدا نشد</string>
     <string name="reader.short_lines">سطرهای کوتاه‌تر در صفحه‌های پهن</string>

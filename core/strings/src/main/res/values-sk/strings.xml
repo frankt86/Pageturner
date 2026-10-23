@@ -355,6 +355,10 @@
     <string name="playback.speed.increase">Rýchlejšie</string>
     <string name="playback.speed.title">Rýchlosť prehrávania</string>
     <string name="playback.volume_boost.off">Vypnuté</string>
+    <string name="reader.auto_scroll">Automaticky posúvať</string>
+    <string name="reader.auto_scroll.speed">Rýchlosť posúvania</string>
+    <string name="reader.auto_turn">Automaticky otáčať strany</string>
+    <string name="reader.auto_turn.interval">Čas na stranu</string>
     <string name="reader.bookmark.add">Pridať záložku</string>
     <string name="reader.bookmark.delete">Vymazať záložku</string>
     <string name="reader.bookmark.remove">Odobrať záložku</string>
@@ -463,6 +467,9 @@
     <string name="reader.publisher_styles.summary">Zachová písma a formátovanie knihy. Mení sa len veľkosť textu a farby.</string>
     <string name="reader.read_aloud">Predčítať</string>
     <string name="reader.read_aloud_unavailable">Predčítanie nie je na tomto zariadení k dispozícii</string>
+    <string name="reader.reading_mode">Režim čítania</string>
+    <string name="reader.reading_mode.pages">Strany</string>
+    <string name="reader.reading_mode.scroll">Posúvanie</string>
     <string name="reader.schedule">Deň a noc</string>
     <string name="reader.schedule.day">Cez deň</string>
     <string name="reader.schedule.earlier">Skôr</string>
@@ -471,6 +478,10 @@
     <string name="reader.schedule.night_end">Koniec noci</string>
     <string name="reader.schedule.night_start">Začiatok noci</string>
     <string name="reader.schedule.switch">Meniť motív podľa dennej doby</string>
+    <string name="reader.scrolling">Posúvanie</string>
+    <string name="reader.scrolling.instant">Okamžite</string>
+    <string name="reader.scrolling.smooth">Plynulo</string>
+    <string name="reader.scrolling.snap">Po obrazovkách</string>
     <string name="reader.search">Hľadať v knihe</string>
     <string name="reader.search.empty">Žiadne výsledky</string>
     <string name="reader.short_lines">Kratšie riadky na širokých obrazovkách</string>

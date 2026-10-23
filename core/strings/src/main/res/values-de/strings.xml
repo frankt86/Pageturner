@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">Schneller</string>
     <string name="playback.speed.title">Abspielgeschwindigkeit</string>
     <string name="playback.volume_boost.off">Aus</string>
+    <string name="reader.auto_scroll">Automatisch scrollen</string>
+    <string name="reader.auto_scroll.speed">Scrollgeschwindigkeit</string>
+    <string name="reader.auto_turn">Automatisch blättern</string>
+    <string name="reader.auto_turn.interval">Zeit pro Seite</string>
     <string name="reader.bookmark.add">Lesezeichen setzen</string>
     <string name="reader.bookmark.delete">Lesezeichen löschen</string>
     <string name="reader.bookmark.remove">Lesezeichen entfernen</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">Behält Schriften und Formatierung des Buchs. Nur Textgröße und Farben ändern sich.</string>
     <string name="reader.read_aloud">Vorlesen</string>
     <string name="reader.read_aloud_unavailable">Vorlesen ist auf diesem Gerät nicht verfügbar</string>
+    <string name="reader.reading_mode">Lesemodus</string>
+    <string name="reader.reading_mode.pages">Seiten</string>
+    <string name="reader.reading_mode.scroll">Scrollen</string>
     <string name="reader.schedule">Tag und Nacht</string>
     <string name="reader.schedule.day">Am Tag</string>
     <string name="reader.schedule.earlier">Früher</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">Nacht endet</string>
     <string name="reader.schedule.night_start">Nacht beginnt</string>
     <string name="reader.schedule.switch">Design je nach Tageszeit wechseln</string>
+    <string name="reader.scrolling">Scrollen</string>
+    <string name="reader.scrolling.instant">Sofort</string>
+    <string name="reader.scrolling.smooth">Fließend</string>
+    <string name="reader.scrolling.snap">Bildschirmweise</string>
     <string name="reader.search">Im Buch suchen</string>
     <string name="reader.search.empty">Keine Treffer</string>
     <string name="reader.short_lines">Kürzere Zeilen auf breiten Bildschirmen</string>

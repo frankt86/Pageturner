@@ -49,12 +49,16 @@ The **Display** button holds:
 - **Reset text settings** puts all of these back to how they were at first.
 - **Brightness**, just for the reader, or the system setting.
 - **Volume keys turn pages**, on or off.
-- **Page turn:** the page curls over like paper, slides sideways, or the next one shows at once.
+- **Reading mode:** **Pages** to turn, or **Scroll** to read the book as one long text from top to bottom, see below.
+- **Page turn:** the page curls over like paper, slides sideways, or the next one shows at once. Only for pages.
+- **Time per page**, for turning pages by themselves, from 10 seconds to 2 minutes.
+- **Scrolling** and **Scrolling speed**, in the scroll mode, see below.
 - **New book engine (beta)**, for EPUB books, see below.
 
 Under **Layout**:
 
-- **Pages:** Auto shows two pages side by side on wide screens, or always **One page** or **Two pages**.
+- **Pages:** Auto shows two pages side by side on wide screens, or always **One page** or **Two pages**. Not in the scroll
+  mode.
 - **Margins** at the sides, **Top margin** and **Bottom margin**, and the **Space between pages** when two show side by
   side.
 - **Shorter lines on wide screens** keeps lines to about 65 characters on tablets and unfolded phones.
@@ -69,6 +73,21 @@ Under **Progress**:
   **Chapter**, the **Percent** read, or the **Time left** in the chapter.
 - **Show chapters, bookmarks and highlights on the bar** draws small marks where each chapter starts and where your bookmarks
   and highlights are.
+
+### Scrolling and reading hands-free
+
+With **Reading mode** set to **Scroll**, the book is one long text you scroll up and down, chapter after chapter, and a PDF
+is one long column of its pages. The page bar, the page footer, bookmarks, highlights, search, contents and reading aloud
+work as with pages; reading aloud scrolls along when the passage it reads leaves the screen.
+
+- **Scrolling:** **Smooth** glides, **Instant** moves at once, and **By screen** ends every swipe on the next or previous
+  screen, like a page. A tap on the left or right third of the screen or the volume keys move one screen less a line, so
+  the last line you read stays in sight.
+- **Scroll automatically**, the button in the top bar, scrolls the text slowly by itself at the **Scrolling speed**. It
+  waits while your finger is on the screen, while text is selected, a sheet or the bars are open, or the book is read
+  aloud, and goes on once they're gone. Tap the button again to stop.
+- With pages, the same button is **Turn pages automatically**: the next page comes after the **Time per page**. It waits
+  while the bars or a sheet are open or the book is read aloud, and turning a page yourself starts the time anew.
 
 ### Colors and themes
 
@@ -153,6 +172,9 @@ bold and italic text, tables, links and footnotes. It's built on [Readium](https
 - Reading aloud works with the natural voice and the phone voice, and highlights the passage it's reading.
 - The pages curl, slide or turn at once, as set under **Page turn**. On two pages side by side, the whole spread curls over
   as one page.
+- In the scroll mode, each chapter scrolls on its own: at its end, swipe sideways, tap the side or press a volume key to
+  go on to the next one. Scrolling automatically goes on to the next chapter by itself. **By screen** isn't there, so a
+  swipe scrolls freely. Books with fixed pages keep turning their pages.
 - Bookmarks and highlights made with one engine don't show in the other.
 - The new engine keeps its own place in the book. When you first turn it on, it opens about where you were.
 

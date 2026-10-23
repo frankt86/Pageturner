@@ -38,6 +38,7 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 | Search | [done] |
 | Reading aloud, with the natural voice or the phone's | [done] |
 | Page curl, slide or no animation | [done] | The curl turns a picture of the page; two-page spreads curl as a whole. |
+| Scroll mode and automatic scrolling | [done] | One chapter at a time; a sideways swipe or the end of the chapter goes on to the next. |
 
 ## Phase 1: reading modes and layout (sections 1 and 5)
 
@@ -46,11 +47,11 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 | Paginated reading | [done] | |
 | Single-page and two-page view | [done] | Two pages when the screen is wide. |
 | Adaptive layout | [done] | **Pages** in the Display sheet: Auto, One page, Two pages. |
-| Continuous scrolling (chapter or whole book) | [new] | Readium scroll mode, or a LazyColumn of paragraphs in our engine. |
-| Page transitions: none, slide, curl | [done] | **Page turn** in the Display sheet, for both engines. |
-| Scroll behavior: smooth, stepped, snap | [new] | Only in scroll mode. |
-| Automatic scrolling with speed, pause on touch | [new] | Timer that scrolls N px per second, stops while a finger is down or text is selected. |
-| Automatic page turns at an interval | [new] | Timer that calls the existing turn; pause while menus are open. |
+| Continuous scrolling (chapter or whole book) | [done] | **Reading mode**: Pages or Scroll. The old engine scrolls the whole book as a list of paragraphs, PDF as a list of pages. The new engine uses Readium's scroll mode, one chapter at a time. |
+| Page transitions: none, slide, curl | [done] | **Page turn** in the Display sheet, for both engines. Hidden in the scroll mode. |
+| Scroll behavior: smooth, stepped, snap | [part] | **Scrolling**: Smooth, Instant (a screen at once) and By screen (each swipe ends on a screen). The new engine has no By screen, its web view can't snap. |
+| Automatic scrolling with speed, pause on touch | [done] | **Scroll automatically** in the top bar and **Scrolling speed**. Waits while a finger is down, text is selected, the bars or a sheet are open or the book is read aloud. The new engine scrolls its web view with a script. |
+| Automatic page turns at an interval | [done] | **Turn pages automatically** in the top bar and **Time per page**, 10 to 120 seconds. Waits while the bars or a sheet are open or the book is read aloud; a turn by hand starts the time anew. |
 | Multiple columns, column gap | [part] | **Pages** sets the column count in the new engine and the pages in the old one. **Space between pages** sets the gap. More than two columns isn't planned. |
 | Margins: top, bottom, left, right separately | [done] | Sides, top and bottom. Left and right stay the same. |
 | Reading width limit | [done] | **Shorter lines on wide screens**, about 65 characters. |

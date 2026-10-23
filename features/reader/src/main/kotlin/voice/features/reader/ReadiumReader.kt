@@ -88,7 +88,9 @@ import voice.core.data.ReaderPages
 import voice.core.data.ReaderSettings
 import voice.core.data.ReaderTextAlign
 import voice.core.data.ReaderTheme
+import voice.core.data.ReadingMode
 import voice.core.data.ReadingPace
+import voice.core.data.ScrollBehavior
 import voice.core.logging.api.Logger
 import voice.core.ui.bookText
 import org.readium.r2.navigator.epub.css.Color as ReadiumCssColor
@@ -112,6 +114,11 @@ internal fun ReadiumPages(
   volumeKeysTurnPages: Boolean,
   transition: PageTransition,
   jumps: Flow<Locator>,
+  // each request turns a page, or in the scroll mode scrolls a screen, forward for a positive step
+  turnRequests: Flow<Int>,
+  // in dp per second while the text scrolls by itself, else null
+  autoScrollSpeed: Int?,
+  onAutoScrollEnd: () -> Unit,
   onLocatorChange: (Locator) -> Unit,
   onPageTurn: () -> Unit,
   onCenterTap: () -> Unit,
@@ -134,27 +141,43 @@ internal fun ReadiumPages(
   val latestOnNoteAdd by rememberUpdatedState(onNoteAdd)
   val latestOnHighlightClick by rememberUpdatedState(onHighlightClick)
   val latestVolumeKeysTurnPages by rememberUpdatedState(volumeKeysTurnPages)
+  val latestOnAutoScrollEnd by rememberUpdatedState(onAutoScrollEnd)
+  val scroll = settings.readingMode == ReadingMode.Scroll
+  val latestScroll by rememberUpdatedState(scroll)
+  // Readium can't snap the scrolled text to screens, a snap scrolls smoothly
+  val latestSmooth by rememberUpdatedState(settings.scrollBehavior != ScrollBehavior.Stepped)
   val selectionLabels by rememberUpdatedState(
     HighlightColor.entries.map { highlightColorName(it, settings.highlightNames) } +
       stringResource(StringsR.string.reader_highlight_note) +
       stringResource(StringsR.string.reader_look_up),
   )
   var navigator by remember { mutableStateOf<EpubNavigatorFragment?>(null) }
+  var selecting by remember { mutableStateOf(false) }
   val turns = remember { ReadiumTurns(scope) }
   val container = remember(context) { NavigatorContainer(context) }
+  val turn: (Int) -> Unit = { step ->
+    val current = navigator
+    if (!latestScroll) {
+      turns.turn(step)
+    } else if (current != null) {
+      scope.launch { scrollStep(current, step, latestSmooth) }
+    }
+  }
+  val latestTurn by rememberUpdatedState(turn)
   SideEffect {
     turns.transition = transition
-    // Readium slides the pages itself
-    container.interceptDrags = transition != PageTransition.Slide
+    // Readium slides the pages itself, and scrolled text changes the chapter with a swipe sideways
+    container.interceptDrags = !scroll && transition != PageTransition.Slide
     container.onDrag = turns::onDrag
     container.onVolumeKey = { step ->
       if (latestVolumeKeysTurnPages) {
-        if (step != 0) turns.turn(step)
+        if (step != 0) latestTurn(step)
         true
       } else {
         false
       }
     }
+    container.onFingerMove = { if (latestScroll) latestOnPageTurn() }
   }
   Box(modifier) {
     AndroidView(factory = { container }, modifier = Modifier.fillMaxSize())
@@ -175,7 +198,7 @@ internal fun ReadiumPages(
     )
     // while the web view has no focus, the volume keys come to Compose
     if (volumeKeysTurnPages) {
-      VolumeKeyPageTurns { step -> turns.turn(step) }
+      VolumeKeyPageTurns { step -> latestTurn(step) }
     }
   }
   // Readium takes these only when its pages are made, so changing them makes them anew
@@ -204,6 +227,7 @@ internal fun ReadiumPages(
         mode: ActionMode,
         menu: Menu,
       ): Boolean {
+        selecting = true
         selectionLabels.forEachIndexed { index, label -> menu.add(Menu.NONE, index, index, label) }
         return true
       }
@@ -235,7 +259,9 @@ internal fun ReadiumPages(
         return true
       }
 
-      override fun onDestroyActionMode(mode: ActionMode) {}
+      override fun onDestroyActionMode(mode: ActionMode) {
+        selecting = false
+      }
     }
     val fragment = book.navigatorFactory
       .createFragmentFactory(
@@ -262,8 +288,8 @@ internal fun ReadiumPages(
         override fun onTap(event: TapEvent): Boolean {
           val width = fragment.publicationView.width
           when {
-            event.point.x > width * 2 / 3 -> turns.turnTowards(right = true)
-            event.point.x < width / 3 -> turns.turnTowards(right = false)
+            event.point.x > width * 2 / 3 -> if (latestScroll) latestTurn(1) else turns.turnTowards(right = true)
+            event.point.x < width / 3 -> if (latestScroll) latestTurn(-1) else turns.turnTowards(right = false)
             else -> latestOnCenterTap()
           }
           return true
@@ -304,7 +330,31 @@ internal fun ReadiumPages(
       .map { it.locations.totalProgression }
       .distinctUntilChanged()
       .drop(1)
-      .collect { latestOnPageTurn() }
+      .collect { if (!latestScroll) latestOnPageTurn() }
+  }
+  LaunchedEffect(turnRequests) {
+    turnRequests.collect { latestTurn(it) }
+  }
+  val speed = autoScrollSpeed?.takeIf { scroll && !container.fingerDown && !selecting }
+  LaunchedEffect(navigator, speed) {
+    val current = navigator ?: return@LaunchedEffect
+    if (speed == null) {
+      val _ = current.evaluateJavascript(autoScrollScript(0))
+      return@LaunchedEffect
+    }
+    while (true) {
+      val chapterEnd = current.evaluateJavascript(autoScrollScript(speed)) == "true"
+      if (chapterEnd) {
+        if (current.locatorAtEnd()) {
+          latestOnAutoScrollEnd()
+          return@LaunchedEffect
+        }
+        val _ = current.goForward(animated = false)
+        // the next chapter takes a moment to open
+        delay(1_000)
+      }
+      delay(250)
+    }
   }
   LaunchedEffect(navigator, jumps) {
     val current = navigator ?: return@LaunchedEffect
@@ -342,6 +392,69 @@ internal fun ReadiumPages(
     if (readingAloud != null) current.go(readingAloud)
   }
 }
+
+private fun EpubNavigatorFragment.locatorAtEnd(): Boolean = (currentLocator.value.locations.totalProgression ?: 0.0) >= 0.999
+
+/**
+ * Scrolls the text a screen less a line, or goes on to the next or previous chapter at its end. Readium only turns
+ * whole chapters in the scroll mode.
+ */
+private suspend fun scrollStep(
+  navigator: EpubNavigatorFragment,
+  step: Int,
+  smooth: Boolean,
+) {
+  val behavior = if (smooth) "smooth" else "auto"
+  val script = """
+    (function() {
+      var s = document.scrollingElement;
+      var line = parseFloat(getComputedStyle(document.body).lineHeight) || 24;
+      if ($step > 0 && s.scrollTop + s.clientHeight >= s.scrollHeight - 1) return false;
+      if ($step < 0 && s.scrollTop <= 0) return false;
+      s.scrollBy({ top: $step * Math.max(s.clientHeight - line, line), behavior: '$behavior' });
+      return true;
+    })();
+  """.trimIndent()
+  if (navigator.evaluateJavascript(script) != "true") {
+    val _ = if (step > 0) navigator.goForward(animated = false) else navigator.goBackward(animated = false)
+  }
+}
+
+/**
+ * Scrolls the text [speed] CSS pixels, which are dp, a second in the web view, and says whether it's at the end of the
+ * chapter. It stops when it isn't called again within a second, so a chapter that's no longer shown stops too.
+ */
+private fun autoScrollScript(speed: Int): String = """
+  (function() {
+    var s = document.scrollingElement;
+    var a = window.pageturnerAutoScroll || (window.pageturnerAutoScroll = { running: false });
+    a.speed = $speed;
+    a.until = Date.now() + 1000;
+    if (!a.running && a.speed > 0) {
+      a.running = true;
+      a.last = 0;
+      a.carry = 0;
+      var frame = function(time) {
+        if (a.speed <= 0 || Date.now() > a.until) {
+          a.running = false;
+          return;
+        }
+        if (a.last) {
+          a.carry += a.speed * (time - a.last) / 1000;
+          var whole = Math.floor(a.carry);
+          if (whole >= 1) {
+            s.scrollTop += whole;
+            a.carry -= whole;
+          }
+        }
+        a.last = time;
+        requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    }
+    return s.scrollTop + s.clientHeight >= s.scrollHeight - 1;
+  })();
+""".trimIndent()
 
 private const val HIGHLIGHTS = "highlights"
 private const val SEARCH = "search"
@@ -401,7 +514,7 @@ private fun ReaderSettings.epubPreferences(colors: PageColors?): EpubPreferences
     // Readium's margins are 20 px at 1
     pageMargins = margin / 20.0,
     publisherStyles = publisherStyles,
-    scroll = false,
+    scroll = readingMode == ReadingMode.Scroll,
     columnCount = when (pages) {
       ReaderPages.Auto -> ColumnCount.AUTO
       ReaderPages.One -> ColumnCount.ONE

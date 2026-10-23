@@ -304,6 +304,10 @@
     <string name="playback.speed.increase">Lebih cepat</string>
     <string name="playback.speed.title">Kecepatan pemutaran</string>
     <string name="playback.volume_boost.off">Mati</string>
+    <string name="reader.auto_scroll">Gulir otomatis</string>
+    <string name="reader.auto_scroll.speed">Kecepatan gulir</string>
+    <string name="reader.auto_turn">Balik halaman otomatis</string>
+    <string name="reader.auto_turn.interval">Waktu per halaman</string>
     <string name="reader.bookmark.add">Tandai halaman ini</string>
     <string name="reader.bookmark.delete">Hapus markah</string>
     <string name="reader.bookmark.remove">Lepas markah</string>
@@ -406,6 +410,9 @@
     <string name="reader.publisher_styles.summary">Mempertahankan font dan format buku. Hanya ukuran teks dan warna yang berubah.</string>
     <string name="reader.read_aloud">Bacakan</string>
     <string name="reader.read_aloud_unavailable">Fitur bacakan tidak tersedia di perangkat ini</string>
+    <string name="reader.reading_mode">Mode membaca</string>
+    <string name="reader.reading_mode.pages">Halaman</string>
+    <string name="reader.reading_mode.scroll">Gulir</string>
     <string name="reader.schedule">Siang dan malam</string>
     <string name="reader.schedule.day">Siang hari</string>
     <string name="reader.schedule.earlier">Lebih awal</string>
@@ -414,6 +421,10 @@
     <string name="reader.schedule.night_end">Malam berakhir</string>
     <string name="reader.schedule.night_start">Malam dimulai</string>
     <string name="reader.schedule.switch">Ganti tema sesuai waktu</string>
+    <string name="reader.scrolling">Gulir</string>
+    <string name="reader.scrolling.instant">Langsung</string>
+    <string name="reader.scrolling.smooth">Halus</string>
+    <string name="reader.scrolling.snap">Per layar</string>
     <string name="reader.search">Cari di buku</string>
     <string name="reader.search.empty">Tidak ada hasil</string>
     <string name="reader.short_lines">Baris lebih pendek di layar lebar</string>

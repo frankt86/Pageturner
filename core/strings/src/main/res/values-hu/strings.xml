@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">Gyorsabb</string>
     <string name="playback.speed.title">Lejátszási sebesség</string>
     <string name="playback.volume_boost.off">Ki</string>
+    <string name="reader.auto_scroll">Automatikus görgetés</string>
+    <string name="reader.auto_scroll.speed">Görgetési sebesség</string>
+    <string name="reader.auto_turn">Automatikus lapozás</string>
+    <string name="reader.auto_turn.interval">Idő oldalanként</string>
     <string name="reader.bookmark.add">Könyvjelző hozzáadása</string>
     <string name="reader.bookmark.delete">Könyvjelző törlése</string>
     <string name="reader.bookmark.remove">Könyvjelző eltávolítása</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">Megtartja a könyv betűtípusait és formázását. Csak a szövegméret és a színek változnak.</string>
     <string name="reader.read_aloud">Felolvasás</string>
     <string name="reader.read_aloud_unavailable">A felolvasás nem érhető el ezen az eszközön</string>
+    <string name="reader.reading_mode">Olvasási mód</string>
+    <string name="reader.reading_mode.pages">Oldalak</string>
+    <string name="reader.reading_mode.scroll">Görgetés</string>
     <string name="reader.schedule">Nappal és éjszaka</string>
     <string name="reader.schedule.day">Nappal</string>
     <string name="reader.schedule.earlier">Korábban</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">Éjszaka vége</string>
     <string name="reader.schedule.night_start">Éjszaka kezdete</string>
     <string name="reader.schedule.switch">Téma váltása a napszak szerint</string>
+    <string name="reader.scrolling">Görgetés</string>
+    <string name="reader.scrolling.instant">Azonnali</string>
+    <string name="reader.scrolling.smooth">Egyenletes</string>
+    <string name="reader.scrolling.snap">Képernyőnként</string>
     <string name="reader.search">Keresés a könyvben</string>
     <string name="reader.search.empty">Nincs találat</string>
     <string name="reader.short_lines">Rövidebb sorok széles kijelzőn</string>

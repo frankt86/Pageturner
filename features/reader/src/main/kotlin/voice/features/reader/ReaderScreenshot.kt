@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.coroutines.flow.emptyFlow
 import voice.core.data.EbookPosition
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
@@ -124,12 +125,15 @@ private fun ReaderPreview(
           readingAloud = true,
           bookmarked = true,
           showSearch = true,
+          auto = AutoMode.Turn,
+          autoRunning = false,
           onCloseClick = {},
           onReadAloudClick = {},
           onContentsClick = {},
           onDisplayClick = {},
           onBookmarkClick = {},
           onSearchClick = {},
+          onAutoClick = {},
         )
       },
     ) { contentPadding ->
@@ -139,6 +143,8 @@ private fun ReaderPreview(
         selection = remember { PageSelection() },
         onHighlightClick = {},
         onVisiblePagesChange = {},
+        turnRequests = emptyFlow(),
+        onTurnRequest = {},
         modifier = Modifier
           .fillMaxSize()
           .padding(contentPadding),

@@ -304,6 +304,10 @@
     <string name="playback.speed.increase">加速</string>
     <string name="playback.speed.title">播放速度</string>
     <string name="playback.volume_boost.off">关闭</string>
+    <string name="reader.auto_scroll">自动滚动</string>
+    <string name="reader.auto_scroll.speed">滚动速度</string>
+    <string name="reader.auto_turn">自动翻页</string>
+    <string name="reader.auto_turn.interval">每页时间</string>
     <string name="reader.bookmark.add">将此页加入书签</string>
     <string name="reader.bookmark.delete">删除书签</string>
     <string name="reader.bookmark.remove">移除书签</string>
@@ -406,6 +410,9 @@
     <string name="reader.publisher_styles.summary">保留图书的字体和格式，只改变文字大小和颜色。</string>
     <string name="reader.read_aloud">朗读</string>
     <string name="reader.read_aloud_unavailable">此设备不支持朗读</string>
+    <string name="reader.reading_mode">阅读模式</string>
+    <string name="reader.reading_mode.pages">翻页</string>
+    <string name="reader.reading_mode.scroll">滚动</string>
     <string name="reader.schedule">白天和夜间</string>
     <string name="reader.schedule.day">白天</string>
     <string name="reader.schedule.earlier">提前</string>
@@ -414,6 +421,10 @@
     <string name="reader.schedule.night_end">夜间结束</string>
     <string name="reader.schedule.night_start">夜间开始</string>
     <string name="reader.schedule.switch">按时间切换主题</string>
+    <string name="reader.scrolling">滚动方式</string>
+    <string name="reader.scrolling.instant">瞬间</string>
+    <string name="reader.scrolling.smooth">平滑</string>
+    <string name="reader.scrolling.snap">按屏</string>
     <string name="reader.search">在书中搜索</string>
     <string name="reader.search.empty">没有找到结果</string>
     <string name="reader.short_lines">宽屏上缩短行长</string>

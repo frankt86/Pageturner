@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">Πιο γρήγορα</string>
     <string name="playback.speed.title">Ταχύτητα αναπαραγωγής</string>
     <string name="playback.volume_boost.off">Απενεργοποίηση</string>
+    <string name="reader.auto_scroll">Αυτόματη κύλιση</string>
+    <string name="reader.auto_scroll.speed">Ταχύτητα κύλισης</string>
+    <string name="reader.auto_turn">Αυτόματο γύρισμα σελίδων</string>
+    <string name="reader.auto_turn.interval">Χρόνος ανά σελίδα</string>
     <string name="reader.bookmark.add">Προσθήκη σελιδοδείκτη</string>
     <string name="reader.bookmark.delete">Διαγραφή σελιδοδείκτη</string>
     <string name="reader.bookmark.remove">Αφαίρεση σελιδοδείκτη</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">Διατηρεί τις γραμματοσειρές και τη μορφοποίηση του βιβλίου. Αλλάζουν μόνο το μέγεθος του κειμένου και τα χρώματα.</string>
     <string name="reader.read_aloud">Ανάγνωση φωναχτά</string>
     <string name="reader.read_aloud_unavailable">Η ανάγνωση φωναχτά δεν είναι διαθέσιμη σε αυτήν τη συσκευή</string>
+    <string name="reader.reading_mode">Λειτουργία ανάγνωσης</string>
+    <string name="reader.reading_mode.pages">Σελίδες</string>
+    <string name="reader.reading_mode.scroll">Κύλιση</string>
     <string name="reader.schedule">Μέρα και νύχτα</string>
     <string name="reader.schedule.day">Τη μέρα</string>
     <string name="reader.schedule.earlier">Νωρίτερα</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">Τέλος νύχτας</string>
     <string name="reader.schedule.night_start">Αρχή νύχτας</string>
     <string name="reader.schedule.switch">Εναλλαγή θέματος ανάλογα με την ώρα</string>
+    <string name="reader.scrolling">Κύλιση</string>
+    <string name="reader.scrolling.instant">Άμεση</string>
+    <string name="reader.scrolling.smooth">Ομαλή</string>
+    <string name="reader.scrolling.snap">Ανά οθόνη</string>
     <string name="reader.search">Αναζήτηση στο βιβλίο</string>
     <string name="reader.search.empty">Δεν βρέθηκε τίποτα</string>
     <string name="reader.short_lines">Πιο κοντές γραμμές σε φαρδιές οθόνες</string>
