@@ -11,13 +11,8 @@ Pageturner turns your own audiobook files into a calm listening library with res
 skipping, and Android Auto support. It also reads your EPUB and PDF books, two pages side by side on an unfolded foldable, and
 can read them aloud.
 
-[:material-download: &nbsp;Download the APK](https://github.com/frankt86/Voice/releases/download/debug/app-free-debug.apk){ .md-button }
+[:material-download: &nbsp;Download the APK](https://github.com/frankt86/Pageturner/releases/download/debug/app-free-debug.apk){ .md-button }
 
-[:simple-kofi:{ .heart-pulse } &nbsp;Support Voice on Ko-fi](https://ko-fi.com/paul_voice){ .md-button .md-button--sponsor }
-
-<small>Pageturner is built on Voice. Voice has no ads and no investors. It's made by one developer and kept going by its listeners. Monthly support
-is what lets me plan the next release. Ko-fi needs no account. You can also
-[sponsor on GitHub](https://github.com/sponsors/PaulWoitaschek).</small>
 
 <div class="voice-screenshots">
   <img src="screenshots/1_en-US.png" alt="Pageturner library view" />
@@ -63,6 +58,6 @@ is what lets me plan the next release. Ko-fi needs no account. You can also
 
 ## Learn more
 
-Read [About Voice](about.md) for the philosophy behind the app it's built on, [Organizing Audiobooks](organizing.md) for setting up your library,
+Read [Organizing Audiobooks](organizing.md) for setting up your library,
 [Ebooks](ebooks.md) for reading EPUB and PDF books, or
 the [FAQ](faq.md) for common questions. Want to contribute? See [Development](development.md) and [Architecture](architecture.md).
