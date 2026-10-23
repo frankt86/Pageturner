@@ -233,6 +233,33 @@ class ReaderViewModel(
     }
   }
 
+  internal fun onReadiumBookmarkClick() {
+    val book = readium ?: return
+    val page = book.locator ?: return
+    val onPage = book.bookmarks.filter { book.isOnPage(it, page) }
+    book.bookmarks = if (onPage.isEmpty()) {
+      (book.bookmarks + page).sortedBy { it.locations.totalProgression ?: 0.0 }
+    } else {
+      book.bookmarks - onPage.toSet()
+    }
+    saveReadiumBookmarks(book)
+  }
+
+  internal fun onReadiumBookmarkDelete(bookmark: Locator) {
+    val book = readium ?: return
+    book.bookmarks = book.bookmarks - bookmark
+    saveReadiumBookmarks(book)
+  }
+
+  private fun saveReadiumBookmarks(book: ReadiumBook) {
+    val bookmarks = book.bookmarks.map { it.toJsonString() }
+    scope.launch {
+      store.updateData { ebooks ->
+        ebooks.map { if (it.uri == uri) it.copy(readiumBookmarks = bookmarks) else it }
+      }
+    }
+  }
+
   internal fun onLocatorChange(locator: Locator) {
     val book = readium ?: return
     if (book.locator == locator) return

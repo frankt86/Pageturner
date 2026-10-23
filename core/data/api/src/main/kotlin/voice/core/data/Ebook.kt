@@ -30,6 +30,8 @@ public data class Ebook(
   val highlights: List<Highlight> = emptyList(),
   /** Where the new book engine is in the book, a Readium Locator as JSON. */
   val readiumLocator: String? = null,
+  /** The bookmarks of the new book engine, Readium Locators as JSON. */
+  val readiumBookmarks: List<String> = emptyList(),
 ) {
 
   val title: String get() = customName ?: name

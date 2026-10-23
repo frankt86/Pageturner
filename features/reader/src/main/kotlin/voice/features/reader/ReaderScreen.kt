@@ -86,7 +86,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
-import org.readium.r2.shared.publication.Link
+import org.readium.r2.shared.publication.Locator
 import voice.core.common.rootGraphAs
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
@@ -156,7 +156,7 @@ internal fun ReaderScreen(uri: Uri) {
   val selection = remember { PageSelection() }
   var visiblePages by remember { mutableStateOf(emptyList<Page>()) }
   var editedHighlight by remember { mutableStateOf<Highlight?>(null) }
-  val readiumJumps = remember { MutableSharedFlow<Link>(extraBufferCapacity = 1) }
+  val readiumJumps = remember { MutableSharedFlow<Locator>(extraBufferCapacity = 1) }
   ReaderWindow(immersive = !barsVisible && loaded != null, brightness = loaded?.settings?.brightness)
   val turnPage = { page: Page, progress: Float ->
     barsVisible = false
@@ -185,17 +185,26 @@ internal fun ReaderScreen(uri: Uri) {
         )
       }
       is ReaderState.Loaded -> if (state.readium != null) {
-        ReadiumPages(
-          book = state.readium,
-          settings = state.settings,
-          jumps = readiumJumps,
-          onLocatorChange = viewModel::onLocatorChange,
-          onPageTurn = { barsVisible = false },
-          onCenterTap = { barsVisible = !barsVisible },
-          modifier = Modifier
+        Box(
+          Modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout)),
-        )
+        ) {
+          ReadiumPages(
+            book = state.readium,
+            settings = state.settings,
+            jumps = readiumJumps,
+            onLocatorChange = viewModel::onLocatorChange,
+            onPageTurn = { barsVisible = false },
+            onCenterTap = { barsVisible = !barsVisible },
+            modifier = Modifier.fillMaxSize(),
+          )
+          ReadiumPageBar(
+            book = state.readium,
+            visible = barsVisible,
+            onJump = { locator -> val _ = readiumJumps.tryEmit(locator) },
+          )
+        }
       } else {
         Book(
           state = state,
@@ -246,12 +255,17 @@ internal fun ReaderScreen(uri: Uri) {
       enter = fadeIn() + slideInVertically { -it },
       exit = fadeOut() + slideOutVertically { -it },
     ) {
-      // bookmarks, search and reading aloud don't work in the new book engine yet
-      val oldEngine = loaded?.readium == null
+      // search and reading aloud don't work in the new book engine yet
+      val readium = loaded?.readium
+      val oldEngine = readium == null
       ReaderTopBar(
         title = loaded?.content?.title,
         readingAloud = loaded?.readingAloud?.takeIf { oldEngine },
-        bookmarked = loaded?.bookmarks?.any { bookmark -> visiblePages.any { it.contains(bookmark) } }?.takeIf { oldEngine },
+        bookmarked = if (readium != null) {
+          readium.bookmarks.any { readium.isOnPage(it, readium.locator) }
+        } else {
+          loaded?.bookmarks?.any { bookmark -> visiblePages.any { it.contains(bookmark) } }
+        },
         showSearch = loaded?.content?.searchable == true && oldEngine,
         onCloseClick = viewModel::onCloseClick,
         onReadAloudClick = {
@@ -259,7 +273,9 @@ internal fun ReaderScreen(uri: Uri) {
         },
         onContentsClick = { sheet = ReaderSheet.Contents },
         onDisplayClick = { sheet = ReaderSheet.Display },
-        onBookmarkClick = { viewModel.onBookmarkClick(visiblePages) },
+        onBookmarkClick = {
+          if (readium != null) viewModel.onReadiumBookmarkClick() else viewModel.onBookmarkClick(visiblePages)
+        },
         onSearchClick = { sheet = ReaderSheet.Search },
       )
     }
@@ -296,10 +312,11 @@ internal fun ReaderScreen(uri: Uri) {
   if (readium != null && sheet == ReaderSheet.Contents) {
     ReadiumContentsSheet(
       book = readium,
-      onLinkClick = { link ->
+      onJump = { locator ->
         sheet = null
-        val _ = readiumJumps.tryEmit(link)
+        val _ = readiumJumps.tryEmit(locator)
       },
+      onBookmarkDelete = viewModel::onReadiumBookmarkDelete,
       onDismiss = { sheet = null },
     )
   } else if (loaded != null) {

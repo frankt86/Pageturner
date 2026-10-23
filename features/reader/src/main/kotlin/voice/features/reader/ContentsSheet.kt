@@ -42,7 +42,7 @@ import voice.core.ui.bookText
 import voice.core.ui.icons.VoiceIcons
 import voice.core.strings.R as StringsR
 
-private enum class ContentsTab {
+internal enum class ContentsTab {
   Contents,
   Bookmarks,
   Highlights,
@@ -92,7 +92,7 @@ internal fun ContentsSheet(
 }
 
 @Composable
-private fun tabTitle(tab: ContentsTab): String = stringResource(
+internal fun tabTitle(tab: ContentsTab): String = stringResource(
   when (tab) {
     ContentsTab.Contents -> StringsR.string.reader_contents
     ContentsTab.Bookmarks -> StringsR.string.reader_bookmarks
@@ -188,7 +188,7 @@ private fun sectionTitle(
 }
 
 @Composable
-private fun MarkRow(
+internal fun MarkRow(
   title: String,
   text: AnnotatedString?,
   deleteLabel: String,
@@ -237,7 +237,7 @@ private fun MarkRow(
 }
 
 @Composable
-private fun EmptyMarks(text: String) {
+internal fun EmptyMarks(text: String) {
   Text(
     text = text,
     style = MaterialTheme.typography.bodyLarge,
