@@ -30,17 +30,12 @@ import voice.core.data.folders.AudiobookFolders
 import voice.core.data.folders.DocumentFileWithUri
 import voice.core.data.folders.FolderType
 import voice.core.data.sleeptimer.SleepTimerPreference
-import voice.core.data.supporter.SupporterBadge
-import voice.core.data.supporter.SupporterStatus
 import voice.core.documentfile.CachedDocumentFile
 import voice.core.featureflag.MemoryFeatureFlag
 import voice.core.ui.DynamicColorAvailability
 import voice.core.ui.GridCount
 import voice.navigation.Destination
 import voice.navigation.Navigator
-import java.time.Clock
-import java.time.YearMonth
-import java.time.ZoneOffset
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -50,7 +45,6 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
-import java.time.Instant as JavaInstant
 
 class SettingsViewModelTest {
 
@@ -77,13 +71,11 @@ class SettingsViewModelTest {
     every { useGridAsDefault() } returns true
   }
   private val kioskModeFeatureFlag = MemoryFeatureFlag(false)
-  private val supportDevelopmentFeatureFlag = MemoryFeatureFlag(true)
   private val audiobookshelfFeatureFlag = MemoryFeatureFlag(false)
   private val serverName = MutableStateFlow<String?>(null)
   private val serverLibrary = mockk<ServerLibrary>(relaxUnitFun = true) {
     every { serverName } returns this@SettingsViewModelTest.serverName
   }
-  private val supporterStatusStore = MemoryDataStore(SupporterStatus())
   private val dynamicColorAvailability = mockk<DynamicColorAvailability> {
     every { isSupported() } returns true
   }
@@ -109,9 +101,6 @@ class SettingsViewModelTest {
     developerMenuUnlockedStore = developerMenuUnlockedStore,
     dynamicColorAvailability = dynamicColorAvailability,
     audiobookFolders = audiobookFolders,
-    supportDevelopmentFeatureFlag = supportDevelopmentFeatureFlag,
-    supporterStatusStore = supporterStatusStore,
-    clock = Clock.fixed(JavaInstant.parse("2026-10-07T10:00:00Z"), ZoneOffset.UTC),
     dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
     serverLibrary = serverLibrary,
     audiobookshelfFeatureFlag = audiobookshelfFeatureFlag,
@@ -218,42 +207,11 @@ class SettingsViewModelTest {
   }
 
   @Test
-  fun `openSupportVoice navigates to support screen`() {
-    viewModel.openSupportVoice()
-
-    verify(exactly = 1) {
-      navigator.goTo(Destination.SupportVoice)
-    }
-  }
-
-  @Test
   fun `openFolderPicker navigates to folder picker`() {
     viewModel.openFolderPicker()
 
     verify(exactly = 1) {
       navigator.goTo(Destination.FolderPicker)
-    }
-  }
-
-  @Test
-  fun `view state shows support development when turned on`() = scope.runTest {
-    supportDevelopmentFeatureFlag.value = true
-
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.filterNotNull().test {
-      assertEquals(expected = true, actual = awaitItem().showSupportDevelopment)
-    }
-  }
-
-  @Test
-  fun `view state hides support development when turned off`() = scope.runTest {
-    supportDevelopmentFeatureFlag.value = false
-
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.filterNotNull().test {
-      assertEquals(expected = false, actual = awaitItem().showSupportDevelopment)
     }
   }
 
@@ -285,34 +243,6 @@ class SettingsViewModelTest {
       viewModel.viewState()
     }.filterNotNull().test {
       assertEquals(expected = true, actual = awaitItem().showAudiobookshelf)
-    }
-  }
-
-  @Test
-  fun `view state shows the supporter badge`() = scope.runTest {
-    supporterStatusStore.updateData {
-      SupporterStatus(
-        supporterSince = JavaInstant.parse("2025-11-02T00:00:00Z").toEpochMilli(),
-        subscribedMonths = 12,
-      )
-    }
-
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.filterNotNull().test {
-      awaitItem().let {
-        assertEquals(expected = SupporterBadge.OneYear, actual = it.supporterBadge)
-        assertEquals(expected = YearMonth.of(2025, 11), actual = it.supporterSince)
-      }
-    }
-  }
-
-  @Test
-  fun `view state has no badge without support`() = scope.runTest {
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.filterNotNull().test {
-      assertNull(awaitItem().supporterBadge)
     }
   }
 

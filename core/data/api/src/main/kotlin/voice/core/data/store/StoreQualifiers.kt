@@ -37,9 +37,6 @@ public annotation class FadeOutStore
 public annotation class AmountOfBatteryOptimizationRequestedStore
 
 @Qualifier
-public annotation class ReviewPromptStateStore
-
-@Qualifier
 public annotation class FolderPickerMovedDialogShownStore
 
 @Qualifier
@@ -53,9 +50,6 @@ public annotation class FeatureFlagOverridesStore
 
 @Qualifier
 public annotation class CoverSeedColorsStore
-
-@Qualifier
-public annotation class SupporterStatusStore
 
 /**
  * Whether the bookmarks screen had the history open last, so it opens on that tab again. It starts

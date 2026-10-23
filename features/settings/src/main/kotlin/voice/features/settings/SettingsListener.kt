@@ -19,7 +19,6 @@ interface SettingsListener {
   fun suggestIdea()
   fun openBugReport()
   fun openFaq()
-  fun openSupportVoice()
   fun setAutoSleepTimer(checked: Boolean)
   fun setAutoSleepTimerStart(time: LocalTime)
   fun setAutoSleepTimerEnd(time: LocalTime)
@@ -46,7 +45,6 @@ interface SettingsListener {
       override fun suggestIdea() {}
       override fun openBugReport() {}
       override fun openFaq() {}
-      override fun openSupportVoice() {}
       override fun setAutoSleepTimer(checked: Boolean) {}
       override fun setAutoSleepTimerStart(time: LocalTime) {}
       override fun setAutoSleepTimerEnd(time: LocalTime) {}

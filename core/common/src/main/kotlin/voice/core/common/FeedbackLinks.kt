@@ -8,16 +8,15 @@ import androidx.core.net.toUri
  */
 object FeedbackLinks {
 
-  const val QUESTIONS = "https://github.com/PaulWoitaschek/Voice/discussions/categories/q-a"
-  const val IDEAS = "https://github.com/PaulWoitaschek/Voice/discussions/categories/ideas"
-  const val FAQ = "https://voice.woitaschek.de/faq/"
-  const val EMAIL = "audiobook@posteo.de"
+  const val QUESTIONS = "https://github.com/frankt86/Pageturner/issues/new"
+  const val IDEAS = "https://github.com/frankt86/Pageturner/issues/new"
+  const val FAQ = "https://github.com/frankt86/Pageturner/blob/main/docs/faq.md"
 
   /**
    * A new bug report, filled in with the app version and the device.
    */
   fun bugReport(versionName: String): String {
-    return "https://github.com/PaulWoitaschek/Voice/issues/new".toUri()
+    return "https://github.com/frankt86/Pageturner/issues/new".toUri()
       .buildUpon()
       .appendQueryParameter("template", "bug.yml")
       .appendQueryParameter("version", versionName)

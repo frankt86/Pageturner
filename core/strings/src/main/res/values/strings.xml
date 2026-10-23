@@ -576,45 +576,6 @@
     <string name="reader.voice.speed">Speed</string>
     <!-- Primary button of the read aloud sheet in the ebook reader. Starts reading the book aloud from the current page. -->
     <string name="reader.voice.start">Start reading</string>
-    <!-- Button in the rating prompt that opens the ways to share feedback. -->
-    <string name="review.prompt.action.feedback" tools:ignore="UnusedResources">Share feedback</string>
-    <!-- Button that closes the rating prompt without rating. -->
-    <string name="review.prompt.action.later" tools:ignore="UnusedResources">Not now</string>
-    <!-- Button in the rating prompt that opens Pageturner on Google Play. -->
-    <string name="review.prompt.action.rate" tools:ignore="UnusedResources">Rate on Google Play</string>
-    <!-- Subject of the feedback email started from the rating prompt. -->
-    <string name="review.prompt.email.subject" tools:ignore="UnusedResources">Feedback on Pageturner</string>
-    <!-- Description of the rating prompt option for reporting a bug. -->
-    <string name="review.prompt.feedback.bug.subtitle" tools:ignore="UnusedResources">Opens a bug report on GitHub</string>
-    <!-- Rating prompt option for reporting a bug. -->
-    <string name="review.prompt.feedback.bug.title" tools:ignore="UnusedResources">Report a bug</string>
-    <!-- Rating prompt option for writing an email. The email address is shown below it. -->
-    <string name="review.prompt.feedback.email.title" tools:ignore="UnusedResources">Write an email</string>
-    <!-- Description of the rating prompt option for suggesting an idea. -->
-    <string name="review.prompt.feedback.idea.subtitle" tools:ignore="UnusedResources">Starts a discussion on GitHub</string>
-    <!-- Rating prompt option for suggesting an idea. -->
-    <string name="review.prompt.feedback.idea.title" tools:ignore="UnusedResources">Suggest an idea</string>
-    <!-- Title of the ways to share feedback in the rating prompt. -->
-    <string name="review.prompt.feedback.title" tools:ignore="UnusedResources">What\'s on your mind?</string>
-    <!-- Title of the rating prompt after a book was finished. The name of the book is shown above it. -->
-    <string name="review.prompt.finished.title" tools:ignore="UnusedResources">Book finished!</string>
-    <!-- Message of the rating prompt. Everyone sees it, so it must not take for granted that the listener likes Pageturner. -->
-    <string name="review.prompt.message" tools:ignore="UnusedResources">Thanks for listening with Pageturner! If you like it, a rating on Google Play helps other listeners find it.</string>
-    <!-- Title of the rating prompt that celebrates the hours of audiobooks listened to. -->
-    <plurals name="review.prompt.milestone.title" tools:ignore="UnusedResources">
-        <item quantity="one">%d hour of stories!</item>
-        <item quantity="other">%d hours of stories!</item>
-    </plurals>
-    <!-- Label below the number of different authors listened to, in the rating prompt. -->
-    <string name="review.prompt.stat.authors" tools:ignore="UnusedResources">Authors</string>
-    <!-- Label below the number of finished books, in the rating prompt. -->
-    <string name="review.prompt.stat.finished" tools:ignore="UnusedResources">Books finished</string>
-    <!-- Label below the number of hours listened, in the rating prompt. -->
-    <string name="review.prompt.stat.hours" tools:ignore="UnusedResources">Hours listened</string>
-    <!-- Message after choosing to rate Pageturner, right before Google Play opens. -->
-    <string name="review.prompt.thanks.message" tools:ignore="UnusedResources">Taking you to Google Play…</string>
-    <!-- Title after choosing to rate Pageturner. -->
-    <string name="review.prompt.thanks.title" tools:ignore="UnusedResources">Thank you!</string>
     <!-- Settings about row showing the app version. -->
     <string name="settings.about.app_version.title">App version</string>
     <!-- Title and content description for opening settings. -->
@@ -699,106 +660,10 @@
     <!-- Settings support row for helping translate the app. -->
     <!-- Settings support row for reporting a problem. -->
     <string name="settings.support.report_issue.title">Report a problem</string>
-    <!-- Description on the settings card that opens the support screen, for subscribing, tipping or donating. -->
-    <string name="settings.support.support_voice.summary">Keeps Pageturner free and ad-free</string>
-    <!-- Settings row for opening the donation/support screen. -->
-    <string name="settings.support.support_voice.title">Support development</string>
     <!-- Settings support row for suggesting a product idea. -->
     <string name="settings.support.suggest_idea.title">Suggest an idea</string>
-    <!-- Title of the settings support card for someone who already supported Pageturner with a subscription or tip. -->
-    <string name="settings.support.supporter.title">Thanks for supporting Pageturner</string>
     <!-- Title of the settings section with the FAQ, getting help, reporting problems, suggesting ideas and translating. -->
     <string name="settings.support.title">Help and feedback</string>
-    <!-- Support screen button that opens the Google Play subscription settings. -->
-    <string name="support.action.manage_subscription">Manage subscription</string>
-    <!-- Support screen button that starts a supporter subscription or a one-time tip. %1$s is the price with its period, for example "€2.99 a month" or "€4.99 once". -->
-    <string name="support.action.subscribe">Support for %1$s</string>
-    <!-- Support screen button that changes a running subscription to another tier or period. %1$s is the new price with its period, for example "€29.99 a year". -->
-    <string name="support.action.switch">Switch to %1$s</string>
-    <!-- Spoken by the screen reader for a supporter badge the user has earned. -->
-    <string name="support.badge.earned">Earned</string>
-    <!-- Name of the supporter badge earned when subscribing. Playful: the narrator's first cup of tea. -->
-    <string name="support.badge.first_cup">First cup</string>
-    <!-- Spoken by the screen reader for a supporter badge the user hasn't earned yet. -->
-    <string name="support.badge.not_earned">Not earned yet</string>
-    <!-- Name of the supporter badge earned after one year of subscription. -->
-    <string name="support.badge.one_year">1 year</string>
-    <!-- Name of the supporter badge earned after six months of subscription. -->
-    <string name="support.badge.six_months">6 months</string>
-    <!-- Name of the supporter badge earned after three months of subscription. -->
-    <string name="support.badge.three_months">3 months</string>
-    <!-- Name of the supporter badge earned with a one-time tip. -->
-    <string name="support.badge.tip_jar">Tip jar</string>
-    <!-- Heading above the row of supporter badges. -->
-    <string name="support.badges.title">Your badge grows each month you support</string>
-    <!-- Support screen action for donating through Ko-fi. -->
-    <string name="support.action.donate_kofi">Donate on Ko-fi</string>
-    <!-- Support screen text explaining why support is useful. -->
-    <string name="support.description.maintenance">Pageturner is free, open source, and maintained by one developer.</string>
-    <!-- Support screen text under the main description, explaining why monthly support helps more than a one-time tip. Written by the developer in first person. -->
-    <string name="support.description.monthly">Monthly support is what lets me plan the next release, not just the next fix.</string>
-    <!-- Small print below the subscribe button. Makes clear that paying gives no features. -->
-    <string name="support.fine_print">It\'s a thank-you: it unlocks nothing. Cancel anytime in Google Play.</string>
-    <!-- Small print below the support button for a one-time tip. Makes clear that paying gives no features and starts no subscription. -->
-    <string name="support.fine_print.tip">It\'s a thank-you: it unlocks nothing. No subscription.</string>
-    <!-- Support screen heading above the list of what donations enable. -->
-    <string name="support.helps.title">Support helps with</string>
-    <!-- Support screen list item: bug fixes and ongoing maintenance. -->
-    <string name="support.helps.maintenance">Bug fixes and maintenance</string>
-    <!-- Support screen list item: new features. -->
-    <string name="support.helps.features">New features</string>
-    <!-- Support screen list item: keeping Pageturner free, open source, and ad-free. -->
-    <string name="support.helps.open_source">Keeping Pageturner ad-free</string>
-    <!-- Title on top of the support screen. Playful: the app is called Pageturner, and support keeps the pages turning. -->
-    <string name="support.hero.title">Keep the pages turning</string>
-    <!-- Hint below the Ko-fi donation button. Ko-fi offers monthly support first and a one-time tip, both without an account. -->
-    <string name="support.kofi.hint">Ko-fi opens in your browser. Monthly or once, no account needed.</string>
-    <!-- Shown on the support screen when starting a payment failed. -->
-    <string name="support.message.failed">That didn\'t work. Try again in a moment.</string>
-    <!-- Shown on the support screen while a payment is still being processed, for example a cash payment. Playful: "brewing" refers to the tea tiers. -->
-    <string name="support.message.pending">Your tea is brewing. Your badge appears once Google confirms the payment.</string>
-    <!-- Signature of the developer below a note or thank-you message. -->
-    <string name="support.note.signature" translatable="false">— Paul</string>
-    <!-- Toggle on the support screen for paying every month. -->
-    <string name="support.period.monthly">Monthly</string>
-    <!-- Toggle on the support screen for paying once a year. -->
-    <string name="support.period.yearly">Yearly</string>
-    <!-- Toggle on the support screen for paying a single time, without a subscription. -->
-    <string name="support.period.once">Once</string>
-    <!-- Price of a monthly subscription. %1$s is the price, for example "€2.99". -->
-    <string name="support.price.monthly">%1$s a month</string>
-    <!-- Price of a yearly subscription. %1$s is the price, for example "€29.99". -->
-    <string name="support.price.yearly">%1$s a year</string>
-    <!-- Price of a one-time tip. %1$s is the price, for example "€4.99". Shown in the support button, for example "Support for €4.99 once". -->
-    <string name="support.price.once">%1$s once</string>
-    <!-- Since when someone supports Pageturner. %1$s is a month and year, for example "March 2026". -->
-    <string name="support.supporter.since">Supporter since %1$s</string>
-    <!-- Title on the support screen for someone who already supported Pageturner. -->
-    <string name="support.supporter.title">You\'re a supporter</string>
-    <!-- Button that closes the thank-you screen after a payment. -->
-    <string name="support.thank_you.action">Back to listening</string>
-    <!-- Thank-you message after a payment. Playful: refers to the tea tiers. -->
-    <string name="support.thank_you.message">That really hits the spot. Thank you for keeping Pageturner going.</string>
-    <!-- Title of the thank-you screen after a payment. -->
-    <string name="support.thank_you.title">Thank you!</string>
-    <!-- Label on the subscription tier the user currently pays for. -->
-    <string name="support.tier.current">Your tier</string>
-    <!-- Short description of the most expensive supporter tier. -->
-    <string name="support.tier.golden_mic.summary">A standing ovation</string>
-    <!-- Name of the most expensive supporter tier. Playful: a golden microphone for the narrator. -->
-    <string name="support.tier.golden_mic.title">Golden mic</string>
-    <!-- Short description of the middle supporter tier. -->
-    <string name="support.tier.honey_tea.summary">Funds the long chapters</string>
-    <!-- Name of the middle supporter tier. Playful: tea with honey soothes the narrator's voice. -->
-    <string name="support.tier.honey_tea.title">Tea with honey</string>
-    <!-- Short description of the cheapest supporter tier. -->
-    <string name="support.tier.tea.summary">Keeps the lights on</string>
-    <!-- Name of the cheapest supporter tier. Playful: a cup of tea for the narrator. -->
-    <string name="support.tier.tea.title">Cup of tea</string>
-    <!-- Shown on the support screen when Google Play billing can't be reached. -->
-    <string name="support.unavailable.message">Google Play billing can\'t be reached on this device right now.</string>
-    <!-- Title on the support screen when Google Play billing can't be reached. -->
-    <string name="support.unavailable.title">Supporting isn\'t available</string>
     <!-- Short label for the launcher shortcut that plays the current book. -->
     <string name="shortcut.play_current.short_label">Play current</string>
     <!-- Content description for opening the sleep timer. -->
