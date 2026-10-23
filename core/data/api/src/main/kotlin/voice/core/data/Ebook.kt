@@ -30,6 +30,9 @@ public data class Ebook(
   val highlights: List<Highlight> = emptyList(),
   /** Where the new book engine is in the book, a Readium Locator as JSON. */
   val readiumLocator: String? = null,
+  /** The bookmarks of the new book engine, Readium Locators as JSON. */
+  val readiumBookmarks: List<String> = emptyList(),
+  val readiumHighlights: List<ReadiumHighlight> = emptyList(),
 ) {
 
   val title: String get() = customName ?: name
@@ -51,6 +54,14 @@ public data class Highlight(
   val section: Int,
   val start: Int,
   val end: Int,
+  val color: HighlightColor = HighlightColor.Yellow,
+  val note: String? = null,
+)
+
+/** A highlight of the new book engine, where [locator] is a Readium Locator as JSON. */
+@Serializable
+public data class ReadiumHighlight(
+  val locator: String,
   val color: HighlightColor = HighlightColor.Yellow,
   val note: String? = null,
 )

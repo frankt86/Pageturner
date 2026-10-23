@@ -44,6 +44,13 @@ import voice.core.ui.bookText
 import voice.core.ui.icons.VoiceIcons
 import voice.core.strings.R as StringsR
 
+/** A match in the book: the text around it, with the match from [matchStart] until [matchEnd]. */
+internal class SearchSnippet(
+  val text: String,
+  val matchStart: Int,
+  val matchEnd: Int,
+)
+
 @Composable
 internal fun SearchSheet(
   content: ReaderContent,
@@ -51,11 +58,39 @@ internal fun SearchSheet(
   onResultClick: (SearchResult) -> Unit,
   onDismiss: () -> Unit,
 ) {
+  SearchSheet(
+    search = search,
+    resultTitle = { result ->
+      when (content) {
+        is ReaderContent.Epub -> content.chapterTitle(result.match.section)
+        is ReaderContent.Pdf -> stringResource(StringsR.string.reader_page, result.match.section + 1, content.sectionCount)
+      }
+    },
+    resultSnippet = { result ->
+      SearchSnippet(
+        text = result.snippet,
+        matchStart = result.snippetMatchStart,
+        matchEnd = result.snippetMatchStart + result.match.end - result.match.start,
+      )
+    },
+    onResultClick = onResultClick,
+    onDismiss = onDismiss,
+  )
+}
+
+@Composable
+internal fun <T> SearchSheet(
+  search: suspend (String) -> List<T>,
+  resultTitle: @Composable (T) -> String,
+  resultSnippet: (T) -> SearchSnippet,
+  onResultClick: (T) -> Unit,
+  onDismiss: () -> Unit,
+) {
   var query by rememberSaveable { mutableStateOf("") }
   val latestSearch by rememberUpdatedState(search)
   val trimmed = query.trim()
   // null while searching
-  val results by produceState<List<SearchResult>?>(emptyList(), trimmed) {
+  val results by produceState<List<T>?>(emptyList(), trimmed) {
     if (trimmed.length < 2) {
       value = emptyList()
       return@produceState
@@ -101,8 +136,8 @@ internal fun SearchSheet(
     LazyColumn {
       items(found.orEmpty()) { result ->
         SearchResultRow(
-          content = content,
-          result = result,
+          title = resultTitle(result),
+          snippet = resultSnippet(result),
           onClick = { onResultClick(result) },
         )
       }
@@ -112,8 +147,8 @@ internal fun SearchSheet(
 
 @Composable
 private fun SearchResultRow(
-  content: ReaderContent,
-  result: SearchResult,
+  title: String,
+  snippet: SearchSnippet,
   onClick: () -> Unit,
 ) {
   val matchColor = MaterialTheme.colorScheme.tertiaryContainer
@@ -124,24 +159,22 @@ private fun SearchResultRow(
       .padding(horizontal = 24.dp, vertical = 10.dp),
   ) {
     Text(
-      text = when (content) {
-        is ReaderContent.Epub -> content.chapterTitle(result.match.section)
-        is ReaderContent.Pdf -> stringResource(StringsR.string.reader_page, result.match.section + 1, content.sectionCount)
-      },
+      text = title,
       style = MaterialTheme.typography.labelLarge.bookText(),
       color = MaterialTheme.colorScheme.onSurfaceVariant,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
     )
-    val snippet = remember(result, matchColor) {
+    val text = remember(snippet, matchColor) {
       buildAnnotatedString {
-        append(result.snippet)
-        val end = (result.snippetMatchStart + result.match.end - result.match.start).coerceAtMost(result.snippet.length)
-        addStyle(SpanStyle(fontWeight = FontWeight.Bold, background = matchColor), result.snippetMatchStart, end)
+        append(snippet.text)
+        val start = snippet.matchStart.coerceIn(0, snippet.text.length)
+        val end = snippet.matchEnd.coerceIn(start, snippet.text.length)
+        addStyle(SpanStyle(fontWeight = FontWeight.Bold, background = matchColor), start, end)
       }
     }
     Text(
-      text = snippet,
+      text = text,
       style = MaterialTheme.typography.bodyMedium.bookText(),
       maxLines = 3,
       overflow = TextOverflow.Ellipsis,

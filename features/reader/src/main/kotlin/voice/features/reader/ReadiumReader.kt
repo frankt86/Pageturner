@@ -2,34 +2,54 @@
 
 package voice.features.reader
 
+import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Context
-import android.net.Uri
+import android.content.Intent
+import android.view.ActionMode
+import android.view.KeyEvent
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentActivity
@@ -41,26 +61,19 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import org.json.JSONException
-import org.json.JSONObject
-import org.readium.r2.navigator.epub.EpubNavigatorFactory
+import kotlinx.coroutines.launch
+import org.readium.r2.navigator.DecorableNavigator
+import org.readium.r2.navigator.Decoration
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
 import org.readium.r2.navigator.epub.EpubPreferences
 import org.readium.r2.navigator.input.InputListener
 import org.readium.r2.navigator.input.TapEvent
 import org.readium.r2.navigator.util.DirectionalNavigationAdapter
 import org.readium.r2.shared.ExperimentalReadiumApi
-import org.readium.r2.shared.publication.Link
 import org.readium.r2.shared.publication.Locator
-import org.readium.r2.shared.publication.Publication
-import org.readium.r2.shared.publication.services.locateProgression
-import org.readium.r2.shared.util.asset.AssetRetriever
-import org.readium.r2.shared.util.getOrElse
-import org.readium.r2.shared.util.http.DefaultHttpClient
-import org.readium.r2.shared.util.toAbsoluteUrl
-import org.readium.r2.streamer.PublicationOpener
-import org.readium.r2.streamer.parser.DefaultPublicationParser
-import voice.core.data.Ebook
+import org.readium.r2.shared.util.AbsoluteUrl
+import org.readium.r2.shared.util.toUri
+import voice.core.data.HighlightColor
 import voice.core.data.ReaderFont
 import voice.core.data.ReaderSettings
 import voice.core.data.ReaderTheme
@@ -70,57 +83,6 @@ import org.readium.r2.navigator.preferences.Color as ReadiumColor
 import org.readium.r2.navigator.preferences.FontFamily as ReadiumFontFamily
 import org.readium.r2.navigator.preferences.Theme as ReadiumTheme
 import voice.core.strings.R as StringsR
-
-/** An EPUB opened with Readium, the new book engine. */
-internal class ReadiumBook(
-  val publication: Publication,
-  /** Where to start when the pages are shown again, e.g. after unfolding. */
-  var locator: Locator?,
-) {
-  val navigatorFactory = EpubNavigatorFactory(publication)
-}
-
-internal suspend fun openReadiumBook(
-  context: Context,
-  uri: Uri,
-  ebook: Ebook,
-): ReadiumBook? {
-  val url = uri.toAbsoluteUrl() ?: return null
-  val httpClient = DefaultHttpClient()
-  val assetRetriever = AssetRetriever(context.contentResolver, httpClient)
-  val asset = assetRetriever.retrieve(url).getOrElse { error ->
-    Logger.w("Readium could not read the book: ${error::class.simpleName}")
-    return null
-  }
-  val opener = PublicationOpener(
-    publicationParser = DefaultPublicationParser(context, httpClient, assetRetriever, pdfFactory = null),
-  )
-  val publication = opener.open(asset, allowUserInteraction = false).getOrElse { error ->
-    Logger.w("Readium could not open the book: ${error::class.simpleName}")
-    asset.close()
-    return null
-  }
-  if (!publication.conformsTo(Publication.Profile.EPUB)) {
-    publication.close()
-    return null
-  }
-  // without a place from the new engine, start about where the old one was
-  val locator = ebook.readiumLocator?.toLocator()
-    ?: ebook.progress.takeIf { it > 0F }?.let { publication.locateProgression(it.toDouble()) }
-  return ReadiumBook(publication, locator)
-}
-
-private fun String.toLocator(): Locator? {
-  return try {
-    Locator.fromJSON(JSONObject(this))
-  } catch (e: JSONException) {
-    // not the exception, its message holds the JSON with the chapter title
-    Logger.w("Could not read the saved place")
-    null
-  }
-}
-
-internal fun Locator.toJsonString(): String = toJSON().toString()
 
 /**
  * After the activity is recreated, e.g. when folding, Android puts the book's pages back before the reader
@@ -134,34 +96,55 @@ private const val NAVIGATOR_TAG = "readium_navigator"
 internal fun ReadiumPages(
   book: ReadiumBook,
   settings: ReaderSettings,
-  jumps: Flow<Link>,
+  volumeKeysTurnPages: Boolean,
+  jumps: Flow<Locator>,
   onLocatorChange: (Locator) -> Unit,
   onPageTurn: () -> Unit,
   onCenterTap: () -> Unit,
+  onHighlightAdd: (Locator, HighlightColor) -> Unit,
+  onNoteAdd: (Locator) -> Unit,
+  onHighlightClick: (LocatedHighlight) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val activity = LocalActivity.current as? FragmentActivity ?: return
   val context = LocalContext.current
+  val scope = rememberCoroutineScope()
   val preferences = settings.epubPreferences()
   val latestPreferences by rememberUpdatedState(preferences)
+  val latestBook by rememberUpdatedState(book)
   val latestOnCenterTap by rememberUpdatedState(onCenterTap)
   val latestOnLocatorChange by rememberUpdatedState(onLocatorChange)
   val latestOnPageTurn by rememberUpdatedState(onPageTurn)
+  val latestOnHighlightAdd by rememberUpdatedState(onHighlightAdd)
+  val latestOnNoteAdd by rememberUpdatedState(onNoteAdd)
+  val latestOnHighlightClick by rememberUpdatedState(onHighlightClick)
+  val latestVolumeKeysTurnPages by rememberUpdatedState(volumeKeysTurnPages)
+  val selectionLabels by rememberUpdatedState(
+    HighlightColor.entries.map { highlightColorName(it) } +
+      stringResource(StringsR.string.reader_highlight_note) +
+      stringResource(StringsR.string.reader_look_up),
+  )
   var navigator by remember { mutableStateOf<EpubNavigatorFragment?>(null) }
-  val container = remember(context) {
-    FragmentContainerView(context).apply {
-      id = View.generateViewId()
-      // the volume keys turn the pages in Compose, which only works while the web view can't take the focus
-      descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+  val turn: (Int) -> Unit = { step ->
+    val current = navigator
+    if (step > 0) current?.goForward() else current?.goBackward()
+  }
+  val container = remember(context) { NavigatorContainer(context) }
+  SideEffect {
+    container.onVolumeKey = { step ->
+      if (latestVolumeKeysTurnPages) {
+        if (step != 0) turn(step)
+        true
+      } else {
+        false
+      }
     }
   }
   Box(modifier) {
     AndroidView(factory = { container }, modifier = Modifier.fillMaxSize())
-    if (settings.volumeKeysTurnPages) {
-      VolumeKeyPageTurns { step ->
-        val current = navigator
-        if (step > 0) current?.goForward() else current?.goBackward()
-      }
+    // while the web view has no focus, the volume keys come to Compose
+    if (volumeKeysTurnPages) {
+      VolumeKeyPageTurns { step -> turn(step) }
     }
   }
   DisposableEffect(book, activity, container) {
@@ -169,13 +152,61 @@ internal fun ReadiumPages(
     fragmentManager.findFragmentByTag(NAVIGATOR_TAG)?.let { stale ->
       fragmentManager.commitNow(allowStateLoss = true) { remove(stale) }
     }
+    var created: EpubNavigatorFragment? = null
+    val selectionCallback = object : ActionMode.Callback {
+      override fun onCreateActionMode(
+        mode: ActionMode,
+        menu: Menu,
+      ): Boolean {
+        selectionLabels.forEachIndexed { index, label -> menu.add(Menu.NONE, index, index, label) }
+        return true
+      }
+
+      override fun onPrepareActionMode(
+        mode: ActionMode,
+        menu: Menu,
+      ): Boolean = false
+
+      override fun onActionItemClicked(
+        mode: ActionMode,
+        item: MenuItem,
+      ): Boolean {
+        val action = item.itemId
+        scope.launch {
+          val selection = created?.currentSelection()
+          mode.finish()
+          created?.clearSelection()
+          val locator = selection?.locator ?: return@launch
+          when (val color = HighlightColor.entries.getOrNull(action)) {
+            null -> if (action == HighlightColor.entries.size) {
+              latestOnNoteAdd(locator)
+            } else {
+              locator.text.highlight?.let { lookUp(context, it) }
+            }
+            else -> latestOnHighlightAdd(locator, color)
+          }
+        }
+        return true
+      }
+
+      override fun onDestroyActionMode(mode: ActionMode) {}
+    }
     val fragment = book.navigatorFactory
       .createFragmentFactory(
         initialLocator = book.locator,
         initialPreferences = latestPreferences,
-        configuration = EpubNavigatorFragment.Configuration(shouldApplyInsetsPadding = false),
+        listener = object : EpubNavigatorFragment.Listener {
+          override fun onExternalLinkActivated(url: AbsoluteUrl) {
+            openInBrowser(context, url)
+          }
+        },
+        configuration = EpubNavigatorFragment.Configuration(
+          selectionActionModeCallback = selectionCallback,
+          shouldApplyInsetsPadding = false,
+        ),
       )
       .instantiate(activity.classLoader, EpubNavigatorFragment::class.java.name) as EpubNavigatorFragment
+    created = fragment
     // the left and right edges turn the pages, so a tap anywhere else is in the middle
     fragment.addInputListener(DirectionalNavigationAdapter(fragment))
     fragment.addInputListener(
@@ -186,7 +217,17 @@ internal fun ReadiumPages(
         }
       },
     )
-    fragmentManager.commitNow(allowStateLoss = true) { add(container, fragment, NAVIGATOR_TAG) }
+    fragment.addDecorationListener(
+      HIGHLIGHTS,
+      object : DecorableNavigator.Listener {
+        override fun onDecorationActivated(event: DecorableNavigator.OnActivatedEvent): Boolean {
+          val highlight = latestBook.highlights.firstOrNull { it.id == event.decoration.id } ?: return false
+          latestOnHighlightClick(highlight)
+          return true
+        }
+      },
+    )
+    fragmentManager.commitNow(allowStateLoss = true) { add(container.fragments, fragment, NAVIGATOR_TAG) }
     navigator = fragment
     onDispose {
       navigator = null
@@ -210,7 +251,66 @@ internal fun ReadiumPages(
   }
   LaunchedEffect(navigator, jumps) {
     val current = navigator ?: return@LaunchedEffect
-    jumps.collect { link -> current.go(link) }
+    jumps.collect { locator -> current.go(locator) }
+  }
+  val highlights = book.highlights
+  LaunchedEffect(navigator, highlights) {
+    navigator?.applyDecorations(
+      highlights.map { highlight ->
+        Decoration(
+          id = highlight.id,
+          locator = highlight.locator,
+          style = Decoration.Style.Highlight(tint = highlight.color.ink().toArgb()),
+        )
+      },
+      HIGHLIGHTS,
+    )
+  }
+  val markTint = (settings.theme.pageColors()?.highlight ?: MaterialTheme.colorScheme.primaryContainer).toArgb()
+  val searchMatch = book.searchMatch
+  LaunchedEffect(navigator, searchMatch) {
+    navigator?.applyDecorations(
+      listOfNotNull(searchMatch?.let { Decoration(id = "match", locator = it, style = Decoration.Style.Highlight(tint = markTint)) }),
+      SEARCH,
+    )
+  }
+  val readingAloud = book.readingAloud
+  LaunchedEffect(navigator, readingAloud) {
+    val current = navigator ?: return@LaunchedEffect
+    current.applyDecorations(
+      listOfNotNull(readingAloud?.let { Decoration(id = "spoken", locator = it, style = Decoration.Style.Highlight(tint = markTint)) }),
+      READ_ALOUD,
+    )
+    // turns the page when the reading goes on on the next one
+    if (readingAloud != null) current.go(readingAloud)
+  }
+}
+
+private const val HIGHLIGHTS = "highlights"
+private const val SEARCH = "search"
+private const val READ_ALOUD = "read_aloud"
+
+/** Turns the pages with the volume keys also while the book's web view has the focus, e.g. after selecting text. */
+@SuppressLint("ViewConstructor")
+private class NavigatorContainer(context: Context) : FrameLayout(context) {
+
+  /** Called with 1 or -1 when a volume key goes down and 0 when it goes up, returns whether it took the key. */
+  var onVolumeKey: (step: Int) -> Boolean = { false }
+
+  val fragments = FragmentContainerView(context).apply { id = View.generateViewId() }
+
+  init {
+    addView(fragments)
+  }
+
+  override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+    val step = when (event.keyCode) {
+      KeyEvent.KEYCODE_VOLUME_DOWN -> 1
+      KeyEvent.KEYCODE_VOLUME_UP -> -1
+      else -> return super.dispatchKeyEvent(event)
+    }
+    // the key up too, or the phone shows its volume panel
+    return onVolumeKey(if (event.action == KeyEvent.ACTION_DOWN) step else 0) || super.dispatchKeyEvent(event)
   }
 }
 
@@ -242,39 +342,142 @@ private fun ReaderSettings.epubPreferences(): EpubPreferences {
   )
 }
 
+private fun openInBrowser(
+  context: Context,
+  url: AbsoluteUrl,
+) {
+  val intent = Intent(Intent.ACTION_VIEW, url.toUri()).addCategory(Intent.CATEGORY_BROWSABLE)
+  try {
+    context.startActivity(intent)
+  } catch (e: ActivityNotFoundException) {
+    // not the exception, its message holds the link
+    Logger.w("No app opens the link")
+  }
+}
+
+/** The page bar of the new book engine, with Readium's positions as the pages. */
+@Composable
+internal fun BoxScope.ReadiumPageBar(
+  book: ReadiumBook,
+  visible: Boolean,
+  onJump: (Locator) -> Unit,
+) {
+  if (book.positions.isEmpty()) return
+  BottomBar(visible = visible) {
+    val current = book.positionIndex(book.locator)
+    PageBar(
+      pageCount = book.positions.size,
+      currentIndex = current,
+      chapterTitle = { index -> book.chapterTitle(book.positions[index]).orEmpty() },
+      pagesLeftInChapter = book.pagesLeftInChapter(current),
+      onJump = { index -> onJump(book.positions[index]) },
+    )
+  }
+}
+
 @Composable
 internal fun ReadiumContentsSheet(
   book: ReadiumBook,
-  onLinkClick: (Link) -> Unit,
+  onJump: (Locator) -> Unit,
+  onBookmarkDelete: (Locator) -> Unit,
+  onHighlightDelete: (LocatedHighlight) -> Unit,
   onDismiss: () -> Unit,
 ) {
-  val entries = remember(book) {
-    val publication = book.publication
-    publication.tableOfContents.ifEmpty { publication.readingOrder }.flattenWithDepth()
-  }
+  val tabs = ContentsTab.entries
+  var selectedTab by rememberSaveable { mutableStateOf(ContentsTab.Contents) }
   ModalBottomSheet(onDismissRequest = onDismiss) {
-    Text(
-      text = stringResource(StringsR.string.reader_contents),
-      style = MaterialTheme.typography.titleLarge,
-      modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
-    )
-    LazyColumn {
-      itemsIndexed(entries) { index, entry ->
-        val depth = entry.first
-        val link = entry.second
-        Text(
-          text = link.title ?: stringResource(StringsR.string.reader_chapter, index + 1),
-          style = MaterialTheme.typography.bodyLarge.bookText(),
-          modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onLinkClick(link) }
-            .padding(start = 24.dp + 16.dp * depth, end = 24.dp, top = 14.dp, bottom = 14.dp),
+    PrimaryTabRow(selectedTabIndex = tabs.indexOf(selectedTab).coerceAtLeast(0)) {
+      tabs.forEach { tab ->
+        Tab(
+          selected = tab == selectedTab,
+          onClick = { selectedTab = tab },
+          text = { Text(tabTitle(tab)) },
         )
       }
+    }
+    when (selectedTab) {
+      ContentsTab.Contents -> ReadiumChapters(book, onJump)
+      ContentsTab.Bookmarks -> ReadiumBookmarks(book, onJump, onBookmarkDelete)
+      ContentsTab.Highlights -> ReadiumHighlights(book, onJump, onHighlightDelete)
     }
   }
 }
 
-private fun List<Link>.flattenWithDepth(depth: Int = 0): List<Pair<Int, Link>> {
-  return flatMap { link -> listOf(depth to link) + link.children.flattenWithDepth(depth + 1) }
+@Composable
+private fun ReadiumChapters(
+  book: ReadiumBook,
+  onJump: (Locator) -> Unit,
+) {
+  val currentChapter = book.locator?.let { book.chapterTitle(it) }
+  LazyColumn {
+    itemsIndexed(book.tableOfContents) { index, entry ->
+      val depth = entry.first
+      val link = entry.second
+      val current = link.title != null && link.title == currentChapter
+      Text(
+        text = link.title ?: stringResource(StringsR.string.reader_chapter, index + 1),
+        style = MaterialTheme.typography.bodyLarge.bookText(),
+        fontWeight = if (current) FontWeight.Bold else null,
+        modifier = Modifier
+          .fillMaxWidth()
+          .clickable { book.publication.locatorFromLink(link)?.let(onJump) }
+          .background(if (current) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent)
+          .padding(start = 24.dp + 16.dp * depth, end = 24.dp, top = 14.dp, bottom = 14.dp),
+      )
+    }
+  }
+}
+
+@Composable
+private fun ReadiumBookmarks(
+  book: ReadiumBook,
+  onJump: (Locator) -> Unit,
+  onBookmarkDelete: (Locator) -> Unit,
+) {
+  if (book.bookmarks.isEmpty()) {
+    EmptyMarks(stringResource(StringsR.string.reader_bookmarks_empty))
+    return
+  }
+  val deleteLabel = stringResource(StringsR.string.reader_bookmark_delete)
+  val pageCount = book.positions.size
+  LazyColumn {
+    items(book.bookmarks) { bookmark ->
+      val page = book.positionIndex(bookmark) + 1
+      MarkRow(
+        title = book.chapterTitle(bookmark) ?: stringResource(StringsR.string.reader_page, page, pageCount),
+        text = AnnotatedString(stringResource(StringsR.string.reader_page, page, pageCount)),
+        deleteLabel = deleteLabel,
+        onClick = { onJump(bookmark) },
+        onDelete = { onBookmarkDelete(bookmark) },
+      )
+    }
+  }
+}
+
+@Composable
+private fun ReadiumHighlights(
+  book: ReadiumBook,
+  onJump: (Locator) -> Unit,
+  onHighlightDelete: (LocatedHighlight) -> Unit,
+) {
+  if (book.highlights.isEmpty()) {
+    EmptyMarks(stringResource(StringsR.string.reader_highlights_empty))
+    return
+  }
+  val deleteLabel = stringResource(StringsR.string.reader_highlight_delete)
+  LazyColumn {
+    items(book.highlights) { highlight ->
+      val quote = highlight.locator.text.highlight.orEmpty().replace('\n', ' ')
+      MarkRow(
+        title = book.chapterTitle(highlight.locator).orEmpty(),
+        text = buildAnnotatedString {
+          withStyle(SpanStyle(background = highlight.color.background())) { append(quote) }
+        },
+        note = highlight.note,
+        deleteLabel = deleteLabel,
+        onClick = { onJump(highlight.locator) },
+        onDelete = { onHighlightDelete(highlight) },
+      )
+    }
+  }
 }

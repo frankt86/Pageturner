@@ -82,8 +82,25 @@ internal fun BoxScope.ReaderControls(
   if (state.settings.volumeKeysTurnPages && !state.readingAloud) {
     VolumeKeyPageTurns(onTurn)
   }
+  BottomBar(visible = barsVisible) {
+    ReaderNavigationBar(
+      content = state.content,
+      pages = pages,
+      currentIndex = index,
+      pagesPerSpread = pagesPerSpread,
+      onJump = { target -> onJump(pages[target], pages.progressAt(target, pagesPerSpread)) },
+    )
+  }
+}
+
+/** Shows [content] at the bottom of the book while [visible]. */
+@Composable
+internal fun BoxScope.BottomBar(
+  visible: Boolean,
+  content: @Composable () -> Unit,
+) {
   AnimatedVisibility(
-    visible = barsVisible,
+    visible = visible,
     enter = fadeIn() + slideInVertically { it / 2 },
     exit = fadeOut() + slideOutVertically { it / 2 },
     modifier = Modifier
@@ -92,13 +109,7 @@ internal fun BoxScope.ReaderControls(
       .widthIn(max = 560.dp)
       .fillMaxWidth(),
   ) {
-    ReaderNavigationBar(
-      content = state.content,
-      pages = pages,
-      currentIndex = index,
-      pagesPerSpread = pagesPerSpread,
-      onJump = { target -> onJump(pages[target], pages.progressAt(target, pagesPerSpread)) },
-    )
+    content()
   }
 }
 
@@ -135,6 +146,26 @@ internal fun ReaderNavigationBar(
   onJump: (Int) -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  PageBar(
+    pageCount = pages.size,
+    currentIndex = currentIndex,
+    chapterTitle = { index -> (content as? ReaderContent.Epub)?.chapterTitle(pages[index].section).orEmpty() },
+    pagesLeftInChapter = if (content is ReaderContent.Epub) pages.pagesLeftInChapter(currentIndex, pagesPerSpread) else null,
+    onJump = onJump,
+    modifier = modifier,
+  )
+}
+
+/** The chapter and page of [currentIndex], a slider to go to any page, and how many pages the chapter has left. */
+@Composable
+internal fun PageBar(
+  pageCount: Int,
+  currentIndex: Int,
+  chapterTitle: @Composable (index: Int) -> String,
+  pagesLeftInChapter: Int?,
+  onJump: (Int) -> Unit,
+  modifier: Modifier = Modifier,
+) {
   var dragTarget by remember { mutableStateOf<Int?>(null) }
   val shown = dragTarget ?: currentIndex
   Surface(
@@ -146,7 +177,7 @@ internal fun ReaderNavigationBar(
     Column(Modifier.padding(horizontal = 20.dp, vertical = 12.dp)) {
       Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
-          text = (content as? ReaderContent.Epub)?.chapterTitle(pages[shown].section).orEmpty(),
+          text = chapterTitle(shown),
           style = MaterialTheme.typography.labelLarge.bookText(),
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
@@ -155,16 +186,16 @@ internal fun ReaderNavigationBar(
             .padding(end = 12.dp),
         )
         Text(
-          text = stringResource(StringsR.string.reader_page, shown + 1, pages.size),
+          text = stringResource(StringsR.string.reader_page, shown + 1, pageCount),
           style = MaterialTheme.typography.labelLarge,
         )
       }
-      if (pages.size > 1) {
+      if (pageCount > 1) {
         // the range is part of the saved state, so a new layout of the pages starts a new slider
-        key(pages.size) {
+        key(pageCount) {
           val sliderState = rememberSliderState(
             value = currentIndex.toFloat(),
-            trackRange = 0F..pages.lastIndex.toFloat(),
+            trackRange = 0F..(pageCount - 1).toFloat(),
           )
           LaunchedEffect(currentIndex) {
             if (dragTarget == null) sliderState.value = currentIndex.toFloat()
@@ -184,13 +215,12 @@ internal fun ReaderNavigationBar(
           )
         }
       }
-      if (content is ReaderContent.Epub) {
-        val left = pages.pagesLeftInChapter(currentIndex, pagesPerSpread)
+      if (pagesLeftInChapter != null) {
         Text(
-          text = if (left == 0) {
+          text = if (pagesLeftInChapter == 0) {
             stringResource(StringsR.string.reader_chapter_last_page)
           } else {
-            pluralStringResource(StringsR.plurals.reader_chapter_pages_left, left, left)
+            pluralStringResource(StringsR.plurals.reader_chapter_pages_left, pagesLeftInChapter, pagesLeftInChapter)
           },
           style = MaterialTheme.typography.labelMedium,
           color = MaterialTheme.colorScheme.onSurfaceVariant,
