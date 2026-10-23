@@ -390,6 +390,16 @@ class ReaderViewModel(
     moveTo(newPosition, pageProgress)
   }
 
+  /** The scrolled book shows [newPosition] at the top. Reading aloud moves the text itself, so it keeps its place. */
+  internal fun onScrolled(newPosition: EbookPosition) {
+    if (readAloudJob != null) return
+    // scrolling moves a few lines at a time, the pace is measured over longer stretches
+    if (SystemClock.elapsedRealtime() - lastProgressAt >= SCROLL_PACE_STEP.inWholeMilliseconds) {
+      measurePace(progress(newPosition).toDouble())
+    }
+    moveTo(newPosition)
+  }
+
   /** Learns how fast the reader reads from the turns forward, leaving out jumps and breaks. */
   private fun measurePace(progress: Double) {
     val content = content as? ReaderContent.Epub ?: return
@@ -699,5 +709,7 @@ private const val MAX_CHARACTERS_PER_TURN = 6_000
 
 // a longer time on a page is a break
 private val IDLE = 2.minutes
+
+private val SCROLL_PACE_STEP = 10.seconds
 
 private val positionOrder = compareBy<EbookPosition>({ it.section }, { it.offset })

@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">Raskere</string>
     <string name="playback.speed.title">Avspillingshastighet</string>
     <string name="playback.volume_boost.off">Av</string>
+    <string name="reader.auto_scroll">Rull automatisk</string>
+    <string name="reader.auto_scroll.speed">Rullehastighet</string>
+    <string name="reader.auto_turn">Bla om automatisk</string>
+    <string name="reader.auto_turn.interval">Tid per side</string>
     <string name="reader.bookmark.add">Legg til bokmerke på denne siden</string>
     <string name="reader.bookmark.delete">Slett bokmerke</string>
     <string name="reader.bookmark.remove">Fjern bokmerke</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">Beholder bokens skrifter og formatering. Bare tekststørrelse og farger endres.</string>
     <string name="reader.read_aloud">Les høyt</string>
     <string name="reader.read_aloud_unavailable">Opplesning er ikke tilgjengelig på denne enheten</string>
+    <string name="reader.reading_mode">Lesemodus</string>
+    <string name="reader.reading_mode.pages">Sider</string>
+    <string name="reader.reading_mode.scroll">Rull</string>
     <string name="reader.schedule">Dag og natt</string>
     <string name="reader.schedule.day">Om dagen</string>
     <string name="reader.schedule.earlier">Tidligere</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">Natten slutter</string>
     <string name="reader.schedule.night_start">Natten begynner</string>
     <string name="reader.schedule.switch">Bytt tema etter tid på døgnet</string>
+    <string name="reader.scrolling">Rulling</string>
+    <string name="reader.scrolling.instant">Umiddelbart</string>
+    <string name="reader.scrolling.smooth">Jevnt</string>
+    <string name="reader.scrolling.snap">Skjerm for skjerm</string>
     <string name="reader.search">Søk i boken</string>
     <string name="reader.search.empty">Ingen treff</string>
     <string name="reader.short_lines">Kortere linjer på brede skjermer</string>

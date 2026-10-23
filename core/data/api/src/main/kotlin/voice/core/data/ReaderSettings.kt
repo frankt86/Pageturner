@@ -72,6 +72,13 @@ public data class ReaderSettings(
   val imageFilter: ReaderImageFilter = ReaderImageFilter.Original,
   /** From 0 for none to 1. */
   val paperTexture: Float = 0F,
+  val readingMode: ReadingMode = ReadingMode.Pages,
+  /** How the volume keys, taps and swipes move the text in [ReadingMode.Scroll]. */
+  val scrollBehavior: ScrollBehavior = ScrollBehavior.Smooth,
+  /** How fast automatic scrolling moves the text, in dp per second. */
+  val autoScrollSpeed: Int = 20,
+  /** The seconds between automatic page turns. */
+  val autoTurnSeconds: Int = 30,
 ) {
   /** These settings with the text looking like it does at first. */
   public fun withDefaultTypography(): ReaderSettings {
@@ -166,6 +173,30 @@ public enum class ReaderPages {
 
   @SerialName("two")
   Two,
+}
+
+@Serializable
+public enum class ReadingMode {
+  @SerialName("pages")
+  Pages,
+
+  /** The text runs on from top to bottom. */
+  @SerialName("scroll")
+  Scroll,
+}
+
+@Serializable
+public enum class ScrollBehavior {
+  @SerialName("smooth")
+  Smooth,
+
+  /** The volume keys and taps move the text one screen at once, without an animation. */
+  @SerialName("stepped")
+  Stepped,
+
+  /** A swipe moves the text one screen. */
+  @SerialName("snap")
+  Snap,
 }
 
 @Serializable

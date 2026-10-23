@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">Hurtigere</string>
     <string name="playback.speed.title">Afspilningshastighed</string>
     <string name="playback.volume_boost.off">Slå fra</string>
+    <string name="reader.auto_scroll">Rul automatisk</string>
+    <string name="reader.auto_scroll.speed">Rullehastighed</string>
+    <string name="reader.auto_turn">Bladr automatisk</string>
+    <string name="reader.auto_turn.interval">Tid pr. side</string>
     <string name="reader.bookmark.add">Sæt bogmærke ved siden</string>
     <string name="reader.bookmark.delete">Slet bogmærke</string>
     <string name="reader.bookmark.remove">Fjern bogmærke</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">Bevarer bogens skrifttyper og formatering. Kun tekststørrelse og farver ændres.</string>
     <string name="reader.read_aloud">Læs højt</string>
     <string name="reader.read_aloud_unavailable">Højtlæsning er ikke tilgængelig på denne enhed</string>
+    <string name="reader.reading_mode">Læsetilstand</string>
+    <string name="reader.reading_mode.pages">Sider</string>
+    <string name="reader.reading_mode.scroll">Rul</string>
     <string name="reader.schedule">Dag og nat</string>
     <string name="reader.schedule.day">Om dagen</string>
     <string name="reader.schedule.earlier">Tidligere</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">Natten slutter</string>
     <string name="reader.schedule.night_start">Natten begynder</string>
     <string name="reader.schedule.switch">Skift tema efter tidspunktet på dagen</string>
+    <string name="reader.scrolling">Rulning</string>
+    <string name="reader.scrolling.instant">Med det samme</string>
+    <string name="reader.scrolling.smooth">Jævnt</string>
+    <string name="reader.scrolling.snap">Skærm for skærm</string>
     <string name="reader.search">Søg i bogen</string>
     <string name="reader.search.empty">Ingen resultater</string>
     <string name="reader.short_lines">Kortere linjer på brede skærme</string>

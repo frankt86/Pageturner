@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">Daha hızlı</string>
     <string name="playback.speed.title">Oynatma hızı</string>
     <string name="playback.volume_boost.off">Kapalı</string>
+    <string name="reader.auto_scroll">Otomatik kaydır</string>
+    <string name="reader.auto_scroll.speed">Kaydırma hızı</string>
+    <string name="reader.auto_turn">Sayfaları otomatik çevir</string>
+    <string name="reader.auto_turn.interval">Sayfa başına süre</string>
     <string name="reader.bookmark.add">Bu sayfaya yer imi ekle</string>
     <string name="reader.bookmark.delete">Yer imini sil</string>
     <string name="reader.bookmark.remove">Yer imini kaldır</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">Kitabın yazı tiplerini ve biçimini korur. Yalnızca metin boyutu ve renkler değişir.</string>
     <string name="reader.read_aloud">Sesli oku</string>
     <string name="reader.read_aloud_unavailable">Sesli okuma bu cihazda kullanılamıyor</string>
+    <string name="reader.reading_mode">Okuma modu</string>
+    <string name="reader.reading_mode.pages">Sayfalar</string>
+    <string name="reader.reading_mode.scroll">Kaydırma</string>
     <string name="reader.schedule">Gündüz ve gece</string>
     <string name="reader.schedule.day">Gündüz</string>
     <string name="reader.schedule.earlier">Daha erken</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">Gece bitişi</string>
     <string name="reader.schedule.night_start">Gece başlangıcı</string>
     <string name="reader.schedule.switch">Temayı günün saatine göre değiştir</string>
+    <string name="reader.scrolling">Kaydırma</string>
+    <string name="reader.scrolling.instant">Anında</string>
+    <string name="reader.scrolling.smooth">Akıcı</string>
+    <string name="reader.scrolling.snap">Ekran ekran</string>
     <string name="reader.search">Kitapta ara</string>
     <string name="reader.search.empty">Sonuç yok</string>
     <string name="reader.short_lines">Geniş ekranlarda daha kısa satırlar</string>

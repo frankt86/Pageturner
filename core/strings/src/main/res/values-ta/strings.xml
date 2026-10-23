@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">வேகமாக</string>
     <string name="playback.speed.title">இயக்க வேகம்</string>
     <string name="playback.volume_boost.off">முடக்கு</string>
+    <string name="reader.auto_scroll">தானாக உருட்டு</string>
+    <string name="reader.auto_scroll.speed">உருட்டும் வேகம்</string>
+    <string name="reader.auto_turn">பக்கங்களைத் தானாகப் புரட்டு</string>
+    <string name="reader.auto_turn.interval">ஒரு பக்கத்துக்கான நேரம்</string>
     <string name="reader.bookmark.add">இந்தப் பக்கத்தை புக்மார்க் செய்</string>
     <string name="reader.bookmark.delete">புக்மார்க்கை நீக்கு</string>
     <string name="reader.bookmark.remove">புக்மார்க்கை அகற்று</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">புத்தகத்தின் எழுத்துருக்களும் வடிவமைப்பும் அப்படியே இருக்கும். உரையின் அளவும் வண்ணங்களும் மட்டுமே மாறும்.</string>
     <string name="reader.read_aloud">சத்தமாகப் படி</string>
     <string name="reader.read_aloud_unavailable">இந்தச் சாதனத்தில் சத்தமாகப் படிக்கும் வசதி கிடைக்கவில்லை</string>
+    <string name="reader.reading_mode">வாசிப்பு முறை</string>
+    <string name="reader.reading_mode.pages">பக்கங்கள்</string>
+    <string name="reader.reading_mode.scroll">உருட்டல்</string>
     <string name="reader.schedule">பகலும் இரவும்</string>
     <string name="reader.schedule.day">பகலில்</string>
     <string name="reader.schedule.earlier">முன்னதாக</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">இரவு முடிவு</string>
     <string name="reader.schedule.night_start">இரவு தொடக்கம்</string>
     <string name="reader.schedule.switch">நேரத்துக்கு ஏற்ப தீமை மாற்று</string>
+    <string name="reader.scrolling">உருட்டல்</string>
+    <string name="reader.scrolling.instant">உடனடி</string>
+    <string name="reader.scrolling.smooth">மென்மையானது</string>
+    <string name="reader.scrolling.snap">திரை திரையாக</string>
     <string name="reader.search">புத்தகத்தில் தேடு</string>
     <string name="reader.search.empty">எதுவும் கிடைக்கவில்லை</string>
     <string name="reader.short_lines">அகலமான திரைகளில் குறுகிய வரிகள்</string>

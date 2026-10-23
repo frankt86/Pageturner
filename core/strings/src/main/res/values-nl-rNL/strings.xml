@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">Sneller</string>
     <string name="playback.speed.title">Afspeelsnelheid</string>
     <string name="playback.volume_boost.off">Uit</string>
+    <string name="reader.auto_scroll">Automatisch scrollen</string>
+    <string name="reader.auto_scroll.speed">Scrollsnelheid</string>
+    <string name="reader.auto_turn">Automatisch bladeren</string>
+    <string name="reader.auto_turn.interval">Tijd per pagina</string>
     <string name="reader.bookmark.add">Bladwijzer op deze pagina</string>
     <string name="reader.bookmark.delete">Bladwijzer verwijderen</string>
     <string name="reader.bookmark.remove">Bladwijzer weghalen</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">Houdt de lettertypes en opmaak van het boek. Alleen tekstgrootte en kleuren veranderen.</string>
     <string name="reader.read_aloud">Voorlezen</string>
     <string name="reader.read_aloud_unavailable">Voorlezen is niet beschikbaar op dit apparaat</string>
+    <string name="reader.reading_mode">Leesmodus</string>
+    <string name="reader.reading_mode.pages">Pagina’s</string>
+    <string name="reader.reading_mode.scroll">Scrollen</string>
     <string name="reader.schedule">Dag en nacht</string>
     <string name="reader.schedule.day">Overdag</string>
     <string name="reader.schedule.earlier">Eerder</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">Nacht eindigt</string>
     <string name="reader.schedule.night_start">Nacht begint</string>
     <string name="reader.schedule.switch">Wissel van thema op tijd van de dag</string>
+    <string name="reader.scrolling">Scrollen</string>
+    <string name="reader.scrolling.instant">Direct</string>
+    <string name="reader.scrolling.smooth">Vloeiend</string>
+    <string name="reader.scrolling.snap">Per scherm</string>
     <string name="reader.search">Zoeken in boek</string>
     <string name="reader.search.empty">Geen resultaten</string>
     <string name="reader.short_lines">Kortere regels op brede schermen</string>

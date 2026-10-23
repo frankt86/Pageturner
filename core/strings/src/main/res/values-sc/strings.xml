@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">Prus lestru</string>
     <string name="playback.speed.title">Lestresa de riprodutzione</string>
     <string name="playback.volume_boost.off">Disativadu</string>
+    <string name="reader.auto_scroll">Iscurre in automàticu</string>
+    <string name="reader.auto_scroll.speed">Velotzidade de iscurrimentu</string>
+    <string name="reader.auto_turn">Gira sas pàginas in automàticu</string>
+    <string name="reader.auto_turn.interval">Tempus pro pàgina</string>
     <string name="reader.bookmark.add">Annanghe unu sinnalibru</string>
     <string name="reader.bookmark.delete">Iscantzella su sinnalibru</string>
     <string name="reader.bookmark.remove">Boga su sinnalibru</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">Mantenet sos caràteres e su formatu de su libru. Càmbiant isceti sa mannària de su testu e sos colores.</string>
     <string name="reader.read_aloud">Leghe a boghe arta</string>
     <string name="reader.read_aloud_unavailable">Sa letura a boghe arta no est disponìbile in custu dispositivu</string>
+    <string name="reader.reading_mode">Modalidade de letura</string>
+    <string name="reader.reading_mode.pages">Pàginas</string>
+    <string name="reader.reading_mode.scroll">Iscurrimentu</string>
     <string name="reader.schedule">Die e note</string>
     <string name="reader.schedule.day">De die</string>
     <string name="reader.schedule.earlier">Prima</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">Acabbu de sa note</string>
     <string name="reader.schedule.night_start">Incumintzu de sa note</string>
     <string name="reader.schedule.switch">Càmbia tema segundu s\'ora de sa die</string>
+    <string name="reader.scrolling">Iscurrimentu</string>
+    <string name="reader.scrolling.instant">Immediadu</string>
+    <string name="reader.scrolling.smooth">Lìsciu</string>
+    <string name="reader.scrolling.snap">Ischermu pro ischermu</string>
     <string name="reader.search">Chirca in su libru</string>
     <string name="reader.search.empty">Nissunu resurtadu</string>
     <string name="reader.short_lines">Lìnias prus curtzas in ischermos largos</string>

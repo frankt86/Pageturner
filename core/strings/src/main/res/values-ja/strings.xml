@@ -304,6 +304,10 @@
     <string name="playback.speed.increase">速く</string>
     <string name="playback.speed.title">再生速度</string>
     <string name="playback.volume_boost.off">オフ</string>
+    <string name="reader.auto_scroll">自動スクロール</string>
+    <string name="reader.auto_scroll.speed">スクロール速度</string>
+    <string name="reader.auto_turn">自動でページをめくる</string>
+    <string name="reader.auto_turn.interval">1 ページの時間</string>
     <string name="reader.bookmark.add">このページをブックマーク</string>
     <string name="reader.bookmark.delete">ブックマークを削除</string>
     <string name="reader.bookmark.remove">ブックマークを外す</string>
@@ -406,6 +410,9 @@
     <string name="reader.publisher_styles.summary">本のフォントと書式をそのまま使います。変わるのは文字サイズと色だけです。</string>
     <string name="reader.read_aloud">読み上げる</string>
     <string name="reader.read_aloud_unavailable">この端末では読み上げを利用できません</string>
+    <string name="reader.reading_mode">読書モード</string>
+    <string name="reader.reading_mode.pages">ページ</string>
+    <string name="reader.reading_mode.scroll">スクロール</string>
     <string name="reader.schedule">昼と夜</string>
     <string name="reader.schedule.day">昼</string>
     <string name="reader.schedule.earlier">早める</string>
@@ -414,6 +421,10 @@
     <string name="reader.schedule.night_end">夜の終わり</string>
     <string name="reader.schedule.night_start">夜の始まり</string>
     <string name="reader.schedule.switch">時間帯でテーマを切り替える</string>
+    <string name="reader.scrolling">スクロール</string>
+    <string name="reader.scrolling.instant">瞬時</string>
+    <string name="reader.scrolling.smooth">なめらか</string>
+    <string name="reader.scrolling.snap">1 画面ずつ</string>
     <string name="reader.search">本の中を検索</string>
     <string name="reader.search.empty">見つかりませんでした</string>
     <string name="reader.short_lines">広い画面では行を短く</string>

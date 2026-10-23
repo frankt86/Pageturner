@@ -40,6 +40,19 @@ internal class PdfFile(private val fileDescriptor: ParcelFileDescriptor) {
     }
   }
 
+  /** The width of each page divided by its height. */
+  suspend fun aspectRatios(): List<Float> = withContext(Dispatchers.Default) {
+    mutex.withLock {
+      if (closed) {
+        emptyList()
+      } else {
+        List(pageCount) { index ->
+          renderer.openPage(index).use { page -> page.width.toFloat() / page.height.coerceAtLeast(1) }
+        }
+      }
+    }
+  }
+
   suspend fun text(index: Int): String {
     if (Build.VERSION.SDK_INT < 35) return ""
     return withContext(Dispatchers.Default) {

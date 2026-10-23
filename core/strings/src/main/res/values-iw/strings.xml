@@ -338,6 +338,10 @@
     <string name="playback.speed.increase">מהר יותר</string>
     <string name="playback.speed.title">מהירות השמעה</string>
     <string name="playback.volume_boost.off">כבוי</string>
+    <string name="reader.auto_scroll">גלילה אוטומטית</string>
+    <string name="reader.auto_scroll.speed">מהירות גלילה</string>
+    <string name="reader.auto_turn">דפדוף אוטומטי</string>
+    <string name="reader.auto_turn.interval">זמן לכל דף</string>
     <string name="reader.bookmark.add">הוספת סימנייה לעמוד</string>
     <string name="reader.bookmark.delete">מחיקת הסימנייה</string>
     <string name="reader.bookmark.remove">הסרת הסימנייה</string>
@@ -444,6 +448,9 @@
     <string name="reader.publisher_styles.summary">הגופנים והעיצוב של הספר נשמרים. רק גודל הטקסט והצבעים משתנים.</string>
     <string name="reader.read_aloud">הקראה</string>
     <string name="reader.read_aloud_unavailable">הקראה אינה זמינה במכשיר הזה</string>
+    <string name="reader.reading_mode">מצב קריאה</string>
+    <string name="reader.reading_mode.pages">דפים</string>
+    <string name="reader.reading_mode.scroll">גלילה</string>
     <string name="reader.schedule">יום ולילה</string>
     <string name="reader.schedule.day">ביום</string>
     <string name="reader.schedule.earlier">מוקדם יותר</string>
@@ -452,6 +459,10 @@
     <string name="reader.schedule.night_end">סוף הלילה</string>
     <string name="reader.schedule.night_start">תחילת הלילה</string>
     <string name="reader.schedule.switch">החלפת ערכת הנושא לפי שעות היום</string>
+    <string name="reader.scrolling">גלילה</string>
+    <string name="reader.scrolling.instant">מיידית</string>
+    <string name="reader.scrolling.smooth">חלקה</string>
+    <string name="reader.scrolling.snap">מסך אחר מסך</string>
     <string name="reader.search">חיפוש בספר</string>
     <string name="reader.search.empty">לא נמצאו תוצאות</string>
     <string name="reader.short_lines">שורות קצרות יותר במסכים רחבים</string>

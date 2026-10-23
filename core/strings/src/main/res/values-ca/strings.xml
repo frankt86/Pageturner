@@ -338,6 +338,10 @@
     <string name="playback.speed.increase">Més ràpid</string>
     <string name="playback.speed.title">Velocitat de reproducció</string>
     <string name="playback.volume_boost.off">Desactivat</string>
+    <string name="reader.auto_scroll">Desplaça automàticament</string>
+    <string name="reader.auto_scroll.speed">Velocitat de desplaçament</string>
+    <string name="reader.auto_turn">Passa les pàgines automàticament</string>
+    <string name="reader.auto_turn.interval">Temps per pàgina</string>
     <string name="reader.bookmark.add">Afegeix un punt de llibre</string>
     <string name="reader.bookmark.delete">Suprimeix el punt de llibre</string>
     <string name="reader.bookmark.remove">Treu el punt de llibre</string>
@@ -444,6 +448,9 @@
     <string name="reader.publisher_styles.summary">Manté els tipus de lletra i el format del llibre. Només canvien la mida del text i els colors.</string>
     <string name="reader.read_aloud">Llegeix en veu alta</string>
     <string name="reader.read_aloud_unavailable">La lectura en veu alta no està disponible en aquest dispositiu</string>
+    <string name="reader.reading_mode">Mode de lectura</string>
+    <string name="reader.reading_mode.pages">Pàgines</string>
+    <string name="reader.reading_mode.scroll">Desplaçament</string>
     <string name="reader.schedule">Dia i nit</string>
     <string name="reader.schedule.day">De dia</string>
     <string name="reader.schedule.earlier">Abans</string>
@@ -452,6 +459,10 @@
     <string name="reader.schedule.night_end">Final de la nit</string>
     <string name="reader.schedule.night_start">Inici de la nit</string>
     <string name="reader.schedule.switch">Canvia el tema segons l\'hora del dia</string>
+    <string name="reader.scrolling">Desplaçament</string>
+    <string name="reader.scrolling.instant">Instantani</string>
+    <string name="reader.scrolling.smooth">Suau</string>
+    <string name="reader.scrolling.snap">Pantalla a pantalla</string>
     <string name="reader.search">Cerca al llibre</string>
     <string name="reader.search.empty">Cap coincidència</string>
     <string name="reader.short_lines">Línies més curtes en pantalles amples</string>

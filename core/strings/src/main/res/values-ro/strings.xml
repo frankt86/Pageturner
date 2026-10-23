@@ -338,6 +338,10 @@
     <string name="playback.speed.increase">Mai repede</string>
     <string name="playback.speed.title">Viteză de redare</string>
     <string name="playback.volume_boost.off">Dezactivat</string>
+    <string name="reader.auto_scroll">Derulează automat</string>
+    <string name="reader.auto_scroll.speed">Viteza de derulare</string>
+    <string name="reader.auto_turn">Întoarce paginile automat</string>
+    <string name="reader.auto_turn.interval">Timp pe pagină</string>
     <string name="reader.bookmark.add">Adaugă semn de carte</string>
     <string name="reader.bookmark.delete">Șterge semnul de carte</string>
     <string name="reader.bookmark.remove">Elimină semnul de carte</string>
@@ -444,6 +448,9 @@
     <string name="reader.publisher_styles.summary">Păstrează fonturile și formatarea cărții. Se schimbă doar dimensiunea textului și culorile.</string>
     <string name="reader.read_aloud">Citește cu voce tare</string>
     <string name="reader.read_aloud_unavailable">Citirea cu voce tare nu este disponibilă pe acest dispozitiv</string>
+    <string name="reader.reading_mode">Mod de citire</string>
+    <string name="reader.reading_mode.pages">Pagini</string>
+    <string name="reader.reading_mode.scroll">Derulare</string>
     <string name="reader.schedule">Zi și noapte</string>
     <string name="reader.schedule.day">Ziua</string>
     <string name="reader.schedule.earlier">Mai devreme</string>
@@ -452,6 +459,10 @@
     <string name="reader.schedule.night_end">Noaptea se termină</string>
     <string name="reader.schedule.night_start">Noaptea începe</string>
     <string name="reader.schedule.switch">Schimbă tema după ora din zi</string>
+    <string name="reader.scrolling">Derulare</string>
+    <string name="reader.scrolling.instant">Instant</string>
+    <string name="reader.scrolling.smooth">Lin</string>
+    <string name="reader.scrolling.snap">Câte un ecran</string>
     <string name="reader.search">Caută în carte</string>
     <string name="reader.search.empty">Niciun rezultat</string>
     <string name="reader.short_lines">Rânduri mai scurte pe ecrane late</string>

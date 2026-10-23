@@ -355,6 +355,10 @@
     <string name="playback.speed.increase">Быстрее</string>
     <string name="playback.speed.title">Скорость воспроизведения</string>
     <string name="playback.volume_boost.off">Выкл.</string>
+    <string name="reader.auto_scroll">Автопрокрутка</string>
+    <string name="reader.auto_scroll.speed">Скорость прокрутки</string>
+    <string name="reader.auto_turn">Листать автоматически</string>
+    <string name="reader.auto_turn.interval">Время на страницу</string>
     <string name="reader.bookmark.add">Добавить закладку</string>
     <string name="reader.bookmark.delete">Удалить закладку</string>
     <string name="reader.bookmark.remove">Убрать закладку</string>
@@ -463,6 +467,9 @@
     <string name="reader.publisher_styles.summary">Сохраняет шрифты и оформление книги. Меняются только размер текста и цвета.</string>
     <string name="reader.read_aloud">Читать вслух</string>
     <string name="reader.read_aloud_unavailable">Чтение вслух недоступно на этом устройстве</string>
+    <string name="reader.reading_mode">Режим чтения</string>
+    <string name="reader.reading_mode.pages">Страницы</string>
+    <string name="reader.reading_mode.scroll">Прокрутка</string>
     <string name="reader.schedule">День и ночь</string>
     <string name="reader.schedule.day">Днём</string>
     <string name="reader.schedule.earlier">Раньше</string>
@@ -471,6 +478,10 @@
     <string name="reader.schedule.night_end">Конец ночи</string>
     <string name="reader.schedule.night_start">Начало ночи</string>
     <string name="reader.schedule.switch">Менять тему по времени суток</string>
+    <string name="reader.scrolling">Прокрутка</string>
+    <string name="reader.scrolling.instant">Сразу</string>
+    <string name="reader.scrolling.smooth">Плавно</string>
+    <string name="reader.scrolling.snap">По экранам</string>
     <string name="reader.search">Поиск по книге</string>
     <string name="reader.search.empty">Ничего не найдено</string>
     <string name="reader.short_lines">Короткие строки на широких экранах</string>

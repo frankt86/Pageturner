@@ -276,14 +276,37 @@ internal class NavigatorContainer(context: Context) : FrameLayout(context) {
   var interceptDrags = false
   var onDrag: (CurlDrag) -> Unit = {}
 
+  /** Called once per touch when the finger moves. */
+  var onFingerMove: () -> Unit = {}
+  var fingerDown by mutableStateOf(false)
+    private set
+
   val fragments = FragmentContainerView(context).apply { id = View.generateViewId() }
 
   private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
   private var down = Offset.Zero
   private var dragging = false
+  private var touchStart = Offset.Zero
+  private var fingerMoved = false
 
   init {
     addView(fragments)
+  }
+
+  override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+    when (event.actionMasked) {
+      MotionEvent.ACTION_DOWN -> {
+        fingerDown = true
+        fingerMoved = false
+        touchStart = Offset(event.x, event.y)
+      }
+      MotionEvent.ACTION_MOVE -> if (!fingerMoved && (Offset(event.x, event.y) - touchStart).getDistance() > touchSlop) {
+        fingerMoved = true
+        onFingerMove()
+      }
+      MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> fingerDown = false
+    }
+    return super.dispatchTouchEvent(event)
   }
 
   override fun dispatchKeyEvent(event: KeyEvent): Boolean {

@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">Snabbare</string>
     <string name="playback.speed.title">Uppspelningshastighet</string>
     <string name="playback.volume_boost.off">Av</string>
+    <string name="reader.auto_scroll">Rulla automatiskt</string>
+    <string name="reader.auto_scroll.speed">Rullningshastighet</string>
+    <string name="reader.auto_turn">Bläddra automatiskt</string>
+    <string name="reader.auto_turn.interval">Tid per sida</string>
     <string name="reader.bookmark.add">Lägg till bokmärke på sidan</string>
     <string name="reader.bookmark.delete">Ta bort bokmärke</string>
     <string name="reader.bookmark.remove">Ta bort bokmärket</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">Behåller bokens typsnitt och formatering. Bara textstorlek och färger ändras.</string>
     <string name="reader.read_aloud">Läs upp</string>
     <string name="reader.read_aloud_unavailable">Uppläsning är inte tillgänglig på den här enheten</string>
+    <string name="reader.reading_mode">Läsläge</string>
+    <string name="reader.reading_mode.pages">Sidor</string>
+    <string name="reader.reading_mode.scroll">Rulla</string>
     <string name="reader.schedule">Dag och natt</string>
     <string name="reader.schedule.day">På dagen</string>
     <string name="reader.schedule.earlier">Tidigare</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">Natten slutar</string>
     <string name="reader.schedule.night_start">Natten börjar</string>
     <string name="reader.schedule.switch">Byt tema efter tid på dygnet</string>
+    <string name="reader.scrolling">Rullning</string>
+    <string name="reader.scrolling.instant">Direkt</string>
+    <string name="reader.scrolling.smooth">Mjukt</string>
+    <string name="reader.scrolling.snap">Skärm för skärm</string>
     <string name="reader.search">Sök i boken</string>
     <string name="reader.search.empty">Inga träffar</string>
     <string name="reader.short_lines">Kortare rader på breda skärmar</string>

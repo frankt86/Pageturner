@@ -32,6 +32,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
@@ -87,21 +88,25 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 import org.readium.r2.shared.publication.Locator
 import voice.core.common.rootGraphAs
+import voice.core.data.EbookPosition
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
 import voice.core.data.ProgressVisibility
 import voice.core.data.ReaderOrientation
 import voice.core.data.ReaderPages
 import voice.core.data.ReaderSettings
+import voice.core.data.ReadingMode
 import voice.core.ui.bookText
 import voice.core.ui.icons.VoiceIcons
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
+import kotlin.time.Duration.Companion.seconds
 import voice.core.strings.R as StringsR
 
 @ContributesTo(AppScope::class)
@@ -170,6 +175,22 @@ internal fun ReaderScreen(uri: Uri) {
     val _ = readiumJumps.tryEmit(locator)
   }
   var editedReadiumHighlight by remember { mutableStateOf<LocatedHighlight?>(null) }
+  // each request turns a page or scrolls a screen, forward for a positive step
+  val turnRequests = remember { MutableSharedFlow<Int>(extraBufferCapacity = 1) }
+  // automatic scrolling or page turns, which wait while the bars, a sheet, a selection or reading aloud are on
+  var autoRunning by rememberSaveable { mutableStateOf(false) }
+  val scrollMode = loaded?.settings?.readingMode == ReadingMode.Scroll
+  val autoPaused = barsVisible || sheet != null || editedHighlight != null || editedReadiumHighlight != null ||
+    selection.range != null || loaded?.readingAloud == true
+  val autoScrollSpeed = loaded?.settings?.autoScrollSpeed?.takeIf { autoRunning && scrollMode && !autoPaused }
+  val autoTurnSeconds = loaded?.settings?.autoTurnSeconds?.takeIf { autoRunning && !scrollMode && !autoPaused }
+  // any turn, also one by hand, starts the wait anew
+  val place: Any? = loaded?.readium?.locator ?: loaded?.position
+  LaunchedEffect(autoTurnSeconds, place) {
+    if (autoTurnSeconds == null) return@LaunchedEffect
+    delay(autoTurnSeconds.seconds)
+    val _ = turnRequests.tryEmit(1)
+  }
   ReaderWindow(
     immersive = !barsVisible && loaded != null,
     brightness = loaded?.settings?.brightness,
@@ -217,6 +238,9 @@ internal fun ReaderScreen(uri: Uri) {
               volumeKeysTurnPages = state.settings.volumeKeysTurnPages && !state.readingAloud,
               transition = state.settings.pageTransition,
               jumps = readiumJumps,
+              turnRequests = turnRequests,
+              autoScrollSpeed = autoScrollSpeed,
+              onAutoScrollEnd = { autoRunning = false },
               onLocatorChange = viewModel::onLocatorChange,
               onPageTurn = { barsVisible = false },
               onCenterTap = { barsVisible = !barsVisible },
@@ -253,7 +277,13 @@ internal fun ReaderScreen(uri: Uri) {
           selection = selection,
           onHighlightClick = { editedHighlight = it },
           onVisiblePagesChange = { visiblePages = it },
+          turnRequests = turnRequests,
+          onTurnRequest = { val _ = turnRequests.tryEmit(it) },
           onCenterTap = { barsVisible = !barsVisible },
+          autoScrollSpeed = autoScrollSpeed,
+          onScroll = viewModel::onScrolled,
+          onUserScroll = { barsVisible = false },
+          onAutoScrollEnd = { autoRunning = false },
           // the insets of hidden bars too, or showing them would lay out all pages anew
           modifier = Modifier
             .fillMaxSize()
@@ -307,6 +337,12 @@ internal fun ReaderScreen(uri: Uri) {
           loaded?.bookmarks?.any { bookmark -> visiblePages.any { it.contains(bookmark) } }
         },
         showSearch = loaded?.content?.searchable == true,
+        auto = when {
+          loaded == null -> null
+          scrollMode -> AutoMode.Scroll
+          else -> AutoMode.Turn
+        },
+        autoRunning = autoRunning,
         onCloseClick = viewModel::onCloseClick,
         onReadAloudClick = {
           if (loaded?.readingAloud == true) viewModel.stopReadingAloudClick() else sheet = ReaderSheet.ReadAloud
@@ -317,6 +353,11 @@ internal fun ReaderScreen(uri: Uri) {
           if (readium != null) viewModel.onReadiumBookmarkClick() else viewModel.onBookmarkClick(visiblePages)
         },
         onSearchClick = { sheet = ReaderSheet.Search },
+        onAutoClick = {
+          autoRunning = !autoRunning
+          // the bars wait it out, so they make way
+          if (autoRunning) barsVisible = false
+        },
       )
     }
     SnackbarHost(
@@ -503,12 +544,16 @@ internal fun ReaderTopBar(
   // null while the book loads
   bookmarked: Boolean?,
   showSearch: Boolean,
+  // null while the book loads
+  auto: AutoMode?,
+  autoRunning: Boolean,
   onCloseClick: () -> Unit,
   onReadAloudClick: () -> Unit,
   onContentsClick: () -> Unit,
   onDisplayClick: () -> Unit,
   onBookmarkClick: () -> Unit,
   onSearchClick: () -> Unit,
+  onAutoClick: () -> Unit,
 ) {
   TopAppBar(
     title = {
@@ -564,6 +609,19 @@ internal fun ReaderTopBar(
           )
         }
       }
+      if (auto != null) {
+        IconToggleButton(checked = autoRunning, onCheckedChange = { onAutoClick() }) {
+          Icon(
+            imageVector = if (autoRunning) VoiceIcons.Pause else VoiceIcons.Speed,
+            contentDescription = stringResource(
+              when (auto) {
+                AutoMode.Scroll -> StringsR.string.reader_auto_scroll
+                AutoMode.Turn -> StringsR.string.reader_auto_turn
+              },
+            ),
+          )
+        }
+      }
       if (readingAloud != null) {
         IconButton(onClick = onReadAloudClick) {
           Icon(
@@ -576,6 +634,12 @@ internal fun ReaderTopBar(
       }
     },
   )
+}
+
+/** What the automatic button of the top bar does. */
+internal enum class AutoMode {
+  Scroll,
+  Turn,
 }
 
 private val PageVerticalPadding = 8.dp
@@ -599,7 +663,7 @@ private fun ReaderSettings.pageMargins(pageWidth: Dp): PageMargins {
     bottom = bottomMargin?.dp ?: PageVerticalPadding,
   )
 }
-private val PageNumberHeight = 32.dp
+internal val PageNumberHeight = 32.dp
 private val SpineWidth = 24.dp
 
 @Composable
@@ -609,8 +673,15 @@ internal fun Book(
   selection: PageSelection,
   onHighlightClick: (Highlight) -> Unit,
   onVisiblePagesChange: (List<Page>) -> Unit,
+  turnRequests: Flow<Int>,
+  onTurnRequest: (step: Int) -> Unit,
   modifier: Modifier = Modifier,
   onCenterTap: () -> Unit = {},
+  // in dp per second while the scrolled book moves by itself
+  autoScrollSpeed: Int? = null,
+  onScroll: (EbookPosition) -> Unit = {},
+  onUserScroll: () -> Unit = {},
+  onAutoScrollEnd: () -> Unit = {},
   // previews can't wait for the pages laid out in the background
   paginateNow: Boolean = false,
   // previews can't swipe, this shows the first page turned this far
@@ -619,7 +690,8 @@ internal fun Book(
   overlay: @Composable BoxScope.(pages: List<Page>, pagesPerSpread: Int, turn: (Int) -> Unit) -> Unit = { _, _, _ -> },
 ) {
   BoxWithConstraints(modifier) {
-    val twoPages = when (state.settings.pages) {
+    val scroll = state.settings.readingMode == ReadingMode.Scroll
+    val twoPages = !scroll && when (state.settings.pages) {
       // an unfolded foldable, a tablet or a phone on its side has room for a spread like an open book
       ReaderPages.Auto -> maxWidth >= 600.dp && maxWidth >= maxHeight * 0.8F
       ReaderPages.One -> false
@@ -645,28 +717,48 @@ internal fun Book(
       return@BoxWithConstraints
     }
     val pagesPerSpread = if (twoPages) 2 else 1
-    val turnRequests = remember { MutableSharedFlow<Int>(extraBufferCapacity = 1) }
     ReaderPageTheme(state.settings.pageColors()) {
-      key(pages, pagesPerSpread) {
-        Spreads(
+      if (scroll) {
+        ScrollBook(
           state = state,
           pages = pages,
-          pagesPerSpread = pagesPerSpread,
           textStyle = textStyle,
-          paragraphGap = paragraphGap,
           margins = margins,
-          spineWidth = spineWidth,
-          onPageTurn = onPageTurn,
           selection = selection,
+          turnRequests = turnRequests,
+          autoScrollSpeed = autoScrollSpeed,
+          onScroll = onScroll,
+          onUserScroll = onUserScroll,
           onHighlightClick = onHighlightClick,
           onVisiblePagesChange = onVisiblePagesChange,
           onCenterTap = onCenterTap,
-          turnRequests = turnRequests,
-          previewTurn = previewTurn,
+          onAutoScrollEnd = onAutoScrollEnd,
+          modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface),
         )
+      } else {
+        key(pages, pagesPerSpread) {
+          Spreads(
+            state = state,
+            pages = pages,
+            pagesPerSpread = pagesPerSpread,
+            textStyle = textStyle,
+            paragraphGap = paragraphGap,
+            margins = margins,
+            spineWidth = spineWidth,
+            onPageTurn = onPageTurn,
+            selection = selection,
+            onHighlightClick = onHighlightClick,
+            onVisiblePagesChange = onVisiblePagesChange,
+            onCenterTap = onCenterTap,
+            turnRequests = turnRequests,
+            previewTurn = previewTurn,
+          )
+        }
       }
     }
-    overlay(pages, pagesPerSpread) { step -> turnRequests.tryEmit(step) }
+    overlay(pages, pagesPerSpread, onTurnRequest)
   }
 }
 

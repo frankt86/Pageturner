@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">तेज़ करें</string>
     <string name="playback.speed.title">प्लेबैक की गति</string>
     <string name="playback.volume_boost.off">बंद</string>
+    <string name="reader.auto_scroll">अपने आप स्क्रॉल करें</string>
+    <string name="reader.auto_scroll.speed">स्क्रॉल की गति</string>
+    <string name="reader.auto_turn">पन्ने अपने आप पलटें</string>
+    <string name="reader.auto_turn.interval">हर पन्ने का समय</string>
     <string name="reader.bookmark.add">इस पेज को बुकमार्क करें</string>
     <string name="reader.bookmark.delete">बुकमार्क हटाएँ</string>
     <string name="reader.bookmark.remove">बुकमार्क निकालें</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">पुस्तक के फ़ॉन्ट और फ़ॉर्मैटिंग वैसे ही रहते हैं। सिर्फ़ टेक्स्ट का आकार और रंग बदलते हैं।</string>
     <string name="reader.read_aloud">ज़ोर से पढ़ें</string>
     <string name="reader.read_aloud_unavailable">इस डिवाइस पर ज़ोर से पढ़ना उपलब्ध नहीं है</string>
+    <string name="reader.reading_mode">पढ़ने का मोड</string>
+    <string name="reader.reading_mode.pages">पन्ने</string>
+    <string name="reader.reading_mode.scroll">स्क्रॉल</string>
     <string name="reader.schedule">दिन और रात</string>
     <string name="reader.schedule.day">दिन में</string>
     <string name="reader.schedule.earlier">पहले</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">रात खत्म</string>
     <string name="reader.schedule.night_start">रात शुरू</string>
     <string name="reader.schedule.switch">दिन के समय के हिसाब से थीम बदलें</string>
+    <string name="reader.scrolling">स्क्रॉलिंग</string>
+    <string name="reader.scrolling.instant">तुरंत</string>
+    <string name="reader.scrolling.smooth">सहज</string>
+    <string name="reader.scrolling.snap">स्क्रीन दर स्क्रीन</string>
     <string name="reader.search">पुस्तक में खोजें</string>
     <string name="reader.search.empty">कुछ नहीं मिला</string>
     <string name="reader.short_lines">चौड़ी स्क्रीन पर छोटी पंक्तियाँ</string>

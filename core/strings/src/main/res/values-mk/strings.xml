@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">Побрзо</string>
     <string name="playback.speed.title">Брзина на репродукција</string>
     <string name="playback.volume_boost.off">Исклучено</string>
+    <string name="reader.auto_scroll">Автоматско лизгање</string>
+    <string name="reader.auto_scroll.speed">Брзина на лизгање</string>
+    <string name="reader.auto_turn">Автоматско листање</string>
+    <string name="reader.auto_turn.interval">Време по страница</string>
     <string name="reader.bookmark.add">Додај обележувач</string>
     <string name="reader.bookmark.delete">Избриши обележувач</string>
     <string name="reader.bookmark.remove">Отстрани обележувач</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">Ги задржува фонтовите и форматирањето на книгата. Се менуваат само големината на текстот и боите.</string>
     <string name="reader.read_aloud">Читај на глас</string>
     <string name="reader.read_aloud_unavailable">Читањето на глас не е достапно на овој уред</string>
+    <string name="reader.reading_mode">Режим на читање</string>
+    <string name="reader.reading_mode.pages">Страници</string>
+    <string name="reader.reading_mode.scroll">Лизгање</string>
     <string name="reader.schedule">Ден и ноќ</string>
     <string name="reader.schedule.day">Дење</string>
     <string name="reader.schedule.earlier">Порано</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">Ноќта завршува</string>
     <string name="reader.schedule.night_start">Ноќта почнува</string>
     <string name="reader.schedule.switch">Менувај ја темата според времето од денот</string>
+    <string name="reader.scrolling">Лизгање</string>
+    <string name="reader.scrolling.instant">Веднаш</string>
+    <string name="reader.scrolling.smooth">Мазно</string>
+    <string name="reader.scrolling.snap">Екран по екран</string>
     <string name="reader.search">Пребарај во книгата</string>
     <string name="reader.search.empty">Нема совпаѓања</string>
     <string name="reader.short_lines">Пократки редови на широки екрани</string>

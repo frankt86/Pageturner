@@ -338,6 +338,10 @@
     <string name="playback.speed.increase">Più veloce</string>
     <string name="playback.speed.title">Velocità di riproduzione</string>
     <string name="playback.volume_boost.off">Disattivato</string>
+    <string name="reader.auto_scroll">Scorri automaticamente</string>
+    <string name="reader.auto_scroll.speed">Velocità di scorrimento</string>
+    <string name="reader.auto_turn">Gira le pagine automaticamente</string>
+    <string name="reader.auto_turn.interval">Tempo per pagina</string>
     <string name="reader.bookmark.add">Aggiungi segnalibro</string>
     <string name="reader.bookmark.delete">Elimina segnalibro</string>
     <string name="reader.bookmark.remove">Rimuovi segnalibro</string>
@@ -444,6 +448,9 @@
     <string name="reader.publisher_styles.summary">Mantiene i caratteri e la formattazione del libro. Cambiano solo la dimensione del testo e i colori.</string>
     <string name="reader.read_aloud">Leggi ad alta voce</string>
     <string name="reader.read_aloud_unavailable">La lettura ad alta voce non è disponibile su questo dispositivo</string>
+    <string name="reader.reading_mode">Modalità di lettura</string>
+    <string name="reader.reading_mode.pages">Pagine</string>
+    <string name="reader.reading_mode.scroll">Scorrimento</string>
     <string name="reader.schedule">Giorno e notte</string>
     <string name="reader.schedule.day">Di giorno</string>
     <string name="reader.schedule.earlier">Prima</string>
@@ -452,6 +459,10 @@
     <string name="reader.schedule.night_end">Fine della notte</string>
     <string name="reader.schedule.night_start">Inizio della notte</string>
     <string name="reader.schedule.switch">Cambia tema in base all\'ora del giorno</string>
+    <string name="reader.scrolling">Scorrimento</string>
+    <string name="reader.scrolling.instant">Istantaneo</string>
+    <string name="reader.scrolling.smooth">Fluido</string>
+    <string name="reader.scrolling.snap">Per schermata</string>
     <string name="reader.search">Cerca nel libro</string>
     <string name="reader.search.empty">Nessun risultato</string>
     <string name="reader.short_lines">Righe più corte sugli schermi larghi</string>

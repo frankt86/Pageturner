@@ -389,6 +389,10 @@
     <string name="playback.speed.increase">أسرع</string>
     <string name="playback.speed.title">سرعة التشغيل</string>
     <string name="playback.volume_boost.off">إيقاف</string>
+    <string name="reader.auto_scroll">التمرير التلقائي</string>
+    <string name="reader.auto_scroll.speed">سرعة التمرير</string>
+    <string name="reader.auto_turn">تقليب الصفحات تلقائيًا</string>
+    <string name="reader.auto_turn.interval">مدة كل صفحة</string>
     <string name="reader.bookmark.add">إضافة علامة مرجعية لهذه الصفحة</string>
     <string name="reader.bookmark.delete">حذف العلامة المرجعية</string>
     <string name="reader.bookmark.remove">إزالة العلامة المرجعية</string>
@@ -501,6 +505,9 @@
     <string name="reader.publisher_styles.summary">يحتفظ بخطوط الكتاب وتنسيقه. يتغير حجم النص والألوان فقط.</string>
     <string name="reader.read_aloud">القراءة بصوت عالٍ</string>
     <string name="reader.read_aloud_unavailable">القراءة بصوت عالٍ غير متاحة على هذا الجهاز</string>
+    <string name="reader.reading_mode">وضع القراءة</string>
+    <string name="reader.reading_mode.pages">الصفحات</string>
+    <string name="reader.reading_mode.scroll">التمرير</string>
     <string name="reader.schedule">النهار والليل</string>
     <string name="reader.schedule.day">في النهار</string>
     <string name="reader.schedule.earlier">أبكر</string>
@@ -509,6 +516,10 @@
     <string name="reader.schedule.night_end">نهاية الليل</string>
     <string name="reader.schedule.night_start">بداية الليل</string>
     <string name="reader.schedule.switch">تبديل السمة حسب وقت اليوم</string>
+    <string name="reader.scrolling">طريقة التمرير</string>
+    <string name="reader.scrolling.instant">فوري</string>
+    <string name="reader.scrolling.smooth">سلس</string>
+    <string name="reader.scrolling.snap">شاشة بشاشة</string>
     <string name="reader.search">البحث في الكتاب</string>
     <string name="reader.search.empty">لا توجد نتائج</string>
     <string name="reader.short_lines">أسطر أقصر على الشاشات العريضة</string>

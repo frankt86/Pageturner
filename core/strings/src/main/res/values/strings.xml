@@ -546,6 +546,14 @@
     <string name="playback.speed.title">Playback speed</string>
     <!-- Button that turns volume boost off. -->
     <string name="playback.volume_boost.off">Off</string>
+    <!-- Button in the top bar of the ebook reader in the scroll mode. Starts or stops the text scrolling up by itself, slowly, so it can be read without touching the phone. -->
+    <string name="reader.auto_scroll">Scroll automatically</string>
+    <!-- Label of the slider in the display sheet of the ebook reader for how fast the text scrolls up by itself. -->
+    <string name="reader.auto_scroll.speed">Scrolling speed</string>
+    <!-- Button in the top bar of the ebook reader. Starts or stops turning to the next page by itself after a while. -->
+    <string name="reader.auto_turn">Turn pages automatically</string>
+    <!-- Label of the slider in the display sheet of the ebook reader for how long each page stays before it turns by itself. The seconds show next to it. -->
+    <string name="reader.auto_turn.interval">Time per page</string>
     <!-- Button in the top bar of the ebook reader that bookmarks the page on screen. -->
     <string name="reader.bookmark.add">Bookmark this page</string>
     <!-- Button in the bookmarks list of the ebook reader that deletes a bookmark. -->
@@ -748,6 +756,12 @@
     <string name="reader.read_aloud">Read aloud</string>
     <!-- Snackbar in the ebook reader when the device has no text-to-speech engine. -->
     <string name="reader.read_aloud_unavailable">Reading aloud isn\'t available on this device</string>
+    <!-- Heading of the choice in the display sheet of the ebook reader between pages that turn and text that scrolls from top to bottom. -->
+    <string name="reader.reading_mode">Reading mode</string>
+    <!-- Choice for the reading mode in the ebook reader: the book is shown as pages that turn. -->
+    <string name="reader.reading_mode.pages">Pages</string>
+    <!-- Choice for the reading mode in the ebook reader: the book is one long text that scrolls up and down. -->
+    <string name="reader.reading_mode.scroll">Scroll</string>
     <!-- Section title in the colors sheet of the ebook reader for switching between a day theme and a night theme by the time. -->
     <string name="reader.schedule">Day and night</string>
     <!-- Label above the themes in the colors sheet of the ebook reader to pick the theme used during the day. -->
@@ -764,6 +778,14 @@
     <string name="reader.schedule.night_start">Night starts</string>
     <!-- Switch in the colors sheet of the ebook reader that uses the day theme by day and the night theme at night. -->
     <string name="reader.schedule.switch">Switch themes by the time of day</string>
+    <!-- Heading of the choice in the display sheet of the ebook reader for how the volume keys, taps and swipes move the text in the scroll mode. -->
+    <string name="reader.scrolling">Scrolling</string>
+    <!-- Choice for scrolling in the ebook reader: the volume keys and taps move the text one screen at once, without an animation. -->
+    <string name="reader.scrolling.instant">Instant</string>
+    <!-- Choice for scrolling in the ebook reader: the text glides smoothly. -->
+    <string name="reader.scrolling.smooth">Smooth</string>
+    <!-- Choice for scrolling in the ebook reader: each swipe moves the text exactly one screen, like turning a page. -->
+    <string name="reader.scrolling.snap">By screen</string>
     <!-- Button in the top bar of the ebook reader and hint of the search field that finds words in the book. -->
     <string name="reader.search">Search in book</string>
     <!-- Shown under the search field of the ebook reader when the book doesn't contain what was typed. -->

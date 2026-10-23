@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">Nopeammin</string>
     <string name="playback.speed.title">Toiston nopeus</string>
     <string name="playback.volume_boost.off">Pois</string>
+    <string name="reader.auto_scroll">Vieritä automaattisesti</string>
+    <string name="reader.auto_scroll.speed">Vierityksen nopeus</string>
+    <string name="reader.auto_turn">Käännä sivuja automaattisesti</string>
+    <string name="reader.auto_turn.interval">Aika sivua kohden</string>
     <string name="reader.bookmark.add">Lisää kirjanmerkki tälle sivulle</string>
     <string name="reader.bookmark.delete">Poista kirjanmerkki</string>
     <string name="reader.bookmark.remove">Poista kirjanmerkki</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">Säilyttää kirjan fontit ja muotoilun. Vain tekstin koko ja värit muuttuvat.</string>
     <string name="reader.read_aloud">Lue ääneen</string>
     <string name="reader.read_aloud_unavailable">Ääneen lukeminen ei ole käytettävissä tällä laitteella</string>
+    <string name="reader.reading_mode">Lukutila</string>
+    <string name="reader.reading_mode.pages">Sivut</string>
+    <string name="reader.reading_mode.scroll">Vieritys</string>
     <string name="reader.schedule">Päivä ja yö</string>
     <string name="reader.schedule.day">Päivällä</string>
     <string name="reader.schedule.earlier">Aiemmin</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">Yö päättyy</string>
     <string name="reader.schedule.night_start">Yö alkaa</string>
     <string name="reader.schedule.switch">Vaihda teemaa kellonajan mukaan</string>
+    <string name="reader.scrolling">Vieritys</string>
+    <string name="reader.scrolling.instant">Heti</string>
+    <string name="reader.scrolling.smooth">Pehmeä</string>
+    <string name="reader.scrolling.snap">Näyttö kerrallaan</string>
     <string name="reader.search">Hae kirjasta</string>
     <string name="reader.search.empty">Ei osumia</string>
     <string name="reader.short_lines">Lyhyemmät rivit leveillä näytöillä</string>

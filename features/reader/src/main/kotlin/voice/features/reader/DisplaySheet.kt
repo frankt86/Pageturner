@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -69,6 +70,8 @@ import voice.core.data.ReaderPages
 import voice.core.data.ReaderSettings
 import voice.core.data.ReaderTextAlign
 import voice.core.data.ReaderTheme
+import voice.core.data.ReadingMode
+import voice.core.data.ScrollBehavior
 import voice.core.ui.VoiceTheme
 import voice.core.ui.bookText
 import voice.core.ui.icons.VoiceIcons
@@ -136,20 +139,10 @@ private fun DisplaySettings(
       Icon(VoiceIcons.Contrast, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
       Text(stringResource(StringsR.string.reader_colors))
     }
-    OptionChoice(
-      label = stringResource(StringsR.string.reader_page_turn),
-      options = PageTransition.entries,
-      selected = settings.pageTransition,
-      optionLabel = {
-        stringResource(
-          when (it) {
-            PageTransition.Curl -> StringsR.string.reader_page_turn_curl
-            PageTransition.Slide -> StringsR.string.reader_page_turn_slide
-            PageTransition.None -> StringsR.string.reader_page_turn_none
-          },
-        )
-      },
-      onSelect = { onSettingsChange(settings.copy(pageTransition = it)) },
+    ReadingModeSettings(
+      settings = settings,
+      newEngine = newEngine,
+      onSettingsChange = onSettingsChange,
     )
     if (showTextOptions) {
       TextSettings(
@@ -164,6 +157,7 @@ private fun DisplaySettings(
     LayoutSettings(
       settings = settings,
       showTextOptions = showTextOptions,
+      scroll = settings.readingMode == ReadingMode.Scroll,
       onSettingsChange = onSettingsChange,
     )
     ProgressSettings(
@@ -328,6 +322,89 @@ private fun TextSettings(
     ) {
       Icon(VoiceIcons.Replay, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
       Text(stringResource(StringsR.string.reader_text_reset))
+    }
+  }
+}
+
+/** Pages or scrolling, how pages turn or the text scrolls, and how fast either goes by itself. */
+@Composable
+private fun ReadingModeSettings(
+  settings: ReaderSettings,
+  newEngine: Boolean,
+  onSettingsChange: (ReaderSettings) -> Unit,
+) {
+  Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    OptionChoice(
+      label = stringResource(StringsR.string.reader_reading_mode),
+      options = ReadingMode.entries,
+      selected = settings.readingMode,
+      optionLabel = {
+        stringResource(
+          when (it) {
+            ReadingMode.Pages -> StringsR.string.reader_reading_mode_pages
+            ReadingMode.Scroll -> StringsR.string.reader_reading_mode_scroll
+          },
+        )
+      },
+      onSelect = { onSettingsChange(settings.copy(readingMode = it)) },
+    )
+    when (settings.readingMode) {
+      ReadingMode.Pages -> {
+        OptionChoice(
+          label = stringResource(StringsR.string.reader_page_turn),
+          options = PageTransition.entries,
+          selected = settings.pageTransition,
+          optionLabel = {
+            stringResource(
+              when (it) {
+                PageTransition.Curl -> StringsR.string.reader_page_turn_curl
+                PageTransition.Slide -> StringsR.string.reader_page_turn_slide
+                PageTransition.None -> StringsR.string.reader_page_turn_none
+              },
+            )
+          },
+          onSelect = { onSettingsChange(settings.copy(pageTransition = it)) },
+        )
+        SettingSlider(
+          label = stringResource(StringsR.string.reader_auto_turn_interval),
+          value = settings.autoTurnSeconds.toFloat(),
+          range = 10F..120F,
+          steps = 21,
+          snap = { (it / 5).roundToInt() * 5F },
+          onValueChange = { onSettingsChange(settings.copy(autoTurnSeconds = it.roundToInt())) },
+        ) {
+          Text(
+            text = pluralStringResource(StringsR.plurals.duration_seconds, settings.autoTurnSeconds, settings.autoTurnSeconds),
+            style = MaterialTheme.typography.labelLarge,
+          )
+        }
+      }
+      ReadingMode.Scroll -> {
+        // the web view of the new engine can't snap
+        val behaviors = if (newEngine) listOf(ScrollBehavior.Smooth, ScrollBehavior.Stepped) else ScrollBehavior.entries
+        OptionChoice(
+          label = stringResource(StringsR.string.reader_scrolling),
+          options = behaviors,
+          selected = settings.scrollBehavior.takeIf { it in behaviors } ?: ScrollBehavior.Smooth,
+          optionLabel = {
+            stringResource(
+              when (it) {
+                ScrollBehavior.Smooth -> StringsR.string.reader_scrolling_smooth
+                ScrollBehavior.Stepped -> StringsR.string.reader_scrolling_instant
+                ScrollBehavior.Snap -> StringsR.string.reader_scrolling_snap
+              },
+            )
+          },
+          onSelect = { onSettingsChange(settings.copy(scrollBehavior = it)) },
+        )
+        SettingSlider(
+          label = stringResource(StringsR.string.reader_auto_scroll_speed),
+          value = settings.autoScrollSpeed.toFloat(),
+          range = 5F..100F,
+          snap = { it.roundToInt().toFloat() },
+          onValueChange = { onSettingsChange(settings.copy(autoScrollSpeed = it.roundToInt())) },
+        )
+      }
     }
   }
 }
@@ -580,6 +657,8 @@ private fun fontName(font: ReaderFont): String = when (font) {
 private fun LayoutSettings(
   settings: ReaderSettings,
   showTextOptions: Boolean,
+  // the text runs on in one column, so there are no pages side by side
+  scroll: Boolean,
   onSettingsChange: (ReaderSettings) -> Unit,
 ) {
   Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -590,21 +669,23 @@ private fun LayoutSettings(
         .padding(top = 8.dp)
         .semantics { heading() },
     )
-    OptionChoice(
-      label = stringResource(StringsR.string.reader_pages),
-      options = ReaderPages.entries,
-      selected = settings.pages,
-      optionLabel = {
-        stringResource(
-          when (it) {
-            ReaderPages.Auto -> StringsR.string.reader_theme_auto
-            ReaderPages.One -> StringsR.string.reader_pages_one
-            ReaderPages.Two -> StringsR.string.reader_pages_two
-          },
-        )
-      },
-      onSelect = { onSettingsChange(settings.copy(pages = it)) },
-    )
+    if (!scroll) {
+      OptionChoice(
+        label = stringResource(StringsR.string.reader_pages),
+        options = ReaderPages.entries,
+        selected = settings.pages,
+        optionLabel = {
+          stringResource(
+            when (it) {
+              ReaderPages.Auto -> StringsR.string.reader_theme_auto
+              ReaderPages.One -> StringsR.string.reader_pages_one
+              ReaderPages.Two -> StringsR.string.reader_pages_two
+            },
+          )
+        },
+        onSelect = { onSettingsChange(settings.copy(pages = it)) },
+      )
+    }
     if (showTextOptions) {
       SettingSlider(
         label = stringResource(StringsR.string.reader_margins),
@@ -630,14 +711,16 @@ private fun LayoutSettings(
         snap = { it.roundToInt().toFloat() },
         onValueChange = { onSettingsChange(settings.copy(bottomMargin = it.roundToInt())) },
       )
-      SettingSlider(
-        label = stringResource(StringsR.string.reader_page_gap),
-        value = (settings.pageGap ?: 24).toFloat(),
-        range = 0F..64F,
-        steps = 7,
-        snap = { it.roundToInt().toFloat() },
-        onValueChange = { onSettingsChange(settings.copy(pageGap = it.roundToInt())) },
-      )
+      if (!scroll) {
+        SettingSlider(
+          label = stringResource(StringsR.string.reader_page_gap),
+          value = (settings.pageGap ?: 24).toFloat(),
+          range = 0F..64F,
+          steps = 7,
+          snap = { it.roundToInt().toFloat() },
+          onValueChange = { onSettingsChange(settings.copy(pageGap = it.roundToInt())) },
+        )
+      }
       SwitchRow(
         label = stringResource(StringsR.string.reader_short_lines),
         checked = settings.shortLines,

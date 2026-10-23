@@ -321,6 +321,10 @@
     <string name="playback.speed.increase">Kiiremini</string>
     <string name="playback.speed.title">Taasesituse kiirus</string>
     <string name="playback.volume_boost.off">Väljas</string>
+    <string name="reader.auto_scroll">Keri automaatselt</string>
+    <string name="reader.auto_scroll.speed">Kerimiskiirus</string>
+    <string name="reader.auto_turn">Keera lehti automaatselt</string>
+    <string name="reader.auto_turn.interval">Aeg lehe kohta</string>
     <string name="reader.bookmark.add">Lisa sellele lehele järjehoidja</string>
     <string name="reader.bookmark.delete">Kustuta järjehoidja</string>
     <string name="reader.bookmark.remove">Eemalda järjehoidja</string>
@@ -425,6 +429,9 @@
     <string name="reader.publisher_styles.summary">Säilitab raamatu kirjatüübid ja vorminduse. Muutuvad ainult teksti suurus ja värvid.</string>
     <string name="reader.read_aloud">Loe ette</string>
     <string name="reader.read_aloud_unavailable">Ettelugemine pole selles seadmes saadaval</string>
+    <string name="reader.reading_mode">Lugemisrežiim</string>
+    <string name="reader.reading_mode.pages">Lehed</string>
+    <string name="reader.reading_mode.scroll">Kerimine</string>
     <string name="reader.schedule">Päev ja öö</string>
     <string name="reader.schedule.day">Päeval</string>
     <string name="reader.schedule.earlier">Varem</string>
@@ -433,6 +440,10 @@
     <string name="reader.schedule.night_end">Öö lõpeb</string>
     <string name="reader.schedule.night_start">Öö algab</string>
     <string name="reader.schedule.switch">Vaheta teemat kellaaja järgi</string>
+    <string name="reader.scrolling">Kerimine</string>
+    <string name="reader.scrolling.instant">Kohe</string>
+    <string name="reader.scrolling.smooth">Sujuv</string>
+    <string name="reader.scrolling.snap">Ekraanihaaval</string>
     <string name="reader.search">Otsi raamatust</string>
     <string name="reader.search.empty">Vasteid pole</string>
     <string name="reader.short_lines">Lühemad read laial ekraanil</string>

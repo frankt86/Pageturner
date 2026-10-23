@@ -355,6 +355,10 @@
     <string name="playback.speed.increase">Швидше</string>
     <string name="playback.speed.title">Швидкість відтворення</string>
     <string name="playback.volume_boost.off">Вимкнено</string>
+    <string name="reader.auto_scroll">Автопрокручування</string>
+    <string name="reader.auto_scroll.speed">Швидкість прокручування</string>
+    <string name="reader.auto_turn">Гортати автоматично</string>
+    <string name="reader.auto_turn.interval">Час на сторінку</string>
     <string name="reader.bookmark.add">Додати закладку</string>
     <string name="reader.bookmark.delete">Видалити закладку</string>
     <string name="reader.bookmark.remove">Прибрати закладку</string>
@@ -463,6 +467,9 @@
     <string name="reader.publisher_styles.summary">Зберігає шрифти й оформлення книги. Змінюються лише розмір тексту та кольори.</string>
     <string name="reader.read_aloud">Читати вголос</string>
     <string name="reader.read_aloud_unavailable">Читання вголос недоступне на цьому пристрої</string>
+    <string name="reader.reading_mode">Режим читання</string>
+    <string name="reader.reading_mode.pages">Сторінки</string>
+    <string name="reader.reading_mode.scroll">Прокручування</string>
     <string name="reader.schedule">День і ніч</string>
     <string name="reader.schedule.day">Удень</string>
     <string name="reader.schedule.earlier">Раніше</string>
@@ -471,6 +478,10 @@
     <string name="reader.schedule.night_end">Кінець ночі</string>
     <string name="reader.schedule.night_start">Початок ночі</string>
     <string name="reader.schedule.switch">Змінювати тему залежно від часу доби</string>
+    <string name="reader.scrolling">Прокручування</string>
+    <string name="reader.scrolling.instant">Одразу</string>
+    <string name="reader.scrolling.smooth">Плавно</string>
+    <string name="reader.scrolling.snap">По екранах</string>
     <string name="reader.search">Пошук у книзі</string>
     <string name="reader.search.empty">Нічого не знайдено</string>
     <string name="reader.short_lines">Коротші рядки на широких екранах</string>

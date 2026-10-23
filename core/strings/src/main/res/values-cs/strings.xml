@@ -355,6 +355,10 @@
     <string name="playback.speed.increase">Rychleji</string>
     <string name="playback.speed.title">Rychlost přehrávání</string>
     <string name="playback.volume_boost.off">Vypnuto</string>
+    <string name="reader.auto_scroll">Automaticky posouvat</string>
+    <string name="reader.auto_scroll.speed">Rychlost posouvání</string>
+    <string name="reader.auto_turn">Automaticky otáčet stránky</string>
+    <string name="reader.auto_turn.interval">Čas na stránku</string>
     <string name="reader.bookmark.add">Přidat záložku</string>
     <string name="reader.bookmark.delete">Smazat záložku</string>
     <string name="reader.bookmark.remove">Odebrat záložku</string>
@@ -463,6 +467,9 @@
     <string name="reader.publisher_styles.summary">Zachová písma a formátování knihy. Mění se jen velikost textu a barvy.</string>
     <string name="reader.read_aloud">Předčítat</string>
     <string name="reader.read_aloud_unavailable">Předčítání není na tomto zařízení k dispozici</string>
+    <string name="reader.reading_mode">Režim čtení</string>
+    <string name="reader.reading_mode.pages">Stránky</string>
+    <string name="reader.reading_mode.scroll">Posouvání</string>
     <string name="reader.schedule">Den a noc</string>
     <string name="reader.schedule.day">Ve dne</string>
     <string name="reader.schedule.earlier">Dříve</string>
@@ -471,6 +478,10 @@
     <string name="reader.schedule.night_end">Konec noci</string>
     <string name="reader.schedule.night_start">Začátek noci</string>
     <string name="reader.schedule.switch">Měnit motiv podle denní doby</string>
+    <string name="reader.scrolling">Posouvání</string>
+    <string name="reader.scrolling.instant">Okamžitě</string>
+    <string name="reader.scrolling.smooth">Plynule</string>
+    <string name="reader.scrolling.snap">Po obrazovkách</string>
     <string name="reader.search">Hledat v knize</string>
     <string name="reader.search.empty">Žádné výsledky</string>
     <string name="reader.short_lines">Kratší řádky na širokých displejích</string>
