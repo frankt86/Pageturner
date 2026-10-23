@@ -253,7 +253,6 @@
     <string name="library.book.offline">Недоступно офлайн</string>
     <string name="library.category.completed.title">Завершені</string>
     <string name="library.category.current.title">Поточні</string>
-    <string name="library.category.ebooks.title">Електронні книги</string>
     <string name="library.category.not_started.title">Ще не початі</string>
     <string name="library.continue_listening">Продовжити слухання</string>
     <string name="library.empty.add_first_book">Давайте додамо папку з аудіокнигами, щоб ви могли почати прослуховування!</string>
@@ -353,12 +352,15 @@
     <string name="playback.speed.increase">Швидше</string>
     <string name="playback.speed.title">Швидкість відтворення</string>
     <string name="playback.volume_boost.off">Вимкнено</string>
+    <string name="reader.chapter">Розділ %d</string>
+    <string name="reader.contents">Зміст</string>
     <string name="reader.failed">Не вдалося відкрити цю книгу</string>
     <string name="reader.nothing_to_read_aloud">Тут немає тексту для читання вголос</string>
     <string name="reader.page">%1$d з %2$d</string>
     <string name="reader.read_aloud">Читати вголос</string>
     <string name="reader.read_aloud_unavailable">Читання вголос недоступне на цьому пристрої</string>
     <string name="reader.stop_reading_aloud">Зупинити читання вголос</string>
+    <string name="reader.text_size">Розмір тексту</string>
     <string name="review.prompt.action.feedback">Залишити відгук</string>
     <string name="review.prompt.action.later">Не зараз</string>
     <string name="review.prompt.action.rate">Оцінити в Google Play</string>

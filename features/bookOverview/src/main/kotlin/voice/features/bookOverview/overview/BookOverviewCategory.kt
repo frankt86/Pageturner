@@ -3,6 +3,7 @@ package voice.features.bookOverview.overview
 import androidx.annotation.StringRes
 import voice.core.data.Book
 import voice.core.data.BookComparator
+import voice.core.data.Ebook
 import java.util.concurrent.TimeUnit.SECONDS
 import voice.core.strings.R as StringsR
 
@@ -35,4 +36,17 @@ val Book.category: BookOverviewCategory
         BookOverviewCategory.CURRENT
       }
     }
+  }
+
+val BookOverviewCategory.ebookComparator: Comparator<Ebook>
+  get() = when (this) {
+    BookOverviewCategory.NOT_STARTED -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.name }
+    BookOverviewCategory.CURRENT, BookOverviewCategory.FINISHED -> compareByDescending { it.lastOpened }
+  }
+
+val Ebook.category: BookOverviewCategory
+  get() = when {
+    progress >= 0.99F -> BookOverviewCategory.FINISHED
+    lastOpened == 0L -> BookOverviewCategory.NOT_STARTED
+    else -> BookOverviewCategory.CURRENT
   }

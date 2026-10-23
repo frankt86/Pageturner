@@ -227,7 +227,6 @@
     <string name="library.book.offline">Недостапно без интернет</string>
     <string name="library.category.completed.title">Завршени</string>
     <string name="library.category.current.title">Тековни</string>
-    <string name="library.category.ebooks.title">Е-книги</string>
     <string name="library.category.not_started.title">Непочнати</string>
     <string name="library.continue_listening">Продолжи со слушање</string>
     <string name="library.empty.add_first_book">Ајде да ги додадеме вашите аудио книги за да почнете со слушање!</string>
@@ -319,12 +318,15 @@
     <string name="playback.speed.increase">Побрзо</string>
     <string name="playback.speed.title">Брзина на репродукција</string>
     <string name="playback.volume_boost.off">Исклучено</string>
+    <string name="reader.chapter">Поглавје %d</string>
+    <string name="reader.contents">Содржина</string>
     <string name="reader.failed">Оваа книга не може да се отвори</string>
     <string name="reader.nothing_to_read_aloud">Тука нема текст за читање на глас</string>
     <string name="reader.page">%1$d од %2$d</string>
     <string name="reader.read_aloud">Читај на глас</string>
     <string name="reader.read_aloud_unavailable">Читањето на глас не е достапно на овој уред</string>
     <string name="reader.stop_reading_aloud">Запри го читањето на глас</string>
+    <string name="reader.text_size">Големина на текстот</string>
     <string name="review.prompt.action.feedback">Сподели повратни информации</string>
     <string name="review.prompt.action.later">Не сега</string>
     <string name="review.prompt.action.rate">Оцени на Google Play</string>

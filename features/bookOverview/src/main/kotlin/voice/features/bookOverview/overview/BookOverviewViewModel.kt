@@ -1,7 +1,6 @@
 package voice.features.bookOverview.overview
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.runtime.Composable
@@ -18,6 +17,7 @@ import androidx.core.net.toUri
 import androidx.datastore.core.DataStore
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import voice.core.audiobookshelf.ServerLibrary
@@ -103,13 +103,8 @@ class BookOverviewViewModel(
     // half loaded state (e.g. no hero card, or top bar icons that disappear again).
     val books = remember { repo.flow() }
       .collectAsState(initial = null).value
-    val ebooks = remember {
-      ebooksStore.data.map { ebooks ->
-        ebooks.filter { it.available }
-          .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-          .map { EbookItemViewState(uri = it.uri, name = it.name, format = it.format, progress = it.progress) }
-      }
-    }.collectAsState(initial = null).value
+    val ebooks = remember { ebooksStore.data.map { ebooks -> ebooks.filter { it.available } } }
+      .collectAsState(initial = null).value
     val currentBook = remember { currentBookStoreDataStore.data.map(::CurrentBook) }
       .collectAsState(initial = null).value
     val scanning = remember { mediaScanner.scannerActive }
@@ -163,24 +158,31 @@ class BookOverviewViewModel(
       remember { mutableStateOf(null) }
     }
 
+    val audiobookItems = books
+      .groupBy {
+        it.category
+      }
+      .mapValues { (category, books) ->
+        books
+          .sortedWith(category.comparator)
+          .associate { book ->
+            book.id to book.itemViewState(
+              currentBookId = currentBookId,
+              livePlaybackState = { livePlaybackState.value },
+              unavailable = book.id in unavailableBooks,
+              download = downloadStates[book.id].badge(),
+            )
+          }
+      }
+    val ebookItems = remember(ebooks) { ebooks.itemsByCategory() }
+
     return BookOverviewViewState(
       layoutMode = layoutMode,
-      books = books
-        .groupBy {
-          it.category
+      books = BookOverviewCategory.entries
+        .associateWith { category ->
+          audiobookItems[category].orEmpty() + ebookItems[category].orEmpty()
         }
-        .mapValues { (category, books) ->
-          books
-            .sortedWith(category.comparator)
-            .associate { book ->
-              book.id to book.itemViewState(
-                currentBookId = currentBookId,
-                livePlaybackState = { livePlaybackState.value },
-                unavailable = book.id in unavailableBooks,
-                download = downloadStates[book.id].badge(),
-              )
-            }
-        }
+        .filterValues { it.isNotEmpty() }
         .toSortedMap(),
       currentBookId = currentBookId,
       playButtonState = if (playState == PlayStateManager.PlayState.Playing) {
@@ -239,15 +241,18 @@ class BookOverviewViewModel(
   }
 
   fun onBookClick(id: BookId) {
-    navigator.goTo(Destination.Playback(id))
-  }
-
-  fun onEbookClick(uri: Uri) {
-    navigator.goTo(Destination.Reader(uri))
+    scope.launch {
+      val ebook = ebooksStore.data.first().firstOrNull { it.bookId == id }
+      navigator.goTo(if (ebook != null) Destination.Reader(ebook.uri) else Destination.Playback(id))
+    }
   }
 
   fun onBookLongClick(id: BookId) {
-    navigator.goTo(Destination.BookActions(id))
+    scope.launch {
+      if (ebooksStore.data.first().none { it.bookId == id }) {
+        navigator.goTo(Destination.BookActions(id))
+      }
+    }
   }
 
   fun onBookFolderClick() {
@@ -304,6 +309,15 @@ private fun Book.itemViewState(
       }.toItemViewState(unavailable, download)
     }
   }
+}
+
+private fun List<Ebook>.itemsByCategory(): Map<BookOverviewCategory, Map<BookId, State<BookOverviewItemViewState>>> {
+  return groupBy { it.category }
+    .mapValues { (category, ebooks) ->
+      ebooks
+        .sortedWith(category.ebookComparator)
+        .associate { ebook -> ebook.bookId to mutableStateOf(ebook.toItemViewState()) }
+    }
 }
 
 /** Distinguishes "no current book" from "not loaded yet". */

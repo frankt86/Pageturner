@@ -227,7 +227,6 @@
     <string name="library.book.offline">Offline nicht verfügbar</string>
     <string name="library.category.completed.title">Abgeschlossen</string>
     <string name="library.category.current.title">Aktuell</string>
-    <string name="library.category.ebooks.title">E-Books</string>
     <string name="library.category.not_started.title">Neu</string>
     <string name="library.continue_listening">Weiterhören</string>
     <string name="library.empty.add_first_book">Füge Deinen Hörbuchordner hinzu, damit Du mit dem Hören beginnen kannst!</string>
@@ -319,12 +318,15 @@
     <string name="playback.speed.increase">Schneller</string>
     <string name="playback.speed.title">Abspielgeschwindigkeit</string>
     <string name="playback.volume_boost.off">Aus</string>
+    <string name="reader.chapter">Kapitel %d</string>
+    <string name="reader.contents">Inhalt</string>
     <string name="reader.failed">Dieses Buch konnte nicht geöffnet werden</string>
     <string name="reader.nothing_to_read_aloud">Hier gibt es keinen Text zum Vorlesen</string>
     <string name="reader.page">%1$d von %2$d</string>
     <string name="reader.read_aloud">Vorlesen</string>
     <string name="reader.read_aloud_unavailable">Vorlesen ist auf diesem Gerät nicht verfügbar</string>
     <string name="reader.stop_reading_aloud">Vorlesen beenden</string>
+    <string name="reader.text_size">Textgröße</string>
     <string name="review.prompt.action.feedback">Feedback geben</string>
     <string name="review.prompt.action.later">Nicht jetzt</string>
     <string name="review.prompt.action.rate">Auf Google Play bewerten</string>

@@ -227,7 +227,6 @@
     <string name="library.book.offline">No disponìbile chene connessione</string>
     <string name="library.category.completed.title">Acabbadu</string>
     <string name="library.category.current.title">In cursu</string>
-    <string name="library.category.ebooks.title">Libros eletrònicos</string>
     <string name="library.category.not_started.title">Galu no incumintzadu</string>
     <string name="library.continue_listening">Sighi a ascurtare</string>
     <string name="library.empty.add_first_book">Agiunghimus sa cartella de audiolibros tua in manera chi potzas incumintzare a ascurtare!</string>
@@ -319,12 +318,15 @@
     <string name="playback.speed.increase">Prus lestru</string>
     <string name="playback.speed.title">Lestresa de riprodutzione</string>
     <string name="playback.volume_boost.off">Disativadu</string>
+    <string name="reader.chapter">Capìtulu %d</string>
+    <string name="reader.contents">Ìndighe</string>
     <string name="reader.failed">No est istadu possìbile abèrrere custu libru</string>
     <string name="reader.nothing_to_read_aloud">Inoghe non b\'at testu de lèghere a boghe arta</string>
     <string name="reader.page">%1$d de %2$d</string>
     <string name="reader.read_aloud">Leghe a boghe arta</string>
     <string name="reader.read_aloud_unavailable">Sa letura a boghe arta no est disponìbile in custu dispositivu</string>
     <string name="reader.stop_reading_aloud">Firma sa letura a boghe arta</string>
+    <string name="reader.text_size">Mannària de su testu</string>
     <string name="review.prompt.action.feedback">Cumpartzi unu parre</string>
     <string name="review.prompt.action.later">Immoe nono</string>
     <string name="review.prompt.action.rate">Vota in Google Play</string>

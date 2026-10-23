@@ -227,7 +227,6 @@
     <string name="library.book.offline">ஆஃப்லைனில் கிடைக்காது</string>
     <string name="library.category.completed.title">முடித்தவை</string>
     <string name="library.category.current.title">தற்போது கேட்பவை</string>
-    <string name="library.category.ebooks.title">மின்னூல்கள்</string>
     <string name="library.category.not_started.title">இன்னும் தொடங்கப்படவில்லை</string>
     <string name="library.continue_listening">தொடர்ந்து கேளுங்கள்</string>
     <string name="library.empty.add_first_book">கேட்கத் தொடங்க, உங்கள் ஆடியோபுக் கோப்புறையைச் சேர்ப்போம்!</string>
@@ -319,12 +318,15 @@
     <string name="playback.speed.increase">வேகமாக</string>
     <string name="playback.speed.title">இயக்க வேகம்</string>
     <string name="playback.volume_boost.off">முடக்கு</string>
+    <string name="reader.chapter">அத்தியாயம் %d</string>
+    <string name="reader.contents">பொருளடக்கம்</string>
     <string name="reader.failed">இந்தப் புத்தகத்தைத் திறக்க முடியவில்லை</string>
     <string name="reader.nothing_to_read_aloud">இங்கே சத்தமாகப் படிக்க உரை எதுவும் இல்லை</string>
     <string name="reader.page">%2$d இல் %1$d</string>
     <string name="reader.read_aloud">சத்தமாகப் படி</string>
     <string name="reader.read_aloud_unavailable">இந்தச் சாதனத்தில் சத்தமாகப் படிக்கும் வசதி கிடைக்கவில்லை</string>
     <string name="reader.stop_reading_aloud">சத்தமாகப் படிப்பதை நிறுத்து</string>
+    <string name="reader.text_size">உரையின் அளவு</string>
     <string name="review.prompt.action.feedback">கருத்தைப் பகிர்</string>
     <string name="review.prompt.action.later">இப்போது வேண்டாம்</string>
     <string name="review.prompt.action.rate">Google Play-இல் மதிப்பிடு</string>

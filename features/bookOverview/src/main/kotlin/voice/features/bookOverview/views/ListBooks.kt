@@ -94,7 +94,14 @@ internal fun ListBookRow(
               )
             }
             Text(
-              text = stringResource(R.string.playback_book_progress_remaining, book.remainingTime),
+              text = if (book.isEbook) {
+                book.remainingTime
+              } else {
+                stringResource(
+                  R.string.playback_book_progress_remaining,
+                  book.remainingTime,
+                )
+              },
               style = MaterialTheme.typography.labelMedium,
               color = MaterialTheme.colorScheme.onSurfaceVariant,
               maxLines = 1,

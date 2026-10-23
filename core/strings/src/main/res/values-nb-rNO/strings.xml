@@ -227,7 +227,6 @@
     <string name="library.book.offline">Ikke tilgjengelig uten nett</string>
     <string name="library.category.completed.title">Fullført</string>
     <string name="library.category.current.title">Pågående</string>
-    <string name="library.category.ebooks.title">E-bøker</string>
     <string name="library.category.not_started.title">Ikke startet enda</string>
     <string name="library.continue_listening">Fortsett å lytte</string>
     <string name="library.empty.add_first_book">Legg til lydbokmappen din så du kan begynne å lytte!</string>
@@ -319,12 +318,15 @@
     <string name="playback.speed.increase">Raskere</string>
     <string name="playback.speed.title">Avspillingshastighet</string>
     <string name="playback.volume_boost.off">Av</string>
+    <string name="reader.chapter">Kapittel %d</string>
+    <string name="reader.contents">Innhold</string>
     <string name="reader.failed">Boken kunne ikke åpnes</string>
     <string name="reader.nothing_to_read_aloud">Det er ingen tekst å lese høyt her</string>
     <string name="reader.page">%1$d av %2$d</string>
     <string name="reader.read_aloud">Les høyt</string>
     <string name="reader.read_aloud_unavailable">Opplesning er ikke tilgjengelig på denne enheten</string>
     <string name="reader.stop_reading_aloud">Stopp opplesning</string>
+    <string name="reader.text_size">Tekststørrelse</string>
     <string name="review.prompt.action.feedback">Gi tilbakemelding</string>
     <string name="review.prompt.action.later">Ikke nå</string>
     <string name="review.prompt.action.rate">Vurder på Google Play</string>

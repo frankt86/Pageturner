@@ -5,8 +5,11 @@ import voice.core.audiobookshelf.download.BookDownloadState
 import voice.core.audiobookshelf.download.WaitingFor
 import voice.core.data.Book
 import voice.core.data.BookId
+import voice.core.data.Ebook
 import voice.core.logging.api.Logger
 import voice.core.ui.formatTime
+import java.io.File
+import java.text.NumberFormat
 
 @Immutable
 data class BookOverviewItemViewState(
@@ -19,6 +22,7 @@ data class BookOverviewItemViewState(
   /** A server book that isn't downloaded while the server can't be reached. */
   val unavailable: Boolean = false,
   val download: DownloadBadge? = null,
+  val isEbook: Boolean = false,
 )
 
 @Immutable
@@ -49,6 +53,19 @@ internal fun Book.toItemViewState(
   remainingTime = formatTime(duration - position),
   unavailable = unavailable,
   download = download,
+)
+
+// ebooks share the library with audiobooks, so they need an id of the same kind
+internal val Ebook.bookId: BookId get() = BookId(uri.toString())
+
+internal fun Ebook.toItemViewState() = BookOverviewItemViewState(
+  name = name,
+  author = author,
+  cover = cover?.let { File(it).toURI().toString() },
+  id = bookId,
+  progress = progress,
+  remainingTime = "${format.name.uppercase()} · ${NumberFormat.getPercentInstance().format(progress)}",
+  isEbook = true,
 )
 
 private fun Book.progress(): Float {

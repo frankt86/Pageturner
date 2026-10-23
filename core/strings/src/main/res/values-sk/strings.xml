@@ -253,7 +253,6 @@
     <string name="library.book.offline">Nie je k dispozícii offline</string>
     <string name="library.category.completed.title">Vypočuté</string>
     <string name="library.category.current.title">Rozpočúvané</string>
-    <string name="library.category.ebooks.title">E-knihy</string>
     <string name="library.category.not_started.title">Ešte nepočúvané</string>
     <string name="library.continue_listening">Pokračovať v počúvaní</string>
     <string name="library.empty.add_first_book">Pridajte si priečinok so zvukovými knihami, aby ste mohli začať počúvať!</string>
@@ -353,12 +352,15 @@
     <string name="playback.speed.increase">Rýchlejšie</string>
     <string name="playback.speed.title">Rýchlosť prehrávania</string>
     <string name="playback.volume_boost.off">Vypnuté</string>
+    <string name="reader.chapter">Kapitola %d</string>
+    <string name="reader.contents">Obsah</string>
     <string name="reader.failed">Túto knihu sa nepodarilo otvoriť</string>
     <string name="reader.nothing_to_read_aloud">Nie je tu žiadny text na predčítanie</string>
     <string name="reader.page">%1$d z %2$d</string>
     <string name="reader.read_aloud">Predčítať</string>
     <string name="reader.read_aloud_unavailable">Predčítanie nie je na tomto zariadení k dispozícii</string>
     <string name="reader.stop_reading_aloud">Zastaviť predčítanie</string>
+    <string name="reader.text_size">Veľkosť textu</string>
     <string name="review.prompt.action.feedback">Zdieľať spätnú väzbu</string>
     <string name="review.prompt.action.later">Teraz nie</string>
     <string name="review.prompt.action.rate">Ohodnotiť na Google Play</string>
