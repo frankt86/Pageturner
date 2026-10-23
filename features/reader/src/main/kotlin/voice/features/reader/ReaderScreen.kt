@@ -441,6 +441,7 @@ private fun Spreads(
       onTurn = { index -> onPageTurn(pages[index], (index + 1F) / pages.size) },
       backColor = MaterialTheme.colorScheme.surface,
       modifier = Modifier.fillMaxSize(),
+      onCenterTap = onCenterTap,
       previewTurn = previewTurn,
     ) { index ->
       PageSlot(state, pages, index, textStyle, Modifier.fillMaxSize())

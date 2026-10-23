@@ -75,7 +75,8 @@ private fun Size.foldFor(
 
 /**
  * Pages lying on top of each other. Dragging from the right lifts the corner of the page and curls it over,
- * dragging from the left brings the previous page back. A tap on the outer thirds turns a page.
+ * dragging from the left brings the previous page back. A tap on the outer thirds turns a page, one in the middle
+ * calls [onCenterTap].
  */
 @Composable
 internal fun CurlPages(
@@ -84,6 +85,7 @@ internal fun CurlPages(
   onTurn: (Int) -> Unit,
   backColor: Color,
   modifier: Modifier = Modifier,
+  onCenterTap: () -> Unit = {},
   // previews can't drag, this shows the page curled this far
   previewTurn: Float? = null,
   page: @Composable (index: Int) -> Unit,
@@ -99,6 +101,7 @@ internal fun CurlPages(
     val backward = remember(pageSize) { Animatable(pageSize.turned(), FoldConverter) }
     val latestCurrent by rememberUpdatedState(current)
     val latestOnTurn by rememberUpdatedState(onTurn)
+    val latestOnCenterTap by rememberUpdatedState(onCenterTap)
     val scope = rememberCoroutineScope()
 
     fun turnForward(fromCorner: Boolean) {
@@ -151,6 +154,7 @@ internal fun CurlPages(
             when {
               offset.x > pageSize.width * 2 / 3 -> turnForward(fromCorner = true)
               offset.x < pageSize.width / 3 -> turnBackward(fromCorner = true)
+              else -> latestOnCenterTap()
             }
           }
         }
