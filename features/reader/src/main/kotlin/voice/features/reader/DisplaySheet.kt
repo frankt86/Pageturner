@@ -43,7 +43,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import voice.core.data.PageTransition
+import voice.core.data.ProgressBarStyle
+import voice.core.data.ProgressVisibility
 import voice.core.data.ReaderFont
+import voice.core.data.ReaderFooter
 import voice.core.data.ReaderOrientation
 import voice.core.data.ReaderPages
 import voice.core.data.ReaderSettings
@@ -57,6 +60,7 @@ import voice.core.strings.R as StringsR
 internal fun DisplaySheet(
   settings: ReaderSettings,
   showTextOptions: Boolean,
+  showProgressScope: Boolean,
   onSettingsChange: (ReaderSettings) -> Unit,
   onDismiss: () -> Unit,
 ) {
@@ -65,6 +69,7 @@ internal fun DisplaySheet(
     DisplaySettings(
       settings = settings,
       showTextOptions = showTextOptions,
+      showProgressScope = showProgressScope,
       onSettingsChange = onSettingsChange,
     )
   }
@@ -74,6 +79,7 @@ internal fun DisplaySheet(
 private fun DisplaySettings(
   settings: ReaderSettings,
   showTextOptions: Boolean,
+  showProgressScope: Boolean,
   onSettingsChange: (ReaderSettings) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -130,6 +136,12 @@ private fun DisplaySettings(
     LayoutSettings(
       settings = settings,
       showTextOptions = showTextOptions,
+      onSettingsChange = onSettingsChange,
+    )
+    ProgressSettings(
+      settings = settings,
+      showFooter = showTextOptions,
+      showProgressScope = showProgressScope,
       onSettingsChange = onSettingsChange,
     )
     Brightness(
@@ -361,6 +373,84 @@ private fun LayoutSettings(
 }
 
 @Composable
+private fun ProgressSettings(
+  settings: ReaderSettings,
+  showFooter: Boolean,
+  showProgressScope: Boolean,
+  onSettingsChange: (ReaderSettings) -> Unit,
+) {
+  Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Text(
+      text = stringResource(StringsR.string.reader_progress),
+      style = MaterialTheme.typography.titleMedium,
+      modifier = Modifier
+        .padding(top = 8.dp)
+        .semantics { heading() },
+    )
+    OptionChoice(
+      label = stringResource(StringsR.string.reader_progress_visibility),
+      options = ProgressVisibility.entries,
+      selected = settings.progressVisibility,
+      optionLabel = {
+        stringResource(
+          when (it) {
+            ProgressVisibility.Always -> StringsR.string.reader_progress_visibility_always
+            ProgressVisibility.OnTap -> StringsR.string.reader_progress_visibility_on_tap
+            ProgressVisibility.Hidden -> StringsR.string.reader_progress_visibility_hidden
+          },
+        )
+      },
+      onSelect = { onSettingsChange(settings.copy(progressVisibility = it)) },
+    )
+    OptionChoice(
+      label = stringResource(StringsR.string.reader_progress_style),
+      options = ProgressBarStyle.entries,
+      selected = settings.progressBar,
+      optionLabel = {
+        stringResource(
+          when (it) {
+            ProgressBarStyle.Line -> StringsR.string.reader_progress_style_line
+            ProgressBarStyle.Bar -> StringsR.string.reader_progress_style_bar
+            ProgressBarStyle.Segmented -> StringsR.string.reader_progress_style_chapters
+          },
+        )
+      },
+      onSelect = { onSettingsChange(settings.copy(progressBar = it)) },
+    )
+    if (showFooter) {
+      OptionChoice(
+        label = stringResource(StringsR.string.reader_footer),
+        options = ReaderFooter.entries,
+        selected = settings.footer,
+        optionLabel = {
+          stringResource(
+            when (it) {
+              ReaderFooter.Page -> StringsR.string.reader_footer_page
+              ReaderFooter.ChapterPage -> StringsR.string.reader_footer_chapter
+              ReaderFooter.Percent -> StringsR.string.reader_footer_percent
+              ReaderFooter.TimeLeft -> StringsR.string.reader_footer_time
+            },
+          )
+        },
+        onSelect = { onSettingsChange(settings.copy(footer = it)) },
+      )
+    }
+    SwitchRow(
+      label = stringResource(StringsR.string.reader_progress_marks),
+      checked = settings.progressMarks,
+      onCheckedChange = { onSettingsChange(settings.copy(progressMarks = it)) },
+    )
+    if (showProgressScope) {
+      SwitchRow(
+        label = stringResource(StringsR.string.reader_progress_body_only),
+        checked = settings.progressBodyOnly,
+        onCheckedChange = { onSettingsChange(settings.copy(progressBodyOnly = it)) },
+      )
+    }
+  }
+}
+
+@Composable
 private fun <T> OptionChoice(
   label: String,
   options: List<T>,
@@ -467,6 +557,7 @@ private fun DisplaySettingsPreview() {
     DisplaySettings(
       settings = ReaderSettings(theme = ReaderTheme.Sepia),
       showTextOptions = true,
+      showProgressScope = true,
       onSettingsChange = {},
     )
   }

@@ -346,17 +346,18 @@
     <string name="reader.brightness">Luminosità</string>
     <string name="reader.brightness.system">Sistema</string>
     <string name="reader.chapter">Capitolo %d</string>
-    <string name="reader.chapter.last_page">Ultima pagina del capitolo</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">Ancora %d pagina in questo capitolo</item>
-        <item quantity="many">Ancora %d pagine in questo capitolo</item>
-        <item quantity="other">Ancora %d pagine in questo capitolo</item>
-    </plurals>
     <string name="reader.contents">Indice</string>
     <string name="reader.display">Visualizzazione</string>
     <string name="reader.failed">Non è stato possibile aprire questo libro</string>
     <string name="reader.font.sans">Sans</string>
     <string name="reader.font.serif">Serif</string>
+    <string name="reader.footer">Piè di pagina</string>
+    <string name="reader.footer.chapter">Capitolo</string>
+    <string name="reader.footer.chapter_page">%1$d di %2$d nel capitolo</string>
+    <string name="reader.footer.page">Pagina</string>
+    <string name="reader.footer.percent">Percentuale</string>
+    <string name="reader.footer.time">Tempo rimasto</string>
+    <string name="reader.footer.time_left">%s alla fine del capitolo</string>
     <string name="reader.go_to_page">Vai alla pagina</string>
     <string name="reader.highlight.blue">Blu</string>
     <string name="reader.highlight.delete">Elimina evidenziazione</string>
@@ -386,6 +387,32 @@
     <string name="reader.pages">Pagine</string>
     <string name="reader.pages.one">Una pagina</string>
     <string name="reader.pages.two">Due pagine</string>
+    <string name="reader.progress">Avanzamento</string>
+    <string name="reader.progress.body_only">Conta solo il testo principale</string>
+    <string name="reader.progress.book">Libro</string>
+    <string name="reader.progress.chapter">Questo capitolo</string>
+    <string name="reader.progress.marks">Mostra capitoli, segnalibri ed evidenziazioni sulla barra</string>
+    <string name="reader.progress.page">Pagina %1$d di %2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">Manca %d pagina</item>
+        <item quantity="many">Mancano %d pagine</item>
+        <item quantity="other">Mancano %d pagine</item>
+    </plurals>
+    <string name="reader.progress.print_page">Pagina stampata %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">Circa %d pagina standard</item>
+        <item quantity="many">Circa %d pagine standard</item>
+        <item quantity="other">Circa %d pagine standard</item>
+    </plurals>
+    <string name="reader.progress.style">Barra di avanzamento</string>
+    <string name="reader.progress.style.bar">Barra</string>
+    <string name="reader.progress.style.chapters">Capitoli</string>
+    <string name="reader.progress.style.line">Linea</string>
+    <string name="reader.progress.time_left">Mancano %s</string>
+    <string name="reader.progress.visibility">Mostra avanzamento</string>
+    <string name="reader.progress.visibility.always">Sempre</string>
+    <string name="reader.progress.visibility.hidden">Mai</string>
+    <string name="reader.progress.visibility.on_tap">Al tocco</string>
     <string name="reader.read_aloud">Leggi ad alta voce</string>
     <string name="reader.read_aloud_unavailable">La lettura ad alta voce non è disponibile su questo dispositivo</string>
     <string name="reader.search">Cerca nel libro</string>

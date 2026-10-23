@@ -329,16 +329,18 @@
     <string name="reader.brightness">चमक</string>
     <string name="reader.brightness.system">सिस्टम</string>
     <string name="reader.chapter">अध्याय %d</string>
-    <string name="reader.chapter.last_page">इस अध्याय का आखिरी पृष्ठ</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">इस अध्याय में %d पृष्ठ बाकी है</item>
-        <item quantity="other">इस अध्याय में %d पृष्ठ बाकी हैं</item>
-    </plurals>
     <string name="reader.contents">विषय-सूची</string>
     <string name="reader.display">डिस्प्ले</string>
     <string name="reader.failed">यह पुस्तक खुल नहीं पाई</string>
     <string name="reader.font.sans">सैन्स</string>
     <string name="reader.font.serif">सेरिफ़</string>
+    <string name="reader.footer">फ़ुटर</string>
+    <string name="reader.footer.chapter">अध्याय</string>
+    <string name="reader.footer.chapter_page">अध्याय में %2$d में से %1$d</string>
+    <string name="reader.footer.page">पृष्ठ</string>
+    <string name="reader.footer.percent">प्रतिशत</string>
+    <string name="reader.footer.time">बचा समय</string>
+    <string name="reader.footer.time_left">अध्याय में %s बाकी</string>
     <string name="reader.go_to_page">पृष्ठ पर जाएँ</string>
     <string name="reader.highlight.blue">नीला</string>
     <string name="reader.highlight.delete">हाइलाइट हटाएँ</string>
@@ -368,6 +370,30 @@
     <string name="reader.pages">पन्ने</string>
     <string name="reader.pages.one">एक पन्ना</string>
     <string name="reader.pages.two">दो पन्ने</string>
+    <string name="reader.progress">प्रगति</string>
+    <string name="reader.progress.body_only">केवल मुख्य पाठ गिनें</string>
+    <string name="reader.progress.book">पुस्तक</string>
+    <string name="reader.progress.chapter">यह अध्याय</string>
+    <string name="reader.progress.marks">बार पर अध्याय, बुकमार्क और हाइलाइट दिखाएँ</string>
+    <string name="reader.progress.page">%2$d में से पृष्ठ %1$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">%d पृष्ठ बाकी</item>
+        <item quantity="other">%d पृष्ठ बाकी</item>
+    </plurals>
+    <string name="reader.progress.print_page">छपा पृष्ठ %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">लगभग %d मानक पृष्ठ</item>
+        <item quantity="other">लगभग %d मानक पृष्ठ</item>
+    </plurals>
+    <string name="reader.progress.style">प्रगति बार</string>
+    <string name="reader.progress.style.bar">बार</string>
+    <string name="reader.progress.style.chapters">अध्याय</string>
+    <string name="reader.progress.style.line">रेखा</string>
+    <string name="reader.progress.time_left">%s बाकी</string>
+    <string name="reader.progress.visibility">प्रगति दिखाएँ</string>
+    <string name="reader.progress.visibility.always">हमेशा</string>
+    <string name="reader.progress.visibility.hidden">कभी नहीं</string>
+    <string name="reader.progress.visibility.on_tap">टैप करने पर</string>
     <string name="reader.read_aloud">ज़ोर से पढ़ें</string>
     <string name="reader.read_aloud_unavailable">इस डिवाइस पर ज़ोर से पढ़ना उपलब्ध नहीं है</string>
     <string name="reader.search">पुस्तक में खोजें</string>

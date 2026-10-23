@@ -329,16 +329,18 @@
     <string name="reader.brightness">Lysstyrke</string>
     <string name="reader.brightness.system">System</string>
     <string name="reader.chapter">Kapitel %d</string>
-    <string name="reader.chapter.last_page">Sidste side i dette kapitel</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">%d side tilbage i dette kapitel</item>
-        <item quantity="other">%d sider tilbage i dette kapitel</item>
-    </plurals>
     <string name="reader.contents">Indhold</string>
     <string name="reader.display">Visning</string>
     <string name="reader.failed">Bogen kunne ikke åbnes</string>
     <string name="reader.font.sans">Sans</string>
     <string name="reader.font.serif">Serif</string>
+    <string name="reader.footer">Sidefod</string>
+    <string name="reader.footer.chapter">Kapitel</string>
+    <string name="reader.footer.chapter_page">%1$d af %2$d i kapitlet</string>
+    <string name="reader.footer.page">Side</string>
+    <string name="reader.footer.percent">Procent</string>
+    <string name="reader.footer.time">Tid tilbage</string>
+    <string name="reader.footer.time_left">%s tilbage af kapitlet</string>
     <string name="reader.go_to_page">Gå til side</string>
     <string name="reader.highlight.blue">Blå</string>
     <string name="reader.highlight.delete">Slet markering</string>
@@ -368,6 +370,30 @@
     <string name="reader.pages">Sider</string>
     <string name="reader.pages.one">Én side</string>
     <string name="reader.pages.two">To sider</string>
+    <string name="reader.progress">Fremskridt</string>
+    <string name="reader.progress.body_only">Tæl kun hovedteksten</string>
+    <string name="reader.progress.book">Bog</string>
+    <string name="reader.progress.chapter">Dette kapitel</string>
+    <string name="reader.progress.marks">Vis kapitler, bogmærker og markeringer på bjælken</string>
+    <string name="reader.progress.page">Side %1$d af %2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">%d side tilbage</item>
+        <item quantity="other">%d sider tilbage</item>
+    </plurals>
+    <string name="reader.progress.print_page">Trykt side %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">Ca. %d standardside</item>
+        <item quantity="other">Ca. %d standardsider</item>
+    </plurals>
+    <string name="reader.progress.style">Statuslinje</string>
+    <string name="reader.progress.style.bar">Bjælke</string>
+    <string name="reader.progress.style.chapters">Kapitler</string>
+    <string name="reader.progress.style.line">Streg</string>
+    <string name="reader.progress.time_left">%s tilbage</string>
+    <string name="reader.progress.visibility">Vis fremskridt</string>
+    <string name="reader.progress.visibility.always">Altid</string>
+    <string name="reader.progress.visibility.hidden">Aldrig</string>
+    <string name="reader.progress.visibility.on_tap">Ved tryk</string>
     <string name="reader.read_aloud">Læs højt</string>
     <string name="reader.read_aloud_unavailable">Højtlæsning er ikke tilgængelig på denne enhed</string>
     <string name="reader.search">Søg i bogen</string>

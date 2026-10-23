@@ -329,16 +329,18 @@
     <string name="reader.brightness">Parlaklık</string>
     <string name="reader.brightness.system">Sistem</string>
     <string name="reader.chapter">Bölüm %d</string>
-    <string name="reader.chapter.last_page">Bu bölümün son sayfası</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">Bu bölümde %d sayfa kaldı</item>
-        <item quantity="other">Bu bölümde %d sayfa kaldı</item>
-    </plurals>
     <string name="reader.contents">İçindekiler</string>
     <string name="reader.display">Görünüm</string>
     <string name="reader.failed">Bu kitap açılamadı</string>
     <string name="reader.font.sans">Sans</string>
     <string name="reader.font.serif">Serif</string>
+    <string name="reader.footer">Alt bilgi</string>
+    <string name="reader.footer.chapter">Bölüm</string>
+    <string name="reader.footer.chapter_page">Bölümde %1$d/%2$d</string>
+    <string name="reader.footer.page">Sayfa</string>
+    <string name="reader.footer.percent">Yüzde</string>
+    <string name="reader.footer.time">Kalan süre</string>
+    <string name="reader.footer.time_left">Bölümde %s kaldı</string>
     <string name="reader.go_to_page">Sayfaya git</string>
     <string name="reader.highlight.blue">Mavi</string>
     <string name="reader.highlight.delete">Vurguyu sil</string>
@@ -368,6 +370,30 @@
     <string name="reader.pages">Sayfalar</string>
     <string name="reader.pages.one">Tek sayfa</string>
     <string name="reader.pages.two">İki sayfa</string>
+    <string name="reader.progress">İlerleme</string>
+    <string name="reader.progress.body_only">Yalnızca ana metni say</string>
+    <string name="reader.progress.book">Kitap</string>
+    <string name="reader.progress.chapter">Bu bölüm</string>
+    <string name="reader.progress.marks">Çubukta bölümleri, yer imlerini ve vurguları göster</string>
+    <string name="reader.progress.page">Sayfa %1$d/%2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">%d sayfa kaldı</item>
+        <item quantity="other">%d sayfa kaldı</item>
+    </plurals>
+    <string name="reader.progress.print_page">Basılı sayfa %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">Yaklaşık %d standart sayfa</item>
+        <item quantity="other">Yaklaşık %d standart sayfa</item>
+    </plurals>
+    <string name="reader.progress.style">İlerleme çubuğu</string>
+    <string name="reader.progress.style.bar">Çubuk</string>
+    <string name="reader.progress.style.chapters">Bölümler</string>
+    <string name="reader.progress.style.line">Çizgi</string>
+    <string name="reader.progress.time_left">%s kaldı</string>
+    <string name="reader.progress.visibility">İlerlemeyi göster</string>
+    <string name="reader.progress.visibility.always">Her zaman</string>
+    <string name="reader.progress.visibility.hidden">Hiçbir zaman</string>
+    <string name="reader.progress.visibility.on_tap">Dokununca</string>
     <string name="reader.read_aloud">Sesli oku</string>
     <string name="reader.read_aloud_unavailable">Sesli okuma bu cihazda kullanılamıyor</string>
     <string name="reader.search">Kitapta ara</string>

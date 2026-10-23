@@ -4,6 +4,7 @@ package voice.features.reader
 
 import android.app.Application
 import android.net.Uri
+import android.os.SystemClock
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -34,16 +35,19 @@ import voice.core.data.EbookPosition
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
 import voice.core.data.ReaderSettings
+import voice.core.data.ReadingPace
 import voice.core.data.ReadiumHighlight
 import voice.core.data.store.EbooksStore
 import voice.core.data.store.ReaderNaturalSpeakerStore
 import voice.core.data.store.ReaderNaturalVoiceStore
 import voice.core.data.store.ReaderSettingsStore
 import voice.core.data.store.ReaderSpeechRateStore
+import voice.core.data.store.ReadingPaceStore
 import voice.core.ebook.parseEpub
 import voice.core.logging.api.Logger
 import voice.navigation.Navigator
 import java.util.Locale
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 internal sealed interface ReaderContent {
@@ -84,6 +88,7 @@ internal sealed interface ReaderState {
     val searchMatch: BookRange? = null,
     /** The book in the new book engine, while it's on. */
     val readium: ReadiumBook? = null,
+    val pace: ReadingPace = ReadingPace(),
   ) : ReaderState
 }
 
@@ -117,6 +122,8 @@ class ReaderViewModel(
   private val naturalSpeakerStore: DataStore<Int>,
   @ReaderSpeechRateStore
   private val speechRateStore: DataStore<Float>,
+  @ReadingPaceStore
+  private val paceStore: DataStore<ReadingPace>,
   private val application: Application,
   private val navigator: Navigator,
   private val dispatcherProvider: DispatcherProvider,
@@ -148,6 +155,9 @@ class ReaderViewModel(
   private var searchMatchJob: Job? = null
   private var readium by mutableStateOf<ReadiumBook?>(null)
   private var useNaturalVoice = false
+  private var pace by mutableStateOf(ReadingPace())
+  private var lastProgress: Double? = null
+  private var lastProgressAt = 0L
 
   private val messageChannel = Channel<ReaderMessage>(Channel.CONFLATED)
   internal val messages: Flow<ReaderMessage> = messageChannel.receiveAsFlow()
@@ -158,6 +168,9 @@ class ReaderViewModel(
     }
     scope.launch {
       speechRateStore.data.collect { speechRate = it }
+    }
+    scope.launch {
+      paceStore.data.collect { pace = it }
     }
     scope.launch {
       naturalSpeakerStore.data.collect { speakerId = it }
@@ -237,6 +250,7 @@ class ReaderViewModel(
         searchMatch = searchMatch,
         // when the new engine can't open the book, the old one shows it
         readium = readium?.takeIf { settings.newBookEngine },
+        pace = pace,
       )
     }
   }
@@ -342,6 +356,7 @@ class ReaderViewModel(
     book.locator = locator
     val json = locator.toJsonString()
     val progress = locator.locations.totalProgression?.toFloat()
+    locator.locations.totalProgression?.let { measurePace(it) }
     scope.launch {
       store.updateData { ebooks ->
         ebooks.map { ebook ->
@@ -356,7 +371,23 @@ class ReaderViewModel(
     pageProgress: Float,
   ) {
     stopReadingAloud()
-    moveTo(EbookPosition(page.section, page.start), pageProgress)
+    val newPosition = EbookPosition(page.section, page.start)
+    measurePace(progress(newPosition).toDouble())
+    moveTo(newPosition, pageProgress)
+  }
+
+  /** Learns how fast the reader reads from the turns forward, leaving out jumps and breaks. */
+  private fun measurePace(progress: Double) {
+    val content = content as? ReaderContent.Epub ?: return
+    val now = SystemClock.elapsedRealtime()
+    val previous = lastProgress
+    val millis = now - lastProgressAt
+    lastProgress = progress
+    lastProgressAt = now
+    if (previous == null || readAloudJob != null) return
+    val characters = (progress - previous) * content.totalLength
+    if (characters <= 0 || characters > MAX_CHARACTERS_PER_TURN || millis < 1_000 || millis > IDLE.inWholeMilliseconds) return
+    scope.launch { paceStore.updateData { it.plus(characters, millis) } }
   }
 
   internal fun onChapterClick(section: Int) {
@@ -622,5 +653,11 @@ class ReaderViewModel(
     fun create(uri: Uri): ReaderViewModel
   }
 }
+
+// a spread of two pages of small text, more is a jump
+private const val MAX_CHARACTERS_PER_TURN = 6_000
+
+// a longer time on a page is a break
+private val IDLE = 2.minutes
 
 private val positionOrder = compareBy<EbookPosition>({ it.section }, { it.offset })

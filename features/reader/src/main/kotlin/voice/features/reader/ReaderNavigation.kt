@@ -35,12 +35,14 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import voice.core.data.EbookPosition
+import voice.core.data.ProgressBarStyle
+import voice.core.data.ProgressVisibility
 import voice.core.ui.bookText
 import kotlin.math.roundToInt
 import voice.core.strings.R as StringsR
@@ -82,12 +84,25 @@ internal fun BoxScope.ReaderControls(
   if (state.settings.volumeKeysTurnPages && !state.readingAloud) {
     VolumeKeyPageTurns(onTurn)
   }
-  BottomBar(visible = barsVisible) {
+  val chapters = remember(pages) { pages.chapterStarts().map { fractionOf(it, pages.size) } }
+  if (state.settings.progressVisibility == ProgressVisibility.Always) {
+    ProgressLine(
+      fraction = pages.progressAt(index, pagesPerSpread),
+      style = state.settings.progressBar,
+      chapters = chapters,
+      color = state.settings.theme.pageColors()?.ink ?: MaterialTheme.colorScheme.onSurface,
+      modifier = Modifier
+        .align(Alignment.BottomCenter)
+        .padding(horizontal = 16.dp, vertical = 4.dp),
+    )
+  }
+  BottomBar(visible = barsVisible && state.settings.progressVisibility != ProgressVisibility.Hidden) {
     ReaderNavigationBar(
-      content = state.content,
+      state = state,
       pages = pages,
       currentIndex = index,
       pagesPerSpread = pagesPerSpread,
+      chapters = chapters,
       onJump = { target -> onJump(pages[target], pages.progressAt(target, pagesPerSpread)) },
     )
   }
@@ -138,31 +153,51 @@ internal fun VolumeKeyPageTurns(onTurn: (step: Int) -> Unit) {
 }
 
 @Composable
-internal fun ReaderNavigationBar(
-  content: ReaderContent,
+private fun ReaderNavigationBar(
+  state: ReaderState.Loaded,
   pages: List<Page>,
   currentIndex: Int,
   pagesPerSpread: Int,
+  chapters: List<Float>,
   onJump: (Int) -> Unit,
-  modifier: Modifier = Modifier,
 ) {
+  val content = state.content
+  val marks = if (state.settings.progressMarks) {
+    remember(pages, chapters, state.bookmarks, state.highlights) {
+      BarMarks(
+        chapters = if (content is ReaderContent.Epub) chapters else emptyList(),
+        bookmarks = state.bookmarks.map { fractionOf(pages.indexOfPosition(it), pages.size) },
+        highlights = state.highlights.map { fractionOf(pages.indexOfPosition(EbookPosition(it.section, it.start)), pages.size) },
+      )
+    }
+  } else {
+    null
+  }
   PageBar(
     pageCount = pages.size,
     currentIndex = currentIndex,
     chapterTitle = { index -> (content as? ReaderContent.Epub)?.chapterTitle(pages[index].section).orEmpty() },
-    pagesLeftInChapter = if (content is ReaderContent.Epub) pages.pagesLeftInChapter(currentIndex, pagesPerSpread) else null,
+    progress = { index -> content.readingProgress(pages, index, if (index == currentIndex) pagesPerSpread else 1, state.pace) },
+    style = state.settings.progressBar,
+    chapters = if (content is ReaderContent.Epub) chapters else emptyList(),
+    marks = marks,
     onJump = onJump,
-    modifier = modifier,
   )
 }
 
-/** The chapter and page of [currentIndex], a slider to go to any page, and how many pages the chapter has left. */
+/**
+ * The chapter and page of [currentIndex], a slider to go to any page, and how far the reader is in the chapter and the
+ * book.
+ */
 @Composable
 internal fun PageBar(
   pageCount: Int,
   currentIndex: Int,
   chapterTitle: @Composable (index: Int) -> String,
-  pagesLeftInChapter: Int?,
+  progress: (index: Int) -> ReadingProgress,
+  style: ProgressBarStyle,
+  chapters: List<Float>,
+  marks: BarMarks?,
   onJump: (Int) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -201,31 +236,50 @@ internal fun PageBar(
             if (dragTarget == null) sliderState.value = currentIndex.toFloat()
           }
           val description = stringResource(StringsR.string.reader_go_to_page)
-          Slider(
-            state = sliderState,
-            onValueChange = {
-              sliderState.value = it
-              dragTarget = it.roundToInt()
-            },
-            onValueChangeFinished = {
-              dragTarget?.let(onJump)
-              dragTarget = null
-            },
-            modifier = Modifier.semantics { contentDescription = description },
-          )
+          val onValueChange = { value: Float ->
+            sliderState.value = value
+            dragTarget = value.roundToInt()
+          }
+          val onValueChangeFinished = {
+            dragTarget?.let(onJump)
+            dragTarget = null
+          }
+          Box {
+            val sliderModifier = Modifier.semantics { contentDescription = description }
+            if (style == ProgressBarStyle.Bar) {
+              Slider(
+                state = sliderState,
+                onValueChange = onValueChange,
+                onValueChangeFinished = onValueChangeFinished,
+                modifier = sliderModifier,
+              )
+            } else {
+              Slider(
+                state = sliderState,
+                onValueChange = onValueChange,
+                onValueChangeFinished = onValueChangeFinished,
+                modifier = sliderModifier,
+                track = {
+                  ProgressTrack(
+                    fraction = fractionOf(shown, pageCount),
+                    style = style,
+                    chapters = chapters,
+                  )
+                },
+              )
+            }
+            if (marks != null) {
+              ProgressMarks(
+                marks = marks,
+                modifier = Modifier
+                  .matchParentSize()
+                  .padding(horizontal = 2.dp),
+              )
+            }
+          }
         }
       }
-      if (pagesLeftInChapter != null) {
-        Text(
-          text = if (pagesLeftInChapter == 0) {
-            stringResource(StringsR.string.reader_chapter_last_page)
-          } else {
-            pluralStringResource(StringsR.plurals.reader_chapter_pages_left, pagesLeftInChapter, pagesLeftInChapter)
-          },
-          style = MaterialTheme.typography.labelMedium,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-      }
+      ProgressDetails(progress(shown))
     }
   }
 }

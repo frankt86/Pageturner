@@ -89,6 +89,7 @@ import org.readium.r2.shared.publication.Locator
 import voice.core.common.rootGraphAs
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
+import voice.core.data.ProgressVisibility
 import voice.core.data.ReaderOrientation
 import voice.core.data.ReaderPages
 import voice.core.data.ReaderSettings
@@ -202,23 +203,40 @@ internal fun ReaderScreen(uri: Uri) {
             .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout))
             .padding(top = state.settings.topMargin?.dp ?: 0.dp, bottom = state.settings.bottomMargin?.dp ?: 0.dp),
         ) {
-          ReadiumPages(
-            book = state.readium,
-            settings = state.settings,
-            // reading aloud keeps the volume keys for the volume
-            volumeKeysTurnPages = state.settings.volumeKeysTurnPages && !state.readingAloud,
-            transition = state.settings.pageTransition,
-            jumps = readiumJumps,
-            onLocatorChange = viewModel::onLocatorChange,
-            onPageTurn = { barsVisible = false },
-            onCenterTap = { barsVisible = !barsVisible },
-            onHighlightAdd = { locator, color -> val _ = viewModel.onReadiumHighlightAdd(locator, color) },
-            onNoteAdd = { locator -> editedReadiumHighlight = viewModel.onReadiumHighlightAdd(locator, HighlightColor.Yellow) },
-            onHighlightClick = { editedReadiumHighlight = it },
-            modifier = Modifier.fillMaxSize(),
-          )
+          val characters = (state.content as? ReaderContent.Epub)?.totalLength ?: 0
+          Column(Modifier.fillMaxSize()) {
+            ReadiumPages(
+              book = state.readium,
+              settings = state.settings,
+              // reading aloud keeps the volume keys for the volume
+              volumeKeysTurnPages = state.settings.volumeKeysTurnPages && !state.readingAloud,
+              transition = state.settings.pageTransition,
+              jumps = readiumJumps,
+              onLocatorChange = viewModel::onLocatorChange,
+              onPageTurn = { barsVisible = false },
+              onCenterTap = { barsVisible = !barsVisible },
+              onHighlightAdd = { locator, color -> val _ = viewModel.onReadiumHighlightAdd(locator, color) },
+              onNoteAdd = { locator -> editedReadiumHighlight = viewModel.onReadiumHighlightAdd(locator, HighlightColor.Yellow) },
+              onHighlightClick = { editedReadiumHighlight = it },
+              modifier = Modifier
+                .fillMaxWidth()
+                .weight(1F),
+            )
+            if (state.settings.progressVisibility == ProgressVisibility.Always) {
+              ReadiumFooter(
+                book = state.readium,
+                settings = state.settings,
+                characters = characters,
+                pace = state.pace,
+                modifier = Modifier.fillMaxWidth(),
+              )
+            }
+          }
           ReadiumPageBar(
             book = state.readium,
+            settings = state.settings,
+            characters = characters,
+            pace = state.pace,
             visible = barsVisible,
             onJump = readiumJump,
           )
@@ -307,6 +325,7 @@ internal fun ReaderScreen(uri: Uri) {
     DisplaySheet(
       settings = loaded.settings,
       showTextOptions = content != null,
+      showProgressScope = loaded.readium != null,
       onSettingsChange = viewModel::onSettingsChange,
       onDismiss = { sheet = null },
     )
@@ -720,11 +739,20 @@ private fun PageSlot(
 ) {
   Box(modifier.background(MaterialTheme.colorScheme.surface)) {
     if (index < pages.size) {
+      val footer = if (state.settings.progressVisibility == ProgressVisibility.Hidden) {
+        null
+      } else {
+        footerText(
+          state.settings.footer,
+          state.content.readingProgress(pages = pages, index = index, pagesPerSpread = 1, pace = state.pace),
+        )
+      }
       BookPage(
         content = state.content,
         page = pages[index],
         pageNumber = index + 1,
         pageCount = pages.size,
+        footer = footer,
         textStyle = textStyle,
         margins = margins,
         readingRange = state.readingRange.takeIf { pages[index].section == state.position.section },
@@ -753,6 +781,7 @@ private fun BookPage(
   page: Page,
   pageNumber: Int,
   pageCount: Int,
+  footer: String?,
   textStyle: TextStyle,
   margins: PageMargins,
   readingRange: IntRange?,
@@ -809,11 +838,13 @@ private fun BookPage(
             .weight(1F)
             .padding(end = 12.dp),
         )
-        Text(
-          text = pageLabel,
-          style = MaterialTheme.typography.labelMedium,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+        if (footer != null) {
+          Text(
+            text = footer,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+          )
+        }
       }
     }
     is ReaderContent.Pdf -> ZoomablePdfPage(

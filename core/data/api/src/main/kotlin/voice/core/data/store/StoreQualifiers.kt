@@ -86,3 +86,7 @@ public annotation class ReaderNaturalSpeakerStore
 /** How fast reading aloud speaks, 1 being normal. */
 @Qualifier
 public annotation class ReaderSpeechRateStore
+
+/** How fast the reader reads, to tell the reading time left. */
+@Qualifier
+public annotation class ReadingPaceStore

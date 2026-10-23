@@ -346,17 +346,18 @@
     <string name="reader.brightness">Luminozitate</string>
     <string name="reader.brightness.system">Sistem</string>
     <string name="reader.chapter">Capitolul %d</string>
-    <string name="reader.chapter.last_page">Ultima pagină a capitolului</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">A mai rămas %d pagină din capitol</item>
-        <item quantity="few">Au mai rămas %d pagini din capitol</item>
-        <item quantity="other">Au mai rămas %d de pagini din capitol</item>
-    </plurals>
     <string name="reader.contents">Cuprins</string>
     <string name="reader.display">Afișare</string>
     <string name="reader.failed">Cartea nu a putut fi deschisă</string>
     <string name="reader.font.sans">Sans</string>
     <string name="reader.font.serif">Serif</string>
+    <string name="reader.footer">Subsol</string>
+    <string name="reader.footer.chapter">Capitol</string>
+    <string name="reader.footer.chapter_page">%1$d din %2$d în capitol</string>
+    <string name="reader.footer.page">Pagină</string>
+    <string name="reader.footer.percent">Procent</string>
+    <string name="reader.footer.time">Timp rămas</string>
+    <string name="reader.footer.time_left">Mai sunt %s din capitol</string>
     <string name="reader.go_to_page">Mergi la pagina</string>
     <string name="reader.highlight.blue">Albastru</string>
     <string name="reader.highlight.delete">Șterge evidențierea</string>
@@ -386,6 +387,32 @@
     <string name="reader.pages">Pagini</string>
     <string name="reader.pages.one">O pagină</string>
     <string name="reader.pages.two">Două pagini</string>
+    <string name="reader.progress">Progres</string>
+    <string name="reader.progress.body_only">Numără doar textul principal</string>
+    <string name="reader.progress.book">Carte</string>
+    <string name="reader.progress.chapter">Acest capitol</string>
+    <string name="reader.progress.marks">Arată capitolele, semnele de carte și evidențierile pe bară</string>
+    <string name="reader.progress.page">Pagina %1$d din %2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">A mai rămas %d pagină</item>
+        <item quantity="few">Au mai rămas %d pagini</item>
+        <item quantity="other">Au mai rămas %d de pagini</item>
+    </plurals>
+    <string name="reader.progress.print_page">Pagina tipărită %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">Cam %d pagină standard</item>
+        <item quantity="few">Cam %d pagini standard</item>
+        <item quantity="other">Cam %d de pagini standard</item>
+    </plurals>
+    <string name="reader.progress.style">Bară de progres</string>
+    <string name="reader.progress.style.bar">Bară</string>
+    <string name="reader.progress.style.chapters">Capitole</string>
+    <string name="reader.progress.style.line">Linie</string>
+    <string name="reader.progress.time_left">Mai sunt %s</string>
+    <string name="reader.progress.visibility">Arată progresul</string>
+    <string name="reader.progress.visibility.always">Mereu</string>
+    <string name="reader.progress.visibility.hidden">Niciodată</string>
+    <string name="reader.progress.visibility.on_tap">La atingere</string>
     <string name="reader.read_aloud">Citește cu voce tare</string>
     <string name="reader.read_aloud_unavailable">Citirea cu voce tare nu este disponibilă pe acest dispozitiv</string>
     <string name="reader.search">Caută în carte</string>

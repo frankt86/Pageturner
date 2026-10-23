@@ -329,16 +329,18 @@
     <string name="reader.brightness">Lugore</string>
     <string name="reader.brightness.system">Sistema</string>
     <string name="reader.chapter">Capìtulu %d</string>
-    <string name="reader.chapter.last_page">Ùrtima pàgina de custu capìtulu</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">Mancat %d pàgina in custu capìtulu</item>
-        <item quantity="other">Mancant %d pàginas in custu capìtulu</item>
-    </plurals>
     <string name="reader.contents">Ìndighe</string>
     <string name="reader.display">Visualizatzione</string>
     <string name="reader.failed">No est istadu possìbile abèrrere custu libru</string>
     <string name="reader.font.sans">Sans</string>
     <string name="reader.font.serif">Serif</string>
+    <string name="reader.footer">Pee de pàgina</string>
+    <string name="reader.footer.chapter">Capìtulu</string>
+    <string name="reader.footer.chapter_page">%1$d de %2$d in su capìtulu</string>
+    <string name="reader.footer.page">Pàgina</string>
+    <string name="reader.footer.percent">Pertzentuale</string>
+    <string name="reader.footer.time">Tempus chi mancat</string>
+    <string name="reader.footer.time_left">Mancant %s in su capìtulu</string>
     <string name="reader.go_to_page">Bae a sa pàgina</string>
     <string name="reader.highlight.blue">Biaitu</string>
     <string name="reader.highlight.delete">Iscantzella s\'evidèntzia</string>
@@ -368,6 +370,30 @@
     <string name="reader.pages">Pàginas</string>
     <string name="reader.pages.one">Una pàgina</string>
     <string name="reader.pages.two">Duas pàginas</string>
+    <string name="reader.progress">Progressu</string>
+    <string name="reader.progress.body_only">Conta isceti su testu printzipale</string>
+    <string name="reader.progress.book">Libru</string>
+    <string name="reader.progress.chapter">Custu capìtulu</string>
+    <string name="reader.progress.marks">Mustra capìtulos, sinnalibros e evidèntzias in sa barra</string>
+    <string name="reader.progress.page">Pàgina %1$d de %2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">Mancat %d pàgina</item>
+        <item quantity="other">Mancant %d pàginas</item>
+    </plurals>
+    <string name="reader.progress.print_page">Pàgina imprentada %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">Prus o mancu %d pàgina istandard</item>
+        <item quantity="other">Prus o mancu %d pàginas istandard</item>
+    </plurals>
+    <string name="reader.progress.style">Barra de progressu</string>
+    <string name="reader.progress.style.bar">Barra</string>
+    <string name="reader.progress.style.chapters">Capìtulos</string>
+    <string name="reader.progress.style.line">Lìnia</string>
+    <string name="reader.progress.time_left">Mancant %s</string>
+    <string name="reader.progress.visibility">Mustra su progressu</string>
+    <string name="reader.progress.visibility.always">Semper</string>
+    <string name="reader.progress.visibility.hidden">Mai</string>
+    <string name="reader.progress.visibility.on_tap">Cando tocas</string>
     <string name="reader.read_aloud">Leghe a boghe arta</string>
     <string name="reader.read_aloud_unavailable">Sa letura a boghe arta no est disponìbile in custu dispositivu</string>
     <string name="reader.search">Chirca in su libru</string>

@@ -13,8 +13,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -35,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
@@ -45,6 +49,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -74,10 +79,12 @@ import org.readium.r2.shared.util.AbsoluteUrl
 import org.readium.r2.shared.util.toUri
 import voice.core.data.HighlightColor
 import voice.core.data.PageTransition
+import voice.core.data.ProgressVisibility
 import voice.core.data.ReaderFont
 import voice.core.data.ReaderPages
 import voice.core.data.ReaderSettings
 import voice.core.data.ReaderTheme
+import voice.core.data.ReadingPace
 import voice.core.logging.api.Logger
 import voice.core.ui.bookText
 import org.readium.r2.navigator.preferences.Color as ReadiumColor
@@ -375,19 +382,107 @@ private fun openInBrowser(
 @Composable
 internal fun BoxScope.ReadiumPageBar(
   book: ReadiumBook,
+  settings: ReaderSettings,
+  characters: Int,
+  pace: ReadingPace,
   visible: Boolean,
   onJump: (Locator) -> Unit,
 ) {
   if (book.positions.isEmpty()) return
-  BottomBar(visible = visible) {
+  BottomBar(visible = visible && settings.progressVisibility != ProgressVisibility.Hidden) {
     val current = book.positionIndex(book.locator)
+    val chapters = remember(book) { book.chapterStarts.map { fractionOf(it, book.positions.size) } }
+    val marks = if (settings.progressMarks) {
+      val bookmarks = book.bookmarks
+      val highlights = book.highlights
+      remember(book, chapters, bookmarks, highlights) {
+        BarMarks(
+          chapters = chapters,
+          bookmarks = bookmarks.map { fractionOf(book.positionIndex(it), book.positions.size) },
+          highlights = highlights.map { fractionOf(book.positionIndex(it.locator), book.positions.size) },
+        )
+      }
+    } else {
+      null
+    }
     PageBar(
       pageCount = book.positions.size,
       currentIndex = current,
       chapterTitle = { index -> book.chapterTitle(book.positions[index]).orEmpty() },
-      pagesLeftInChapter = book.pagesLeftInChapter(current),
+      progress = { index ->
+        book.readingProgress(
+          index = index,
+          locator = book.locator.takeIf { index == current },
+          bodyOnly = settings.progressBodyOnly,
+          characters = characters,
+          pace = pace,
+        )
+      },
+      style = settings.progressBar,
+      chapters = chapters,
+      marks = marks,
       onJump = { index -> onJump(book.positions[index]) },
     )
+  }
+}
+
+/** The chapter and what [ReaderSettings.footer] picks under the pages, with a thin line of the book's progress. */
+@Composable
+internal fun ReadiumFooter(
+  book: ReadiumBook,
+  settings: ReaderSettings,
+  characters: Int,
+  pace: ReadingPace,
+  modifier: Modifier = Modifier,
+) {
+  if (book.positions.isEmpty()) return
+  val current = book.positionIndex(book.locator)
+  val progress = book.readingProgress(
+    index = current,
+    locator = book.locator,
+    bodyOnly = settings.progressBodyOnly,
+    characters = characters,
+    pace = pace,
+  )
+  val chapters = remember(book) { book.chapterStarts.map { fractionOf(it, book.positions.size) } }
+  ReaderPageTheme(settings.theme) {
+    Column(
+      modifier
+        .background(MaterialTheme.colorScheme.surface)
+        .padding(horizontal = settings.margin.dp),
+    ) {
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(28.dp),
+      ) {
+        Text(
+          text = book.locator?.let { book.chapterTitle(it) }.orEmpty(),
+          style = MaterialTheme.typography.labelMedium.bookText(),
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
+          modifier = Modifier
+            .weight(1F)
+            .padding(end = 12.dp),
+        )
+        footerText(settings.footer, progress)?.let {
+          Text(
+            text = it,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+          )
+        }
+      }
+      ProgressLine(
+        fraction = progress.bookFraction,
+        style = settings.progressBar,
+        chapters = chapters,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.padding(bottom = 6.dp),
+      )
+    }
   }
 }
 

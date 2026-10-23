@@ -312,15 +312,18 @@
     <string name="reader.brightness">亮度</string>
     <string name="reader.brightness.system">系统</string>
     <string name="reader.chapter">第 %d 章</string>
-    <string name="reader.chapter.last_page">本章最后一页</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="other">本章还剩 %d 页</item>
-    </plurals>
     <string name="reader.contents">目录</string>
     <string name="reader.display">显示</string>
     <string name="reader.failed">无法打开这本书</string>
     <string name="reader.font.sans">无衬线</string>
     <string name="reader.font.serif">衬线</string>
+    <string name="reader.footer">页脚</string>
+    <string name="reader.footer.chapter">章节</string>
+    <string name="reader.footer.chapter_page">本章 %1$d / %2$d</string>
+    <string name="reader.footer.page">页码</string>
+    <string name="reader.footer.percent">百分比</string>
+    <string name="reader.footer.time">剩余时间</string>
+    <string name="reader.footer.time_left">本章还剩 %s</string>
     <string name="reader.go_to_page">跳转到页面</string>
     <string name="reader.highlight.blue">蓝色</string>
     <string name="reader.highlight.delete">删除划线</string>
@@ -350,6 +353,28 @@
     <string name="reader.pages">页面</string>
     <string name="reader.pages.one">单页</string>
     <string name="reader.pages.two">双页</string>
+    <string name="reader.progress">进度</string>
+    <string name="reader.progress.body_only">只计算正文</string>
+    <string name="reader.progress.book">全书</string>
+    <string name="reader.progress.chapter">本章</string>
+    <string name="reader.progress.marks">在进度条上显示章节、书签和划线</string>
+    <string name="reader.progress.page">第 %1$d 页，共 %2$d 页</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="other">还剩 %d 页</item>
+    </plurals>
+    <string name="reader.progress.print_page">纸书第 %s 页</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="other">约 %d 标准页</item>
+    </plurals>
+    <string name="reader.progress.style">进度条</string>
+    <string name="reader.progress.style.bar">粗条</string>
+    <string name="reader.progress.style.chapters">章节</string>
+    <string name="reader.progress.style.line">细线</string>
+    <string name="reader.progress.time_left">还剩 %s</string>
+    <string name="reader.progress.visibility">显示进度</string>
+    <string name="reader.progress.visibility.always">始终</string>
+    <string name="reader.progress.visibility.hidden">从不</string>
+    <string name="reader.progress.visibility.on_tap">点按时</string>
     <string name="reader.read_aloud">朗读</string>
     <string name="reader.read_aloud_unavailable">此设备不支持朗读</string>
     <string name="reader.search">在书中搜索</string>

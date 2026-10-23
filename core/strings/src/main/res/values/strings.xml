@@ -562,13 +562,6 @@
     <string name="reader.brightness.system">System</string>
     <!-- Name of a chapter in the ebook reader when the book doesn't name it. %d is its number, starting at 1. -->
     <string name="reader.chapter">Chapter %d</string>
-    <!-- Shown in the page bar of the ebook reader when the page on screen is the last one of its chapter. -->
-    <string name="reader.chapter.last_page">Last page of this chapter</string>
-    <!-- Shown in the page bar of the ebook reader: how many pages of the current chapter come after the one on screen. -->
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">%d page left in this chapter</item>
-        <item quantity="other">%d pages left in this chapter</item>
-    </plurals>
     <!-- Button and title of the sheet in the ebook reader that lists the chapters of the book, to jump to one. -->
     <string name="reader.contents">Contents</string>
     <!-- Button and title of the sheet in the ebook reader where the reader changes how the pages look: colors, font, text size, spacing, margins and brightness. -->
@@ -579,6 +572,20 @@
     <string name="reader.font.sans">Sans</string>
     <!-- Option in the display sheet of the ebook reader: a font with serifs for the book's text, like in printed books. Shown in that font. -->
     <string name="reader.font.serif">Serif</string>
+    <!-- Title of the choice in the display sheet of the ebook reader for what the line at the bottom of each page shows next to the chapter title. -->
+    <string name="reader.footer">Page footer</string>
+    <!-- Choice for the line at the bottom of an ebook page: the page number within the chapter. -->
+    <string name="reader.footer.chapter">Chapter</string>
+    <!-- At the bottom of an ebook page: the page within the current chapter, e.g. "4 of 18 in chapter". -->
+    <string name="reader.footer.chapter_page">%1$d of %2$d in chapter</string>
+    <!-- Choice for the line at the bottom of an ebook page: the page number within the book. -->
+    <string name="reader.footer.page">Page</string>
+    <!-- Choice for the line at the bottom of an ebook page: how much of the book is read, in percent. -->
+    <string name="reader.footer.percent">Percent</string>
+    <!-- Choice for the line at the bottom of an ebook page: the reading time left in the chapter. -->
+    <string name="reader.footer.time">Time left</string>
+    <!-- At the bottom of an ebook page: the reading time left in the chapter, measured from how fast the reader reads. %s is a duration like "9 min". -->
+    <string name="reader.footer.time_left">%s left in chapter</string>
     <!-- Read out by screen readers for the slider in the page bar of the ebook reader that jumps to any page of the book. -->
     <string name="reader.go_to_page">Go to page</string>
     <!-- Color of a highlight in the ebook reader, read out by screen readers for its color dot. -->
@@ -637,6 +644,48 @@
     <string name="reader.pages.one">One page</string>
     <!-- Choice in the ebook reader: always show two pages side by side, like an open book. -->
     <string name="reader.pages.two">Two pages</string>
+    <!-- Section title in the display sheet of the ebook reader for how the reading progress is shown. -->
+    <string name="reader.progress">Progress</string>
+    <!-- Switch in the display sheet of the ebook reader. When it's on, the book's percentage and pages left leave out front and back matter like the title page, the copyright page or the index. -->
+    <string name="reader.progress.body_only">Count only the main text</string>
+    <!-- Label in the page bar of the ebook reader, before how far the reader is in the whole book. -->
+    <string name="reader.progress.book">Book</string>
+    <!-- Label in the page bar of the ebook reader, before how far the reader is in the current chapter. -->
+    <string name="reader.progress.chapter">This chapter</string>
+    <!-- Switch in the display sheet of the ebook reader. When it's on, small marks along the page bar show where chapters start and where the bookmarks and highlights are. -->
+    <string name="reader.progress.marks">Show chapters, bookmarks and highlights on the bar</string>
+    <!-- In the page bar of the ebook reader, after "This chapter": the page within the chapter, e.g. "Page 4 of 18". -->
+    <string name="reader.progress.page">Page %1$d of %2$d</string>
+    <!-- In the page bar of the ebook reader: how many pages are left, in the chapter or in the book. -->
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">%d page left</item>
+        <item quantity="other">%d pages left</item>
+    </plurals>
+    <!-- In the page bar of the ebook reader: the page number of the printed edition at the place on screen, from the book's own page list. %s is the page label, like "42" or "xii". -->
+    <string name="reader.progress.print_page">Print page %s</string>
+    <!-- In the page bar of the ebook reader: an estimate of how long the book is, counted in standard pages of 1,024 characters each. -->
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">About %d standard page</item>
+        <item quantity="other">About %d standard pages</item>
+    </plurals>
+    <!-- Title of the choice in the display sheet of the ebook reader for how the progress bar looks. -->
+    <string name="reader.progress.style">Progress bar</string>
+    <!-- Choice for how the progress bar looks: a thick bar. -->
+    <string name="reader.progress.style.bar">Bar</string>
+    <!-- Choice for how the progress bar looks: split into one segment per chapter. -->
+    <string name="reader.progress.style.chapters">Chapters</string>
+    <!-- Choice for how the progress bar looks: a thin line. -->
+    <string name="reader.progress.style.line">Line</string>
+    <!-- In the page bar of the ebook reader: the reading time left, measured from how fast the reader reads. %s is a duration like "2 hr, 5 min". -->
+    <string name="reader.progress.time_left">%s left</string>
+    <!-- Title of the choice in the display sheet of the ebook reader for when the reading progress shows. -->
+    <string name="reader.progress.visibility">Show progress</string>
+    <!-- Choice for when the reading progress shows: always, as a thin line at the bottom of the page. -->
+    <string name="reader.progress.visibility.always">Always</string>
+    <!-- Choice for when the reading progress shows: never. -->
+    <string name="reader.progress.visibility.hidden">Never</string>
+    <!-- Choice for when the reading progress shows: when the middle of the page is tapped. -->
+    <string name="reader.progress.visibility.on_tap">On tap</string>
     <!-- Button in the ebook reader that starts reading the book aloud from the current page. -->
     <string name="reader.read_aloud">Read aloud</string>
     <!-- Snackbar in the ebook reader when the device has no text-to-speech engine. -->

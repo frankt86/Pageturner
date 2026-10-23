@@ -346,17 +346,18 @@
     <string name="reader.brightness">בהירות</string>
     <string name="reader.brightness.system">מערכת</string>
     <string name="reader.chapter">פרק %d</string>
-    <string name="reader.chapter.last_page">העמוד האחרון בפרק</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">עמודים שנותרו בפרק: %d</item>
-        <item quantity="two">עמודים שנותרו בפרק: %d</item>
-        <item quantity="other">עמודים שנותרו בפרק: %d</item>
-    </plurals>
     <string name="reader.contents">תוכן העניינים</string>
     <string name="reader.display">תצוגה</string>
     <string name="reader.failed">לא ניתן לפתוח את הספר הזה</string>
     <string name="reader.font.sans">ללא תגים</string>
     <string name="reader.font.serif">עם תגים</string>
+    <string name="reader.footer">כותרת תחתונה</string>
+    <string name="reader.footer.chapter">פרק</string>
+    <string name="reader.footer.chapter_page">%1$d מתוך %2$d בפרק</string>
+    <string name="reader.footer.page">עמוד</string>
+    <string name="reader.footer.percent">אחוזים</string>
+    <string name="reader.footer.time">זמן שנותר</string>
+    <string name="reader.footer.time_left">בפרק נותרו %s</string>
     <string name="reader.go_to_page">מעבר לעמוד</string>
     <string name="reader.highlight.blue">כחול</string>
     <string name="reader.highlight.delete">מחיקת ההדגשה</string>
@@ -386,6 +387,32 @@
     <string name="reader.pages">דפים</string>
     <string name="reader.pages.one">דף אחד</string>
     <string name="reader.pages.two">שני דפים</string>
+    <string name="reader.progress">התקדמות</string>
+    <string name="reader.progress.body_only">ספירת הטקסט הראשי בלבד</string>
+    <string name="reader.progress.book">ספר</string>
+    <string name="reader.progress.chapter">הפרק הזה</string>
+    <string name="reader.progress.marks">הצגת פרקים, סימניות והדגשות על הסרגל</string>
+    <string name="reader.progress.page">עמוד %1$d מתוך %2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">עמודים שנותרו: %d</item>
+        <item quantity="two">עמודים שנותרו: %d</item>
+        <item quantity="other">עמודים שנותרו: %d</item>
+    </plurals>
+    <string name="reader.progress.print_page">עמוד מודפס %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">עמודים סטנדרטיים: כ־%d</item>
+        <item quantity="two">עמודים סטנדרטיים: כ־%d</item>
+        <item quantity="other">עמודים סטנדרטיים: כ־%d</item>
+    </plurals>
+    <string name="reader.progress.style">סרגל התקדמות</string>
+    <string name="reader.progress.style.bar">סרגל</string>
+    <string name="reader.progress.style.chapters">פרקים</string>
+    <string name="reader.progress.style.line">קו</string>
+    <string name="reader.progress.time_left">נותרו %s</string>
+    <string name="reader.progress.visibility">הצגת ההתקדמות</string>
+    <string name="reader.progress.visibility.always">תמיד</string>
+    <string name="reader.progress.visibility.hidden">אף פעם</string>
+    <string name="reader.progress.visibility.on_tap">בהקשה</string>
     <string name="reader.read_aloud">הקראה</string>
     <string name="reader.read_aloud_unavailable">הקראה אינה זמינה במכשיר הזה</string>
     <string name="reader.search">חיפוש בספר</string>
