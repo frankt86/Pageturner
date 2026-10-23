@@ -62,6 +62,8 @@ import voice.core.strings.R as StringsR
 internal fun HighlightSheet(
   highlight: Highlight,
   text: String,
+  highlightNames: Map<HighlightColor, String>,
+  highlightOpacity: Float,
   onDone: (Highlight) -> Unit,
   onDelete: () -> Unit,
 ) {
@@ -83,7 +85,7 @@ internal fun HighlightSheet(
     ) {
       Text(
         text = buildAnnotatedString {
-          withStyle(SpanStyle(background = color.background())) { append(text) }
+          withStyle(SpanStyle(background = color.background(highlightOpacity))) { append(text) }
         },
         style = MaterialTheme.typography.bodyLarge.bookText(),
         maxLines = 6,
@@ -92,6 +94,7 @@ internal fun HighlightSheet(
       Spacer(Modifier.height(16.dp))
       ColorPicker(
         selected = color,
+        names = highlightNames,
         onSelect = { color = it },
       )
       Spacer(Modifier.height(16.dp))
@@ -128,6 +131,7 @@ internal fun HighlightSheet(
 @Composable
 private fun ColorPicker(
   selected: HighlightColor,
+  names: Map<HighlightColor, String>,
   onSelect: (HighlightColor) -> Unit,
 ) {
   Row(
@@ -135,7 +139,7 @@ private fun ColorPicker(
     horizontalArrangement = Arrangement.spacedBy(8.dp),
   ) {
     HighlightColor.entries.forEach { color ->
-      val name = highlightColorName(color)
+      val name = highlightColorName(color, names)
       val isSelected = color == selected
       Box(
         modifier = Modifier

@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
@@ -37,6 +38,7 @@ internal fun ZoomablePdfPage(
   pdf: PdfFile,
   index: Int,
   contentDescription: String,
+  colorFilter: ColorFilter?,
   modifier: Modifier = Modifier,
 ) {
   BoxWithConstraints(modifier, contentAlignment = Alignment.Center) {
@@ -60,6 +62,7 @@ internal fun ZoomablePdfPage(
       bitmap = image,
       contentDescription = contentDescription,
       contentScale = ContentScale.Fit,
+      colorFilter = colorFilter,
       modifier = Modifier
         .fillMaxSize()
         .graphicsLayer {

@@ -113,16 +113,16 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 | Feature | Status | How |
 |---|---|---|
 | Light, Sepia, Dark (Night), True black | [done] | Day, Sepia, Night, Black. |
-| Soft paper, Slate | [new] | Two more presets. |
-| Custom: background, text, headings, links, selection | [new] | Color picker with HEX input. |
-| Contrast preview | [new] | Show the WCAG contrast ratio and a warning below 4.5:1. |
-| Highlight palette with opacity and names ("Important", "Question", "Quote") | [part] | 4 colors today; add names and opacity. |
-| Progress, toolbar and footnote colors | [new] | |
-| Images: original, dimmed, inverted in dark themes | [new] | Applies to EPUB images and PDF pages. |
-| Paper texture with intensity | [new] | Subtle noise or paper image under the text. |
+| Soft paper, Slate | [done] | Two more presets. |
+| Custom: background, text, headings, links, selection | [part] | **Colors and themes**: hue, saturation and brightness sliders, a few colors to start from and a HEX field. Links only in the new engine; the old one has no links. Readium has no heading color, so there is none. |
+| Contrast preview | [done] | The WCAG ratio of text on page, with a warning below 4.5:1. |
+| Highlight palette with opacity and names ("Important", "Question", "Quote") | [done] | Names for the 4 colors, used in the selection menu and highlight sheet, and **Highlight strength**. |
+| Progress, toolbar and footnote colors | [new] | Left out: the bars follow the app colors and the progress line the page's text. |
+| Images: original, dimmed, inverted in dark themes | [done] | Readium's image filter in the new engine and a color filter on PDF pages. The old engine shows no images. |
+| Paper texture with intensity | [done] | A fine grain in the text color, under the text in the old engine and over the pages in the new one. |
 | Follow system light or dark | [done] | Auto theme. |
-| Scheduled themes | [new] | Day theme by day, night theme from a set time or sunset. |
-| Saved themes: create, duplicate, rename, import, export | [new] | Store as JSON; export and import as a file. |
+| Scheduled themes | [done] | **By time**: a day and a night theme, with the night's start and end in half hours. Sunset isn't planned, it needs the location. |
+| Saved themes: create, duplicate, rename, import, export | [done] | Kept in the reader settings; export and import as a JSON file. |
 
 ## Order and rough size
 

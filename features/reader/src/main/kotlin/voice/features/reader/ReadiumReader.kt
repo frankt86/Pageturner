@@ -56,6 +56,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentFactory
 import androidx.fragment.app.commitNow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
@@ -68,9 +69,11 @@ import org.readium.r2.navigator.epub.EpubNavigatorFragment
 import org.readium.r2.navigator.epub.EpubPreferences
 import org.readium.r2.navigator.epub.css.Length
 import org.readium.r2.navigator.epub.css.RsProperties
+import org.readium.r2.navigator.html.HtmlDecorationTemplates
 import org.readium.r2.navigator.input.InputListener
 import org.readium.r2.navigator.input.TapEvent
 import org.readium.r2.navigator.preferences.ColumnCount
+import org.readium.r2.navigator.preferences.ImageFilter
 import org.readium.r2.navigator.preferences.Spread
 import org.readium.r2.navigator.util.DirectionalNavigationAdapter
 import org.readium.r2.shared.ExperimentalReadiumApi
@@ -80,6 +83,7 @@ import org.readium.r2.shared.util.toUri
 import voice.core.data.HighlightColor
 import voice.core.data.PageTransition
 import voice.core.data.ProgressVisibility
+import voice.core.data.ReaderImageFilter
 import voice.core.data.ReaderPages
 import voice.core.data.ReaderSettings
 import voice.core.data.ReaderTextAlign
@@ -87,6 +91,7 @@ import voice.core.data.ReaderTheme
 import voice.core.data.ReadingPace
 import voice.core.logging.api.Logger
 import voice.core.ui.bookText
+import org.readium.r2.navigator.epub.css.Color as ReadiumCssColor
 import org.readium.r2.navigator.preferences.Color as ReadiumColor
 import org.readium.r2.navigator.preferences.TextAlign as ReadiumTextAlign
 import org.readium.r2.navigator.preferences.Theme as ReadiumTheme
@@ -118,7 +123,8 @@ internal fun ReadiumPages(
   val activity = LocalActivity.current as? FragmentActivity ?: return
   val context = LocalContext.current
   val scope = rememberCoroutineScope()
-  val preferences = settings.epubPreferences()
+  val pageColors = settings.pageColors()
+  val preferences = settings.epubPreferences(pageColors)
   val latestPreferences by rememberUpdatedState(preferences)
   val latestBook by rememberUpdatedState(book)
   val latestOnCenterTap by rememberUpdatedState(onCenterTap)
@@ -129,7 +135,7 @@ internal fun ReadiumPages(
   val latestOnHighlightClick by rememberUpdatedState(onHighlightClick)
   val latestVolumeKeysTurnPages by rememberUpdatedState(volumeKeysTurnPages)
   val selectionLabels by rememberUpdatedState(
-    HighlightColor.entries.map { highlightColorName(it) } +
+    HighlightColor.entries.map { highlightColorName(it, settings.highlightNames) } +
       stringResource(StringsR.string.reader_highlight_note) +
       stringResource(StringsR.string.reader_look_up),
   )
@@ -156,25 +162,38 @@ internal fun ReadiumPages(
     turns.curl?.let { turn ->
       CurlOverlay(
         turn = turn,
-        backColor = settings.theme.pageColors()?.paper ?: MaterialTheme.colorScheme.surface,
+        backColor = pageColors?.paper ?: MaterialTheme.colorScheme.surface,
         onDone = turns::onCurlDone,
         onCancel = turns::onCurlCancel,
         modifier = Modifier.fillMaxSize(),
       )
     }
+    PaperTexture(
+      intensity = settings.paperTexture,
+      color = pageColors?.ink ?: MaterialTheme.colorScheme.onSurface,
+      modifier = Modifier.fillMaxSize(),
+    )
     // while the web view has no focus, the volume keys come to Compose
     if (volumeKeysTurnPages) {
       VolumeKeyPageTurns { step -> turns.turn(step) }
     }
   }
   // Readium takes these only when its pages are made, so changing them makes them anew
+  // colors wait until they stop changing, so dragging a color slider doesn't make the pages anew all the time
+  val link = settled(pageColors?.link)
+  val selectionColor = settled(pageColors?.selection)
   val cssProperties = RsProperties(
     // about 65 characters per line
     maxLineLength = if (settings.shortLines) Length.Rem(32.0) else null,
     colGap = settings.pageGap?.let { Length.Px(it.toDouble()) },
+    linkColor = link?.let { ReadiumCssColor.Int(it.toArgb()) },
+    visitedColor = link?.let { ReadiumCssColor.Int(it.toArgb()) },
+    selectionBackgroundColor = selectionColor?.let { ReadiumCssColor.Int(it.toArgb()) },
   )
+  // Readium draws highlights at 0.3 where the old engine draws them at 0.45
+  val highlightAlpha = settled(settings.highlightOpacity) * 0.3 / 0.45
   val customFont = settings.customFont
-  DisposableEffect(book, activity, container, cssProperties, customFont) {
+  DisposableEffect(book, activity, container, cssProperties, customFont, highlightAlpha) {
     val fragmentManager = activity.supportFragmentManager
     fragmentManager.findFragmentByTag(NAVIGATOR_TAG)?.let { stale ->
       fragmentManager.commitNow(allowStateLoss = true) { remove(stale) }
@@ -229,6 +248,7 @@ internal fun ReadiumPages(
         },
         configuration = EpubNavigatorFragment.Configuration(
           readiumCssRsProperties = cssProperties,
+          decorationTemplates = HtmlDecorationTemplates.defaultTemplates(alpha = highlightAlpha),
           selectionActionModeCallback = selectionCallback,
           shouldApplyInsetsPadding = false,
         ).apply { addReaderFonts(customFont) },
@@ -303,7 +323,7 @@ internal fun ReadiumPages(
       HIGHLIGHTS,
     )
   }
-  val markTint = (settings.theme.pageColors()?.highlight ?: MaterialTheme.colorScheme.primaryContainer).toArgb()
+  val markTint = (pageColors?.highlight ?: MaterialTheme.colorScheme.primaryContainer).toArgb()
   val searchMatch = book.searchMatch
   LaunchedEffect(navigator, searchMatch) {
     navigator?.applyDecorations(
@@ -328,17 +348,33 @@ private const val SEARCH = "search"
 private const val READ_ALOUD = "read_aloud"
 
 @Composable
-private fun ReaderSettings.epubPreferences(): EpubPreferences {
-  val colors = theme.pageColors()
+private fun <T> settled(value: T): T {
+  var settled by remember { mutableStateOf(value) }
+  LaunchedEffect(value) {
+    delay(600)
+    settled = value
+  }
+  return settled
+}
+
+@Composable
+private fun ReaderSettings.epubPreferences(colors: PageColors?): EpubPreferences {
   val paper = colors?.paper ?: MaterialTheme.colorScheme.surface
   val ink = colors?.ink ?: MaterialTheme.colorScheme.onSurface
+  val sepia = shownTheme() == ReaderTheme.Sepia
   return EpubPreferences(
     backgroundColor = ReadiumColor(paper.toArgb()),
     textColor = ReadiumColor(ink.toArgb()),
     theme = when {
-      theme == ReaderTheme.Sepia -> ReadiumTheme.SEPIA
+      sepia -> ReadiumTheme.SEPIA
       paper.luminance() < 0.5F -> ReadiumTheme.DARK
       else -> ReadiumTheme.LIGHT
+    },
+    // only applies to dark pages
+    imageFilter = when (imageFilter) {
+      ReaderImageFilter.Original -> null
+      ReaderImageFilter.Dimmed -> ImageFilter.DARKEN
+      ReaderImageFilter.Inverted -> ImageFilter.INVERT
     },
     fontFamily = readiumFontFamily(),
     // the web view's text is 16 px at 100 %
@@ -460,7 +496,7 @@ internal fun ReadiumFooter(
     pace = pace,
   )
   val chapters = remember(book) { book.chapterStarts.map { fractionOf(it, book.positions.size) } }
-  ReaderPageTheme(settings.theme) {
+  ReaderPageTheme(settings.pageColors()) {
     Column(
       modifier
         .background(MaterialTheme.colorScheme.surface)
@@ -507,6 +543,7 @@ internal fun ReadiumContentsSheet(
   onJump: (Locator) -> Unit,
   onBookmarkDelete: (Locator) -> Unit,
   onHighlightDelete: (LocatedHighlight) -> Unit,
+  highlightOpacity: Float,
   onDismiss: () -> Unit,
 ) {
   val tabs = ContentsTab.entries
@@ -524,7 +561,7 @@ internal fun ReadiumContentsSheet(
     when (selectedTab) {
       ContentsTab.Contents -> ReadiumChapters(book, onJump)
       ContentsTab.Bookmarks -> ReadiumBookmarks(book, onJump, onBookmarkDelete)
-      ContentsTab.Highlights -> ReadiumHighlights(book, onJump, onHighlightDelete)
+      ContentsTab.Highlights -> ReadiumHighlights(book, highlightOpacity, onJump, onHighlightDelete)
     }
   }
 }
@@ -583,6 +620,7 @@ private fun ReadiumBookmarks(
 @Composable
 private fun ReadiumHighlights(
   book: ReadiumBook,
+  opacity: Float,
   onJump: (Locator) -> Unit,
   onHighlightDelete: (LocatedHighlight) -> Unit,
 ) {
@@ -597,7 +635,7 @@ private fun ReadiumHighlights(
       MarkRow(
         title = book.chapterTitle(highlight.locator).orEmpty(),
         text = buildAnnotatedString {
-          withStyle(SpanStyle(background = highlight.color.background())) { append(quote) }
+          withStyle(SpanStyle(background = highlight.color.background(opacity))) { append(quote) }
         },
         note = highlight.note,
         deleteLabel = deleteLabel,

@@ -7,6 +7,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,7 +46,9 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -81,6 +84,7 @@ internal fun DisplaySheet(
   fontImportFailed: Boolean,
   onFontImport: (Uri) -> Unit,
   onSettingsChange: (ReaderSettings) -> Unit,
+  onColorsClick: () -> Unit,
   onDismiss: () -> Unit,
 ) {
   // no scrim, so the pages show each change while it's made
@@ -93,6 +97,7 @@ internal fun DisplaySheet(
       fontImportFailed = fontImportFailed,
       onFontImport = onFontImport,
       onSettingsChange = onSettingsChange,
+      onColorsClick = onColorsClick,
     )
   }
 }
@@ -106,6 +111,7 @@ private fun DisplaySettings(
   fontImportFailed: Boolean,
   onFontImport: (Uri) -> Unit,
   onSettingsChange: (ReaderSettings) -> Unit,
+  onColorsClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(
@@ -121,9 +127,15 @@ private fun DisplaySettings(
       modifier = Modifier.semantics { heading() },
     )
     ThemeChoice(
-      theme = settings.theme,
+      settings = settings,
+      options = ReaderTheme.entries,
+      selected = settings.theme,
       onThemeSelect = { onSettingsChange(settings.copy(theme = it)) },
     )
+    TextButton(onClick = onColorsClick) {
+      Icon(VoiceIcons.Contrast, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+      Text(stringResource(StringsR.string.reader_colors))
+    }
     OptionChoice(
       label = stringResource(StringsR.string.reader_page_turn),
       options = PageTransition.entries,
@@ -356,7 +368,7 @@ private fun TextSize(
 }
 
 @Composable
-private fun SwitchRow(
+internal fun SwitchRow(
   label: String,
   checked: Boolean,
   onCheckedChange: (Boolean) -> Unit,
@@ -397,48 +409,69 @@ private fun SwitchRow(
 }
 
 @Composable
-private fun ThemeChoice(
-  theme: ReaderTheme,
+internal fun ThemeChoice(
+  settings: ReaderSettings,
+  options: List<ReaderTheme>,
+  selected: ReaderTheme,
   onThemeSelect: (ReaderTheme) -> Unit,
 ) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
+      .horizontalScroll(rememberScrollState())
       .selectableGroup(),
-    horizontalArrangement = Arrangement.SpaceBetween,
+    horizontalArrangement = Arrangement.spacedBy(4.dp),
   ) {
-    ReaderTheme.entries.forEach { option ->
-      val colors = option.pageColors()
-      val selected = option == theme
+    options.forEach { option ->
+      val isSelected = option == selected
       Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
           .clip(MaterialTheme.shapes.medium)
-          .selectable(selected = selected, role = Role.RadioButton, onClick = { onThemeSelect(option) })
+          .selectable(selected = isSelected, role = Role.RadioButton, onClick = { onThemeSelect(option) })
           .padding(4.dp),
       ) {
+        val colors = option.pageColors(settings.customColors)
+        // by time shows the day theme in one half and the night theme in the other
+        val night = settings.nightTheme.pageColors(settings.customColors)
+        val day = settings.dayTheme.pageColors(settings.customColors)
+        val paper = colors?.paper ?: MaterialTheme.colorScheme.surface
         Box(
           contentAlignment = Alignment.Center,
           modifier = Modifier
             .size(52.dp)
             .clip(CircleShape)
-            .background(colors?.paper ?: MaterialTheme.colorScheme.surface)
+            .background(
+              if (option == ReaderTheme.Scheduled) {
+                Brush.linearGradient(
+                  0.5F to (day?.paper ?: MaterialTheme.colorScheme.surface),
+                  0.5F to (night?.paper ?: MaterialTheme.colorScheme.surface),
+                )
+              } else {
+                SolidColor(paper)
+              },
+            )
             .border(
-              width = if (selected) 3.dp else 1.dp,
-              color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
+              width = if (isSelected) 3.dp else 1.dp,
+              color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
               shape = CircleShape,
             ),
         ) {
-          Text(
-            text = "Aa",
-            style = MaterialTheme.typography.titleMedium.bookText(),
-            color = colors?.ink ?: MaterialTheme.colorScheme.onSurface,
-          )
+          if (option == ReaderTheme.Scheduled) {
+            Icon(VoiceIcons.Schedule, contentDescription = null, tint = night?.ink ?: MaterialTheme.colorScheme.onSurface)
+          } else {
+            Text(
+              text = "Aa",
+              style = MaterialTheme.typography.titleMedium.bookText(),
+              color = colors?.ink ?: MaterialTheme.colorScheme.onSurface,
+            )
+          }
         }
         Text(
           text = stringResource(option.label()),
           style = MaterialTheme.typography.labelMedium,
-          color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+          color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+          maxLines = 1,
           modifier = Modifier.padding(top = 4.dp),
         )
       }
@@ -446,12 +479,16 @@ private fun ThemeChoice(
   }
 }
 
-private fun ReaderTheme.label(): Int = when (this) {
+internal fun ReaderTheme.label(): Int = when (this) {
   ReaderTheme.Auto -> StringsR.string.reader_theme_auto
   ReaderTheme.Day -> StringsR.string.reader_theme_day
   ReaderTheme.Sepia -> StringsR.string.reader_theme_sepia
   ReaderTheme.Night -> StringsR.string.reader_theme_night
   ReaderTheme.Black -> StringsR.string.reader_theme_black
+  ReaderTheme.SoftPaper -> StringsR.string.reader_theme_soft_paper
+  ReaderTheme.Slate -> StringsR.string.reader_theme_slate
+  ReaderTheme.Custom -> StringsR.string.reader_theme_custom
+  ReaderTheme.Scheduled -> StringsR.string.reader_theme_scheduled
 }
 
 @Composable
@@ -704,7 +741,7 @@ private fun ProgressSettings(
 }
 
 @Composable
-private fun <T : Any> OptionChoice(
+internal fun <T : Any> OptionChoice(
   label: String,
   options: List<T>,
   selected: T?,
@@ -750,7 +787,7 @@ private fun <T : Any> OptionChoice(
 }
 
 @Composable
-private fun SettingSlider(
+internal fun SettingSlider(
   label: String,
   value: Float,
   range: ClosedFloatingPointRange<Float>,
@@ -830,6 +867,7 @@ private fun DisplaySettingsPreview() {
       fontImportFailed = false,
       onFontImport = {},
       onSettingsChange = {},
+      onColorsClick = {},
     )
   }
 }

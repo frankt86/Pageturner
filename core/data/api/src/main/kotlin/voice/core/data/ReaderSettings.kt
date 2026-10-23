@@ -56,6 +56,22 @@ public data class ReaderSettings(
   val textAlign: ReaderTextAlign? = null,
   val hyphens: Boolean = false,
   val ligatures: Boolean = true,
+  /** The colors of [ReaderTheme.Custom]. */
+  val customColors: ReaderColors = ReaderColors(),
+  val savedThemes: List<ReaderColors> = emptyList(),
+  /** The themes of [ReaderTheme.Scheduled], neither Auto nor Scheduled. */
+  val dayTheme: ReaderTheme = ReaderTheme.Day,
+  val nightTheme: ReaderTheme = ReaderTheme.Night,
+  /** In minutes after midnight. */
+  val nightStart: Int = 21 * 60,
+  val nightEnd: Int = 7 * 60,
+  /** The names the reader gave the highlight colors, the others keep their color's name. */
+  val highlightNames: Map<HighlightColor, String> = emptyMap(),
+  val highlightOpacity: Float = 0.45F,
+  /** How images and PDF pages look on dark pages. */
+  val imageFilter: ReaderImageFilter = ReaderImageFilter.Original,
+  /** From 0 for none to 1. */
+  val paperTexture: Float = 0F,
 ) {
   /** These settings with the text looking like it does at first. */
   public fun withDefaultTypography(): ReaderSettings {
@@ -214,4 +230,40 @@ public enum class ReaderTheme {
 
   @SerialName("black")
   Black,
+
+  @SerialName("soft_paper")
+  SoftPaper,
+
+  @SerialName("slate")
+  Slate,
+
+  /** [ReaderSettings.customColors]. */
+  @SerialName("custom")
+  Custom,
+
+  /** [ReaderSettings.dayTheme] by day and [ReaderSettings.nightTheme] at night. */
+  @SerialName("scheduled")
+  Scheduled,
+}
+
+/** Colors as #RRGGBB. Without a link or selection color, the theme's own are used. */
+@Serializable
+public data class ReaderColors(
+  val name: String = "",
+  val background: String = "#FDFCF9",
+  val text: String = "#1F1E1C",
+  val link: String? = null,
+  val selection: String? = null,
+)
+
+@Serializable
+public enum class ReaderImageFilter {
+  @SerialName("original")
+  Original,
+
+  @SerialName("dimmed")
+  Dimmed,
+
+  @SerialName("inverted")
+  Inverted,
 }

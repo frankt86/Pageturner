@@ -85,7 +85,7 @@ internal fun ContentsSheet(
       }
       ContentsTab.Bookmarks -> Bookmarks(content, state.bookmarks, onMarkClick, onBookmarkDelete)
       ContentsTab.Highlights -> if (content is ReaderContent.Epub) {
-        Highlights(content, state.highlights, onMarkClick, onHighlightDelete)
+        Highlights(content, state.highlights, state.settings.highlightOpacity, onMarkClick, onHighlightDelete)
       }
     }
   }
@@ -153,6 +153,7 @@ private fun Bookmarks(
 private fun Highlights(
   content: ReaderContent.Epub,
   highlights: List<Highlight>,
+  opacity: Float,
   onHighlightClick: (EbookPosition) -> Unit,
   onHighlightDelete: (Highlight) -> Unit,
 ) {
@@ -167,7 +168,7 @@ private fun Highlights(
       MarkRow(
         title = content.chapterTitle(highlight.section),
         text = buildAnnotatedString {
-          withStyle(SpanStyle(background = highlight.color.background())) { append(quote) }
+          withStyle(SpanStyle(background = highlight.color.background(opacity))) { append(quote) }
         },
         note = highlight.note,
         deleteLabel = deleteLabel,

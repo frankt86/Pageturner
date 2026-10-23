@@ -55,9 +55,6 @@ internal fun HighlightColor.ink(): Color = when (this) {
   HighlightColor.Pink -> Color(0xFFF48FB1)
 }
 
-// see-through, so the text stays readable on light and dark pages
-internal fun HighlightColor.background(): Color = ink().copy(alpha = 0.45F)
-
 internal data class Mark(
   val start: Int,
   val end: Int,
@@ -69,6 +66,7 @@ internal fun pageMarks(
   section: Int,
   readingRange: IntRange?,
   highlights: List<Highlight>,
+  highlightOpacity: Float,
   searchMatch: BookRange?,
   selection: BookRange?,
 ): List<Mark> {
@@ -76,7 +74,7 @@ internal fun pageMarks(
   val searchColor = MaterialTheme.colorScheme.tertiaryContainer
   val selectionColor = LocalTextSelectionColors.current.backgroundColor
   return buildList {
-    highlights.forEach { if (it.section == section) add(Mark(it.start, it.end, it.color.background())) }
+    highlights.forEach { if (it.section == section) add(Mark(it.start, it.end, it.color.background(highlightOpacity))) }
     if (readingRange != null) add(Mark(readingRange.first, readingRange.last + 1, readAloudColor))
     if (searchMatch != null && searchMatch.section == section) add(Mark(searchMatch.start, searchMatch.end, searchColor))
     if (selection != null && selection.section == section) add(Mark(selection.start, selection.end, selectionColor))

@@ -90,7 +90,7 @@ internal fun BoxScope.ReaderControls(
       fraction = pages.progressAt(index, pagesPerSpread),
       style = state.settings.progressBar,
       chapters = chapters,
-      color = state.settings.theme.pageColors()?.ink ?: MaterialTheme.colorScheme.onSurface,
+      color = state.settings.pageColors()?.ink ?: MaterialTheme.colorScheme.onSurface,
       modifier = Modifier
         .align(Alignment.BottomCenter)
         .padding(horizontal = 16.dp, vertical = 4.dp),

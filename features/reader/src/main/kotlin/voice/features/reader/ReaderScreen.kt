@@ -57,6 +57,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -181,7 +182,7 @@ internal fun ReaderScreen(uri: Uri) {
   Box(
     Modifier
       .fillMaxSize()
-      .background(loaded?.settings?.theme?.pageColors()?.paper ?: MaterialTheme.colorScheme.surface),
+      .background(loaded?.settings?.pageColors()?.paper ?: MaterialTheme.colorScheme.surface),
   ) {
     when (state) {
       ReaderState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -275,6 +276,7 @@ internal fun ReaderScreen(uri: Uri) {
     if (selected != null && epub != null) {
       SelectionToolbar(
         selectedText = epub.text(selected),
+        highlightNames = loaded.settings.highlightNames,
         onHighlightClick = { color ->
           val _ = viewModel.onHighlightAdd(selected, color)
           selection.clear()
@@ -334,6 +336,22 @@ internal fun ReaderScreen(uri: Uri) {
       fontImportFailed = loaded.fontImportFailed,
       onFontImport = viewModel::onFontImport,
       onSettingsChange = viewModel::onSettingsChange,
+      onColorsClick = { sheet = ReaderSheet.Colors },
+      onDismiss = { sheet = null },
+    )
+  }
+  if (loaded != null && sheet == ReaderSheet.Colors) {
+    ColorsSheet(
+      settings = loaded.settings,
+      content = when {
+        loaded.readium != null -> ColorsContent.NewEngine
+        content != null -> ColorsContent.OldEngine
+        else -> ColorsContent.Pdf
+      },
+      themesFileFailed = loaded.themesFileFailed,
+      onThemesExport = viewModel::onThemesExport,
+      onThemesImport = viewModel::onThemesImport,
+      onSettingsChange = viewModel::onSettingsChange,
       onDismiss = { sheet = null },
     )
   }
@@ -360,6 +378,7 @@ internal fun ReaderScreen(uri: Uri) {
       },
       onBookmarkDelete = viewModel::onReadiumBookmarkDelete,
       onHighlightDelete = viewModel::onReadiumHighlightDelete,
+      highlightOpacity = loaded.settings.highlightOpacity,
       onDismiss = { sheet = null },
     )
   } else if (readium != null && sheet == ReaderSheet.Search) {
@@ -399,13 +418,14 @@ internal fun ReaderScreen(uri: Uri) {
         },
         onDismiss = { sheet = null },
       )
-      ReaderSheet.Display, ReaderSheet.ReadAloud, null -> Unit
+      ReaderSheet.Display, ReaderSheet.Colors, ReaderSheet.ReadAloud, null -> Unit
     }
   }
   val readiumHighlight = editedReadiumHighlight
   if (readiumHighlight != null) {
     ReadiumHighlightSheet(
       highlight = readiumHighlight,
+      settings = loaded?.settings ?: ReaderSettings(),
       onDone = { color, note ->
         editedReadiumHighlight = null
         if (color != readiumHighlight.color || note != readiumHighlight.note) {
@@ -423,6 +443,8 @@ internal fun ReaderScreen(uri: Uri) {
     HighlightSheet(
       highlight = highlight,
       text = content.text(BookRange(highlight.section, highlight.start, highlight.end)),
+      highlightNames = loaded.settings.highlightNames,
+      highlightOpacity = loaded.settings.highlightOpacity,
       onDone = { changed ->
         editedHighlight = null
         if (changed != highlight) viewModel.onHighlightChange(highlight, changed)
@@ -450,6 +472,7 @@ private fun Locator.searchSnippet(): SearchSnippet {
 private enum class ReaderSheet {
   Contents,
   Display,
+  Colors,
   ReadAloud,
   Search,
 }
@@ -457,6 +480,7 @@ private enum class ReaderSheet {
 @Composable
 private fun ReadiumHighlightSheet(
   highlight: LocatedHighlight,
+  settings: ReaderSettings,
   onDone: (HighlightColor, String?) -> Unit,
   onDelete: () -> Unit,
 ) {
@@ -465,6 +489,8 @@ private fun ReadiumHighlightSheet(
   HighlightSheet(
     highlight = editable,
     text = highlight.locator.text.highlight.orEmpty(),
+    highlightNames = settings.highlightNames,
+    highlightOpacity = settings.highlightOpacity,
     onDone = { changed -> onDone(changed.color, changed.note) },
     onDelete = onDelete,
   )
@@ -620,7 +646,7 @@ internal fun Book(
     }
     val pagesPerSpread = if (twoPages) 2 else 1
     val turnRequests = remember { MutableSharedFlow<Int>(extraBufferCapacity = 1) }
-    ReaderPageTheme(state.settings.theme) {
+    ReaderPageTheme(state.settings.pageColors()) {
       key(pages, pagesPerSpread) {
         Spreads(
           state = state,
@@ -751,6 +777,13 @@ private fun PageSlot(
   modifier: Modifier = Modifier,
 ) {
   Box(modifier.background(MaterialTheme.colorScheme.surface)) {
+    if (state.content is ReaderContent.Epub) {
+      PaperTexture(
+        intensity = state.settings.paperTexture,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.matchParentSize(),
+      )
+    }
     if (index < pages.size) {
       val footer = if (state.settings.progressVisibility == ProgressVisibility.Hidden) {
         null
@@ -771,8 +804,10 @@ private fun PageSlot(
         margins = margins,
         readingRange = state.readingRange.takeIf { pages[index].section == state.position.section },
         highlights = state.highlights,
+        highlightOpacity = state.settings.highlightOpacity,
         searchMatch = state.searchMatch,
         selection = selection,
+        imageFilter = state.settings.imageFilter.colorFilter(paper = MaterialTheme.colorScheme.surface),
       )
     }
   }
@@ -801,8 +836,10 @@ private fun BookPage(
   margins: PageMargins,
   readingRange: IntRange?,
   highlights: List<Highlight>,
+  highlightOpacity: Float,
   searchMatch: BookRange?,
   selection: PageSelection,
+  imageFilter: ColorFilter?,
 ) {
   val pageLabel = stringResource(StringsR.string.reader_page, pageNumber, pageCount)
   when (content) {
@@ -811,7 +848,7 @@ private fun BookPage(
         .fillMaxSize()
         .padding(start = margins.side, end = margins.side, top = margins.top, bottom = margins.bottom),
     ) {
-      val marks = pageMarks(page.section, readingRange, highlights, searchMatch, selection.range)
+      val marks = pageMarks(page.section, readingRange, highlights, highlightOpacity, searchMatch, selection.range)
       val textStart = remember(content, page) {
         val chapter = content.chapters[page.section]
         var start = page.start
@@ -874,6 +911,7 @@ private fun BookPage(
       pdf = content.pdf,
       index = page.section,
       contentDescription = pageLabel,
+      colorFilter = imageFilter,
       modifier = Modifier
         .fillMaxSize()
         .padding(8.dp),

@@ -92,6 +92,8 @@ internal sealed interface ReaderState {
     /** The file names of the fonts the reader added. */
     val fonts: List<String> = emptyList(),
     val fontImportFailed: Boolean = false,
+    /** A themes file couldn't be written or had no themes. */
+    val themesFileFailed: Boolean = false,
   ) : ReaderState
 }
 
@@ -144,6 +146,7 @@ class ReaderViewModel(
   private var settings by mutableStateOf(ReaderSettings())
   private var fonts by mutableStateOf(emptyList<String>())
   private var fontImportFailed by mutableStateOf(false)
+  private var themesFileFailed by mutableStateOf(false)
   private val neuralVoice by lazy { NeuralVoice(application) }
   private var naturalVoice by mutableStateOf(true)
   private var naturalReady by mutableStateOf(false)
@@ -261,6 +264,7 @@ class ReaderViewModel(
         pace = pace,
         fonts = fonts,
         fontImportFailed = fontImportFailed,
+        themesFileFailed = themesFileFailed,
       )
     }
   }
@@ -488,6 +492,21 @@ class ReaderViewModel(
         fonts = withContext(dispatcherProvider.io) { importedFonts(application) }
         onSettingsChange(settings.copy(customFont = name))
       }
+    }
+  }
+
+  internal fun onThemesExport(uri: Uri) {
+    val themes = settings.savedThemes
+    scope.launch {
+      themesFileFailed = !withContext(dispatcherProvider.io) { exportThemes(application, uri, themes) }
+    }
+  }
+
+  internal fun onThemesImport(uri: Uri) {
+    scope.launch {
+      val imported = withContext(dispatcherProvider.io) { importThemes(application, uri) }
+      themesFileFailed = imported.isEmpty()
+      if (imported.isNotEmpty()) onSettingsChange(settings.copy(savedThemes = settings.savedThemes + imported))
     }
   }
 
