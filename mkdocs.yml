@@ -8,6 +8,7 @@ repo_name: "Pageturner on GitHub"
 
 nav:
   - Home: index.md
+  - Install: install.md
   - Organizing Audiobooks: organizing.md
   - Ebooks: ebooks.md
   - Audiobookshelf: audiobookshelf.md

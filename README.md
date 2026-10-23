@@ -29,7 +29,7 @@ This is a sketch of the reader. See [Ebooks](docs/ebooks.md) for how it works.
 
 ## Download
 
-Install the newest build on your phone from [app-free-debug.apk](https://github.com/frankt86/Pageturner/releases/download/debug/app-free-debug.apk). It installs next to Voice from Google Play or F-Droid and leaves its library alone.
+**[Download Pageturner](https://github.com/frankt86/Pageturner/releases/download/debug/app-free-debug.apk)** on your phone, open the file and tap **Install**. It's always the newest build, and installs next to Voice from Google Play or F-Droid without touching its library. See [Install](docs/install.md) for the steps.
 
 ## Learn more
 
