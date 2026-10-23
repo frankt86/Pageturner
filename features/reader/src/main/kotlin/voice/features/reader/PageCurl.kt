@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.drawscope.clipPath
@@ -288,7 +287,7 @@ private fun Modifier.curl(
 
   val shadowRadius = 15.dp.toPx()
   val shadowOffset = Offset(5.dp.toPx(), 0F).rotate(2 * PI.toFloat() - angle)
-  val shadowPaint = Paint().asFrameworkPaint().apply {
+  val shadowPaint = android.graphics.Paint().apply {
     color = Color.Transparent.toArgb()
     setShadowLayer(shadowRadius, shadowOffset.x, shadowOffset.y, Color.Black.copy(alpha = 0.25F).toArgb())
   }
