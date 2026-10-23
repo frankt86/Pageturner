@@ -20,7 +20,7 @@ bigger or smaller. The screen stays on while you read.
 On a foldable, the book follows the screen. Folded, you see one page. Unfolded, the book opens to two pages side by side, like
 a paper book. The same happens on a tablet or a phone turned on its side. Your place stays the same when you fold or unfold.
 
-![Sketch: one page folded, two pages unfolded](sketches/ebooks-reader.png)
+![Two pages side by side on an unfolded foldable](images/reader-unfolded.png)
 
 ## Reading aloud
 
