@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
@@ -32,6 +33,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.atan2
@@ -75,7 +78,8 @@ private fun Size.foldFor(
 
 /**
  * Pages lying on top of each other. Dragging from the right lifts the corner of the page and curls it over,
- * dragging from the left brings the previous page back. A tap on the outer thirds turns a page.
+ * dragging from the left brings the previous page back. A tap on the outer thirds turns a page, one in the middle
+ * calls [onCenterTap].
  */
 @Composable
 internal fun CurlPages(
@@ -84,6 +88,9 @@ internal fun CurlPages(
   onTurn: (Int) -> Unit,
   backColor: Color,
   modifier: Modifier = Modifier,
+  onCenterTap: () -> Unit = {},
+  // each request turns a page forward (positive) or back (negative), like a tap on the edge
+  turnRequests: Flow<Int> = emptyFlow(),
   // previews can't drag, this shows the page curled this far
   previewTurn: Float? = null,
   page: @Composable (index: Int) -> Unit,
@@ -99,6 +106,7 @@ internal fun CurlPages(
     val backward = remember(pageSize) { Animatable(pageSize.turned(), FoldConverter) }
     val latestCurrent by rememberUpdatedState(current)
     val latestOnTurn by rememberUpdatedState(onTurn)
+    val latestOnCenterTap by rememberUpdatedState(onCenterTap)
     val scope = rememberCoroutineScope()
 
     fun turnForward(fromCorner: Boolean) {
@@ -143,6 +151,12 @@ internal fun CurlPages(
       }
     }
 
+    LaunchedEffect(turnRequests, pageSize) {
+      turnRequests.collect { step ->
+        if (step > 0) turnForward(fromCorner = true) else turnBackward(fromCorner = true)
+      }
+    }
+
     Box(
       Modifier
         .fillMaxSize()
@@ -151,6 +165,7 @@ internal fun CurlPages(
             when {
               offset.x > pageSize.width * 2 / 3 -> turnForward(fromCorner = true)
               offset.x < pageSize.width / 3 -> turnBackward(fromCorner = true)
+              else -> latestOnCenterTap()
             }
           }
         }

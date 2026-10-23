@@ -71,9 +71,9 @@ public annotation class LockScreenSliderStore
 @Qualifier
 public annotation class EbooksStore
 
-/** The size of the text in the ebook reader, in sp. */
+/** How the ebook reader shows the pages: text, colors, brightness and turning pages with the volume keys. */
 @Qualifier
-public annotation class ReaderTextSizeStore
+public annotation class ReaderSettingsStore
 
 /** Whether reading aloud uses the downloaded natural voice instead of the phone's text-to-speech voice. */
 @Qualifier

@@ -11,21 +11,26 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.Before
 import org.junit.runner.RunWith
+import voice.core.data.ReaderSettings
+import voice.core.data.store.ReaderTextSizeMigration
 import voice.core.data.store.VoiceDataStoreFactory
 import voice.core.data.store.booleanPrefsDataMigration
 import voice.core.data.store.intPrefsDataMigration
+import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 @RunWith(AndroidJUnit4::class)
 class DataMigrationTests {
 
+  private lateinit var context: Application
   private lateinit var sharedPreferences: SharedPreferences
   private lateinit var factory: VoiceDataStoreFactory
 
   @Before
   fun setup() {
-    val context = ApplicationProvider.getApplicationContext<Application>()
+    context = ApplicationProvider.getApplicationContext()
     sharedPreferences = context.getSharedPreferences("de.ph1b.audiobook_preferences", Context.MODE_PRIVATE)
     factory = VoiceDataStoreFactory(Json { ignoreUnknownKeys = true }, context)
   }
@@ -58,5 +63,20 @@ class DataMigrationTests {
     )
     assertEquals(expected = true, actual = dataStore.data.first())
     assertEquals(expected = false, actual = sharedPreferences.contains("testBoolKey"))
+  }
+
+  @Test
+  fun `the reader settings take over the text size from its old store`() = runTest {
+    val oldFile = File(context.filesDir, "datastore/readerTextSize")
+    oldFile.parentFile!!.mkdirs()
+    oldFile.writeText("22.0")
+    val dataStore = factory.create(
+      serializer = ReaderSettings.serializer(),
+      defaultValue = ReaderSettings(),
+      fileName = "testReaderSettings",
+      migrations = listOf(ReaderTextSizeMigration(context)),
+    )
+    assertEquals(expected = ReaderSettings(textSize = 22F), actual = dataStore.data.first())
+    assertFalse(oldFile.exists())
   }
 }
