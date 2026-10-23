@@ -540,12 +540,35 @@
     <string name="playback.speed.title">Playback speed</string>
     <!-- Button that turns volume boost off. -->
     <string name="playback.volume_boost.off">Off</string>
+    <!-- Label of the slider in the display sheet of the ebook reader that sets how bright the screen is while reading. -->
+    <string name="reader.brightness">Brightness</string>
+    <!-- Chip next to the brightness slider in the ebook reader. When it's on, the phone decides the brightness as usual. -->
+    <string name="reader.brightness.system">System</string>
     <!-- Name of a chapter in the ebook reader when the book doesn't name it. %d is its number, starting at 1. -->
     <string name="reader.chapter">Chapter %d</string>
+    <!-- Shown in the page bar of the ebook reader when the page on screen is the last one of its chapter. -->
+    <string name="reader.chapter.last_page">Last page of this chapter</string>
+    <!-- Shown in the page bar of the ebook reader: how many pages of the current chapter come after the one on screen. -->
+    <plurals name="reader.chapter.pages_left">
+        <item quantity="one">%d page left in this chapter</item>
+        <item quantity="other">%d pages left in this chapter</item>
+    </plurals>
     <!-- Button and title of the sheet in the ebook reader that lists the chapters of the book, to jump to one. -->
     <string name="reader.contents">Contents</string>
+    <!-- Button and title of the sheet in the ebook reader where the reader changes how the pages look: colors, font, text size, spacing, margins and brightness. -->
+    <string name="reader.display">Display</string>
     <!-- Shown in the ebook reader when an EPUB or PDF file can't be read. -->
     <string name="reader.failed">This book couldn\'t be opened</string>
+    <!-- Option in the display sheet of the ebook reader: a font without serifs for the book's text. Shown in that font. -->
+    <string name="reader.font.sans">Sans</string>
+    <!-- Option in the display sheet of the ebook reader: a font with serifs for the book's text, like in printed books. Shown in that font. -->
+    <string name="reader.font.serif">Serif</string>
+    <!-- Read out by screen readers for the slider in the page bar of the ebook reader that jumps to any page of the book. -->
+    <string name="reader.go_to_page">Go to page</string>
+    <!-- Label of the slider in the display sheet of the ebook reader that sets the space between the lines of text. -->
+    <string name="reader.line_spacing">Line spacing</string>
+    <!-- Label of the slider in the display sheet of the ebook reader that sets the empty space left and right of the text. -->
+    <string name="reader.margins">Margins</string>
     <!-- Snackbar in the ebook reader when there is no text to read aloud, e.g. a scanned PDF. -->
     <string name="reader.nothing_to_read_aloud">There\'s no text here to read aloud</string>
     <!-- Page number at the bottom of an ebook page, e.g. "12 of 240". -->
@@ -556,8 +579,18 @@
     <string name="reader.read_aloud_unavailable">Reading aloud isn\'t available on this device</string>
     <!-- Button in the ebook reader that stops reading aloud. -->
     <string name="reader.stop_reading_aloud">Stop reading aloud</string>
-    <!-- Button and title of the sheet in the ebook reader where the reader makes the book's text bigger or smaller. -->
+    <!-- Label of the slider in the display sheet of the ebook reader that makes the book's text bigger or smaller. -->
     <string name="reader.text_size">Text size</string>
+    <!-- Page color option in the display sheet of the ebook reader: the pages take the app's own colors, light or dark like the app. -->
+    <string name="reader.theme.auto">Auto</string>
+    <!-- Page color option in the display sheet of the ebook reader: light gray text on black pages. -->
+    <string name="reader.theme.black">Black</string>
+    <!-- Page color option in the display sheet of the ebook reader: dark text on white pages. -->
+    <string name="reader.theme.day">Day</string>
+    <!-- Page color option in the display sheet of the ebook reader: light text on dark gray pages. -->
+    <string name="reader.theme.night">Night</string>
+    <!-- Page color option in the display sheet of the ebook reader: brown text on warm, yellowish pages like old paper. -->
+    <string name="reader.theme.sepia">Sepia</string>
     <!-- Option in the read aloud sheet of the ebook reader: a natural sounding voice that runs on the phone. -->
     <string name="reader.voice.natural">Natural voice</string>
     <!-- Shown while the natural voice downloads. %d is how much is done, from 0 to 100. -->
@@ -576,6 +609,8 @@
     <string name="reader.voice.speed">Speed</string>
     <!-- Primary button of the read aloud sheet in the ebook reader. Starts reading the book aloud from the current page. -->
     <string name="reader.voice.start">Start reading</string>
+    <!-- Switch in the display sheet of the ebook reader. When it's on, volume down turns to the next page and volume up to the previous one, except while the book is read aloud. -->
+    <string name="reader.volume_keys">Turn pages with the volume keys</string>
     <!-- Settings about row showing the app version. -->
     <string name="settings.about.app_version.title">App version</string>
     <!-- Title and content description for opening settings. -->

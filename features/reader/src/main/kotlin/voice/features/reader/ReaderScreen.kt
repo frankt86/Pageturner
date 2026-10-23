@@ -4,22 +4,34 @@ package voice.features.reader
 
 import android.net.Uri
 import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -31,13 +43,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -76,14 +85,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
-import androidx.compose.ui.text.style.Hyphens
-import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation3.runtime.NavEntry
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -99,8 +105,8 @@ import voice.core.ui.icons.VoiceIcons
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.floor
-import kotlin.math.roundToInt
 import kotlin.math.sin
 import voice.core.strings.R as StringsR
 
@@ -159,9 +165,60 @@ internal fun ReaderScreen(uri: Uri) {
   val state = viewModel.state()
   val loaded = state as? ReaderState.Loaded
   var sheet by rememberSaveable { mutableStateOf<ReaderSheet?>(null) }
-  Scaffold(
-    snackbarHost = { SnackbarHost(snackbarHostState) },
-    topBar = {
+  // the bars show when the book opens and get out of the way once reading starts
+  var barsVisible by rememberSaveable { mutableStateOf(true) }
+  ReaderWindow(immersive = !barsVisible && loaded != null, brightness = loaded?.settings?.brightness)
+  val turnPage = { page: Page, progress: Float ->
+    barsVisible = false
+    viewModel.onPageTurned(page, progress)
+  }
+  Box(
+    Modifier
+      .fillMaxSize()
+      .background(loaded?.settings?.theme?.pageColors()?.paper ?: MaterialTheme.colorScheme.surface),
+  ) {
+    when (state) {
+      ReaderState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        LoadingIndicator(Modifier.size(64.dp))
+      }
+      ReaderState.Failed -> Box(
+        Modifier
+          .fillMaxSize()
+          .safeDrawingPadding()
+          .padding(24.dp),
+        contentAlignment = Alignment.Center,
+      ) {
+        Text(
+          text = stringResource(StringsR.string.reader_failed),
+          style = MaterialTheme.typography.bodyLarge,
+          textAlign = TextAlign.Center,
+        )
+      }
+      is ReaderState.Loaded -> Book(
+        state = state,
+        onPageTurn = turnPage,
+        onCenterTap = { barsVisible = !barsVisible },
+        // the insets of hidden bars too, or showing them would lay out all pages anew
+        modifier = Modifier
+          .fillMaxSize()
+          .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout)),
+        overlay = { pages, pagesPerSpread ->
+          ReaderControls(
+            state = state,
+            pages = pages,
+            pagesPerSpread = pagesPerSpread,
+            barsVisible = barsVisible,
+            onPageTurn = turnPage,
+            onJump = viewModel::onPageTurned,
+          )
+        },
+      )
+    }
+    AnimatedVisibility(
+      visible = barsVisible || loaded == null,
+      enter = fadeIn() + slideInVertically { -it },
+      exit = fadeOut() + slideOutVertically { -it },
+    ) {
       ReaderTopBar(
         title = loaded?.content?.title,
         readingAloud = loaded?.readingAloud,
@@ -171,32 +228,25 @@ internal fun ReaderScreen(uri: Uri) {
           if (loaded?.readingAloud == true) viewModel.stopReadingAloudClick() else sheet = ReaderSheet.ReadAloud
         },
         onContentsClick = { sheet = ReaderSheet.Contents },
-        onTextSizeClick = { sheet = ReaderSheet.TextSize },
-      )
-    },
-  ) { contentPadding ->
-    val modifier = Modifier
-      .fillMaxSize()
-      .padding(contentPadding)
-    when (state) {
-      ReaderState.Loading -> Box(modifier, contentAlignment = Alignment.Center) {
-        LoadingIndicator(Modifier.size(64.dp))
-      }
-      ReaderState.Failed -> Box(modifier.padding(24.dp), contentAlignment = Alignment.Center) {
-        Text(
-          text = stringResource(StringsR.string.reader_failed),
-          style = MaterialTheme.typography.bodyLarge,
-          textAlign = TextAlign.Center,
-        )
-      }
-      is ReaderState.Loaded -> Book(
-        state = state,
-        onPageTurn = viewModel::onPageTurned,
-        modifier = modifier,
+        onDisplayClick = { sheet = ReaderSheet.Display },
       )
     }
+    SnackbarHost(
+      hostState = snackbarHostState,
+      modifier = Modifier
+        .align(Alignment.BottomCenter)
+        .safeDrawingPadding(),
+    )
   }
   val content = loaded?.content as? ReaderContent.Epub
+  if (loaded != null && sheet == ReaderSheet.Display) {
+    DisplaySheet(
+      settings = loaded.settings,
+      showTextOptions = content != null,
+      onSettingsChange = viewModel::onSettingsChange,
+      onDismiss = { sheet = null },
+    )
+  }
   if (loaded != null && sheet == ReaderSheet.ReadAloud) {
     ReadAloudSheet(
       voice = loaded.voice,
@@ -220,19 +270,14 @@ internal fun ReaderScreen(uri: Uri) {
         },
         onDismiss = { sheet = null },
       )
-      ReaderSheet.TextSize -> TextSizeSheet(
-        textSize = loaded.textSize,
-        onTextSizeChange = viewModel::onTextSizeChange,
-        onDismiss = { sheet = null },
-      )
-      ReaderSheet.ReadAloud, null -> Unit
+      ReaderSheet.Display, ReaderSheet.ReadAloud, null -> Unit
     }
   }
 }
 
 private enum class ReaderSheet {
   Contents,
-  TextSize,
+  Display,
   ReadAloud,
 }
 
@@ -244,7 +289,7 @@ internal fun ReaderTopBar(
   onCloseClick: () -> Unit,
   onReadAloudClick: () -> Unit,
   onContentsClick: () -> Unit,
-  onTextSizeClick: () -> Unit,
+  onDisplayClick: () -> Unit,
 ) {
   TopAppBar(
     title = {
@@ -275,10 +320,12 @@ internal fun ReaderTopBar(
             contentDescription = stringResource(StringsR.string.reader_contents),
           )
         }
-        IconButton(onClick = onTextSizeClick) {
+      }
+      if (title != null) {
+        IconButton(onClick = onDisplayClick) {
           Icon(
             imageVector = VoiceIcons.Title,
-            contentDescription = stringResource(StringsR.string.reader_text_size),
+            contentDescription = stringResource(StringsR.string.reader_display),
           )
         }
       }
@@ -296,7 +343,6 @@ internal fun ReaderTopBar(
   )
 }
 
-private val PageHorizontalPadding = 24.dp
 private val PageVerticalPadding = 8.dp
 private val PageNumberHeight = 32.dp
 private val SpineWidth = 24.dp
@@ -306,26 +352,22 @@ internal fun Book(
   state: ReaderState.Loaded,
   onPageTurn: (Page, Float) -> Unit,
   modifier: Modifier = Modifier,
+  onCenterTap: () -> Unit = {},
   // previews can't wait for the pages laid out in the background
   paginateNow: Boolean = false,
   // previews can't swipe, this shows the first page turned this far
   previewTurn: Float? = null,
+  overlay: @Composable BoxScope.(pages: List<Page>, pagesPerSpread: Int) -> Unit = { _, _ -> },
 ) {
   BoxWithConstraints(modifier) {
     // an unfolded foldable, a tablet or a phone on its side has room for a spread like an open book
     val twoPages = maxWidth >= 600.dp && maxWidth >= maxHeight * 0.8F
     val pageWidth = if (twoPages) (maxWidth - SpineWidth) / 2 else maxWidth
-    val textStyle = MaterialTheme.typography.bodyLarge.bookText().copy(
-      fontSize = state.textSize.sp,
-      lineHeight = (state.textSize * 1.55F).sp,
-      // the same breaks on screen as when the pages were measured, so no line spills over
-      lineBreak = LineBreak.Simple,
-      hyphens = Hyphens.None,
-    )
+    val textStyle = state.settings.pageTextStyle()
     val pages = pages(
       content = state.content,
       textStyle = textStyle,
-      textWidth = pageWidth - PageHorizontalPadding * 2,
+      textWidth = pageWidth - state.settings.margin.dp * 2,
       textHeight = maxHeight - PageVerticalPadding * 2 - PageNumberHeight,
       paginateNow = paginateNow,
     )
@@ -336,16 +378,20 @@ internal fun Book(
       return@BoxWithConstraints
     }
     val pagesPerSpread = if (twoPages) 2 else 1
-    key(pages, pagesPerSpread) {
-      Spreads(
-        state = state,
-        pages = pages,
-        pagesPerSpread = pagesPerSpread,
-        textStyle = textStyle,
-        onPageTurn = onPageTurn,
-        previewTurn = previewTurn,
-      )
+    ReaderPageTheme(state.settings.theme) {
+      key(pages, pagesPerSpread) {
+        Spreads(
+          state = state,
+          pages = pages,
+          pagesPerSpread = pagesPerSpread,
+          textStyle = textStyle,
+          onPageTurn = onPageTurn,
+          onCenterTap = onCenterTap,
+          previewTurn = previewTurn,
+        )
+      }
     }
+    overlay(pages, pagesPerSpread)
   }
 }
 
@@ -386,6 +432,7 @@ private fun Spreads(
   pagesPerSpread: Int,
   textStyle: TextStyle,
   onPageTurn: (Page, Float) -> Unit,
+  onCenterTap: () -> Unit,
   previewTurn: Float?,
 ) {
   if (pages.isEmpty()) return
@@ -393,19 +440,22 @@ private fun Spreads(
   val spreadCount = (pages.size + pagesPerSpread - 1) / pagesPerSpread
   val pagerState = rememberPagerState(initialPage = currentSpread) { spreadCount }
 
-  // follows reading aloud from page to page
+  // follows reading aloud and the volume keys from page to page, and jumps further away
   LaunchedEffect(currentSpread) {
-    if (pagerState.currentPage != currentSpread) {
-      pagerState.animateScrollToPage(currentSpread)
+    when (abs(pagerState.currentPage - currentSpread)) {
+      0 -> Unit
+      1 -> pagerState.animateScrollToPage(currentSpread)
+      else -> pagerState.scrollToPage(currentSpread)
     }
   }
   val latestSpread by rememberUpdatedState(currentSpread)
   val latestOnPageTurn by rememberUpdatedState(onPageTurn)
+  val latestOnCenterTap by rememberUpdatedState(onCenterTap)
   LaunchedEffect(pagerState) {
     snapshotFlow { pagerState.settledPage }.collect { spread ->
       if (spread != latestSpread) {
-        val pagesSeen = ((spread + 1) * pagesPerSpread).coerceAtMost(pages.size)
-        latestOnPageTurn(pages[spread * pagesPerSpread], pagesSeen.toFloat() / pages.size)
+        val first = spread * pagesPerSpread
+        latestOnPageTurn(pages[first], pages.progressAt(first, pagesPerSpread))
       }
     }
   }
@@ -437,7 +487,10 @@ private fun Spreads(
             val target = when {
               offset.x < edge -> pagerState.currentPage - 1
               offset.x > size.width - edge -> pagerState.currentPage + 1
-              else -> return@detectTapGestures
+              else -> {
+                latestOnCenterTap()
+                return@detectTapGestures
+              }
             }
             if (target in 0 until pagerState.pageCount) {
               scope.launch { pagerState.animateScrollToPage(target) }
@@ -610,6 +663,7 @@ private fun PageSlot(
         pageNumber = index + 1,
         pageCount = pages.size,
         textStyle = textStyle,
+        margin = state.settings.margin.dp,
         readingRange = state.readingRange.takeIf { pages[index].section == state.position.section },
       )
     }
@@ -634,6 +688,7 @@ private fun BookPage(
   pageNumber: Int,
   pageCount: Int,
   textStyle: TextStyle,
+  margin: Dp,
   readingRange: IntRange?,
 ) {
   val pageLabel = stringResource(StringsR.string.reader_page, pageNumber, pageCount)
@@ -641,7 +696,7 @@ private fun BookPage(
     is ReaderContent.Epub -> Column(
       Modifier
         .fillMaxSize()
-        .padding(horizontal = PageHorizontalPadding, vertical = PageVerticalPadding),
+        .padding(horizontal = margin, vertical = PageVerticalPadding),
     ) {
       val highlight = MaterialTheme.colorScheme.primaryContainer
       val text = remember(content, page, readingRange, highlight) {
@@ -710,7 +765,7 @@ private fun BookPage(
 }
 
 @Composable
-private fun ReaderContent.Epub.chapterTitle(section: Int): String {
+internal fun ReaderContent.Epub.chapterTitle(section: Int): String {
   return chapterTitles.getOrNull(section) ?: stringResource(StringsR.string.reader_chapter, section + 1)
 }
 
@@ -742,35 +797,6 @@ private fun ContentsSheet(
             .padding(horizontal = 24.dp, vertical = 14.dp),
         )
       }
-    }
-  }
-}
-
-@Composable
-private fun TextSizeSheet(
-  textSize: Float,
-  onTextSizeChange: (Float) -> Unit,
-  onDismiss: () -> Unit,
-) {
-  ModalBottomSheet(onDismissRequest = onDismiss) {
-    Column(Modifier.padding(horizontal = 24.dp, vertical = 8.dp)) {
-      Text(
-        text = stringResource(StringsR.string.reader_text_size),
-        style = MaterialTheme.typography.titleLarge,
-      )
-      Text(
-        text = "Aa",
-        style = MaterialTheme.typography.bodyLarge.bookText().copy(fontSize = textSize.sp),
-        modifier = Modifier.padding(vertical = 16.dp),
-      )
-      val sliderState = rememberSliderState(value = textSize, trackRange = 14F..30F)
-      Slider(
-        state = sliderState,
-        onValueChange = {
-          sliderState.value = it
-          onTextSizeChange(it.roundToInt().toFloat())
-        },
-      )
     }
   }
 }
