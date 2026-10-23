@@ -10,4 +10,8 @@ Pageturner is a modular Android audiobook player and ebook reader, based on Voic
 
 ## Pull requests
 
+- Always commit and push your work, open a pull request and merge it as soon as CI passes. Don't leave finished work unmerged.
+- Commit as frankt86 <frank.terry.james@gmail.com>. Never credit an AI in commits, pull requests or code.
+
+
 Pageturner is maintained by frankt86. Report bugs and ideas as issues: https://github.com/frankt86/Pageturner/issues/new
