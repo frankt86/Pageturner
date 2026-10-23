@@ -14,11 +14,6 @@ can read them aloud.
 [:material-download: &nbsp;Download the APK](https://github.com/frankt86/Pageturner/releases/download/debug/app-free-debug.apk){ .md-button }
 
 
-<div class="voice-screenshots">
-  <img src="screenshots/1_en-US.png" alt="Pageturner library view" />
-  <img src="screenshots/2_en-US.png" alt="Pageturner player view" />
-  <img src="screenshots/3_en-US.png" alt="Pageturner sleep timer" />
-</div>
 
 ## Why Pageturner?
 

@@ -11,11 +11,6 @@ Pageturner turns your own audiobook files into a calm, focused listening library
 
 Pageturner also reads your EPUB and PDF books, and can read them aloud. On a foldable, a book opens to two pages side by side when you unfold it.
 
-<p align="center">
-  <img alt="Pageturner library view" width="30%" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1_en-US.png" />
-  <img alt="Pageturner player view" width="30%" src="fastlane/metadata/android/en-US/images/phoneScreenshots/2_en-US.png" />
-  <img alt="Pageturner sleep timer" width="30%" src="fastlane/metadata/android/en-US/images/phoneScreenshots/3_en-US.png" />
-</p>
 
 ## Why Pageturner?
 
