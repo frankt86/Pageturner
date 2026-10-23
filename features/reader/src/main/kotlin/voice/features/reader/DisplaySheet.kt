@@ -2,33 +2,46 @@
 
 package voice.features.reader
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +52,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,9 +64,11 @@ import voice.core.data.ReaderFooter
 import voice.core.data.ReaderOrientation
 import voice.core.data.ReaderPages
 import voice.core.data.ReaderSettings
+import voice.core.data.ReaderTextAlign
 import voice.core.data.ReaderTheme
 import voice.core.ui.VoiceTheme
 import voice.core.ui.bookText
+import voice.core.ui.icons.VoiceIcons
 import kotlin.math.roundToInt
 import voice.core.strings.R as StringsR
 
@@ -60,7 +76,10 @@ import voice.core.strings.R as StringsR
 internal fun DisplaySheet(
   settings: ReaderSettings,
   showTextOptions: Boolean,
-  showProgressScope: Boolean,
+  newEngine: Boolean,
+  fonts: List<String>,
+  fontImportFailed: Boolean,
+  onFontImport: (Uri) -> Unit,
   onSettingsChange: (ReaderSettings) -> Unit,
   onDismiss: () -> Unit,
 ) {
@@ -69,7 +88,10 @@ internal fun DisplaySheet(
     DisplaySettings(
       settings = settings,
       showTextOptions = showTextOptions,
-      showProgressScope = showProgressScope,
+      newEngine = newEngine,
+      fonts = fonts,
+      fontImportFailed = fontImportFailed,
+      onFontImport = onFontImport,
       onSettingsChange = onSettingsChange,
     )
   }
@@ -79,7 +101,10 @@ internal fun DisplaySheet(
 private fun DisplaySettings(
   settings: ReaderSettings,
   showTextOptions: Boolean,
-  showProgressScope: Boolean,
+  newEngine: Boolean,
+  fonts: List<String>,
+  fontImportFailed: Boolean,
+  onFontImport: (Uri) -> Unit,
   onSettingsChange: (ReaderSettings) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -115,22 +140,13 @@ private fun DisplaySettings(
       onSelect = { onSettingsChange(settings.copy(pageTransition = it)) },
     )
     if (showTextOptions) {
-      FontChoice(
-        font = settings.font,
-        onFontSelect = { onSettingsChange(settings.copy(font = it)) },
-      )
-      SettingSlider(
-        label = stringResource(StringsR.string.reader_text_size),
-        value = settings.textSize,
-        range = 14F..30F,
-        onValueChange = { onSettingsChange(settings.copy(textSize = it.roundToInt().toFloat())) },
-      )
-      SettingSlider(
-        label = stringResource(StringsR.string.reader_line_spacing),
-        value = settings.lineSpacing,
-        range = 1.15F..1.95F,
-        steps = 7,
-        onValueChange = { onSettingsChange(settings.copy(lineSpacing = (it * 20).roundToInt() / 20F)) },
+      TextSettings(
+        settings = settings,
+        newEngine = newEngine,
+        fonts = fonts,
+        fontImportFailed = fontImportFailed,
+        onFontImport = onFontImport,
+        onSettingsChange = onSettingsChange,
       )
     }
     LayoutSettings(
@@ -141,7 +157,7 @@ private fun DisplaySettings(
     ProgressSettings(
       settings = settings,
       showFooter = showTextOptions,
-      showProgressScope = showProgressScope,
+      showProgressScope = newEngine,
       onSettingsChange = onSettingsChange,
     )
     Brightness(
@@ -164,10 +180,188 @@ private fun DisplaySettings(
 }
 
 @Composable
+private fun TextSettings(
+  settings: ReaderSettings,
+  newEngine: Boolean,
+  fonts: List<String>,
+  fontImportFailed: Boolean,
+  onFontImport: (Uri) -> Unit,
+  onSettingsChange: (ReaderSettings) -> Unit,
+) {
+  // the book's own style leaves only the text size to change
+  val styled = !(newEngine && settings.publisherStyles)
+  Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    if (newEngine) {
+      SwitchRow(
+        label = stringResource(StringsR.string.reader_publisher_styles),
+        summary = stringResource(StringsR.string.reader_publisher_styles_summary),
+        checked = settings.publisherStyles,
+        onCheckedChange = { onSettingsChange(settings.copy(publisherStyles = it)) },
+      )
+    }
+    FontChoice(
+      settings = settings,
+      newEngine = newEngine,
+      fonts = fonts,
+      enabled = styled,
+      onFontImport = onFontImport,
+      onSettingsChange = onSettingsChange,
+    )
+    if (fontImportFailed) {
+      Text(
+        text = stringResource(StringsR.string.reader_font_add_failed),
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.error,
+      )
+    }
+    TextSize(
+      textSize = settings.textSize,
+      onTextSizeChange = { onSettingsChange(settings.copy(textSize = it)) },
+    )
+    SettingSlider(
+      label = stringResource(StringsR.string.reader_line_spacing),
+      value = settings.lineSpacing,
+      range = 1.15F..1.95F,
+      steps = 7,
+      snap = { (it * 20).roundToInt() / 20F },
+      enabled = styled,
+      onValueChange = { onSettingsChange(settings.copy(lineSpacing = it)) },
+    )
+    SettingSlider(
+      label = stringResource(StringsR.string.reader_font_weight),
+      value = (settings.fontWeight ?: 400).toFloat(),
+      range = 300F..800F,
+      steps = 4,
+      snap = { (it / 100).roundToInt() * 100F },
+      enabled = styled,
+      onValueChange = { onSettingsChange(settings.copy(fontWeight = it.roundToInt())) },
+    )
+    SettingSlider(
+      label = stringResource(StringsR.string.reader_letter_spacing),
+      value = settings.letterSpacing ?: 0F,
+      range = 0F..0.2F,
+      steps = 7,
+      snap = { (it * 40).roundToInt() / 40F },
+      enabled = styled,
+      onValueChange = { onSettingsChange(settings.copy(letterSpacing = it)) },
+    )
+    // Compose text has no word spacing, so the old engine can't do it
+    if (newEngine) {
+      SettingSlider(
+        label = stringResource(StringsR.string.reader_word_spacing),
+        value = settings.wordSpacing ?: 0F,
+        range = 0F..1F,
+        steps = 9,
+        snap = { (it * 10).roundToInt() / 10F },
+        enabled = styled,
+        onValueChange = { onSettingsChange(settings.copy(wordSpacing = it)) },
+      )
+    }
+    SettingSlider(
+      label = stringResource(StringsR.string.reader_paragraph_spacing),
+      value = settings.paragraphSpacing ?: 1F,
+      range = 0F..2F,
+      steps = 7,
+      snap = { (it * 4).roundToInt() / 4F },
+      enabled = styled,
+      onValueChange = { onSettingsChange(settings.copy(paragraphSpacing = it)) },
+    )
+    SettingSlider(
+      label = stringResource(StringsR.string.reader_paragraph_indent),
+      value = settings.paragraphIndent ?: 0F,
+      range = 0F..3F,
+      steps = 5,
+      snap = { (it * 2).roundToInt() / 2F },
+      enabled = styled,
+      onValueChange = { onSettingsChange(settings.copy(paragraphIndent = it)) },
+    )
+    OptionChoice(
+      label = stringResource(StringsR.string.reader_text_align),
+      // Readium can't center the text
+      options = if (newEngine) {
+        listOf(ReaderTextAlign.Left, ReaderTextAlign.Right, ReaderTextAlign.Justify)
+      } else {
+        ReaderTextAlign.entries
+      },
+      // the old engine starts the lines on the left without a choice, the new one keeps the book's
+      selected = settings.textAlign ?: ReaderTextAlign.Left.takeUnless { newEngine },
+      enabled = styled,
+      optionLabel = {
+        stringResource(
+          when (it) {
+            ReaderTextAlign.Left -> StringsR.string.reader_text_align_left
+            ReaderTextAlign.Center -> StringsR.string.reader_text_align_center
+            ReaderTextAlign.Right -> StringsR.string.reader_text_align_right
+            ReaderTextAlign.Justify -> StringsR.string.reader_text_align_justify
+          },
+        )
+      },
+      onSelect = { onSettingsChange(settings.copy(textAlign = it)) },
+    )
+    SwitchRow(
+      label = stringResource(StringsR.string.reader_hyphens),
+      checked = settings.hyphens,
+      enabled = styled,
+      onCheckedChange = { onSettingsChange(settings.copy(hyphens = it)) },
+    )
+    SwitchRow(
+      label = stringResource(StringsR.string.reader_ligatures),
+      checked = settings.ligatures,
+      enabled = styled,
+      onCheckedChange = { onSettingsChange(settings.copy(ligatures = it)) },
+    )
+    TextButton(
+      onClick = { onSettingsChange(settings.withDefaultTypography()) },
+      enabled = settings != settings.withDefaultTypography(),
+    ) {
+      Icon(VoiceIcons.Replay, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+      Text(stringResource(StringsR.string.reader_text_reset))
+    }
+  }
+}
+
+@Composable
+private fun TextSize(
+  textSize: Float,
+  onTextSizeChange: (Float) -> Unit,
+) {
+  val label = stringResource(StringsR.string.reader_text_size)
+  val range = 14F..30F
+  SettingSlider(
+    label = label,
+    value = textSize,
+    range = range,
+    snap = { it.roundToInt().toFloat() },
+    onValueChange = onTextSizeChange,
+  ) {
+    IconButton(
+      onClick = { onTextSizeChange((textSize - 1).coerceIn(range)) },
+      enabled = textSize > range.start,
+    ) {
+      Icon(VoiceIcons.Remove, contentDescription = stringResource(StringsR.string.reader_text_size_smaller))
+    }
+    Text(
+      text = textSize.roundToInt().toString(),
+      style = MaterialTheme.typography.titleMedium,
+      textAlign = TextAlign.Center,
+      modifier = Modifier.widthIn(min = 32.dp),
+    )
+    IconButton(
+      onClick = { onTextSizeChange((textSize + 1).coerceIn(range)) },
+      enabled = textSize < range.endInclusive,
+    ) {
+      Icon(VoiceIcons.Add, contentDescription = stringResource(StringsR.string.reader_text_size_larger))
+    }
+  }
+}
+
+@Composable
 private fun SwitchRow(
   label: String,
   checked: Boolean,
   onCheckedChange: (Boolean) -> Unit,
+  summary: String? = null,
+  enabled: Boolean = true,
 ) {
   Row(
     verticalAlignment = Alignment.CenterVertically,
@@ -175,19 +369,30 @@ private fun SwitchRow(
       .fillMaxWidth()
       .toggleable(
         value = checked,
+        enabled = enabled,
         role = Role.Switch,
         onValueChange = onCheckedChange,
       )
       .padding(vertical = 8.dp),
   ) {
-    Text(
-      text = label,
-      style = MaterialTheme.typography.bodyLarge,
-      modifier = Modifier
+    Column(
+      Modifier
         .weight(1F)
         .padding(end = 16.dp),
-    )
-    Switch(checked = checked, onCheckedChange = null)
+    ) {
+      Text(
+        text = label,
+        style = MaterialTheme.typography.bodyLarge,
+      )
+      if (summary != null) {
+        Text(
+          text = summary,
+          style = MaterialTheme.typography.bodyMedium,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+      }
+    }
+    Switch(checked = checked, onCheckedChange = null, enabled = enabled)
   }
 }
 
@@ -251,43 +456,87 @@ private fun ReaderTheme.label(): Int = when (this) {
 
 @Composable
 private fun FontChoice(
-  font: ReaderFont,
-  onFontSelect: (ReaderFont) -> Unit,
+  settings: ReaderSettings,
+  newEngine: Boolean,
+  fonts: List<String>,
+  enabled: Boolean,
+  onFontImport: (Uri) -> Unit,
+  onSettingsChange: (ReaderSettings) -> Unit,
 ) {
-  Row(
-    modifier = Modifier
-      .fillMaxWidth()
-      .selectableGroup(),
-    horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-  ) {
-    ReaderFont.entries.forEachIndexed { index, option ->
-      ToggleButton(
-        checked = option == font,
-        onCheckedChange = { onFontSelect(option) },
-        shapes = when (index) {
-          0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-          else -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-        },
-        modifier = Modifier
-          .weight(1F)
-          .semantics { role = Role.RadioButton },
-      ) {
-        val style = MaterialTheme.typography.labelLarge
-        Text(
-          text = stringResource(
-            when (option) {
-              ReaderFont.Serif -> StringsR.string.reader_font_serif
-              ReaderFont.Sans -> StringsR.string.reader_font_sans
-            },
-          ),
-          style = when (option) {
-            ReaderFont.Serif -> style.bookText()
-            ReaderFont.Sans -> style
+  val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+    if (uri != null) onFontImport(uri)
+  }
+  Column {
+    Text(
+      text = stringResource(StringsR.string.reader_font),
+      style = MaterialTheme.typography.titleSmall,
+    )
+    FlowRow(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 4.dp)
+        .selectableGroup(),
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+      // the old engine's serif is Literata already
+      val options = ReaderFont.entries.filter { newEngine || it != ReaderFont.Literata }
+      val selectedFont = settings.font.takeIf { it in options } ?: ReaderFont.Serif
+      options.forEach { option ->
+        FilterChip(
+          selected = settings.customFont == null && option == selectedFont,
+          onClick = { onSettingsChange(settings.copy(font = option, customFont = null)) },
+          enabled = enabled,
+          label = {
+            val style = MaterialTheme.typography.labelLarge
+            Text(
+              text = fontName(option),
+              style = style.copy(fontFamily = option.fontFamily(opticalSize = style.fontSize)),
+            )
           },
+          modifier = Modifier.semantics { role = Role.RadioButton },
         )
       }
+      fonts.forEach { font ->
+        FilterChip(
+          selected = settings.customFont == font,
+          onClick = { onSettingsChange(settings.copy(customFont = font)) },
+          enabled = enabled,
+          label = { Text(fontLabel(font), maxLines = 1, overflow = TextOverflow.Ellipsis) },
+          modifier = Modifier.semantics { role = Role.RadioButton },
+        )
+      }
+      AssistChip(
+        onClick = {
+          picker.launch(
+            arrayOf(
+              "font/ttf",
+              "font/otf",
+              "font/sfnt",
+              "application/x-font-ttf",
+              "application/x-font-otf",
+              "application/font-sfnt",
+              "application/vnd.ms-opentype",
+              // many file managers don't know fonts
+              "application/octet-stream",
+            ),
+          )
+        },
+        enabled = enabled,
+        leadingIcon = { Icon(VoiceIcons.Add, contentDescription = null) },
+        label = { Text(stringResource(StringsR.string.reader_font_add)) },
+      )
     }
   }
+}
+
+@Composable
+private fun fontName(font: ReaderFont): String = when (font) {
+  ReaderFont.Serif -> stringResource(StringsR.string.reader_font_serif)
+  ReaderFont.Sans -> stringResource(StringsR.string.reader_font_sans)
+  ReaderFont.Monospace -> stringResource(StringsR.string.reader_font_mono)
+  ReaderFont.Literata -> "Literata"
+  ReaderFont.AtkinsonHyperlegible -> "Atkinson Hyperlegible"
+  ReaderFont.OpenDyslexic -> "OpenDyslexic"
 }
 
 @Composable
@@ -325,6 +574,7 @@ private fun LayoutSettings(
         value = settings.margin.toFloat(),
         range = 8F..56F,
         steps = 5,
+        snap = { it.roundToInt().toFloat() },
         onValueChange = { onSettingsChange(settings.copy(margin = it.roundToInt())) },
       )
       SettingSlider(
@@ -332,6 +582,7 @@ private fun LayoutSettings(
         value = (settings.topMargin ?: 8).toFloat(),
         range = 0F..64F,
         steps = 7,
+        snap = { it.roundToInt().toFloat() },
         onValueChange = { onSettingsChange(settings.copy(topMargin = it.roundToInt())) },
       )
       SettingSlider(
@@ -339,6 +590,7 @@ private fun LayoutSettings(
         value = (settings.bottomMargin ?: 8).toFloat(),
         range = 0F..64F,
         steps = 7,
+        snap = { it.roundToInt().toFloat() },
         onValueChange = { onSettingsChange(settings.copy(bottomMargin = it.roundToInt())) },
       )
       SettingSlider(
@@ -346,6 +598,7 @@ private fun LayoutSettings(
         value = (settings.pageGap ?: 24).toFloat(),
         range = 0F..64F,
         steps = 7,
+        snap = { it.roundToInt().toFloat() },
         onValueChange = { onSettingsChange(settings.copy(pageGap = it.roundToInt())) },
       )
       SwitchRow(
@@ -451,12 +704,13 @@ private fun ProgressSettings(
 }
 
 @Composable
-private fun <T> OptionChoice(
+private fun <T : Any> OptionChoice(
   label: String,
   options: List<T>,
-  selected: T,
+  selected: T?,
   optionLabel: @Composable (T) -> String,
   onSelect: (T) -> Unit,
+  enabled: Boolean = true,
 ) {
   Column {
     Text(
@@ -474,6 +728,7 @@ private fun <T> OptionChoice(
         ToggleButton(
           checked = option == selected,
           onCheckedChange = { onSelect(option) },
+          enabled = enabled,
           shapes = when (index) {
             0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
             options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
@@ -501,18 +756,31 @@ private fun SettingSlider(
   range: ClosedFloatingPointRange<Float>,
   onValueChange: (Float) -> Unit,
   steps: Int = 0,
+  snap: (Float) -> Float = { it },
+  enabled: Boolean = true,
+  actions: @Composable RowScope.() -> Unit = {},
 ) {
   Column {
-    Text(
-      text = label,
-      style = MaterialTheme.typography.titleSmall,
-    )
+    Row(verticalAlignment = Alignment.CenterVertically) {
+      Text(
+        text = label,
+        style = MaterialTheme.typography.titleSmall,
+        modifier = Modifier.weight(1F),
+      )
+      actions()
+    }
     val sliderState = rememberSliderState(value = value, steps = steps, trackRange = range)
+    val latestSnap by rememberUpdatedState(snap)
+    // follows changes from elsewhere, like the reset button, but not the rounding while it's dragged
+    LaunchedEffect(value) {
+      if (latestSnap(sliderState.value) != value) sliderState.value = value
+    }
     Slider(
       state = sliderState,
+      enabled = enabled,
       onValueChange = {
         sliderState.value = it
-        onValueChange(it)
+        onValueChange(snap(it))
       },
       modifier = Modifier.semantics { contentDescription = label },
     )
@@ -557,7 +825,10 @@ private fun DisplaySettingsPreview() {
     DisplaySettings(
       settings = ReaderSettings(theme = ReaderTheme.Sepia),
       showTextOptions = true,
-      showProgressScope = true,
+      newEngine = true,
+      fonts = listOf("My_font.ttf"),
+      fontImportFailed = false,
+      onFontImport = {},
       onSettingsChange = {},
     )
   }

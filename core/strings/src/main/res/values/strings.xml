@@ -568,10 +568,20 @@
     <string name="reader.display">Display</string>
     <!-- Shown in the ebook reader when an EPUB or PDF file can't be read. -->
     <string name="reader.failed">This book couldn\'t be opened</string>
+    <!-- Label above the choice of fonts in the display sheet of the ebook reader. -->
+    <string name="reader.font">Font</string>
+    <!-- Chip after the fonts in the display sheet of the ebook reader. Opens the file picker to add a font file (.ttf or .otf) from the phone. -->
+    <string name="reader.font.add">Add font</string>
+    <!-- Shown under the fonts in the display sheet of the ebook reader when the picked file couldn't be added as a font. -->
+    <string name="reader.font.add_failed">That file isn\'t a font Pageturner can use. Pick a .ttf or .otf file.</string>
+    <!-- A font choice in the ebook reader, next to Serif and Sans: a monospaced font, where every letter is as wide as the others. Keep it short. -->
+    <string name="reader.font.mono">Mono</string>
     <!-- Option in the display sheet of the ebook reader: a font without serifs for the book's text. Shown in that font. -->
     <string name="reader.font.sans">Sans</string>
     <!-- Option in the display sheet of the ebook reader: a font with serifs for the book's text, like in printed books. Shown in that font. -->
     <string name="reader.font.serif">Serif</string>
+    <!-- Label of the slider in the display sheet of the ebook reader that sets how thin or bold the text is. -->
+    <string name="reader.font_weight">Font weight</string>
     <!-- Title of the choice in the display sheet of the ebook reader for what the line at the bottom of each page shows next to the chapter title. -->
     <string name="reader.footer">Page footer</string>
     <!-- Choice for the line at the bottom of an ebook page: the page number within the chapter. -->
@@ -604,8 +614,14 @@
     <string name="reader.highlights">Highlights</string>
     <!-- Shown in the highlights tab of the ebook reader while nothing is highlighted. -->
     <string name="reader.highlights.empty">Nothing highlighted yet. Press and hold a word, then drag to take in more.</string>
+    <!-- Switch in the display sheet of the ebook reader. When it's on, long words are split at the end of a line with a hyphen, so the lines are more even. -->
+    <string name="reader.hyphens">Hyphenate words</string>
     <!-- Heading of the section in the display sheet of the ebook reader with the pages, margins and screen orientation. -->
     <string name="reader.layout">Layout</string>
+    <!-- Label of the slider in the display sheet of the ebook reader that sets the space between letters. -->
+    <string name="reader.letter_spacing">Letter spacing</string>
+    <!-- Switch in the display sheet of the ebook reader. When it's on, letter pairs like fi are joined into one shape, as in printed books. The typographic term. -->
+    <string name="reader.ligatures">Ligatures</string>
     <!-- Label of the slider in the display sheet of the ebook reader that sets the space between the lines of text. -->
     <string name="reader.line_spacing">Line spacing</string>
     <!-- Button under selected text in the ebook reader that opens the phone's dictionary or translation app for it. -->
@@ -644,6 +660,10 @@
     <string name="reader.pages.one">One page</string>
     <!-- Choice in the ebook reader: always show two pages side by side, like an open book. -->
     <string name="reader.pages.two">Two pages</string>
+    <!-- Label of the slider in the display sheet of the ebook reader that sets how far the first line of each paragraph is moved in. -->
+    <string name="reader.paragraph_indent">First-line indent</string>
+    <!-- Label of the slider in the display sheet of the ebook reader that sets the space between paragraphs. -->
+    <string name="reader.paragraph_spacing">Space between paragraphs</string>
     <!-- Section title in the display sheet of the ebook reader for how the reading progress is shown. -->
     <string name="reader.progress">Progress</string>
     <!-- Switch in the display sheet of the ebook reader. When it's on, the book's percentage and pages left leave out front and back matter like the title page, the copyright page or the index. -->
@@ -686,6 +706,10 @@
     <string name="reader.progress.visibility.hidden">Never</string>
     <!-- Choice for when the reading progress shows: when the middle of the page is tapped. -->
     <string name="reader.progress.visibility.on_tap">On tap</string>
+    <!-- Switch in the display sheet of the ebook reader with the new book engine. When it's on, the book keeps the fonts and formatting it came with. -->
+    <string name="reader.publisher_styles">Book\'s own style</string>
+    <!-- Explains the switch reader.publisher_styles in the ebook reader. -->
+    <string name="reader.publisher_styles.summary">Keeps the book\'s fonts and formatting. Only the text size and colors change.</string>
     <!-- Button in the ebook reader that starts reading the book aloud from the current page. -->
     <string name="reader.read_aloud">Read aloud</string>
     <!-- Snackbar in the ebook reader when the device has no text-to-speech engine. -->
@@ -698,8 +722,24 @@
     <string name="reader.short_lines">Shorter lines on wide screens</string>
     <!-- Button in the ebook reader that stops reading aloud. -->
     <string name="reader.stop_reading_aloud">Stop reading aloud</string>
+    <!-- Button at the end of the text settings in the display sheet of the ebook reader. Puts the font, text size, spacing and alignment back to how they were at first. -->
+    <string name="reader.text.reset">Reset text settings</string>
+    <!-- Label above the choice in the display sheet of the ebook reader of how the lines of text line up. -->
+    <string name="reader.text_align">Alignment</string>
+    <!-- Alignment choice in the ebook reader: each line is centered. Keep it short, it shares a row with three others. -->
+    <string name="reader.text_align.center">Center</string>
+    <!-- Alignment choice in the ebook reader: lines are stretched so both edges are straight, as in printed books. Keep it short. -->
+    <string name="reader.text_align.justify">Justified</string>
+    <!-- Alignment choice in the ebook reader: lines start at the left edge. Keep it short. -->
+    <string name="reader.text_align.left">Left</string>
+    <!-- Alignment choice in the ebook reader: lines end at the right edge. Keep it short. -->
+    <string name="reader.text_align.right">Right</string>
     <!-- Label of the slider in the display sheet of the ebook reader that makes the book's text bigger or smaller. -->
     <string name="reader.text_size">Text size</string>
+    <!-- Read out by screen readers for the plus button next to the text size in the ebook reader. -->
+    <string name="reader.text_size.larger">Larger text</string>
+    <!-- Read out by screen readers for the minus button next to the text size in the ebook reader. -->
+    <string name="reader.text_size.smaller">Smaller text</string>
     <!-- Page color option in the display sheet of the ebook reader: the pages take the app's own colors, light or dark like the app. -->
     <string name="reader.theme.auto">Auto</string>
     <!-- Page color option in the display sheet of the ebook reader: light gray text on black pages. -->
@@ -730,6 +770,8 @@
     <string name="reader.voice.start">Start reading</string>
     <!-- Switch in the display sheet of the ebook reader. When it's on, volume down turns to the next page and volume up to the previous one, except while the book is read aloud. -->
     <string name="reader.volume_keys">Turn pages with the volume keys</string>
+    <!-- Label of the slider in the display sheet of the ebook reader that sets the space between words. -->
+    <string name="reader.word_spacing">Word spacing</string>
     <!-- Settings about row showing the app version. -->
     <string name="settings.about.app_version.title">App version</string>
     <!-- Title and content description for opening settings. -->

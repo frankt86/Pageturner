@@ -80,15 +80,15 @@ import org.readium.r2.shared.util.toUri
 import voice.core.data.HighlightColor
 import voice.core.data.PageTransition
 import voice.core.data.ProgressVisibility
-import voice.core.data.ReaderFont
 import voice.core.data.ReaderPages
 import voice.core.data.ReaderSettings
+import voice.core.data.ReaderTextAlign
 import voice.core.data.ReaderTheme
 import voice.core.data.ReadingPace
 import voice.core.logging.api.Logger
 import voice.core.ui.bookText
 import org.readium.r2.navigator.preferences.Color as ReadiumColor
-import org.readium.r2.navigator.preferences.FontFamily as ReadiumFontFamily
+import org.readium.r2.navigator.preferences.TextAlign as ReadiumTextAlign
 import org.readium.r2.navigator.preferences.Theme as ReadiumTheme
 import voice.core.strings.R as StringsR
 
@@ -173,7 +173,8 @@ internal fun ReadiumPages(
     maxLineLength = if (settings.shortLines) Length.Rem(32.0) else null,
     colGap = settings.pageGap?.let { Length.Px(it.toDouble()) },
   )
-  DisposableEffect(book, activity, container, cssProperties) {
+  val customFont = settings.customFont
+  DisposableEffect(book, activity, container, cssProperties, customFont) {
     val fragmentManager = activity.supportFragmentManager
     fragmentManager.findFragmentByTag(NAVIGATOR_TAG)?.let { stale ->
       fragmentManager.commitNow(allowStateLoss = true) { remove(stale) }
@@ -230,7 +231,7 @@ internal fun ReadiumPages(
           readiumCssRsProperties = cssProperties,
           selectionActionModeCallback = selectionCallback,
           shouldApplyInsetsPadding = false,
-        ),
+        ).apply { addReaderFonts(customFont) },
       )
       .instantiate(activity.classLoader, EpubNavigatorFragment::class.java.name) as EpubNavigatorFragment
     created = fragment
@@ -339,17 +340,31 @@ private fun ReaderSettings.epubPreferences(): EpubPreferences {
       paper.luminance() < 0.5F -> ReadiumTheme.DARK
       else -> ReadiumTheme.LIGHT
     },
-    fontFamily = when (font) {
-      ReaderFont.Serif -> ReadiumFontFamily.SERIF
-      ReaderFont.Sans -> ReadiumFontFamily.SANS_SERIF
-    },
+    fontFamily = readiumFontFamily(),
     // the web view's text is 16 px at 100 %
     fontSize = textSize / 16.0,
+    // Readium's weight is a multiple of the regular one
+    fontWeight = fontWeight?.takeUnless { publisherStyles }?.let { it / 400.0 },
+    // the settings below only apply without the publisher's styles
     lineHeight = lineSpacing.toDouble(),
+    // Readium halves it
+    letterSpacing = letterSpacing?.let { it * 2.0 },
+    wordSpacing = wordSpacing?.toDouble(),
+    paragraphSpacing = paragraphSpacing?.let { it * lineSpacing.toDouble() },
+    paragraphIndent = paragraphIndent?.toDouble(),
+    textAlign = when (textAlign) {
+      ReaderTextAlign.Left -> ReadiumTextAlign.LEFT
+      ReaderTextAlign.Right -> ReadiumTextAlign.RIGHT
+      ReaderTextAlign.Justify -> ReadiumTextAlign.JUSTIFY
+      // Readium can't center the text
+      ReaderTextAlign.Center, null -> null
+    },
+    // at their defaults, these leave it to the book as before
+    hyphens = hyphens.takeIf { it },
+    ligatures = ligatures.takeUnless { it },
     // Readium's margins are 20 px at 1
     pageMargins = margin / 20.0,
-    // the line spacing only applies without the publisher's own
-    publisherStyles = false,
+    publisherStyles = publisherStyles,
     scroll = false,
     columnCount = when (pages) {
       ReaderPages.Auto -> ColumnCount.AUTO

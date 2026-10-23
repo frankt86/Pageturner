@@ -213,7 +213,11 @@ internal suspend fun openReadiumBook(
   val opener = PublicationOpener(
     publicationParser = DefaultPublicationParser(context, httpClient, assetRetriever, pdfFactory = null),
   )
-  val publication = opener.open(asset, allowUserInteraction = false).getOrElse { error ->
+  val publication = opener.open(
+    asset = asset,
+    allowUserInteraction = false,
+    onCreatePublication = { container = FontsContainer(context, container) },
+  ).getOrElse { error ->
     Logger.w("Readium could not open the book: ${error::class.simpleName}")
     asset.close()
     return null

@@ -1,9 +1,15 @@
 package voice.features.reader
 
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ParagraphStyle
+import androidx.compose.ui.text.style.TextIndent
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 import voice.core.data.EbookPosition
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class PaginationTest {
 
@@ -54,5 +60,46 @@ class PaginationTest {
     assertEquals(1, pages.indexOfPosition(EbookPosition(section = 0, offset = 15)))
     assertEquals(2, pages.indexOfPosition(EbookPosition(section = 1, offset = 3)))
     assertEquals(2, pages.indexOfPosition(EbookPosition(section = 7, offset = 0)))
+  }
+
+  @Test
+  fun `without a paragraph gap the text stays one paragraph`() {
+    assertTrue(paragraphStyles("One.\n\nTwo.", TextUnit.Unspecified, continued = true).isEmpty())
+  }
+
+  @Test
+  fun `the line breaks between paragraphs take the gap`() {
+    assertEquals(
+      listOf(AnnotatedString.Range(ParagraphStyle(lineHeight = 4.sp), 4, 6)),
+      paragraphStyles("One.\n\nTwo.", 4.sp, continued = false),
+    )
+  }
+
+  @Test
+  fun `a paragraph from the page before has no indent`() {
+    assertEquals(
+      listOf(
+        AnnotatedString.Range(ParagraphStyle(textIndent = TextIndent.None), 0, 4),
+        AnnotatedString.Range(ParagraphStyle(lineHeight = 4.sp), 4, 6),
+      ),
+      paragraphStyles("end.\n\nNext", 4.sp, continued = true),
+    )
+  }
+
+  @Test
+  fun `a page that ends inside a paragraph is followed by the next word`() {
+    val chapter = "one two three"
+    assertEquals("two", pageTail(chapter, 4))
+  }
+
+  @Test
+  fun `a page that ends inside a word is followed by the rest of it`() {
+    assertEquals("tion", pageTail("attention please", 5))
+  }
+
+  @Test
+  fun `a page that ends with its paragraph is followed by nothing`() {
+    assertEquals("", pageTail("One.\n\nTwo.", 5))
+    assertEquals("", pageTail("One.", 4))
   }
 }

@@ -38,8 +38,14 @@ Tap an ebook to open it where you left off.
 The **Display** button holds:
 
 - **Theme:** Auto, Day, Sepia, Night or Black.
-- **Font:** serif or sans.
-- **Text size** and **line spacing**.
+- **Font:** Serif, Sans, Mono, Atkinson Hyperlegible (made for easy reading) or OpenDyslexic. **Add font** picks a .ttf or
+  .otf file from your phone; Pageturner keeps a copy, and the font is listed with the others from then on.
+- **Text size:** the slider, or minus and plus for one step at a time.
+- **Line spacing**, **Font weight**, **Letter spacing**, **Space between paragraphs** and **First-line indent**.
+- **Alignment:** Left, Center, Right or Justified.
+- **Hyphenate words** splits long words at the end of a line, by your phone's language.
+- **Ligatures** joins letter pairs like fi as in printed books; turn it off to keep every letter apart.
+- **Reset text settings** puts all of these back to how they were at first.
 - **Brightness**, just for the reader, or the system setting.
 - **Volume keys turn pages**, on or off.
 - **Page turn:** the page curls over like paper, slides sideways, or the next one shows at once.
@@ -104,7 +110,12 @@ stops it. While it reads, the volume keys change the volume instead of turning p
 Turn on **New book engine (beta)** under **Display** to show EPUB books the way they were made: with their pictures, headings,
 bold and italic text, tables, links and footnotes. It's built on [Readium](https://readium.org).
 
-- Your theme, font, text size, line spacing and margins carry over.
+- Your theme, font, text size, spacing and margins carry over. Hyphenation follows the book's language.
+- **Book's own style** keeps the fonts and formatting the book came with, like its headings, drop caps and spacing. Only the
+  text size and colors still change.
+- **Word spacing** is only here. Alignment has no **Center**, and **Ligatures** only changes Arabic script.
+- The font list also has **Literata**, the serif the app uses for the books' words.
+- Until you change them, alignment, hyphenation and the spacing settings leave the book's own.
 - Tap the left or right side, swipe or use the volume keys to turn the page, and tap the middle to show or hide the bars.
 - The page bar counts the book in pages that stay the same whatever the screen or text size, and jumps anywhere.
 - When the book lists the pages of its printed edition, the page bar shows the **Print page** you're on. Where a printed page
