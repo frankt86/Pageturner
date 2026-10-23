@@ -21,6 +21,11 @@ class NaturalSpeakersTest {
   }
 
   @Test
+  fun `british voices use the british english espeak knows`() {
+    assertEquals(setOf("en"), naturalSpeakers(Locale.UK).filter { it.language == "en-gb" }.map { it.espeakLanguage }.toSet())
+  }
+
+  @Test
   fun `portuguese is spoken the brazilian way`() {
     assertEquals("pt-br", naturalSpeakers(Locale.forLanguageTag("pt-PT")).first().language)
   }
