@@ -54,7 +54,7 @@ internal fun nextChunk(
   text: String,
   from: Int,
   // the natural voice only starts speaking once the whole chunk is ready, so a long one means a long silence
-  maxLength: Int = 300,
+  maxLength: Int = 200,
 ): IntRange? {
   var start = from.coerceAtLeast(0)
   while (start < text.length && text[start].isWhitespace()) start++
@@ -63,7 +63,12 @@ internal fun nextChunk(
   if (end - start > maxLength) {
     val limit = start + maxLength
     val sentenceEnd = listOf(". ", "! ", "? ").maxOf { text.lastIndexOf(it, limit) }
-    end = if (sentenceEnd > start) sentenceEnd + 1 else limit
+    val wordEnd = text.lastIndexOf(' ', limit)
+    end = when {
+      sentenceEnd > start -> sentenceEnd + 1
+      wordEnd > start -> wordEnd
+      else -> limit
+    }
   }
   return start until end
 }

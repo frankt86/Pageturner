@@ -32,6 +32,12 @@ class PaginationTest {
   }
 
   @Test
+  fun `a long sentence is cut between words`() {
+    val text = "one two three four"
+    assertEquals("one two", text.substring(nextChunk(text, 0, maxLength = 10)!!))
+  }
+
+  @Test
   fun `a long paragraph without sentences is cut at the limit`() {
     val text = "abcdefghij"
     assertEquals("abcd", text.substring(nextChunk(text, 0, maxLength = 4)!!))
