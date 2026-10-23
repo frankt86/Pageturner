@@ -2,12 +2,15 @@ package voice.features.reader
 
 import java.util.Locale
 
-/** A voice of the natural voice model. [language] is the espeak language its words are pronounced in. */
+/** A voice of the natural voice model. [language] is the language tag its words are pronounced in. */
 internal data class NaturalSpeaker(
   val id: Int,
   val name: String,
   val language: String,
-)
+) {
+  // espeak calls British English plain "en" and has no "en-gb"
+  val espeakLanguage: String get() = if (language == "en-gb") "en" else language
+}
 
 // only the voices that sound good, the model has more
 private val american = listOf(

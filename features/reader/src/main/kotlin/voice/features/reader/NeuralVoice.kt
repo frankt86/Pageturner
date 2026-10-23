@@ -139,7 +139,7 @@ internal class NeuralVoice(context: Context) {
           config = GenerationConfig(
             sid = speech.speaker.id,
             speed = speech.speed,
-            extra = mapOf("lang" to speech.speaker.language),
+            extra = mapOf("lang" to speech.speaker.espeakLanguage),
           ),
         ).takeIf { it.samples.isNotEmpty() }
       } catch (e: Exception) {
@@ -163,7 +163,7 @@ internal class NeuralVoice(context: Context) {
             dataDir = "$folder/espeak-ng-data",
             dictDir = "$folder/dict",
             lexicon = "$folder/lexicon-$english-en.txt,$folder/lexicon-zh.txt",
-            lang = naturalSpeakers(locale).firstOrNull()?.language ?: "en-us",
+            lang = naturalSpeakers(locale).firstOrNull()?.espeakLanguage ?: "en-us",
           ),
           numThreads = 4,
         ),
