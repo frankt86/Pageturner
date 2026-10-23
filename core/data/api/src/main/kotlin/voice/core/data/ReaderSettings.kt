@@ -30,7 +30,60 @@ public data class ReaderSettings(
   /** Keeps lines to about 65 characters on wide screens. */
   val shortLines: Boolean = false,
   val orientation: ReaderOrientation = ReaderOrientation.Auto,
+  val progressBar: ProgressBarStyle = ProgressBarStyle.Bar,
+  val progressVisibility: ProgressVisibility = ProgressVisibility.OnTap,
+  /** Shows the chapters, bookmarks and highlights along the page bar. */
+  val progressMarks: Boolean = false,
+  /** Counts the book's progress over its main text only, without front and back matter like the title page or index. */
+  val progressBodyOnly: Boolean = false,
+  /** What the line at the bottom of the page shows next to the chapter. */
+  val footer: ReaderFooter = ReaderFooter.Page,
 )
+
+@Serializable
+public enum class ProgressBarStyle {
+  @SerialName("line")
+  Line,
+
+  @SerialName("bar")
+  Bar,
+
+  /** One segment per chapter. */
+  @SerialName("segmented")
+  Segmented,
+}
+
+@Serializable
+public enum class ProgressVisibility {
+  /** A thin line at the bottom of the page, and the page bar on a tap. */
+  @SerialName("always")
+  Always,
+
+  /** The page bar on a tap. */
+  @SerialName("on_tap")
+  OnTap,
+
+  @SerialName("hidden")
+  Hidden,
+}
+
+@Serializable
+public enum class ReaderFooter {
+  /** The page of the book. */
+  @SerialName("page")
+  Page,
+
+  /** The page of the chapter. */
+  @SerialName("chapter_page")
+  ChapterPage,
+
+  @SerialName("percent")
+  Percent,
+
+  /** The reading time left in the chapter. */
+  @SerialName("time_left")
+  TimeLeft,
+}
 
 /** One page or two side by side. */
 @Serializable

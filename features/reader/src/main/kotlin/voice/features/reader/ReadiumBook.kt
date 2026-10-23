@@ -12,6 +12,8 @@ import org.readium.r2.navigator.epub.EpubNavigatorFactory
 import org.readium.r2.shared.publication.Link
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
+import org.readium.r2.shared.publication.epub.landmarks
+import org.readium.r2.shared.publication.epub.pageList
 import org.readium.r2.shared.publication.services.locateProgression
 import org.readium.r2.shared.publication.services.positions
 import org.readium.r2.shared.util.Url
@@ -19,10 +21,12 @@ import org.readium.r2.shared.util.asset.AssetRetriever
 import org.readium.r2.shared.util.getOrElse
 import org.readium.r2.shared.util.http.DefaultHttpClient
 import org.readium.r2.shared.util.toAbsoluteUrl
+import org.readium.r2.shared.util.use
 import org.readium.r2.streamer.PublicationOpener
 import org.readium.r2.streamer.parser.DefaultPublicationParser
 import voice.core.data.Ebook
 import voice.core.data.HighlightColor
+import voice.core.data.ReadingPace
 import voice.core.logging.api.Logger
 
 /** An EPUB opened with Readium, the new book engine. */
@@ -34,6 +38,8 @@ internal class ReadiumBook(
   locator: Locator?,
   bookmarks: List<Locator>,
   highlights: List<LocatedHighlight>,
+  /** The pages of the printed book, in reading order. */
+  private val printPages: List<PrintPage> = emptyList(),
 ) {
   val navigatorFactory = EpubNavigatorFactory(publication)
 
@@ -63,13 +69,76 @@ internal class ReadiumBook(
   fun chapterTitle(locator: Locator): String? = locator.title ?: titles[locator.href.removeFragment()]
 
   fun positionIndex(locator: Locator?): Int {
-    val position = locator?.locations?.position ?: return 0
-    return (position - 1).coerceIn(0, (positions.size - 1).coerceAtLeast(0))
+    val locations = locator?.locations ?: return 0
+    val index = locations.position?.minus(1)
+      // a selection, like a highlight, can come without a position
+      ?: locations.totalProgression?.let { (it * positions.size).toInt() }
+      ?: 0
+    return index.coerceIn(0, (positions.size - 1).coerceAtLeast(0))
   }
 
   fun pagesLeftInChapter(index: Int): Int {
     val href = positions.getOrNull(index)?.href ?: return 0
     return positions.drop(index + 1).takeWhile { it.href == href }.size
+  }
+
+  /** The positions where a new file of the book starts, which is mostly a new chapter. */
+  val chapterStarts: List<Int> = positions.indices.filter { it == 0 || positions[it].href != positions[it - 1].href }
+
+  private val readingOrder: List<Url> = publication.readingOrder.map { it.url().removeFragment() }
+
+  /** The positions of the main text, without front and back matter, from the book's landmarks. */
+  val bodyRange: IntRange? = run {
+    fun landmark(type: String): Int? {
+      val link = publication.landmarks.firstOrNull { entry -> entry.rels.any { it.substringAfterLast('#') == type } } ?: return null
+      val href = link.url().removeFragment()
+      return positions.indexOfFirst { it.href.removeFragment() == href }.takeIf { it >= 0 }
+    }
+    val start = landmark("bodymatter") ?: 0
+    val end = landmark("backmatter")?.takeIf { it > start } ?: positions.size
+    if (start == 0 && end == positions.size) null else start until end
+  }
+
+  fun printPage(locator: Locator): String? {
+    if (printPages.isEmpty()) return null
+    val resource = readingOrder.indexOf(locator.href.removeFragment())
+    val progression = locator.locations.progression ?: 0.0
+    return printPages.lastOrNull { page ->
+      page.resource < resource || (page.resource == resource && page.progression <= progression)
+    }?.label
+  }
+
+  /** The progress at the position [index], or at [locator] when it's the place on screen. */
+  fun readingProgress(
+    index: Int,
+    locator: Locator?,
+    bodyOnly: Boolean,
+    characters: Int,
+    pace: ReadingPace,
+  ): ReadingProgress {
+    val href = positions[index].href
+    var chapterFirst = index
+    while (chapterFirst > 0 && positions[chapterFirst - 1].href == href) chapterFirst--
+    var chapterLast = index
+    while (chapterLast < positions.lastIndex && positions[chapterLast + 1].href == href) chapterLast++
+    val body = bodyRange?.takeIf { bodyOnly } ?: positions.indices
+    val place = locator ?: positions[index]
+    val progression = place.locations.totalProgression ?: positions[index].locations.totalProgression ?: 0.0
+    fun progressionAt(position: Int): Double = positions.getOrNull(position)?.locations?.totalProgression ?: 1.0
+    return ReadingProgress(
+      page = index + 1,
+      pageCount = positions.size,
+      bookFraction = ((index + 1 - body.first).toFloat() / (body.last - body.first + 1)).coerceIn(0F, 1F),
+      pagesLeftInBook = (body.last - index).coerceAtLeast(0),
+      chapterPage = index - chapterFirst + 1,
+      chapterPageCount = chapterLast - chapterFirst + 1,
+      chapterFraction = (index - chapterFirst + 1).toFloat() / (chapterLast - chapterFirst + 1),
+      pagesLeftInChapter = chapterLast - index,
+      chapterTimeLeft = timeToRead((progressionAt(chapterLast + 1) - progression) * characters, pace),
+      bookTimeLeft = timeToRead((progressionAt(body.last + 1) - progression) * characters, pace),
+      printPage = printPage(place),
+      standardPages = standardPages(characters),
+    )
   }
 
   fun isOnPage(
@@ -84,6 +153,40 @@ internal class ReadiumBook(
 
 private fun List<Link>.flattenWithDepth(depth: Int = 0): List<Pair<Int, Link>> {
   return flatMap { link -> listOf(depth to link) + link.children.flattenWithDepth(depth + 1) }
+}
+
+/** A page of the printed book, starting at [progression] in the file [resource] of the reading order. */
+internal class PrintPage(
+  val resource: Int,
+  val progression: Double,
+  val label: String,
+)
+
+/**
+ * Finds where the book's page list puts each printed page. Where a page starts within a file is told by where its
+ * anchor is in the file's text, which is about where it is on screen.
+ */
+private suspend fun Publication.printPages(): List<PrintPage> {
+  if (pageList.isEmpty()) return emptyList()
+  val files = readingOrder.map { it.url().removeFragment() }
+  val texts = mutableMapOf<Int, String?>()
+  return pageList
+    .mapNotNull { link ->
+      val label = link.title?.trim()?.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
+      val url = link.url()
+      val resource = files.indexOf(url.removeFragment()).takeIf { it >= 0 } ?: return@mapNotNull null
+      val fragment = url.fragment ?: return@mapNotNull PrintPage(resource, 0.0, label)
+      val text = texts.getOrPut(resource) {
+        get(readingOrder[resource])?.use { it.read().getOrNull() }?.decodeToString()
+      } ?: return@mapNotNull null
+      val anchor = listOf("id=\"$fragment\"", "id='$fragment'")
+        .map { text.indexOf(it) }
+        .filter { it >= 0 }
+        .minOrNull()
+        ?: return@mapNotNull null
+      PrintPage(resource, anchor.toDouble() / text.length, label)
+    }
+    .sortedWith(compareBy<PrintPage>({ it.resource }, { it.progression }))
 }
 
 internal data class LocatedHighlight(
@@ -130,6 +233,7 @@ internal suspend fun openReadiumBook(
     highlights = ebook.readiumHighlights.mapNotNull { highlight ->
       highlight.locator.toLocator()?.let { LocatedHighlight(it, highlight.color, highlight.note) }
     },
+    printPages = publication.printPages(),
   )
 }
 

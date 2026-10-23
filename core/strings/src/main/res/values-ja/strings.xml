@@ -312,15 +312,18 @@
     <string name="reader.brightness">明るさ</string>
     <string name="reader.brightness.system">システム</string>
     <string name="reader.chapter">第%d章</string>
-    <string name="reader.chapter.last_page">この章の最後のページ</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="other">この章の残り %d ページ</item>
-    </plurals>
     <string name="reader.contents">目次</string>
     <string name="reader.display">表示</string>
     <string name="reader.failed">この本を開けませんでした</string>
     <string name="reader.font.sans">ゴシック</string>
     <string name="reader.font.serif">明朝</string>
+    <string name="reader.footer">フッター</string>
+    <string name="reader.footer.chapter">章</string>
+    <string name="reader.footer.chapter_page">章内 %1$d / %2$d</string>
+    <string name="reader.footer.page">ページ</string>
+    <string name="reader.footer.percent">パーセント</string>
+    <string name="reader.footer.time">残り時間</string>
+    <string name="reader.footer.time_left">この章の残り %s</string>
     <string name="reader.go_to_page">ページに移動</string>
     <string name="reader.highlight.blue">青</string>
     <string name="reader.highlight.delete">ハイライトを削除</string>
@@ -350,6 +353,28 @@
     <string name="reader.pages">ページ</string>
     <string name="reader.pages.one">1 ページ</string>
     <string name="reader.pages.two">2 ページ</string>
+    <string name="reader.progress">進捗</string>
+    <string name="reader.progress.body_only">本文だけで数える</string>
+    <string name="reader.progress.book">本</string>
+    <string name="reader.progress.chapter">この章</string>
+    <string name="reader.progress.marks">バーに章・ブックマーク・ハイライトを表示</string>
+    <string name="reader.progress.page">%1$d / %2$d ページ</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="other">残り %d ページ</item>
+    </plurals>
+    <string name="reader.progress.print_page">印刷版 %s ページ</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="other">標準ページで約 %d ページ</item>
+    </plurals>
+    <string name="reader.progress.style">進捗バー</string>
+    <string name="reader.progress.style.bar">バー</string>
+    <string name="reader.progress.style.chapters">章</string>
+    <string name="reader.progress.style.line">ライン</string>
+    <string name="reader.progress.time_left">残り %s</string>
+    <string name="reader.progress.visibility">進捗を表示</string>
+    <string name="reader.progress.visibility.always">常に</string>
+    <string name="reader.progress.visibility.hidden">表示しない</string>
+    <string name="reader.progress.visibility.on_tap">タップ時</string>
     <string name="reader.read_aloud">読み上げる</string>
     <string name="reader.read_aloud_unavailable">この端末では読み上げを利用できません</string>
     <string name="reader.search">本の中を検索</string>

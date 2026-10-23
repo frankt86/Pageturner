@@ -329,16 +329,18 @@
     <string name="reader.brightness">روشنایی</string>
     <string name="reader.brightness.system">سیستم</string>
     <string name="reader.chapter">فصل %d</string>
-    <string name="reader.chapter.last_page">آخرین صفحهٔ این فصل</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">%d صفحه تا پایان این فصل</item>
-        <item quantity="other">%d صفحه تا پایان این فصل</item>
-    </plurals>
     <string name="reader.contents">فهرست مطالب</string>
     <string name="reader.display">نمایش</string>
     <string name="reader.failed">این کتاب باز نشد</string>
     <string name="reader.font.sans">بدون سریف</string>
     <string name="reader.font.serif">سریف‌دار</string>
+    <string name="reader.footer">پایین صفحه</string>
+    <string name="reader.footer.chapter">فصل</string>
+    <string name="reader.footer.chapter_page">%1$d از %2$d در فصل</string>
+    <string name="reader.footer.page">صفحه</string>
+    <string name="reader.footer.percent">درصد</string>
+    <string name="reader.footer.time">زمان باقی‌مانده</string>
+    <string name="reader.footer.time_left">%s تا پایان فصل</string>
     <string name="reader.go_to_page">رفتن به صفحه</string>
     <string name="reader.highlight.blue">آبی</string>
     <string name="reader.highlight.delete">حذف هایلایت</string>
@@ -368,6 +370,30 @@
     <string name="reader.pages">صفحه‌ها</string>
     <string name="reader.pages.one">یک صفحه</string>
     <string name="reader.pages.two">دو صفحه</string>
+    <string name="reader.progress">پیشرفت</string>
+    <string name="reader.progress.body_only">فقط متن اصلی حساب شود</string>
+    <string name="reader.progress.book">کتاب</string>
+    <string name="reader.progress.chapter">این فصل</string>
+    <string name="reader.progress.marks">نمایش فصل‌ها، نشانه‌ها و هایلایت‌ها روی نوار</string>
+    <string name="reader.progress.page">صفحهٔ %1$d از %2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">%d صفحه مانده</item>
+        <item quantity="other">%d صفحه مانده</item>
+    </plurals>
+    <string name="reader.progress.print_page">صفحهٔ چاپی %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">حدود %d صفحهٔ استاندارد</item>
+        <item quantity="other">حدود %d صفحهٔ استاندارد</item>
+    </plurals>
+    <string name="reader.progress.style">نوار پیشرفت</string>
+    <string name="reader.progress.style.bar">نوار</string>
+    <string name="reader.progress.style.chapters">فصل‌ها</string>
+    <string name="reader.progress.style.line">خط</string>
+    <string name="reader.progress.time_left">%s مانده</string>
+    <string name="reader.progress.visibility">نمایش پیشرفت</string>
+    <string name="reader.progress.visibility.always">همیشه</string>
+    <string name="reader.progress.visibility.hidden">هرگز</string>
+    <string name="reader.progress.visibility.on_tap">با ضربه</string>
     <string name="reader.read_aloud">خواندن با صدای بلند</string>
     <string name="reader.read_aloud_unavailable">خواندن با صدای بلند در این دستگاه در دسترس نیست</string>
     <string name="reader.search">جستجو در کتاب</string>

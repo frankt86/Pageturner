@@ -329,16 +329,18 @@
     <string name="reader.brightness">Fényerő</string>
     <string name="reader.brightness.system">Rendszer</string>
     <string name="reader.chapter">%d. fejezet</string>
-    <string name="reader.chapter.last_page">A fejezet utolsó oldala</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">Még %d oldal van hátra a fejezetből</item>
-        <item quantity="other">Még %d oldal van hátra a fejezetből</item>
-    </plurals>
     <string name="reader.contents">Tartalom</string>
     <string name="reader.display">Megjelenítés</string>
     <string name="reader.failed">Ezt a könyvet nem sikerült megnyitni</string>
     <string name="reader.font.sans">Talpatlan</string>
     <string name="reader.font.serif">Talpas</string>
+    <string name="reader.footer">Lábléc</string>
+    <string name="reader.footer.chapter">Fejezet</string>
+    <string name="reader.footer.chapter_page">%1$d / %2$d a fejezetben</string>
+    <string name="reader.footer.page">Oldal</string>
+    <string name="reader.footer.percent">Százalék</string>
+    <string name="reader.footer.time">Hátralévő idő</string>
+    <string name="reader.footer.time_left">Még %s a fejezetből</string>
     <string name="reader.go_to_page">Ugrás oldalra</string>
     <string name="reader.highlight.blue">Kék</string>
     <string name="reader.highlight.delete">Kiemelés törlése</string>
@@ -368,6 +370,30 @@
     <string name="reader.pages">Oldalak</string>
     <string name="reader.pages.one">Egy oldal</string>
     <string name="reader.pages.two">Két oldal</string>
+    <string name="reader.progress">Haladás</string>
+    <string name="reader.progress.body_only">Csak a főszöveg számítása</string>
+    <string name="reader.progress.book">Könyv</string>
+    <string name="reader.progress.chapter">Ez a fejezet</string>
+    <string name="reader.progress.marks">Fejezetek, könyvjelzők és kiemelések megjelenítése a sávon</string>
+    <string name="reader.progress.page">Oldal: %1$d / %2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">Még %d oldal</item>
+        <item quantity="other">Még %d oldal</item>
+    </plurals>
+    <string name="reader.progress.print_page">Nyomtatott oldal: %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">Kb. %d szabványoldal</item>
+        <item quantity="other">Kb. %d szabványoldal</item>
+    </plurals>
+    <string name="reader.progress.style">Folyamatjelző</string>
+    <string name="reader.progress.style.bar">Sáv</string>
+    <string name="reader.progress.style.chapters">Fejezetek</string>
+    <string name="reader.progress.style.line">Vonal</string>
+    <string name="reader.progress.time_left">Még %s</string>
+    <string name="reader.progress.visibility">Haladás megjelenítése</string>
+    <string name="reader.progress.visibility.always">Mindig</string>
+    <string name="reader.progress.visibility.hidden">Soha</string>
+    <string name="reader.progress.visibility.on_tap">Koppintásra</string>
     <string name="reader.read_aloud">Felolvasás</string>
     <string name="reader.read_aloud_unavailable">A felolvasás nem érhető el ezen az eszközön</string>
     <string name="reader.search">Keresés a könyvben</string>

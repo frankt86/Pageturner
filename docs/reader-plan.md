@@ -64,7 +64,7 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 | Keyboard shortcuts and remapping | [new] | Default shortcuts first, remapping later. |
 | Mouse wheel: scroll or turn page | [new] | Setting. |
 | Customizable toolbar | [new] | Choose and order the top bar actions. |
-| Header and footer: title, chapter, page, percent, time, battery | [part] | Chapter and page shown; make each slot choosable. |
+| Header and footer: title, chapter, page, percent, time, battery | [part] | Chapter shown; **Page footer** picks page, chapter page, percent or time left. A header, battery and more slots are left. |
 | Interface size separate from text | [new] | Scale factor applied to the reader's chrome only. |
 | One-handed layout | [new] | Move controls to the left or right edge. |
 | Accidental-input protection | [new] | Minimum swipe distance, ignore palm touches at the edges, confirm jumps of more than N pages. |
@@ -75,16 +75,16 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 |---|---|---|
 | Screen page numbers | [done] | From current font, margins and screen. The new engine counts Readium positions instead, which stay the same for every screen. |
 | Stable locations | [part] | The old engine stores chapter plus character offset. The new engine stores Readium Locators. |
-| Publisher page labels | [new] | Read the EPUB page-list; label it "Print page 42" so its basis is clear. Hidden when the book has none. |
-| Estimated standard pages | [new] | Fixed 1,024 characters per page, labelled "about 320 standard pages". |
-| Book and chapter page counters | [part] | Book counter done; add "Page 4 of 18 in this chapter". |
-| Book and chapter percentage | [part] | Book percent stored; show both. |
-| Pages remaining (chapter, book) | [part] | Chapter pages left done; add book. |
-| Time remaining | [new] | Measure the reader's own pages per minute, ignore idle time. |
-| Progress bar styles: thin line, bar, segmented | [part] | Slider bar exists; add styles. |
-| Chapter, bookmark, note and highlight markers on the bar | [new] | Ticks drawn at their positions. |
-| Progress visibility: always, on tap, hidden | [part] | On tap today. |
-| Progress scope: include or exclude front and back matter | [new] | Use the EPUB landmarks and guide to find body start and end. |
+| Publisher page labels | [part] | New engine: "Print page 42" in the page bar from the EPUB page-list, placed by where each page's anchor is in its file's text. Hidden when the book has none. The old engine keeps only plain text, so it has none. |
+| Estimated standard pages | [done] | Fixed 1,024 characters per page, "About 320 standard pages" in the page bar. |
+| Book and chapter page counters | [done] | "Page 4 of 18" under "This chapter" in the page bar. The new engine counts a chapter as one file of the book. |
+| Book and chapter percentage | [done] | Both in the page bar; the book's can be the page footer. |
+| Pages remaining (chapter, book) | [done] | |
+| Time remaining | [done] | Characters per minute over page turns forward, leaving out breaks over 2 minutes and jumps; one average over the last hour, for all books. Not for PDF. |
+| Progress bar styles: thin line, bar, segmented | [done] | **Progress bar**: Line, Bar, Chapters. |
+| Chapter, bookmark, note and highlight markers on the bar | [done] | One switch: chapter ticks, bookmark ribbons and highlight dots (notes are highlights). |
+| Progress visibility: always, on tap, hidden | [done] | **Show progress**: Always adds a thin line, and in the new engine a footer with the chapter. |
+| Progress scope: include or exclude front and back matter | [part] | New engine: **Count only the main text** uses the bodymatter and backmatter landmarks (or the EPUB 2 guide). The old engine has no book structure. |
 
 ## Phase 3: fonts and typography (section 3)
 

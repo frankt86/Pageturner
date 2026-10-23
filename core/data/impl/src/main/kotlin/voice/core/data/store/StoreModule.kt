@@ -19,6 +19,7 @@ import voice.core.data.BookId
 import voice.core.data.Ebook
 import voice.core.data.GridMode
 import voice.core.data.ReaderSettings
+import voice.core.data.ReadingPace
 import voice.core.data.ThemeColorScheme
 import voice.core.data.ThemeMode
 import voice.core.data.sleeptimer.SleepTimerPreference
@@ -283,6 +284,17 @@ public object StoreModule {
       defaultValue = ReaderSettings(),
       fileName = "readerSettings",
       migrations = listOf(ReaderTextSizeMigration(application)),
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @ReadingPaceStore
+  private fun readingPace(factory: VoiceDataStoreFactory): DataStore<ReadingPace> {
+    return factory.create(
+      serializer = ReadingPace.serializer(),
+      defaultValue = ReadingPace(),
+      fileName = "readingPace",
     )
   }
 

@@ -329,16 +329,18 @@
     <string name="reader.brightness">Kirkkaus</string>
     <string name="reader.brightness.system">Järjestelmä</string>
     <string name="reader.chapter">Luku %d</string>
-    <string name="reader.chapter.last_page">Luvun viimeinen sivu</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">Luvussa on jäljellä %d sivu</item>
-        <item quantity="other">Luvussa on jäljellä %d sivua</item>
-    </plurals>
     <string name="reader.contents">Sisällys</string>
     <string name="reader.display">Näyttö</string>
     <string name="reader.failed">Kirjaa ei voitu avata</string>
     <string name="reader.font.sans">Sans</string>
     <string name="reader.font.serif">Serif</string>
+    <string name="reader.footer">Alatunniste</string>
+    <string name="reader.footer.chapter">Luku</string>
+    <string name="reader.footer.chapter_page">%1$d/%2$d luvussa</string>
+    <string name="reader.footer.page">Sivu</string>
+    <string name="reader.footer.percent">Prosentti</string>
+    <string name="reader.footer.time">Aikaa jäljellä</string>
+    <string name="reader.footer.time_left">Luvussa %s jäljellä</string>
     <string name="reader.go_to_page">Siirry sivulle</string>
     <string name="reader.highlight.blue">Sininen</string>
     <string name="reader.highlight.delete">Poista korostus</string>
@@ -368,6 +370,30 @@
     <string name="reader.pages">Sivut</string>
     <string name="reader.pages.one">Yksi sivu</string>
     <string name="reader.pages.two">Kaksi sivua</string>
+    <string name="reader.progress">Edistyminen</string>
+    <string name="reader.progress.body_only">Laske vain päätekstiä</string>
+    <string name="reader.progress.book">Kirja</string>
+    <string name="reader.progress.chapter">Tämä luku</string>
+    <string name="reader.progress.marks">Näytä luvut, kirjanmerkit ja korostukset palkissa</string>
+    <string name="reader.progress.page">Sivu %1$d/%2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">%d sivu jäljellä</item>
+        <item quantity="other">%d sivua jäljellä</item>
+    </plurals>
+    <string name="reader.progress.print_page">Painettu sivu %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">Noin %d vakiosivu</item>
+        <item quantity="other">Noin %d vakiosivua</item>
+    </plurals>
+    <string name="reader.progress.style">Edistymispalkki</string>
+    <string name="reader.progress.style.bar">Palkki</string>
+    <string name="reader.progress.style.chapters">Luvut</string>
+    <string name="reader.progress.style.line">Viiva</string>
+    <string name="reader.progress.time_left">%s jäljellä</string>
+    <string name="reader.progress.visibility">Näytä edistyminen</string>
+    <string name="reader.progress.visibility.always">Aina</string>
+    <string name="reader.progress.visibility.hidden">Ei koskaan</string>
+    <string name="reader.progress.visibility.on_tap">Napautettaessa</string>
     <string name="reader.read_aloud">Lue ääneen</string>
     <string name="reader.read_aloud_unavailable">Ääneen lukeminen ei ole käytettävissä tällä laitteella</string>
     <string name="reader.search">Hae kirjasta</string>

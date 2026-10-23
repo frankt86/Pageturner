@@ -329,16 +329,18 @@
     <string name="reader.brightness">Heledus</string>
     <string name="reader.brightness.system">Süsteem</string>
     <string name="reader.chapter">Peatükk %d</string>
-    <string name="reader.chapter.last_page">Selle peatüki viimane lehekülg</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">Peatükis on jäänud %d lehekülg</item>
-        <item quantity="other">Peatükis on jäänud %d lehekülge</item>
-    </plurals>
     <string name="reader.contents">Sisukord</string>
     <string name="reader.display">Kuva</string>
     <string name="reader.failed">Seda raamatut ei õnnestunud avada</string>
     <string name="reader.font.sans">Sans</string>
     <string name="reader.font.serif">Serif</string>
+    <string name="reader.footer">Jalus</string>
+    <string name="reader.footer.chapter">Peatükk</string>
+    <string name="reader.footer.chapter_page">%1$d/%2$d peatükis</string>
+    <string name="reader.footer.page">Leht</string>
+    <string name="reader.footer.percent">Protsent</string>
+    <string name="reader.footer.time">Aega jäänud</string>
+    <string name="reader.footer.time_left">Peatükis jäänud %s</string>
     <string name="reader.go_to_page">Mine leheküljele</string>
     <string name="reader.highlight.blue">Sinine</string>
     <string name="reader.highlight.delete">Kustuta esiletõst</string>
@@ -368,6 +370,30 @@
     <string name="reader.pages">Lehed</string>
     <string name="reader.pages.one">Üks leht</string>
     <string name="reader.pages.two">Kaks lehte</string>
+    <string name="reader.progress">Edenemine</string>
+    <string name="reader.progress.body_only">Arvesta ainult põhiteksti</string>
+    <string name="reader.progress.book">Raamat</string>
+    <string name="reader.progress.chapter">See peatükk</string>
+    <string name="reader.progress.marks">Näita ribal peatükke, järjehoidjaid ja esiletõste</string>
+    <string name="reader.progress.page">Leht %1$d/%2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">%d leht jäänud</item>
+        <item quantity="other">%d lehte jäänud</item>
+    </plurals>
+    <string name="reader.progress.print_page">Paberraamatu lk %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">Umbes %d standardleht</item>
+        <item quantity="other">Umbes %d standardlehte</item>
+    </plurals>
+    <string name="reader.progress.style">Edenemisriba</string>
+    <string name="reader.progress.style.bar">Riba</string>
+    <string name="reader.progress.style.chapters">Peatükid</string>
+    <string name="reader.progress.style.line">Joon</string>
+    <string name="reader.progress.time_left">%s jäänud</string>
+    <string name="reader.progress.visibility">Näita edenemist</string>
+    <string name="reader.progress.visibility.always">Alati</string>
+    <string name="reader.progress.visibility.hidden">Mitte kunagi</string>
+    <string name="reader.progress.visibility.on_tap">Puudutusel</string>
     <string name="reader.read_aloud">Loe ette</string>
     <string name="reader.read_aloud_unavailable">Ettelugemine pole selles seadmes saadaval</string>
     <string name="reader.search">Otsi raamatust</string>

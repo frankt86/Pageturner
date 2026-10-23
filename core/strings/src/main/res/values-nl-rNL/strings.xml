@@ -329,16 +329,18 @@
     <string name="reader.brightness">Helderheid</string>
     <string name="reader.brightness.system">Systeem</string>
     <string name="reader.chapter">Hoofdstuk %d</string>
-    <string name="reader.chapter.last_page">Laatste pagina van dit hoofdstuk</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">Nog %d pagina in dit hoofdstuk</item>
-        <item quantity="other">Nog %d pagina\'s in dit hoofdstuk</item>
-    </plurals>
     <string name="reader.contents">Inhoud</string>
     <string name="reader.display">Weergave</string>
     <string name="reader.failed">Dit boek kon niet worden geopend</string>
     <string name="reader.font.sans">Sans</string>
     <string name="reader.font.serif">Serif</string>
+    <string name="reader.footer">Voettekst</string>
+    <string name="reader.footer.chapter">Hoofdstuk</string>
+    <string name="reader.footer.chapter_page">%1$d van %2$d in hoofdstuk</string>
+    <string name="reader.footer.page">Pagina</string>
+    <string name="reader.footer.percent">Procent</string>
+    <string name="reader.footer.time">Resterende tijd</string>
+    <string name="reader.footer.time_left">Nog %s in hoofdstuk</string>
     <string name="reader.go_to_page">Ga naar pagina</string>
     <string name="reader.highlight.blue">Blauw</string>
     <string name="reader.highlight.delete">Markering verwijderen</string>
@@ -368,6 +370,30 @@
     <string name="reader.pages">Pagina’s</string>
     <string name="reader.pages.one">Eén pagina</string>
     <string name="reader.pages.two">Twee pagina’s</string>
+    <string name="reader.progress">Voortgang</string>
+    <string name="reader.progress.body_only">Alleen de hoofdtekst tellen</string>
+    <string name="reader.progress.book">Boek</string>
+    <string name="reader.progress.chapter">Dit hoofdstuk</string>
+    <string name="reader.progress.marks">Hoofdstukken, bladwijzers en markeringen op de balk tonen</string>
+    <string name="reader.progress.page">Pagina %1$d van %2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">Nog %d pagina</item>
+        <item quantity="other">Nog %d pagina’s</item>
+    </plurals>
+    <string name="reader.progress.print_page">Gedrukte pagina %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">Ongeveer %d standaardpagina</item>
+        <item quantity="other">Ongeveer %d standaardpagina’s</item>
+    </plurals>
+    <string name="reader.progress.style">Voortgangsbalk</string>
+    <string name="reader.progress.style.bar">Balk</string>
+    <string name="reader.progress.style.chapters">Hoofdstukken</string>
+    <string name="reader.progress.style.line">Lijn</string>
+    <string name="reader.progress.time_left">Nog %s</string>
+    <string name="reader.progress.visibility">Voortgang tonen</string>
+    <string name="reader.progress.visibility.always">Altijd</string>
+    <string name="reader.progress.visibility.hidden">Nooit</string>
+    <string name="reader.progress.visibility.on_tap">Bij tikken</string>
     <string name="reader.read_aloud">Voorlezen</string>
     <string name="reader.read_aloud_unavailable">Voorlezen is niet beschikbaar op dit apparaat</string>
     <string name="reader.search">Zoeken in boek</string>

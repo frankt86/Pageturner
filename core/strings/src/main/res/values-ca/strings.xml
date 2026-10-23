@@ -346,17 +346,18 @@
     <string name="reader.brightness">Brillantor</string>
     <string name="reader.brightness.system">Sistema</string>
     <string name="reader.chapter">Capítol %d</string>
-    <string name="reader.chapter.last_page">Última pàgina d\'aquest capítol</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">Queda %d pàgina en aquest capítol</item>
-        <item quantity="many">Queden %d pàgines en aquest capítol</item>
-        <item quantity="other">Queden %d pàgines en aquest capítol</item>
-    </plurals>
     <string name="reader.contents">Índex</string>
     <string name="reader.display">Visualització</string>
     <string name="reader.failed">No s\'ha pogut obrir aquest llibre</string>
     <string name="reader.font.sans">Sans</string>
     <string name="reader.font.serif">Serif</string>
+    <string name="reader.footer">Peu de pàgina</string>
+    <string name="reader.footer.chapter">Capítol</string>
+    <string name="reader.footer.chapter_page">%1$d de %2$d al capítol</string>
+    <string name="reader.footer.page">Pàgina</string>
+    <string name="reader.footer.percent">Percentatge</string>
+    <string name="reader.footer.time">Temps restant</string>
+    <string name="reader.footer.time_left">Queden %s del capítol</string>
     <string name="reader.go_to_page">Ves a la pàgina</string>
     <string name="reader.highlight.blue">Blau</string>
     <string name="reader.highlight.delete">Suprimeix el subratllat</string>
@@ -386,6 +387,32 @@
     <string name="reader.pages">Pàgines</string>
     <string name="reader.pages.one">Una pàgina</string>
     <string name="reader.pages.two">Dues pàgines</string>
+    <string name="reader.progress">Progrés</string>
+    <string name="reader.progress.body_only">Compta només el text principal</string>
+    <string name="reader.progress.book">Llibre</string>
+    <string name="reader.progress.chapter">Aquest capítol</string>
+    <string name="reader.progress.marks">Mostra capítols, punts de llibre i subratllats a la barra</string>
+    <string name="reader.progress.page">Pàgina %1$d de %2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">Queda %d pàgina</item>
+        <item quantity="many">Queden %d pàgines</item>
+        <item quantity="other">Queden %d pàgines</item>
+    </plurals>
+    <string name="reader.progress.print_page">Pàgina impresa %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">Aproximadament %d pàgina estàndard</item>
+        <item quantity="many">Unes %d pàgines estàndard</item>
+        <item quantity="other">Unes %d pàgines estàndard</item>
+    </plurals>
+    <string name="reader.progress.style">Barra de progrés</string>
+    <string name="reader.progress.style.bar">Barra</string>
+    <string name="reader.progress.style.chapters">Capítols</string>
+    <string name="reader.progress.style.line">Línia</string>
+    <string name="reader.progress.time_left">Queden %s</string>
+    <string name="reader.progress.visibility">Mostra el progrés</string>
+    <string name="reader.progress.visibility.always">Sempre</string>
+    <string name="reader.progress.visibility.hidden">Mai</string>
+    <string name="reader.progress.visibility.on_tap">En tocar</string>
     <string name="reader.read_aloud">Llegeix en veu alta</string>
     <string name="reader.read_aloud_unavailable">La lectura en veu alta no està disponible en aquest dispositiu</string>
     <string name="reader.search">Cerca al llibre</string>

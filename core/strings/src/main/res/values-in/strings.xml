@@ -312,15 +312,18 @@
     <string name="reader.brightness">Kecerahan</string>
     <string name="reader.brightness.system">Sistem</string>
     <string name="reader.chapter">Bab %d</string>
-    <string name="reader.chapter.last_page">Halaman terakhir bab ini</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="other">%d halaman lagi di bab ini</item>
-    </plurals>
     <string name="reader.contents">Daftar isi</string>
     <string name="reader.display">Tampilan</string>
     <string name="reader.failed">Buku ini tidak dapat dibuka</string>
     <string name="reader.font.sans">Sans</string>
     <string name="reader.font.serif">Serif</string>
+    <string name="reader.footer">Kaki halaman</string>
+    <string name="reader.footer.chapter">Bab</string>
+    <string name="reader.footer.chapter_page">%1$d dari %2$d di bab</string>
+    <string name="reader.footer.page">Halaman</string>
+    <string name="reader.footer.percent">Persen</string>
+    <string name="reader.footer.time">Sisa waktu</string>
+    <string name="reader.footer.time_left">%s lagi di bab ini</string>
     <string name="reader.go_to_page">Buka halaman</string>
     <string name="reader.highlight.blue">Biru</string>
     <string name="reader.highlight.delete">Hapus sorotan</string>
@@ -350,6 +353,28 @@
     <string name="reader.pages">Halaman</string>
     <string name="reader.pages.one">Satu halaman</string>
     <string name="reader.pages.two">Dua halaman</string>
+    <string name="reader.progress">Progres</string>
+    <string name="reader.progress.body_only">Hitung teks utama saja</string>
+    <string name="reader.progress.book">Buku</string>
+    <string name="reader.progress.chapter">Bab ini</string>
+    <string name="reader.progress.marks">Tampilkan bab, markah, dan sorotan di bilah</string>
+    <string name="reader.progress.page">Halaman %1$d dari %2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="other">%d halaman lagi</item>
+    </plurals>
+    <string name="reader.progress.print_page">Halaman cetak %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="other">Sekitar %d halaman standar</item>
+    </plurals>
+    <string name="reader.progress.style">Bilah progres</string>
+    <string name="reader.progress.style.bar">Bilah</string>
+    <string name="reader.progress.style.chapters">Bab</string>
+    <string name="reader.progress.style.line">Garis</string>
+    <string name="reader.progress.time_left">%s lagi</string>
+    <string name="reader.progress.visibility">Tampilkan progres</string>
+    <string name="reader.progress.visibility.always">Selalu</string>
+    <string name="reader.progress.visibility.hidden">Tidak pernah</string>
+    <string name="reader.progress.visibility.on_tap">Saat diketuk</string>
     <string name="reader.read_aloud">Bacakan</string>
     <string name="reader.read_aloud_unavailable">Fitur bacakan tidak tersedia di perangkat ini</string>
     <string name="reader.search">Cari di buku</string>

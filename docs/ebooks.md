@@ -26,7 +26,9 @@ Tap an ebook to open it where you left off.
   page curls over the spine and shows the next page on its back. Your place stays the same when you fold or unfold.
 - **Full screen:** tap the middle of the page to hide or show the bars.
 - **Page bar:** drag the slider at the bottom to jump anywhere in the book. It shows the chapter and page while you drag, and how
-  many pages are left in the chapter.
+  far you are: the page of the chapter, the chapter and the book in percent, the pages left in each, and about how long they
+  take you to read. It also shows the book's length in standard pages of 1,024 characters, an estimate that's the same on
+  every screen.
 - **Contents:** jump to any chapter, and see your bookmarks and highlights in their own tabs.
 
 ![Two pages side by side on an unfolded foldable](images/reader-unfolded.png)
@@ -50,6 +52,20 @@ Under **Layout**:
   side.
 - **Shorter lines on wide screens** keeps lines to about 65 characters on tablets and unfolded phones.
 - **Orientation:** Auto turns with your phone, **Portrait** and **Landscape** keep the screen that way while you read.
+
+Under **Progress**:
+
+- **Show progress:** **On tap** shows the page bar when you tap the middle of the page. **Always** adds a thin line along the
+  bottom of the page as well. **Never** hides both, and the page number at the bottom of the page.
+- **Progress bar:** a thin **Line**, a **Bar**, or **Chapters**, which splits the bar into one part per chapter.
+- **Page footer:** what the bottom of each page shows next to the chapter: the **Page** of the book, the page of the
+  **Chapter**, the **Percent** read, or the **Time left** in the chapter.
+- **Show chapters, bookmarks and highlights on the bar** draws small marks where each chapter starts and where your bookmarks
+  and highlights are.
+
+The time left comes from how fast you read. Pageturner measures it as you turn pages, leaves out pauses of more than two
+minutes and jumps, and keeps an average of your last hour of reading across all books. Until it knows you, it guesses about
+1,200 characters a minute.
 
 The screen stays on while you read.
 
@@ -91,6 +107,12 @@ bold and italic text, tables, links and footnotes. It's built on [Readium](https
 - Your theme, font, text size, line spacing and margins carry over.
 - Tap the left or right side, swipe or use the volume keys to turn the page, and tap the middle to show or hide the bars.
 - The page bar counts the book in pages that stay the same whatever the screen or text size, and jumps anywhere.
+- When the book lists the pages of its printed edition, the page bar shows the **Print page** you're on. Where a printed page
+  starts is placed by the book's text, so it can be off by a screen.
+- **Count only the main text**, under **Progress**, leaves the front and back matter, like the title page or the index, out
+  of the book's percentage, pages left and time left. It uses the landmarks the book marks itself, so it changes nothing for
+  books without them.
+- With **Show progress** set to **Always**, the bottom of the page shows the chapter, the **Page footer** and the thin line.
 - Contents, bookmarks and search work as usual. Links to websites open in your browser.
 - Long-press a word and drag to select more, then pick a highlight color, **Note** or **Look up** from the menu. Tap a
   highlight to change its color, edit its note or delete it.
@@ -103,7 +125,8 @@ bold and italic text, tables, links and footnotes. It's built on [Readium](https
 ## Good to know
 
 - Without the new book engine, EPUB books show their text only. Pictures and text styling, like bold or headings, are left
-  out. See the [reader plan](reader-plan.md).
+  out, and so are print page numbers and **Count only the main text**. See the [reader plan](reader-plan.md).
+- PDF books show their pages without chapters or reading time.
 - PDF pages show exactly as they're printed. Searching or reading a PDF aloud needs Android 15 or newer, and a PDF made of
   scanned pages has no text. Highlights work in EPUB books only.
 - The natural voice needs a 64-bit phone, which nearly every phone from the last years is. On older phones it may pause briefly

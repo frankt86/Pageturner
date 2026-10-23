@@ -329,16 +329,18 @@
     <string name="reader.brightness">Φωτεινότητα</string>
     <string name="reader.brightness.system">Σύστημα</string>
     <string name="reader.chapter">Κεφάλαιο %d</string>
-    <string name="reader.chapter.last_page">Τελευταία σελίδα του κεφαλαίου</string>
-    <plurals name="reader.chapter.pages_left">
-        <item quantity="one">Απομένει %d σελίδα σε αυτό το κεφάλαιο</item>
-        <item quantity="other">Απομένουν %d σελίδες σε αυτό το κεφάλαιο</item>
-    </plurals>
     <string name="reader.contents">Περιεχόμενα</string>
     <string name="reader.display">Εμφάνιση</string>
     <string name="reader.failed">Δεν ήταν δυνατό το άνοιγμα αυτού του βιβλίου</string>
     <string name="reader.font.sans">Sans</string>
     <string name="reader.font.serif">Serif</string>
+    <string name="reader.footer">Υποσέλιδο</string>
+    <string name="reader.footer.chapter">Κεφάλαιο</string>
+    <string name="reader.footer.chapter_page">%1$d από %2$d στο κεφάλαιο</string>
+    <string name="reader.footer.page">Σελίδα</string>
+    <string name="reader.footer.percent">Ποσοστό</string>
+    <string name="reader.footer.time">Χρόνος που απομένει</string>
+    <string name="reader.footer.time_left">Απομένουν %s στο κεφάλαιο</string>
     <string name="reader.go_to_page">Μετάβαση σε σελίδα</string>
     <string name="reader.highlight.blue">Μπλε</string>
     <string name="reader.highlight.delete">Διαγραφή επισήμανσης</string>
@@ -368,6 +370,30 @@
     <string name="reader.pages">Σελίδες</string>
     <string name="reader.pages.one">Μία σελίδα</string>
     <string name="reader.pages.two">Δύο σελίδες</string>
+    <string name="reader.progress">Πρόοδος</string>
+    <string name="reader.progress.body_only">Μέτρηση μόνο του κύριου κειμένου</string>
+    <string name="reader.progress.book">Βιβλίο</string>
+    <string name="reader.progress.chapter">Αυτό το κεφάλαιο</string>
+    <string name="reader.progress.marks">Εμφάνιση κεφαλαίων, σελιδοδεικτών και επισημάνσεων στη μπάρα</string>
+    <string name="reader.progress.page">Σελίδα %1$d από %2$d</string>
+    <plurals name="reader.progress.pages_left">
+        <item quantity="one">Απομένει %d σελίδα</item>
+        <item quantity="other">Απομένουν %d σελίδες</item>
+    </plurals>
+    <string name="reader.progress.print_page">Έντυπη σελίδα %s</string>
+    <plurals name="reader.progress.standard_pages">
+        <item quantity="one">Περίπου %d τυπική σελίδα</item>
+        <item quantity="other">Περίπου %d τυπικές σελίδες</item>
+    </plurals>
+    <string name="reader.progress.style">Γραμμή προόδου</string>
+    <string name="reader.progress.style.bar">Μπάρα</string>
+    <string name="reader.progress.style.chapters">Κεφάλαια</string>
+    <string name="reader.progress.style.line">Λεπτή</string>
+    <string name="reader.progress.time_left">Απομένουν %s</string>
+    <string name="reader.progress.visibility">Εμφάνιση προόδου</string>
+    <string name="reader.progress.visibility.always">Πάντα</string>
+    <string name="reader.progress.visibility.hidden">Ποτέ</string>
+    <string name="reader.progress.visibility.on_tap">Με πάτημα</string>
     <string name="reader.read_aloud">Ανάγνωση φωναχτά</string>
     <string name="reader.read_aloud_unavailable">Η ανάγνωση φωναχτά δεν είναι διαθέσιμη σε αυτήν τη συσκευή</string>
     <string name="reader.search">Αναζήτηση στο βιβλίο</string>
