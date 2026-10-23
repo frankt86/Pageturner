@@ -9,14 +9,14 @@ Pageturner is based on [Voice](https://github.com/PaulWoitaschek/Voice) by Paul 
 
 Pageturner turns your own audiobook files into a calm, focused listening library. It remembers where you stopped, keeps playback controls close, and includes the audiobook-specific details that generic music players miss: chapter navigation, sleep timer, bookmarks, playback speed, silence skipping, and auto-rewind after pauses.
 
-Pageturner also reads your EPUB and PDF books, and can read them aloud. On a foldable, a book opens to two pages side by side when you unfold it.
+Pageturner also reads your EPUB and PDF books, with page curls, themes, bookmarks, highlights and search, and can read them aloud in a natural voice. On a foldable, a book opens to two pages side by side when you unfold it.
 
 
 ## Why Pageturner?
 
 - **Made for your files:** Add a folder once and Pageturner organizes your local M4B, MP3, M4A, OGG, OGA, and OPUS audiobooks.
 - **Built for listening:** Resume positions, bookmarks, sleep timer fade-out, volume boost, speed control, and Android Auto support are part of the core experience.
-- **Reads your ebooks too:** EPUB and PDF files in your folders sit next to your audiobooks, with their covers. Turn pages like paper, jump through the table of contents, see two pages side by side on an unfolded foldable, or have a natural voice read them to you, offline.
+- **Reads your ebooks too:** EPUB and PDF files in your folders sit next to your audiobooks, with their covers. Turn pages with a real page curl, see two pages side by side on an unfolded foldable, pick a theme and font, bookmark, highlight, add notes, search the book, or have a natural voice read it to you, offline.
 - **Private and uncluttered:** No account, no ads, no forced cloud sync. Your library stays on your device.
 
 <p align="center">
@@ -31,7 +31,7 @@ Pageturner also reads your EPUB and PDF books, and can read them aloud. On a fol
   <img alt="Two pages side by side on an unfolded foldable" width="90%" src="docs/images/reader-unfolded.png" />
 </p>
 
-See [Ebooks](docs/ebooks.md) for how it works.
+See [Ebooks](docs/ebooks.md) for how it works, and the [reader plan](docs/reader-plan.md) for what's coming.
 
 ## Download
 

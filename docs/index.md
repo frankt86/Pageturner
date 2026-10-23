@@ -49,7 +49,7 @@ New to installing apps from outside Google Play? See [Install](install.md).
 
   ---
 
-  EPUB and PDF books from your folders, one page folded, two pages unfolded, and read aloud on request. See [Ebooks](ebooks.md).
+  EPUB and PDF books from your folders with a real page curl, themes, bookmarks, highlights, search and a natural read-aloud voice. One page folded, two pages unfolded. See [Ebooks](ebooks.md).
 
 - :material-update:{ .lg .middle } **Actively maintained**
 
