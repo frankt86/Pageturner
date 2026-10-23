@@ -52,11 +52,30 @@ private val chapterOne = """
 @Preview(widthDp = 411, heightDp = 891, name = "folded")
 @Preview(widthDp = 841, heightDp = 701, name = "unfolded")
 private fun ReaderScreenshot() {
+  ReaderPreview(previewTurn = null)
+}
+
+@Composable
+@Preview(widthDp = 411, heightDp = 891, name = "folded")
+@Preview(widthDp = 841, heightDp = 701, name = "unfolded")
+private fun ReaderTurnEarlyPreview() {
+  ReaderPreview(previewTurn = 0.3F)
+}
+
+@Composable
+@Preview(widthDp = 411, heightDp = 891, name = "folded")
+@Preview(widthDp = 841, heightDp = 701, name = "unfolded")
+private fun ReaderTurnLatePreview() {
+  ReaderPreview(previewTurn = 0.7F)
+}
+
+@Composable
+private fun ReaderPreview(previewTurn: Float?) {
   val readAloud = chapterOne.indexOf("“My dear Mr. Bennet,”")
   val state = ReaderState.Loaded(
     content = ReaderContent.Epub(
       title = "Pride and Prejudice",
-      chapters = listOf(chapterOne),
+      chapters = listOf(chapterOne + "\n\n" + chapterOne),
       chapterTitles = listOf("Chapter 1"),
     ),
     position = EbookPosition(),
@@ -92,6 +111,7 @@ private fun ReaderScreenshot() {
           .fillMaxSize()
           .padding(contentPadding),
         paginateNow = true,
+        previewTurn = previewTurn,
       )
     }
   }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,6 +41,7 @@ import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +55,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
@@ -92,7 +95,10 @@ import voice.core.ui.bookText
 import voice.core.ui.icons.VoiceIcons
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
+import kotlin.math.PI
+import kotlin.math.floor
 import kotlin.math.roundToInt
+import kotlin.math.sin
 import voice.core.strings.R as StringsR
 
 @ContributesTo(AppScope::class)
@@ -299,6 +305,8 @@ internal fun Book(
   modifier: Modifier = Modifier,
   // previews can't wait for the pages laid out in the background
   paginateNow: Boolean = false,
+  // previews can't swipe, this shows the first page turned this far
+  previewTurn: Float? = null,
 ) {
   BoxWithConstraints(modifier) {
     // an unfolded foldable, a tablet or a phone on its side has room for a spread like an open book
@@ -332,6 +340,7 @@ internal fun Book(
         pagesPerSpread = pagesPerSpread,
         textStyle = textStyle,
         onPageTurn = onPageTurn,
+        previewTurn = previewTurn,
       )
     }
   }
@@ -374,8 +383,23 @@ private fun Spreads(
   pagesPerSpread: Int,
   textStyle: TextStyle,
   onPageTurn: (Page, Float) -> Unit,
+  previewTurn: Float?,
 ) {
   if (pages.isEmpty()) return
+  if (pagesPerSpread == 1) {
+    val current = pages.indexOfPosition(state.position)
+    CurlPages(
+      count = pages.size,
+      current = current,
+      onTurn = { index -> onPageTurn(pages[index], (index + 1F) / pages.size) },
+      backColor = MaterialTheme.colorScheme.surface,
+      modifier = Modifier.fillMaxSize(),
+      previewTurn = previewTurn,
+    ) { index ->
+      PageSlot(state, pages, index, textStyle, Modifier.fillMaxSize())
+    }
+    return
+  }
   val currentSpread = pages.indexOfPosition(state.position) / pagesPerSpread
   val spreadCount = (pages.size + pagesPerSpread - 1) / pagesPerSpread
   val pagerState = rememberPagerState(initialPage = currentSpread) { spreadCount }
@@ -397,64 +421,140 @@ private fun Spreads(
     }
   }
 
+  val turning by remember {
+    derivedStateOf {
+      floor(pagerState.currentPage + pagerState.currentPageOffsetFraction).toInt().coerceIn(0, spreadCount - 1)
+    }
+  }
+  val progress = {
+    previewTurn ?: (pagerState.currentPage + pagerState.currentPageOffsetFraction - turning).coerceIn(0F, 1F)
+  }
   val scope = rememberCoroutineScope()
-  HorizontalPager(
-    state = pagerState,
-    modifier = Modifier
-      .fillMaxSize()
-      .pointerInput(pagerState) {
-        // like turning a paper page, a tap near the edge turns it
-        detectTapGestures { offset ->
-          val edge = size.width / 4
-          val target = when {
-            offset.x < edge -> pagerState.currentPage - 1
-            offset.x > size.width - edge -> pagerState.currentPage + 1
-            else -> return@detectTapGestures
-          }
-          if (target in 0 until pagerState.pageCount) {
-            scope.launch { pagerState.animateScrollToPage(target) }
-          }
-        }
-      },
-  ) { spread ->
-    val surface = MaterialTheme.colorScheme.surface
-    Row(
-      Modifier
+  Box(Modifier.fillMaxSize()) {
+    SpreadTurn(state, pages, turning, progress, textStyle)
+    // the pager only follows the finger, the pages are drawn above and turn like paper
+    HorizontalPager(
+      state = pagerState,
+      modifier = Modifier
         .fillMaxSize()
-        .graphicsLayer {
-          // the pager slides pages, this holds them in place and turns the upper one like a paper page
-          val offset = (pagerState.currentPage - spread) + pagerState.currentPageOffsetFraction
-          translationX = offset * size.width
-          if (offset < 0F) {
-            transformOrigin = TransformOrigin(0F, 0.5F)
-            rotationY = 90F * offset.coerceAtLeast(-1F)
-            cameraDistance = 16F * density
+        .pointerInput(pagerState) {
+          // like turning a paper page, a tap near the edge turns it
+          detectTapGestures { offset ->
+            val edge = size.width / 4
+            val target = when {
+              offset.x < edge -> pagerState.currentPage - 1
+              offset.x > size.width - edge -> pagerState.currentPage + 1
+              else -> return@detectTapGestures
+            }
+            if (target in 0 until pagerState.pageCount) {
+              scope.launch { pagerState.animateScrollToPage(target) }
+            }
           }
-        }
-        .background(surface),
+        },
     ) {
-      repeat(pagesPerSpread) { slot ->
-        val index = spread * pagesPerSpread + slot
-        Box(
-          Modifier
-            .weight(1F)
-            .fillMaxHeight(),
-        ) {
-          if (index < pages.size) {
-            BookPage(
-              content = state.content,
-              page = pages[index],
-              pageNumber = index + 1,
-              pageCount = pages.size,
-              textStyle = textStyle,
-              readingRange = state.readingRange.takeIf { pages[index].section == state.position.section },
-            )
+      Box(Modifier.fillMaxSize())
+    }
+  }
+}
+
+// the right page turns around the spine like a leaf of a book, its back is the left page of the next spread
+@Composable
+private fun SpreadTurn(
+  state: ReaderState.Loaded,
+  pages: List<Page>,
+  turning: Int,
+  progress: () -> Float,
+  textStyle: TextStyle,
+) {
+  val first = turning * 2
+  Box(Modifier.fillMaxSize()) {
+    Row(Modifier.fillMaxSize()) {
+      PageSlot(
+        state = state,
+        pages = pages,
+        index = first,
+        textStyle = textStyle,
+        modifier = Modifier
+          .weight(1F)
+          .fillMaxHeight()
+          .shade { 0.2F * progress() },
+      )
+      Spine()
+      PageSlot(
+        state = state,
+        pages = pages,
+        index = first + 3,
+        textStyle = textStyle,
+        modifier = Modifier
+          .weight(1F)
+          .fillMaxHeight()
+          .shade { progress().let { if (it > 0F) 0.2F * (1F - it) else 0F } },
+      )
+    }
+    Row(Modifier.fillMaxSize()) {
+      PageSlot(
+        state = state,
+        pages = pages,
+        index = first + 2,
+        textStyle = textStyle,
+        modifier = Modifier
+          .weight(1F)
+          .fillMaxHeight()
+          .graphicsLayer {
+            val turned = progress()
+            alpha = if (turned > 0.5F) 1F else 0F
+            transformOrigin = TransformOrigin(1F, 0.5F)
+            rotationY = -180F * (1F - turned)
+            cameraDistance = 32F * density
           }
-        }
-        if (slot < pagesPerSpread - 1) {
-          Spine()
-        }
-      }
+          .shade { 0.3F * sin(PI.toFloat() * progress()) },
+      )
+      Spacer(Modifier.width(SpineWidth))
+      PageSlot(
+        state = state,
+        pages = pages,
+        index = first + 1,
+        textStyle = textStyle,
+        modifier = Modifier
+          .weight(1F)
+          .fillMaxHeight()
+          .graphicsLayer {
+            val turned = progress()
+            alpha = if (turned <= 0.5F) 1F else 0F
+            transformOrigin = TransformOrigin(0F, 0.5F)
+            rotationY = 180F * turned
+            cameraDistance = 32F * density
+          }
+          .shade { 0.3F * sin(PI.toFloat() * progress()) },
+      )
+    }
+  }
+}
+
+private fun Modifier.shade(alpha: () -> Float): Modifier = drawWithContent {
+  drawContent()
+  val value = alpha()
+  if (value > 0F) drawRect(Color.Black.copy(alpha = value))
+}
+
+@Composable
+private fun PageSlot(
+  state: ReaderState.Loaded,
+  pages: List<Page>,
+  index: Int,
+  textStyle: TextStyle,
+  modifier: Modifier = Modifier,
+) {
+  Box(modifier.background(MaterialTheme.colorScheme.surface)) {
+    if (index < pages.size) {
+      BookPage(
+        content = state.content,
+        page = pages[index],
+        pageNumber = index + 1,
+        pageCount = pages.size,
+        textStyle = textStyle,
+        readingRange = state.readingRange.takeIf { pages[index].section == state.position.section },
+      )
     }
   }
 }
