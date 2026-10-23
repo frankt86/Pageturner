@@ -18,11 +18,9 @@ import kotlinx.serialization.builtins.serializer
 import voice.core.data.BookId
 import voice.core.data.Ebook
 import voice.core.data.GridMode
-import voice.core.data.ReviewPromptState
 import voice.core.data.ThemeColorScheme
 import voice.core.data.ThemeMode
 import voice.core.data.sleeptimer.SleepTimerPreference
-import voice.core.data.supporter.SupporterStatus
 import voice.core.featureflag.FeatureFlagOverride
 import java.io.File
 import kotlin.time.Duration
@@ -181,21 +179,6 @@ public object StoreModule {
 
   @Provides
   @SingleIn(AppScope::class)
-  @ReviewPromptStateStore
-  private fun reviewPromptState(
-    factory: VoiceDataStoreFactory,
-    application: Application,
-  ): DataStore<ReviewPromptState> {
-    return factory.create(
-      serializer = ReviewPromptState.serializer(),
-      defaultValue = ReviewPromptState(),
-      fileName = "reviewPromptState",
-      migrations = listOf(ReviewDialogShownMigration(application)),
-    )
-  }
-
-  @Provides
-  @SingleIn(AppScope::class)
   @FolderPickerMovedDialogShownStore
   private fun folderPickerMovedDialogShown(factory: VoiceDataStoreFactory): DataStore<Boolean> {
     return factory.boolean("folderPickerMovedDialogShow2n", defaultValue = false)
@@ -241,17 +224,6 @@ public object StoreModule {
       serializer = MapSerializer(String.serializer(), Int.serializer()),
       defaultValue = emptyMap(),
       fileName = "coverSeedColors",
-    )
-  }
-
-  @Provides
-  @SingleIn(AppScope::class)
-  @SupporterStatusStore
-  private fun supporterStatus(factory: VoiceDataStoreFactory): DataStore<SupporterStatus> {
-    return factory.create(
-      serializer = SupporterStatus.serializer(),
-      defaultValue = SupporterStatus(),
-      fileName = "supporterStatus",
     )
   }
 
@@ -343,24 +315,5 @@ private class LegacyDarkThemeMigration(
 
   override suspend fun shouldMigrate(currentData: ThemeMode): Boolean {
     return oldDataStoreFile.exists() || sharedPreferences.contains("darkTheme")
-  }
-}
-
-/**
- * The prompt used to ask once and remember that it did. Whoever saw it isn't asked again.
- */
-private class ReviewDialogShownMigration(application: Application) : DataMigration<ReviewPromptState> {
-
-  private val oldDataStoreFile = File(application.applicationContext.filesDir, "datastore/reviewDialogShown")
-
-  override suspend fun shouldMigrate(currentData: ReviewPromptState): Boolean = oldDataStoreFile.exists()
-
-  override suspend fun migrate(currentData: ReviewPromptState): ReviewPromptState {
-    val shown = oldDataStoreFile.readText().trim().toBooleanStrictOrNull() ?: false
-    return if (shown) currentData.copy(done = true) else currentData
-  }
-
-  override suspend fun cleanUp() {
-    oldDataStoreFile.delete()
   }
 }

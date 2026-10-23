@@ -228,7 +228,7 @@ private enum class ReaderSheet {
 }
 
 @Composable
-private fun ReaderTopBar(
+internal fun ReaderTopBar(
   title: String?,
   readingAloud: Boolean?,
   showTextOptions: Boolean,
@@ -293,10 +293,12 @@ private val PageNumberHeight = 32.dp
 private val SpineWidth = 24.dp
 
 @Composable
-private fun Book(
+internal fun Book(
   state: ReaderState.Loaded,
   onPageTurn: (Page, Float) -> Unit,
   modifier: Modifier = Modifier,
+  // previews can't wait for the pages laid out in the background
+  paginateNow: Boolean = false,
 ) {
   BoxWithConstraints(modifier) {
     // an unfolded foldable, a tablet or a phone on its side has room for a spread like an open book
@@ -314,6 +316,7 @@ private fun Book(
       textStyle = textStyle,
       textWidth = pageWidth - PageHorizontalPadding * 2,
       textHeight = maxHeight - PageVerticalPadding * 2 - PageNumberHeight,
+      paginateNow = paginateNow,
     )
     if (pages == null) {
       Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -340,6 +343,7 @@ private fun pages(
   textStyle: TextStyle,
   textWidth: Dp,
   textHeight: Dp,
+  paginateNow: Boolean,
 ): List<Page>? {
   return when (content) {
     is ReaderContent.Pdf -> remember(content) { List(content.sectionCount) { Page(section = it) } }
@@ -348,11 +352,17 @@ private fun pages(
       val density = LocalDensity.current
       val width = with(density) { textWidth.roundToPx() }
       val height = with(density) { textHeight.roundToPx() }
-      produceState<List<Page>?>(null, content, textStyle, width, height, textMeasurer) {
-        value = withContext(Dispatchers.Default) {
+      if (paginateNow) {
+        remember(content, textStyle, width, height) {
           paginate(content.chapters, textMeasurer, textStyle, width, height)
         }
-      }.value
+      } else {
+        produceState<List<Page>?>(null, content, textStyle, width, height, textMeasurer) {
+          value = withContext(Dispatchers.Default) {
+            paginate(content.chapters, textMeasurer, textStyle, width, height)
+          }
+        }.value
+      }
     }
   }
 }

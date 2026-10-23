@@ -38,7 +38,7 @@ class OnboardingWelcomeViewModel(
   }
 
   fun onPrivacyPolicyClick() {
-    navigator.goTo(Destination.Website("https://voice.woitaschek.de/privacy-policy"))
+    navigator.goTo(Destination.Website("https://github.com/frankt86/Pageturner/blob/main/docs/privacy-policy.md"))
   }
 
   private fun start(analyticsConsent: Boolean) {

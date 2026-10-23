@@ -16,11 +16,13 @@ import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
 import voice.core.common.DispatcherProvider
+import voice.core.data.ebookFormat
 import voice.core.data.folders.AudiobookFolders
 import voice.core.data.folders.FolderType
 import voice.core.documentfile.CachedDocumentFile
 import voice.core.documentfile.CachedDocumentFileFactory
 import voice.core.documentfile.nameWithoutExtension
+import voice.core.documentfile.walk
 import voice.core.logging.api.Logger
 import voice.core.scanner.BookPreview
 import voice.core.scanner.BookPreviewer
@@ -97,6 +99,7 @@ class SelectFolderTypeViewModel(
         FolderStructure(
           guess = folder.guessFolderMode(),
           books = FolderMode.entries.associateWith { folder.books(it) },
+          ebookCount = folder.walk().count { it.ebookFormat() != null },
         )
       }
       if (selectedMode.value == null) {
@@ -126,6 +129,7 @@ class SelectFolderTypeViewModel(
       },
       editing = currentType != null,
       onboarding = origin == Origin.Onboarding && currentType == null,
+      ebookCount = loadedStructure?.ebookCount ?: 0,
     )
   }
 
@@ -165,6 +169,7 @@ class SelectFolderTypeViewModel(
   private class FolderStructure(
     val guess: FolderMode,
     val books: Map<FolderMode, List<FolderBook>>,
+    val ebookCount: Int,
   )
 
   @AssistedFactory

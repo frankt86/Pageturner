@@ -31,24 +31,18 @@ import voice.core.data.store.LockScreenSliderStore
 import voice.core.data.store.PureBlackStore
 import voice.core.data.store.SeekTimeStore
 import voice.core.data.store.SleepTimerPreferenceStore
-import voice.core.data.store.SupporterStatusStore
 import voice.core.data.store.ThemeColorSchemeStore
 import voice.core.data.store.ThemeModeStore
-import voice.core.data.supporter.SupporterStatus
 import voice.core.documentfile.nameWithoutExtension
 import voice.core.featureflag.AudiobookshelfFeatureFlagQualifier
 import voice.core.featureflag.FeatureFlag
 import voice.core.featureflag.KioskModeFeatureFlagQualifier
-import voice.core.featureflag.SupportDevelopmentFeatureFlagQualifier
 import voice.core.ui.DynamicColorAvailability
 import voice.core.ui.GridCount
 import voice.navigation.Destination
 import voice.navigation.Navigator
 import voice.navigation.Origin
-import java.time.Clock
-import java.time.Instant
 import java.time.LocalTime
-import java.time.YearMonth
 
 @Inject
 class SettingsViewModel(
@@ -79,11 +73,6 @@ class SettingsViewModel(
   private val developerMenuUnlockedStore: DataStore<Boolean>,
   private val dynamicColorAvailability: DynamicColorAvailability,
   private val audiobookFolders: AudiobookFolders,
-  @SupportDevelopmentFeatureFlagQualifier
-  private val supportDevelopmentFeatureFlag: FeatureFlag<Boolean>,
-  @SupporterStatusStore
-  private val supporterStatusStore: DataStore<SupporterStatus>,
-  private val clock: Clock,
   private val dispatcherProvider: DispatcherProvider,
   private val serverLibrary: ServerLibrary,
   @AudiobookshelfFeatureFlagQualifier
@@ -114,8 +103,6 @@ class SettingsViewModel(
     val folderNames = remember { folderNames() }.collectAsState(initial = null, context = dispatcherProvider.io).value
     val foldersWithoutAccess = remember { foldersWithoutAccess() }.collectAsState(initial = null, context = dispatcherProvider.io).value
     val showDeveloperMenu = remember { developerMenuUnlockedStore.data }.collectAsState(initial = null).value
-    val showSupportDevelopment = remember { supportDevelopmentFeatureFlag.flow.map { it.value } }.collectAsState(initial = null).value
-    val supporterStatus = remember { supporterStatusStore.data }.collectAsState(initial = null).value
     val audiobookshelfServer = remember {
       serverLibrary.serverName.map(::AudiobookshelfServerName)
     }.collectAsState(initial = null).value
@@ -137,8 +124,6 @@ class SettingsViewModel(
       folderNames == null ||
       foldersWithoutAccess == null ||
       showDeveloperMenu == null ||
-      showSupportDevelopment == null ||
-      supporterStatus == null ||
       audiobookshelfServer == null ||
       audiobookshelfEnabled == null
     ) {
@@ -166,11 +151,6 @@ class SettingsViewModel(
       analyticsEnabled = analyticsEnabled,
       showAnalyticSetting = appInfoProvider.analyticsIncluded,
       showDeveloperMenu = showDeveloperMenu,
-      showSupportDevelopment = showSupportDevelopment,
-      supporterBadge = supporterStatus.badge,
-      supporterSince = supporterStatus.supporterSince?.let {
-        YearMonth.from(Instant.ofEpochMilli(it).atZone(clock.zone))
-      },
       folderNames = folderNames,
       foldersWithoutAccess = foldersWithoutAccess,
       audiobookshelfServer = audiobookshelfServer.name,
@@ -275,10 +255,6 @@ class SettingsViewModel(
 
   override fun openFaq() {
     navigator.goTo(Destination.Website(FeedbackLinks.FAQ))
-  }
-
-  override fun openSupportVoice() {
-    navigator.goTo(Destination.SupportVoice)
   }
 
   override fun openFolderPicker() {

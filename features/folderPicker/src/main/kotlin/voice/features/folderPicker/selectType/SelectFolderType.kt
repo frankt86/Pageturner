@@ -222,7 +222,7 @@ private fun ReviewHeader(
   viewState: SelectFolderTypeViewState,
   modifier: Modifier = Modifier,
 ) {
-  val empty = !viewState.loading && viewState.books.isEmpty()
+  val empty = !viewState.loading && viewState.books.isEmpty() && viewState.ebookCount == 0
   Column(
     modifier = modifier.padding(top = 8.dp, bottom = 24.dp, start = 8.dp, end = 8.dp),
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -231,7 +231,7 @@ private fun ReviewHeader(
       text = when {
         viewState.loading -> stringResource(StringsR.string.folder_review_loading, viewState.folderName)
         empty -> stringResource(StringsR.string.folder_review_empty_title, viewState.folderName)
-        else -> pluralStringResource(StringsR.plurals.folder_review_title, viewState.books.size, viewState.books.size)
+        else -> pluralStringResource(StringsR.plurals.folder_review_title, viewState.bookCount, viewState.bookCount)
       },
       style = MaterialTheme.typography.displaySmallEmphasized,
       textAlign = TextAlign.Center,
@@ -404,7 +404,7 @@ private fun ReviewActions(
         .fillMaxWidth(),
       verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-      if (!viewState.loading && viewState.books.isEmpty()) {
+      if (!viewState.loading && viewState.books.isEmpty() && viewState.ebookCount == 0) {
         OnboardingButton(
           text = stringResource(StringsR.string.folder_add_action_folder),
           onClick = onChooseAnotherFolder,
@@ -414,7 +414,7 @@ private fun ReviewActions(
           text = if (viewState.editing) {
             stringResource(StringsR.string.common_action_save)
           } else {
-            pluralStringResource(StringsR.plurals.folder_review_action_add, viewState.books.size, viewState.books.size)
+            pluralStringResource(StringsR.plurals.folder_review_action_add, viewState.bookCount, viewState.bookCount)
           },
           onClick = onAddClick,
           enabled = !viewState.loading,

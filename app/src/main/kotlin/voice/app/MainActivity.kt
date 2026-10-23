@@ -47,7 +47,6 @@ import voice.core.ui.LocalSharedTransitionScope
 import voice.core.ui.LocalSplashScreenHolds
 import voice.core.ui.SplashScreenHolds
 import voice.core.ui.VoiceTheme
-import voice.features.review.ReviewFeature
 import voice.navigation.Destination
 import voice.navigation.NavigationCommand
 import voice.navigation.Navigator
@@ -214,8 +213,6 @@ class MainActivity : AppCompatActivity() {
             }
           }
         }
-
-        ReviewFeature(canShow = backStack.lastOrNull() is Destination.BookOverview)
       }
     }
 
