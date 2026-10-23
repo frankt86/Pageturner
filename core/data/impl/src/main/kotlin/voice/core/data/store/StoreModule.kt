@@ -255,6 +255,13 @@ public object StoreModule {
 
   @Provides
   @SingleIn(AppScope::class)
+  @ReaderNaturalSpeakerStore
+  private fun readerNaturalSpeaker(factory: VoiceDataStoreFactory): DataStore<Int> {
+    return factory.int("readerNaturalSpeaker", defaultValue = -1)
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
   @ReaderSpeechRateStore
   private fun readerSpeechRate(factory: VoiceDataStoreFactory): DataStore<Float> {
     return factory.create(

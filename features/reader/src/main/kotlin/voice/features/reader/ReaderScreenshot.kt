@@ -109,6 +109,8 @@ private fun ReaderPreview(
       downloadProgress = null,
       downloadFailed = false,
       speechRate = 1F,
+      speakers = emptyList(),
+      speaker = null,
     ),
     highlights = listOf(
       Highlight(section = 0, start = 0, end = chapterOne.indexOf(','), color = HighlightColor.Yellow),

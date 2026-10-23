@@ -2,16 +2,20 @@
 
 package voice.features.reader
 
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -26,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import java.text.NumberFormat
+import java.util.Locale
 import kotlin.math.roundToInt
 import voice.core.strings.R as StringsR
 
@@ -33,6 +38,7 @@ import voice.core.strings.R as StringsR
 internal fun ReadAloudSheet(
   voice: VoiceState,
   onVoiceSelect: (natural: Boolean) -> Unit,
+  onSpeakerSelect: (NaturalSpeaker) -> Unit,
   onSpeechRateChange: (Float) -> Unit,
   onStartClick: () -> Unit,
   onDismiss: () -> Unit,
@@ -63,6 +69,13 @@ internal fun ReadAloudSheet(
           progress = voice.downloadProgress,
           onClick = { onVoiceSelect(true) },
         )
+        if (voice.natural && voice.naturalReady && voice.speakers.isNotEmpty()) {
+          SpeakerPicker(
+            speakers = voice.speakers,
+            selected = voice.speaker,
+            onSelect = onSpeakerSelect,
+          )
+        }
         VoiceOption(
           title = stringResource(StringsR.string.reader_voice_phone),
           summary = stringResource(StringsR.string.reader_voice_phone_summary),
@@ -99,6 +112,39 @@ internal fun ReadAloudSheet(
           .padding(vertical = 16.dp),
       ) {
         Text(stringResource(StringsR.string.reader_voice_start))
+      }
+    }
+  }
+}
+
+@Composable
+private fun SpeakerPicker(
+  speakers: List<NaturalSpeaker>,
+  selected: NaturalSpeaker?,
+  onSelect: (NaturalSpeaker) -> Unit,
+) {
+  val accents = speakers.groupBy { it.language }
+  Column(Modifier.padding(start = 40.dp, bottom = 8.dp)) {
+    accents.forEach { (language, accentSpeakers) ->
+      if (accents.size > 1) {
+        Text(
+          text = Locale.forLanguageTag(language).displayCountry,
+          style = MaterialTheme.typography.labelMedium,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          modifier = Modifier.padding(top = 4.dp),
+        )
+      }
+      Row(
+        modifier = Modifier.horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+      ) {
+        accentSpeakers.forEach { speaker ->
+          FilterChip(
+            selected = speaker == selected,
+            onClick = { onSelect(speaker) },
+            label = { Text(speaker.name) },
+          )
+        }
       }
     }
   }

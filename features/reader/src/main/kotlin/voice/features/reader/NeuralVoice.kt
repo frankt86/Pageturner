@@ -8,8 +8,8 @@ import com.k2fsa.sherpa.onnx.GeneratedAudio
 import com.k2fsa.sherpa.onnx.GenerationConfig
 import com.k2fsa.sherpa.onnx.OfflineTts
 import com.k2fsa.sherpa.onnx.OfflineTtsConfig
+import com.k2fsa.sherpa.onnx.OfflineTtsKokoroModelConfig
 import com.k2fsa.sherpa.onnx.OfflineTtsModelConfig
-import com.k2fsa.sherpa.onnx.OfflineTtsSupertonicModelConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -30,26 +30,22 @@ import java.net.HttpURLConnection
 import java.net.URI
 import java.util.Locale
 
-private const val MODEL = "sherpa-onnx-supertonic-3-tts-int8-2026-05-11"
+private const val MODEL = "kokoro-int8-multi-lang-v1_0"
 private const val MODEL_URL = "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/$MODEL.tar.bz2"
-
-private val languages = setOf(
-  "en", "ko", "ja", "ar", "bg", "cs", "da", "de", "el", "es", "et", "fi", "fr", "hi", "hr", "hu",
-  "id", "it", "lt", "lv", "nl", "pl", "pt", "ro", "ru", "sk", "sl", "sv", "tr", "uk", "vi",
-)
 
 /**
  * A natural sounding voice that runs on the phone. The voice itself is too big for the app, so it's downloaded once.
  */
 internal class NeuralVoice(context: Context) {
 
-  private val folder = File(context.filesDir, "voices/$MODEL")
+  private val voicesFolder = File(context.filesDir, "voices")
+  private val folder = File(voicesFolder, MODEL)
   private val doneMarker = File(folder, ".complete")
   private val downloadFile = File(context.cacheDir, "$MODEL.tar.bz2")
   private val mutex = Mutex()
   private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
   private var tts: OfflineTts? = null
-  private var upcoming: Pair<String, Deferred<GeneratedAudio?>>? = null
+  private var upcoming: Pair<Speech, Deferred<GeneratedAudio?>>? = null
 
   val isDownloaded: Boolean get() = doneMarker.exists()
 
@@ -76,6 +72,8 @@ internal class NeuralVoice(context: Context) {
       }
       extract()
       doneMarker.createNewFile()
+      // voices of earlier versions take up a lot of space
+      voicesFolder.listFiles()?.filter { it.name != MODEL }?.forEach { it.deleteRecursively() }
       true
     } catch (e: Exception) {
       Logger.w(e, "Could not download the voice")
@@ -95,43 +93,54 @@ internal class NeuralVoice(context: Context) {
         val entry = tar.nextEntry ?: break
         // the archive holds everything in a folder named like the model
         val name = entry.name.substringAfter('/', missingDelimiterValue = "")
-        if (entry.isDirectory || name.isEmpty()) continue
+        if (name.isEmpty()) continue
         val target = File(root, name).canonicalFile
         check(target.path.startsWith(root.path + File.separator)) { "Entry outside of the voice folder" }
-        target.parentFile?.mkdirs()
-        target.outputStream().use { tar.copyTo(it) }
+        if (entry.isDirectory) {
+          target.mkdirs()
+        } else if (entry.isFile) {
+          target.parentFile?.mkdirs()
+          target.outputStream().use { tar.copyTo(it) }
+        }
       }
     }
   }
 
   /**
-   * Speaks [text] and returns once it was played, or false if the voice can't speak.
+   * Speaks [text] with [speaker] and returns once it was played, or false if the voice can't speak.
    * [next] is what comes after, so it can be prepared while [text] plays and there is no pause in between.
    */
   suspend fun speak(
     text: String,
     next: String?,
     speed: Float,
+    speaker: NaturalSpeaker,
   ): Boolean {
+    val speech = Speech(text, speed, speaker)
     val pending = upcoming
-    val audio = if (pending != null && pending.first == text) pending.second.await() else generate(text, speed)
-    upcoming = next?.let { it to scope.async { generate(it, speed) } }
+    val audio = if (pending != null && pending.first == speech) {
+      pending.second.await()
+    } else {
+      pending?.second?.cancel()
+      generate(speech)
+    }
+    upcoming = next?.let { Speech(it, speed, speaker) }?.let { it to scope.async { generate(it) } }
     if (audio == null) return false
     play(audio)
     return true
   }
 
-  private suspend fun generate(
-    text: String,
-    speed: Float,
-  ): GeneratedAudio? = withContext(Dispatchers.Default) {
+  private suspend fun generate(speech: Speech): GeneratedAudio? = withContext(Dispatchers.Default) {
     mutex.withLock {
       val tts = tts ?: createTts() ?: return@withContext null
-      val language = Locale.getDefault().language.takeIf { it in languages } ?: "en"
       try {
         tts.generateWithConfig(
-          text = text,
-          config = GenerationConfig(speed = speed, extra = mapOf("lang" to language)),
+          text = speech.text,
+          config = GenerationConfig(
+            sid = speech.speaker.id,
+            speed = speech.speed,
+            extra = mapOf("lang" to speech.speaker.language),
+          ),
         ).takeIf { it.samples.isNotEmpty() }
       } catch (e: Exception) {
         Logger.w(e, "Could not speak with the voice")
@@ -142,20 +151,28 @@ internal class NeuralVoice(context: Context) {
 
   private fun createTts(): OfflineTts? {
     if (!isDownloaded) return null
+    val locale = Locale.getDefault()
+    val english = if (locale.prefersBritishEnglish()) "gb" else "us"
     return try {
       val config = OfflineTtsConfig(
         model = OfflineTtsModelConfig(
-          supertonic = OfflineTtsSupertonicModelConfig(
-            durationPredictor = "$folder/duration_predictor.int8.onnx",
-            textEncoder = "$folder/text_encoder.int8.onnx",
-            vectorEstimator = "$folder/vector_estimator.int8.onnx",
-            vocoder = "$folder/vocoder.int8.onnx",
-            ttsJson = "$folder/tts.json",
-            unicodeIndexer = "$folder/unicode_indexer.bin",
-            voiceStyle = "$folder/voice.bin",
+          kokoro = OfflineTtsKokoroModelConfig(
+            model = "$folder/model.int8.onnx",
+            voices = "$folder/voices.bin",
+            tokens = "$folder/tokens.txt",
+            dataDir = "$folder/espeak-ng-data",
+            dictDir = "$folder/dict",
+            lexicon = "$folder/lexicon-$english-en.txt,$folder/lexicon-zh.txt",
+            lang = naturalSpeakers(locale).firstOrNull()?.language ?: "en-us",
           ),
           numThreads = 4,
         ),
+        // reads numbers and dates in Chinese text the Chinese way
+        ruleFsts = if (locale.language == "zh") {
+          listOf("date", "phone", "number").joinToString(",") { "$folder/$it-zh.fst" }
+        } else {
+          ""
+        },
       )
       OfflineTts(config = config).also { tts = it }
     } catch (e: Throwable) {
@@ -217,3 +234,9 @@ internal class NeuralVoice(context: Context) {
     }
   }
 }
+
+private data class Speech(
+  val text: String,
+  val speed: Float,
+  val speaker: NaturalSpeaker,
+)

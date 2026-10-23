@@ -4,6 +4,7 @@ import android.app.Application
 import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
@@ -27,12 +28,14 @@ import voice.core.data.Highlight
 import voice.core.data.HighlightColor
 import voice.core.data.ReaderSettings
 import voice.core.data.store.EbooksStore
+import voice.core.data.store.ReaderNaturalSpeakerStore
 import voice.core.data.store.ReaderNaturalVoiceStore
 import voice.core.data.store.ReaderSettingsStore
 import voice.core.data.store.ReaderSpeechRateStore
 import voice.core.ebook.parseEpub
 import voice.core.logging.api.Logger
 import voice.navigation.Navigator
+import java.util.Locale
 import kotlin.time.Duration.Companion.seconds
 
 internal sealed interface ReaderContent {
@@ -81,6 +84,9 @@ internal data class VoiceState(
   val downloadProgress: Float?,
   val downloadFailed: Boolean,
   val speechRate: Float,
+  /** The voices of the natural voice for the phone's language, empty if it doesn't speak it. */
+  val speakers: List<NaturalSpeaker>,
+  val speaker: NaturalSpeaker?,
 )
 
 internal enum class ReaderMessage {
@@ -97,6 +103,8 @@ class ReaderViewModel(
   private val settingsStore: DataStore<ReaderSettings>,
   @ReaderNaturalVoiceStore
   private val naturalVoiceStore: DataStore<Boolean>,
+  @ReaderNaturalSpeakerStore
+  private val naturalSpeakerStore: DataStore<Int>,
   @ReaderSpeechRateStore
   private val speechRateStore: DataStore<Float>,
   private val application: Application,
@@ -120,6 +128,10 @@ class ReaderViewModel(
   private var downloadProgress by mutableStateOf<Float?>(null)
   private var downloadFailed by mutableStateOf(false)
   private var speechRate by mutableFloatStateOf(1F)
+  private val speakers = naturalSpeakers(Locale.getDefault())
+  private var speakerId by mutableIntStateOf(-1)
+  private val speaker: NaturalSpeaker?
+    get() = speakers.firstOrNull { it.id == speakerId } ?: speakers.firstOrNull()
   private var bookmarks by mutableStateOf(emptyList<EbookPosition>())
   private var highlights by mutableStateOf(emptyList<Highlight>())
   private var searchMatch by mutableStateOf<BookRange?>(null)
@@ -134,6 +146,9 @@ class ReaderViewModel(
     }
     scope.launch {
       speechRateStore.data.collect { speechRate = it }
+    }
+    scope.launch {
+      naturalSpeakerStore.data.collect { speakerId = it }
     }
     scope.launch {
       naturalReady = withContext(dispatcherProvider.io) { neuralVoice.isDownloaded }
@@ -196,6 +211,8 @@ class ReaderViewModel(
           downloadProgress = downloadProgress,
           downloadFailed = downloadFailed,
           speechRate = speechRate,
+          speakers = speakers,
+          speaker = speaker,
         ),
         bookmarks = bookmarks,
         highlights = highlights,
@@ -316,6 +333,11 @@ class ReaderViewModel(
     scope.launch { speechRateStore.updateData { rate } }
   }
 
+  internal fun onSpeakerSelect(speaker: NaturalSpeaker) {
+    speakerId = speaker.id
+    scope.launch { naturalSpeakerStore.updateData { speaker.id } }
+  }
+
   internal fun stopReadingAloudClick() {
     stopReadingAloud()
   }
@@ -354,7 +376,8 @@ class ReaderViewModel(
         moveTo(EbookPosition(section, chunk.first))
         readingRange = chunk
         val next = nextChunk(text, chunk.last + 1)?.let { text.substring(it) }
-        if (useNaturalVoice && !neuralVoice.speak(text.substring(chunk), next, speechRate)) {
+        val speaker = speaker
+        if (useNaturalVoice && (speaker == null || !neuralVoice.speak(text.substring(chunk), next, speechRate, speaker))) {
           useNaturalVoice = false
           messageChannel.trySend(ReaderMessage.NaturalVoiceUnavailable)
         }

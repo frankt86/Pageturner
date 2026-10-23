@@ -278,6 +278,7 @@ internal fun ReaderScreen(uri: Uri) {
     ReadAloudSheet(
       voice = loaded.voice,
       onVoiceSelect = viewModel::onVoiceSelect,
+      onSpeakerSelect = viewModel::onSpeakerSelect,
       onSpeechRateChange = viewModel::onSpeechRateChange,
       onStartClick = {
         sheet = null

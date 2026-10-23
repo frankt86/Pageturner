@@ -79,6 +79,10 @@ public annotation class ReaderSettingsStore
 @Qualifier
 public annotation class ReaderNaturalVoiceStore
 
+/** Which voice of the natural voice reads aloud, -1 for the default one of the phone's language. */
+@Qualifier
+public annotation class ReaderNaturalSpeakerStore
+
 /** How fast reading aloud speaks, 1 being normal. */
 @Qualifier
 public annotation class ReaderSpeechRateStore
