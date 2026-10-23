@@ -26,6 +26,12 @@ class PaginationTest {
   }
 
   @Test
+  fun `a question ends a sentence too`() {
+    val text = "Who is there? Nobody at all."
+    assertEquals("Who is there?", text.substring(nextChunk(text, 0, maxLength = 16)!!))
+  }
+
+  @Test
   fun `a long paragraph without sentences is cut at the limit`() {
     val text = "abcdefghij"
     assertEquals("abcd", text.substring(nextChunk(text, 0, maxLength = 4)!!))

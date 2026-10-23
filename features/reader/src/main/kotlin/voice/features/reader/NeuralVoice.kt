@@ -33,8 +33,7 @@ import java.util.Locale
 private const val MODEL = "sherpa-onnx-supertonic-3-tts-int8-2026-05-11"
 private const val MODEL_URL = "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/$MODEL.tar.bz2"
 
-// languages the model knows by name, anything else lets it work the language out from the text
-private val namedLanguages = setOf(
+private val languages = setOf(
   "en", "ko", "ja", "ar", "bg", "cs", "da", "de", "el", "es", "et", "fi", "fr", "hi", "hr", "hu",
   "id", "it", "lt", "lv", "nl", "pl", "pt", "ro", "ru", "sk", "sl", "sv", "tr", "uk", "vi",
 )
@@ -128,11 +127,16 @@ internal class NeuralVoice(context: Context) {
   ): GeneratedAudio? = withContext(Dispatchers.Default) {
     mutex.withLock {
       val tts = tts ?: createTts() ?: return@withContext null
-      val language = Locale.getDefault().language.takeIf { it in namedLanguages } ?: "na"
-      tts.generateWithConfig(
-        text = text,
-        config = GenerationConfig(speed = speed, extra = mapOf("lang" to language)),
-      ).takeIf { it.samples.isNotEmpty() }
+      val language = Locale.getDefault().language.takeIf { it in languages } ?: "en"
+      try {
+        tts.generateWithConfig(
+          text = text,
+          config = GenerationConfig(speed = speed, extra = mapOf("lang" to language)),
+        ).takeIf { it.samples.isNotEmpty() }
+      } catch (e: Exception) {
+        Logger.w(e, "Could not speak with the voice")
+        null
+      }
     }
   }
 
