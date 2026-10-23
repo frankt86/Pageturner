@@ -106,6 +106,8 @@ internal fun CurlPages(
     val twoPages = pagesPerSpread == 2
     val spinePx = if (twoPages) with(LocalDensity.current) { spineWidth.toPx() } else 0F
     val width = constraints.maxWidth.toFloat()
+    val pageWidth = if (twoPages) (maxWidth - spineWidth) / 2 else maxWidth
+    val rightPageX = maxWidth - pageWidth
     // all folds are measured on the (right) page that turns, the spine lies half its width left of it
     val pageSize = Size(if (twoPages) (width - spinePx) / 2 else width, constraints.maxHeight.toFloat())
     val gap = spinePx / 2
@@ -239,7 +241,6 @@ internal fun CurlPages(
           )
         },
     ) {
-      val pageWidth = if (twoPages) (maxWidth - spineWidth) / 2 else maxWidth
       if (twoPages) {
         Box(
           Modifier
@@ -266,7 +267,7 @@ internal fun CurlPages(
             ),
             Placed(
               page = index * 2 + 1,
-              x = maxWidth - pageWidth,
+              x = rightPageX,
               modifier = if (fold == null) Modifier else Modifier.curl(gap, Offset.Zero, front = true, flap = null) { fold.value },
             ),
             // the back of the turning page is the left page of the spread after it
