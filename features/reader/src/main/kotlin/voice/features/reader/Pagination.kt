@@ -53,7 +53,8 @@ internal fun paginate(
 internal fun nextChunk(
   text: String,
   from: Int,
-  maxLength: Int = 3000,
+  // the natural voice only starts speaking once the whole chunk is ready, so a long one means a long silence
+  maxLength: Int = 300,
 ): IntRange? {
   var start = from.coerceAtLeast(0)
   while (start < text.length && text[start].isWhitespace()) start++
@@ -61,7 +62,7 @@ internal fun nextChunk(
   var end = text.indexOf('\n', start).takeIf { it != -1 } ?: text.length
   if (end - start > maxLength) {
     val limit = start + maxLength
-    val sentenceEnd = text.lastIndexOf(". ", limit)
+    val sentenceEnd = listOf(". ", "! ", "? ").maxOf { text.lastIndexOf(it, limit) }
     end = if (sentenceEnd > start) sentenceEnd + 1 else limit
   }
   return start until end
