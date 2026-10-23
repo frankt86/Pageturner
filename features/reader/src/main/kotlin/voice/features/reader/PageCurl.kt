@@ -265,16 +265,17 @@ private fun Modifier.curl(
 
   val rightCross = intersection(top, bottom, Offset(size.width, 0F), Offset(size.width, size.height))
   // always four corners, switching between three and four makes the shadow jump
+  val page = size
   val back = buildList {
-    if (top.x < size.width) {
+    if (top.x < page.width) {
       add(top)
-      add(Offset(size.width, top.y))
+      add(Offset(page.width, top.y))
     } else if (rightCross != null) {
       add(rightCross)
       add(rightCross)
     }
-    if (bottom.x < size.width) {
-      add(Offset(size.width, size.height))
+    if (bottom.x < page.width) {
+      add(Offset(page.width, page.height))
       add(bottom)
     } else if (rightCross != null) {
       add(rightCross)
