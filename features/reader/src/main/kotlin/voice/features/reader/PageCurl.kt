@@ -43,6 +43,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import voice.core.data.PageTransition
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -130,6 +131,8 @@ internal fun CurlPages(
   // previews can't drag, this shows the page curled this far
   previewTurn: Float? = null,
   spineWidth: Dp = 0.dp,
+  // a shorter drag lets the page fall back
+  minSwipe: Dp = 0.dp,
   spine: @Composable () -> Unit = {},
   page: @Composable (index: Int) -> Unit,
 ) {
@@ -158,6 +161,7 @@ internal fun CurlPages(
     val latestOnTurnCancel by rememberUpdatedState(onTurnCancel)
     val latestOnCenterTap by rememberUpdatedState(onCenterTap)
     val latestTransition by rememberUpdatedState(transition)
+    val latestMinSwipe by rememberUpdatedState(with(LocalDensity.current) { minSwipe.toPx() })
     val scope = rememberCoroutineScope()
 
     fun turnForward(fromCorner: Boolean) {
@@ -246,8 +250,9 @@ internal fun CurlPages(
       val fold = drag.lifted ?: return
       drag.lifted = null
       val travelled = drag.finger.x + drag.velocity.calculateVelocity().x * FLING_SECONDS - drag.start.x
+      val farEnough = abs(drag.finger.x - drag.start.x) >= latestMinSwipe
       if (fold === forward) {
-        if (-travelled > pageSize.width * TURN_DISTANCE) {
+        if (farEnough && -travelled > pageSize.width * TURN_DISTANCE) {
           turnForward(fromCorner = false)
         } else {
           scope.launch {
@@ -256,7 +261,7 @@ internal fun CurlPages(
           }
         }
       } else {
-        if (travelled > pageSize.width * TURN_DISTANCE) {
+        if (farEnough && travelled > pageSize.width * TURN_DISTANCE) {
           turnBackward(fromCorner = false)
         } else {
           scope.launch {

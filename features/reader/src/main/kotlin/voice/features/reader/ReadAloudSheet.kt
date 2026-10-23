@@ -36,6 +36,8 @@ import voice.core.strings.R as StringsR
 
 @Composable
 internal fun ReadAloudSheet(
+  // the size of the reader's controls
+  scale: Float,
   voice: VoiceState,
   onVoiceSelect: (natural: Boolean) -> Unit,
   onSpeakerSelect: (NaturalSpeaker) -> Unit,
@@ -44,74 +46,76 @@ internal fun ReadAloudSheet(
   onDismiss: () -> Unit,
 ) {
   ModalBottomSheet(onDismissRequest = onDismiss) {
-    Column(Modifier.padding(horizontal = 24.dp, vertical = 8.dp)) {
-      Text(
-        text = stringResource(StringsR.string.reader_read_aloud),
-        style = MaterialTheme.typography.titleLarge,
-      )
-      Column(
-        Modifier
-          .padding(vertical = 8.dp)
-          .selectableGroup(),
-      ) {
-        VoiceOption(
-          title = stringResource(StringsR.string.reader_voice_natural),
-          summary = when {
-            voice.downloadProgress != null -> stringResource(
-              StringsR.string.reader_voice_natural_downloading,
-              (voice.downloadProgress * 100).toInt(),
-            )
-            voice.downloadFailed -> stringResource(StringsR.string.reader_voice_natural_failed)
-            voice.naturalReady -> null
-            else -> stringResource(StringsR.string.reader_voice_natural_summary)
-          },
-          selected = voice.natural,
-          progress = voice.downloadProgress,
-          onClick = { onVoiceSelect(true) },
+    ScaledControls(scale) {
+      Column(Modifier.padding(horizontal = 24.dp, vertical = 8.dp)) {
+        Text(
+          text = stringResource(StringsR.string.reader_read_aloud),
+          style = MaterialTheme.typography.titleLarge,
         )
-        if (voice.natural && voice.naturalReady && voice.speakers.isNotEmpty()) {
-          SpeakerPicker(
-            speakers = voice.speakers,
-            selected = voice.speaker,
-            onSelect = onSpeakerSelect,
+        Column(
+          Modifier
+            .padding(vertical = 8.dp)
+            .selectableGroup(),
+        ) {
+          VoiceOption(
+            title = stringResource(StringsR.string.reader_voice_natural),
+            summary = when {
+              voice.downloadProgress != null -> stringResource(
+                StringsR.string.reader_voice_natural_downloading,
+                (voice.downloadProgress * 100).toInt(),
+              )
+              voice.downloadFailed -> stringResource(StringsR.string.reader_voice_natural_failed)
+              voice.naturalReady -> null
+              else -> stringResource(StringsR.string.reader_voice_natural_summary)
+            },
+            selected = voice.natural,
+            progress = voice.downloadProgress,
+            onClick = { onVoiceSelect(true) },
+          )
+          if (voice.natural && voice.naturalReady && voice.speakers.isNotEmpty()) {
+            SpeakerPicker(
+              speakers = voice.speakers,
+              selected = voice.speaker,
+              onSelect = onSpeakerSelect,
+            )
+          }
+          VoiceOption(
+            title = stringResource(StringsR.string.reader_voice_phone),
+            summary = stringResource(StringsR.string.reader_voice_phone_summary),
+            selected = !voice.natural,
+            progress = null,
+            onClick = { onVoiceSelect(false) },
           )
         }
-        VoiceOption(
-          title = stringResource(StringsR.string.reader_voice_phone),
-          summary = stringResource(StringsR.string.reader_voice_phone_summary),
-          selected = !voice.natural,
-          progress = null,
-          onClick = { onVoiceSelect(false) },
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          Text(
+            text = stringResource(StringsR.string.reader_voice_speed),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.weight(1F),
+          )
+          Text(
+            text = NumberFormat.getNumberInstance().apply { maximumFractionDigits = 1 }.format(voice.speechRate) + "×",
+            style = MaterialTheme.typography.labelLarge,
+          )
+        }
+        val sliderState = rememberSliderState(value = voice.speechRate, trackRange = 0.6F..1.8F)
+        Slider(
+          state = sliderState,
+          onValueChange = {
+            sliderState.value = it
+            onSpeechRateChange((it * 10).roundToInt() / 10F)
+          },
         )
-      }
-      Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(
-          text = stringResource(StringsR.string.reader_voice_speed),
-          style = MaterialTheme.typography.titleMedium,
-          modifier = Modifier.weight(1F),
-        )
-        Text(
-          text = NumberFormat.getNumberInstance().apply { maximumFractionDigits = 1 }.format(voice.speechRate) + "×",
-          style = MaterialTheme.typography.labelLarge,
-        )
-      }
-      val sliderState = rememberSliderState(value = voice.speechRate, trackRange = 0.6F..1.8F)
-      Slider(
-        state = sliderState,
-        onValueChange = {
-          sliderState.value = it
-          onSpeechRateChange((it * 10).roundToInt() / 10F)
-        },
-      )
-      Button(
-        onClick = onStartClick,
-        enabled = !voice.natural || voice.naturalReady,
-        shapes = ButtonDefaults.shapes(),
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(vertical = 16.dp),
-      ) {
-        Text(stringResource(StringsR.string.reader_voice_start))
+        Button(
+          onClick = onStartClick,
+          enabled = !voice.natural || voice.naturalReady,
+          shapes = ButtonDefaults.shapes(),
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        ) {
+          Text(stringResource(StringsR.string.reader_voice_start))
+        }
       }
     }
   }

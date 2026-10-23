@@ -554,6 +554,8 @@
     <string name="reader.auto_turn">Turn pages automatically</string>
     <!-- Label of the slider in the display sheet of the ebook reader for how long each page stays before it turns by itself. The seconds show next to it. -->
     <string name="reader.auto_turn.interval">Time per page</string>
+    <!-- Switch in the display sheet of the ebook reader that shows the battery level at the bottom of the page. -->
+    <string name="reader.battery">Show the battery</string>
     <!-- Button in the top bar of the ebook reader that bookmarks the page on screen. -->
     <string name="reader.bookmark.add">Bookmark this page</string>
     <!-- Button in the bookmarks list of the ebook reader that deletes a bookmark. -->
@@ -568,8 +570,12 @@
     <string name="reader.brightness">Brightness</string>
     <!-- Chip next to the brightness slider in the ebook reader. When it's on, the phone decides the brightness as usual. -->
     <string name="reader.brightness.system">System</string>
+    <!-- Heading in the controls sheet of the ebook reader over the list of top bar buttons, which can be shown, hidden and moved. -->
+    <string name="reader.buttons">Buttons</string>
     <!-- Name of a chapter in the ebook reader when the book doesn't name it. %d is its number, starting at 1. -->
     <string name="reader.chapter">Chapter %d</string>
+    <!-- Switch in the display sheet of the ebook reader that shows the time at the bottom of the page. -->
+    <string name="reader.clock">Show the time</string>
     <!-- Row in the colors sheet of the ebook reader that sets the color of the pages behind the text. -->
     <string name="reader.color.background">Background</string>
     <!-- Label of the slider in the color picker of the ebook reader that makes a color lighter or darker (the value in hue, saturation, value). Not the screen brightness. -->
@@ -588,14 +594,22 @@
     <string name="reader.color.text">Text</string>
     <!-- Button in the display sheet of the ebook reader, and title of the sheet it opens, with custom colors, saved themes, highlight colors and day and night themes. -->
     <string name="reader.colors">Colors and themes</string>
+    <!-- Label in the controls sheet of the ebook reader. Below it are choices like Never, 10 pages, 50 pages: a jump on the page bar over more pages asks first. -->
+    <string name="reader.confirm_jump">Ask before jumping over more than</string>
     <!-- Button and title of the sheet in the ebook reader that lists the chapters of the book, to jump to one. -->
     <string name="reader.contents">Contents</string>
     <!-- In the colors sheet of the ebook reader, how well the text stands out from the page, as a contrast ratio like 12.6:1 in place of %s. -->
     <string name="reader.contrast">Text contrast %s</string>
     <!-- Warning under the text contrast in the colors sheet of the ebook reader when the text and page colors are too close, below the WCAG minimum of 4.5:1. -->
     <string name="reader.contrast.low">Low contrast. The text may be hard to read.</string>
+    <!-- Button in the display sheet of the ebook reader and title of the sheet it opens, with the settings for taps, keys, the mouse wheel and the buttons. -->
+    <string name="reader.controls">Controls</string>
     <!-- Button and title of the sheet in the ebook reader where the reader changes how the pages look: colors, font, text size, spacing, margins and brightness. -->
     <string name="reader.display">Display</string>
+    <!-- Label in the controls sheet of the ebook reader for what tapping the page twice quickly does. -->
+    <string name="reader.double_tap">Double tap</string>
+    <!-- Slider in the controls sheet of the ebook reader: touches that start this close to the left or right edge do nothing, e.g. a palm resting on the screen. -->
+    <string name="reader.edge_margin">Ignore touches at the edges</string>
     <!-- Shown in the ebook reader when an EPUB or PDF file can't be read. -->
     <string name="reader.failed">This book couldn\'t be opened</string>
     <!-- Label above the choice of fonts in the display sheet of the ebook reader. -->
@@ -620,6 +634,8 @@
     <string name="reader.footer.chapter_page">%1$d of %2$d in chapter</string>
     <!-- Choice for the line at the bottom of an ebook page: the page number within the book. -->
     <string name="reader.footer.page">Page</string>
+    <!-- Choice for the page footer of the ebook reader: the pages left in the chapter. -->
+    <string name="reader.footer.pages_left">Pages left</string>
     <!-- Choice for the line at the bottom of an ebook page: how much of the book is read, in percent. -->
     <string name="reader.footer.percent">Percent</string>
     <!-- Choice for the line at the bottom of an ebook page: the reading time left in the chapter. -->
@@ -628,6 +644,14 @@
     <string name="reader.footer.time_left">%s left in chapter</string>
     <!-- Read out by screen readers for the slider in the page bar of the ebook reader that jumps to any page of the book. -->
     <string name="reader.go_to_page">Go to page</string>
+    <!-- Name in the controls sheet of the ebook reader for the top bar button that scrolls or turns the pages by itself. -->
+    <string name="reader.hands_free">Hands-free</string>
+    <!-- Label in the display sheet of the ebook reader for what the line at the top of each page shows. -->
+    <string name="reader.header">Page header</string>
+    <!-- Choice for the page header of the ebook reader: the chapter title. -->
+    <string name="reader.header.chapter">Chapter</string>
+    <!-- Choice for the page header of the ebook reader: the book title. -->
+    <string name="reader.header.title">Title</string>
     <!-- Color of a highlight in the ebook reader, read out by screen readers for its color dot. -->
     <string name="reader.highlight.blue">Blue</string>
     <!-- Button that deletes a highlight in the ebook reader. -->
@@ -656,8 +680,22 @@
     <string name="reader.images.inverted">Inverted</string>
     <!-- Option for images on dark pages in the ebook reader: pictures keep their own colors. -->
     <string name="reader.images.original">Original</string>
+    <!-- Slider in the controls sheet of the ebook reader that makes the bars and menus larger or smaller, without changing the book's text. -->
+    <string name="reader.interface_size">Size of bars and menus</string>
+    <!-- Button in the dialog that asks before jumping far in the ebook reader. Goes to the page. -->
+    <string name="reader.jump">Go</string>
+    <!-- Title of the dialog that asks before jumping far in the ebook reader. %d is the page number. -->
+    <string name="reader.jump.title">Go to page %d?</string>
+    <!-- Heading in the controls sheet of the ebook reader for the keyboard, volume keys and mouse. -->
+    <string name="reader.keys">Keys and mouse</string>
+    <!-- Text in the controls sheet of the ebook reader about the keys that work in the reader. Ctrl, F, B, D and Esc are keys of a keyboard; use the names printed on keyboards in the language. -->
+    <string name="reader.keys.summary">Page keys, arrow keys, the space bar and Bluetooth page turners turn pages too. Ctrl+F searches, Ctrl+B adds a bookmark, Ctrl+D opens Display and Esc goes back.</string>
     <!-- Heading of the section in the display sheet of the ebook reader with the pages, margins and screen orientation. -->
     <string name="reader.layout">Layout</string>
+    <!-- Switch in the controls sheet of the ebook reader that swaps what tapping the left and the right side does. -->
+    <string name="reader.left_handed">Left-handed</string>
+    <!-- Summary of the left-handed switch in the controls sheet of the ebook reader. -->
+    <string name="reader.left_handed.summary">Swaps what the left and right side do</string>
     <!-- Label of the slider in the display sheet of the ebook reader that sets the space between letters. -->
     <string name="reader.letter_spacing">Letter spacing</string>
     <!-- Switch in the display sheet of the ebook reader. When it's on, letter pairs like fi are joined into one shape, as in printed books. The typographic term. -->
@@ -672,10 +710,26 @@
     <string name="reader.margin_top">Top margin</string>
     <!-- Label of the slider in the display sheet of the ebook reader that sets the empty space left and right of the text. -->
     <string name="reader.margins">Margins</string>
+    <!-- Slider in the controls sheet of the ebook reader for how far a swipe has to go before the page turns. -->
+    <string name="reader.min_swipe">Shortest swipe to turn a page</string>
+    <!-- Label in the controls sheet of the ebook reader for what the wheel of a mouse does: scroll or turn pages. -->
+    <string name="reader.mouse_wheel">Mouse wheel</string>
+    <!-- Choice for the mouse wheel in the ebook reader: each step of the wheel turns a page. -->
+    <string name="reader.mouse_wheel.turn">Turn pages</string>
+    <!-- Button in the controls sheet of the ebook reader that moves a top bar button one place down the list. -->
+    <string name="reader.move_down">Move down</string>
+    <!-- Button in the controls sheet of the ebook reader that moves a top bar button one place up the list. -->
+    <string name="reader.move_up">Move up</string>
     <!-- Switch in the display sheet of the ebook reader, only for EPUB books. When it's on, books are shown with a new engine that keeps the book's own layout, images and links. It's still being tested, so bookmarks, highlights, search and reading aloud aren't there yet. -->
     <string name="reader.new_engine">New book engine (beta)</string>
+    <!-- Choice in the ebook reader settings for a tap, double tap, page header or page footer that does or shows nothing. -->
+    <string name="reader.nothing">Nothing</string>
     <!-- Snackbar in the ebook reader when there is no text to read aloud, e.g. a scanned PDF. -->
     <string name="reader.nothing_to_read_aloud">There\'s no text here to read aloud</string>
+    <!-- Switch in the controls sheet of the ebook reader that puts the top bar buttons at the bottom of the screen. -->
+    <string name="reader.one_handed">Buttons at the bottom</string>
+    <!-- Summary of the switch that puts the ebook reader's buttons at the bottom of the screen. -->
+    <string name="reader.one_handed.summary">Easier to reach with one hand</string>
     <!-- Heading of the choice in the display sheet of the ebook reader whether the screen turns with the phone or stays upright or sideways while reading. -->
     <string name="reader.orientation">Orientation</string>
     <!-- Choice for the screen orientation in the ebook reader: the screen stays sideways. -->
@@ -700,6 +754,11 @@
     <string name="reader.pages.one">One page</string>
     <!-- Choice in the ebook reader: always show two pages side by side, like an open book. -->
     <string name="reader.pages.two">Two pages</string>
+    <!-- A number of pages, as a choice in the controls sheet of the ebook reader. -->
+    <plurals name="reader.pages_count">
+        <item quantity="one">%d page</item>
+        <item quantity="other">%d pages</item>
+    </plurals>
     <!-- Label of the slider in the colors sheet of the ebook reader that adds a fine grain like paper under the text, from none to strong. -->
     <string name="reader.paper_texture">Paper texture</string>
     <!-- Label of the slider in the display sheet of the ebook reader that sets how far the first line of each paragraph is moved in. -->
@@ -748,6 +807,8 @@
     <string name="reader.progress.visibility.hidden">Never</string>
     <!-- Choice for when the reading progress shows: when the middle of the page is tapped. -->
     <string name="reader.progress.visibility.on_tap">On tap</string>
+    <!-- Heading in the controls sheet of the ebook reader for settings against touching the screen by mistake. -->
+    <string name="reader.protection">Accidental touches</string>
     <!-- Switch in the display sheet of the ebook reader with the new book engine. When it's on, the book keeps the fonts and formatting it came with. -->
     <string name="reader.publisher_styles">Book\'s own style</string>
     <!-- Explains the switch reader.publisher_styles in the ebook reader. -->
@@ -778,6 +839,14 @@
     <string name="reader.schedule.night_start">Night starts</string>
     <!-- Switch in the colors sheet of the ebook reader that uses the day theme by day and the night theme at night. -->
     <string name="reader.schedule.switch">Switch themes by the time of day</string>
+    <!-- Label in the controls sheet of the ebook reader for how long the screen stays on. Below it are System, While reading and Until idle. -->
+    <string name="reader.screen_awake">Keep the screen on</string>
+    <!-- Choice for keeping the screen on in the ebook reader: until nothing was touched for a few minutes. -->
+    <string name="reader.screen_awake.idle">Until idle</string>
+    <!-- Label in the controls sheet of the ebook reader. Below it are 5, 10 and 30 minutes: the screen turns off once nothing was touched for that long. -->
+    <string name="reader.screen_awake.minutes">Turn off after no touch for</string>
+    <!-- Choice for keeping the screen on in the ebook reader: as long as the book is open. -->
+    <string name="reader.screen_awake.reading">While reading</string>
     <!-- Heading of the choice in the display sheet of the ebook reader for how the volume keys, taps and swipes move the text in the scroll mode. -->
     <string name="reader.scrolling">Scrolling</string>
     <!-- Choice for scrolling in the ebook reader: the volume keys and taps move the text one screen at once, without an animation. -->
@@ -794,6 +863,22 @@
     <string name="reader.short_lines">Shorter lines on wide screens</string>
     <!-- Button in the ebook reader that stops reading aloud. -->
     <string name="reader.stop_reading_aloud">Stop reading aloud</string>
+    <!-- Choice for a tap or double tap in the ebook reader: shows the bars, or hides them when they show. -->
+    <string name="reader.tap.bars">Show or hide bars</string>
+    <!-- Choice for a double tap in the ebook reader, and the name of the top bar button: bookmarks the page. -->
+    <string name="reader.tap.bookmark">Bookmark</string>
+    <!-- Label in the controls sheet of the ebook reader for what a tap on the left third of the page does. -->
+    <string name="reader.tap.left">Tap on the left</string>
+    <!-- Label in the controls sheet of the ebook reader for what a tap on the middle of the page does. -->
+    <string name="reader.tap.middle">Tap in the middle</string>
+    <!-- Choice for a tap in the ebook reader: turns to the next page. -->
+    <string name="reader.tap.next">Next page</string>
+    <!-- Choice for a tap in the ebook reader: turns to the previous page. -->
+    <string name="reader.tap.previous">Previous page</string>
+    <!-- Label in the controls sheet of the ebook reader for what a tap on the right third of the page does. -->
+    <string name="reader.tap.right">Tap on the right</string>
+    <!-- Heading in the controls sheet of the ebook reader for what taps on the page do. -->
+    <string name="reader.taps">Taps</string>
     <!-- Button at the end of the text settings in the display sheet of the ebook reader. Puts the font, text size, spacing and alignment back to how they were at first. -->
     <string name="reader.text.reset">Reset text settings</string>
     <!-- Label above the choice in the display sheet of the ebook reader of how the lines of text line up. -->

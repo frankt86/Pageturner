@@ -281,6 +281,8 @@ private suspend fun PointerInputScope.detectPageGestures(
 ) {
   awaitEachGesture {
     val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+    // a touch at the edge that's ignored
+    if (down.isConsumed) return@awaitEachGesture
     if (selecting()) {
       // while something is selected, a drag moves the closer end of the selection and a tap ends it
       down.consume()

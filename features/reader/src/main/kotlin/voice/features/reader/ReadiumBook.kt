@@ -12,6 +12,7 @@ import org.readium.r2.navigator.epub.EpubNavigatorFactory
 import org.readium.r2.shared.publication.Link
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
+import org.readium.r2.shared.publication.ReadingProgression
 import org.readium.r2.shared.publication.epub.landmarks
 import org.readium.r2.shared.publication.epub.pageList
 import org.readium.r2.shared.publication.services.locateProgression
@@ -42,6 +43,9 @@ internal class ReadiumBook(
   private val printPages: List<PrintPage> = emptyList(),
 ) {
   val navigatorFactory = EpubNavigatorFactory(publication)
+
+  /** The pages turn from right to left, so the sides swap for taps and arrow keys. */
+  val rightToLeft: Boolean = publication.metadata.readingProgression == ReadingProgression.RTL
 
   /** Where the reader is, and where to start when the pages are shown again, e.g. after unfolding. */
   var locator by mutableStateOf(locator)

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -28,6 +29,7 @@ import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -37,6 +39,7 @@ import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -46,9 +49,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -94,18 +99,25 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 import org.readium.r2.shared.publication.Locator
 import voice.core.common.rootGraphAs
+import voice.core.data.DoubleTapAction
 import voice.core.data.EbookPosition
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
+import voice.core.data.MouseWheel
 import voice.core.data.ProgressVisibility
+import voice.core.data.ReaderAction
+import voice.core.data.ReaderHeader
 import voice.core.data.ReaderOrientation
 import voice.core.data.ReaderPages
 import voice.core.data.ReaderSettings
 import voice.core.data.ReadingMode
+import voice.core.data.ScreenAwake
+import voice.core.data.TapAction
 import voice.core.ui.bookText
 import voice.core.ui.icons.VoiceIcons
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import voice.core.strings.R as StringsR
 
@@ -156,13 +168,9 @@ internal fun ReaderScreen(uri: Uri) {
       )
     }
   }
-  val view = LocalView.current
-  DisposableEffect(view) {
-    view.keepScreenOn = true
-    onDispose { view.keepScreenOn = false }
-  }
   val state = viewModel.state()
   val loaded = state as? ReaderState.Loaded
+  val settings = loaded?.settings ?: ReaderSettings()
   var sheet by rememberSaveable { mutableStateOf<ReaderSheet?>(null) }
   // the bars show when the book opens and get out of the way once reading starts
   var barsVisible by rememberSaveable { mutableStateOf(true) }
@@ -177,9 +185,10 @@ internal fun ReaderScreen(uri: Uri) {
   var editedReadiumHighlight by remember { mutableStateOf<LocatedHighlight?>(null) }
   // each request turns a page or scrolls a screen, forward for a positive step
   val turnRequests = remember { MutableSharedFlow<Int>(extraBufferCapacity = 1) }
+  val turn = remember(turnRequests) { { step: Int -> val _ = turnRequests.tryEmit(step) } }
   // automatic scrolling or page turns, which wait while the bars, a sheet, a selection or reading aloud are on
   var autoRunning by rememberSaveable { mutableStateOf(false) }
-  val scrollMode = loaded?.settings?.readingMode == ReadingMode.Scroll
+  val scrollMode = settings.readingMode == ReadingMode.Scroll
   val autoPaused = barsVisible || sheet != null || editedHighlight != null || editedReadiumHighlight != null ||
     selection.range != null || loaded?.readingAloud == true
   val autoScrollSpeed = loaded?.settings?.autoScrollSpeed?.takeIf { autoRunning && scrollMode && !autoPaused }
@@ -189,8 +198,17 @@ internal fun ReaderScreen(uri: Uri) {
   LaunchedEffect(autoTurnSeconds, place) {
     if (autoTurnSeconds == null) return@LaunchedEffect
     delay(autoTurnSeconds.seconds)
-    val _ = turnRequests.tryEmit(1)
+    turn(1)
   }
+  val touches = remember { mutableIntStateOf(0) }
+  val onTouch = remember { { touches.intValue += 1 } }
+  KeepScreenOn(
+    mode = settings.screenAwake,
+    idleMinutes = settings.screenAwakeMinutes,
+    busy = loaded?.readingAloud == true || autoRunning,
+    touches = { touches.intValue },
+    place = place,
+  )
   ReaderWindow(
     immersive = !barsVisible && loaded != null,
     brightness = loaded?.settings?.brightness,
@@ -200,11 +218,62 @@ internal fun ReaderScreen(uri: Uri) {
     barsVisible = false
     viewModel.onPageTurned(page, progress)
   }
+  val readium = loaded?.readium
+  val bookmark = {
+    if (readium != null) viewModel.onReadiumBookmarkClick() else viewModel.onBookmarkClick(visiblePages)
+  }
+  val scope = rememberCoroutineScope()
+  val taps = remember(scope) { Taps(scope) }
+  val onTap = { fraction: Float ->
+    taps.tap(
+      withDoubleTap = settings.doubleTap != DoubleTapAction.Nothing,
+      onTap = {
+        when (settings.tapActionAt(fraction, rightToLeft = readium?.rightToLeft == true)) {
+          TapAction.Previous -> turn(-1)
+          TapAction.Next -> turn(1)
+          TapAction.Bars -> barsVisible = !barsVisible
+          TapAction.Nothing -> Unit
+        }
+      },
+      onDoubleTap = {
+        when (settings.doubleTap) {
+          DoubleTapAction.Nothing -> Unit
+          DoubleTapAction.Bars -> barsVisible = !barsVisible
+          DoubleTapAction.Bookmark -> bookmark()
+        }
+      },
+    )
+  }
+  val onKey = { keyCode: Int, ctrl: Boolean, shift: Boolean, down: Boolean ->
+    if (down) touches.intValue += 1
+    val action = keyAction(
+      keyCode = keyCode,
+      ctrl = ctrl,
+      shift = shift,
+      // reading aloud keeps the volume keys for the volume
+      volumeKeys = settings.volumeKeysTurnPages && loaded != null && !loaded.readingAloud,
+      rightToLeft = readium?.rightToLeft == true,
+    )
+    if (down && action != null) {
+      when (action) {
+        KeyAction.Next -> turn(1)
+        KeyAction.Previous -> turn(-1)
+        KeyAction.Search -> if (loaded?.content?.searchable == true) sheet = ReaderSheet.Search
+        KeyAction.Bookmark -> if (loaded != null) bookmark()
+        KeyAction.Display -> if (loaded != null) sheet = ReaderSheet.Display
+        KeyAction.Close -> if (sheet != null) sheet = null else viewModel.onCloseClick()
+      }
+    }
+    // the key up too, or the phone shows its volume panel
+    action != null
+  }
   Box(
     Modifier
       .fillMaxSize()
-      .background(loaded?.settings?.pageColors()?.paper ?: MaterialTheme.colorScheme.surface),
+      .background(loaded?.settings?.pageColors()?.paper ?: MaterialTheme.colorScheme.surface)
+      .onAnyTouch(onTouch),
   ) {
+    ReaderKeys(onKey)
     when (state) {
       ReaderState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         LoadingIndicator(Modifier.size(64.dp))
@@ -231,11 +300,25 @@ internal fun ReaderScreen(uri: Uri) {
         ) {
           val characters = (state.content as? ReaderContent.Epub)?.totalLength ?: 0
           Column(Modifier.fillMaxSize()) {
+            val header = when (state.settings.header) {
+              ReaderHeader.Nothing -> null
+              ReaderHeader.Title -> state.content.title
+              ReaderHeader.Chapter -> state.readium.locator?.let { state.readium.chapterTitle(it) }.orEmpty()
+            }
+            if (header != null) {
+              ReaderPageTheme(state.settings.pageColors()) {
+                PageHeader(
+                  text = header,
+                  modifier = Modifier
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(horizontal = state.settings.margin.dp),
+                )
+              }
+            }
             ReadiumPages(
               book = state.readium,
               settings = state.settings,
-              // reading aloud keeps the volume keys for the volume
-              volumeKeysTurnPages = state.settings.volumeKeysTurnPages && !state.readingAloud,
+              onKey = onKey,
               transition = state.settings.pageTransition,
               jumps = readiumJumps,
               turnRequests = turnRequests,
@@ -243,7 +326,7 @@ internal fun ReaderScreen(uri: Uri) {
               onAutoScrollEnd = { autoRunning = false },
               onLocatorChange = viewModel::onLocatorChange,
               onPageTurn = { barsVisible = false },
-              onCenterTap = { barsVisible = !barsVisible },
+              onTap = onTap,
               onHighlightAdd = { locator, color -> val _ = viewModel.onReadiumHighlightAdd(locator, color) },
               onNoteAdd = { locator -> editedReadiumHighlight = viewModel.onReadiumHighlightAdd(locator, HighlightColor.Yellow) },
               onHighlightClick = { editedReadiumHighlight = it },
@@ -251,7 +334,7 @@ internal fun ReaderScreen(uri: Uri) {
                 .fillMaxWidth()
                 .weight(1F),
             )
-            if (state.settings.progressVisibility == ProgressVisibility.Always) {
+            if (state.settings.progressVisibility == ProgressVisibility.Always || state.settings.clock || state.settings.battery) {
               ReadiumFooter(
                 book = state.readium,
                 settings = state.settings,
@@ -278,8 +361,8 @@ internal fun ReaderScreen(uri: Uri) {
           onHighlightClick = { editedHighlight = it },
           onVisiblePagesChange = { visiblePages = it },
           turnRequests = turnRequests,
-          onTurnRequest = { val _ = turnRequests.tryEmit(it) },
-          onCenterTap = { barsVisible = !barsVisible },
+          onTurnRequest = turn,
+          onTap = onTap,
           autoScrollSpeed = autoScrollSpeed,
           onScroll = viewModel::onScrolled,
           onUserScroll = { barsVisible = false },
@@ -287,14 +370,14 @@ internal fun ReaderScreen(uri: Uri) {
           // the insets of hidden bars too, or showing them would lay out all pages anew
           modifier = Modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout)),
-          overlay = { pages, pagesPerSpread, turn ->
+            .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout))
+            .wheelTurns(enabled = state.settings.mouseWheel == MouseWheel.Turn, onTurn = turn),
+          overlay = { pages, pagesPerSpread, _ ->
             ReaderControls(
               state = state,
               pages = pages,
               pagesPerSpread = pagesPerSpread,
               barsVisible = barsVisible,
-              onTurn = turn,
               onJump = viewModel::onPageTurned,
             )
           },
@@ -304,32 +387,30 @@ internal fun ReaderScreen(uri: Uri) {
     val selected = selection.range
     val epub = loaded?.content as? ReaderContent.Epub
     if (selected != null && epub != null) {
-      SelectionToolbar(
-        selectedText = epub.text(selected),
-        highlightNames = loaded.settings.highlightNames,
-        onHighlightClick = { color ->
-          val _ = viewModel.onHighlightAdd(selected, color)
-          selection.clear()
-        },
-        onNoteClick = {
-          editedHighlight = viewModel.onHighlightAdd(selected, HighlightColor.Yellow)
-          selection.clear()
-        },
-        onLookUp = selection::clear,
-        modifier = Modifier
-          .align(Alignment.BottomCenter)
-          .safeDrawingPadding()
-          .padding(16.dp),
-      )
+      ScaledControls(settings.interfaceScale) {
+        SelectionToolbar(
+          selectedText = epub.text(selected),
+          highlightNames = loaded.settings.highlightNames,
+          onHighlightClick = { color ->
+            val _ = viewModel.onHighlightAdd(selected, color)
+            selection.clear()
+          },
+          onNoteClick = {
+            editedHighlight = viewModel.onHighlightAdd(selected, HighlightColor.Yellow)
+            selection.clear()
+          },
+          onLookUp = selection::clear,
+          modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .safeDrawingPadding()
+            .padding(16.dp),
+        )
+      }
     }
-    AnimatedVisibility(
-      visible = barsVisible || loaded == null,
-      enter = fadeIn() + slideInVertically { -it },
-      exit = fadeOut() + slideOutVertically { -it },
-    ) {
-      val readium = loaded?.readium
-      ReaderTopBar(
-        title = loaded?.content?.title,
+    val actions: @Composable RowScope.() -> Unit = {
+      ReaderActionButtons(
+        actions = settings.toolbarActions(),
+        loaded = loaded != null,
         readingAloud = loaded?.readingAloud,
         bookmarked = if (readium != null) {
           readium.bookmarks.any { readium.isOnPage(it, readium.locator) }
@@ -343,15 +424,12 @@ internal fun ReaderScreen(uri: Uri) {
           else -> AutoMode.Turn
         },
         autoRunning = autoRunning,
-        onCloseClick = viewModel::onCloseClick,
         onReadAloudClick = {
           if (loaded?.readingAloud == true) viewModel.stopReadingAloudClick() else sheet = ReaderSheet.ReadAloud
         },
         onContentsClick = { sheet = ReaderSheet.Contents },
         onDisplayClick = { sheet = ReaderSheet.Display },
-        onBookmarkClick = {
-          if (readium != null) viewModel.onReadiumBookmarkClick() else viewModel.onBookmarkClick(visiblePages)
-        },
+        onBookmarkClick = bookmark,
         onSearchClick = { sheet = ReaderSheet.Search },
         onAutoClick = {
           autoRunning = !autoRunning
@@ -359,6 +437,33 @@ internal fun ReaderScreen(uri: Uri) {
           if (autoRunning) barsVisible = false
         },
       )
+    }
+    val oneHanded = settings.oneHanded && loaded != null
+    ScaledControls(settings.interfaceScale) {
+      AnimatedVisibility(
+        visible = barsVisible || loaded == null,
+        enter = fadeIn() + slideInVertically { -it },
+        exit = fadeOut() + slideOutVertically { -it },
+      ) {
+        ReaderTopBar(
+          title = loaded?.content?.title,
+          onCloseClick = viewModel::onCloseClick,
+          actions = { if (!oneHanded) actions() },
+        )
+      }
+    }
+    if (oneHanded) {
+      val alignment = Modifier.align(Alignment.BottomCenter)
+      ScaledControls(settings.interfaceScale) {
+        AnimatedVisibility(
+          visible = barsVisible,
+          enter = fadeIn() + slideInVertically { it },
+          exit = fadeOut() + slideOutVertically { it },
+          modifier = alignment,
+        ) {
+          BottomActions(actions)
+        }
+      }
     }
     SnackbarHost(
       hostState = snackbarHostState,
@@ -368,8 +473,10 @@ internal fun ReaderScreen(uri: Uri) {
     )
   }
   val content = loaded?.content as? ReaderContent.Epub
+  val scale = settings.interfaceScale
   if (loaded != null && sheet == ReaderSheet.Display) {
     DisplaySheet(
+      scale = scale,
       settings = loaded.settings,
       showTextOptions = content != null,
       newEngine = loaded.readium != null,
@@ -378,11 +485,13 @@ internal fun ReaderScreen(uri: Uri) {
       onFontImport = viewModel::onFontImport,
       onSettingsChange = viewModel::onSettingsChange,
       onColorsClick = { sheet = ReaderSheet.Colors },
+      onControlsClick = { sheet = ReaderSheet.Controls },
       onDismiss = { sheet = null },
     )
   }
   if (loaded != null && sheet == ReaderSheet.Colors) {
     ColorsSheet(
+      scale = scale,
       settings = loaded.settings,
       content = when {
         loaded.readium != null -> ColorsContent.NewEngine
@@ -396,8 +505,17 @@ internal fun ReaderScreen(uri: Uri) {
       onDismiss = { sheet = null },
     )
   }
+  if (loaded != null && sheet == ReaderSheet.Controls) {
+    ControlsSheet(
+      scale = scale,
+      settings = loaded.settings,
+      onSettingsChange = viewModel::onSettingsChange,
+      onDismiss = { sheet = null },
+    )
+  }
   if (loaded != null && sheet == ReaderSheet.ReadAloud) {
     ReadAloudSheet(
+      scale = scale,
       voice = loaded.voice,
       onVoiceSelect = viewModel::onVoiceSelect,
       onSpeakerSelect = viewModel::onSpeakerSelect,
@@ -409,9 +527,9 @@ internal fun ReaderScreen(uri: Uri) {
       onDismiss = { sheet = null },
     )
   }
-  val readium = loaded?.readium
   if (readium != null && sheet == ReaderSheet.Contents) {
     ReadiumContentsSheet(
+      scale = scale,
       book = readium,
       onJump = { locator ->
         sheet = null
@@ -424,6 +542,7 @@ internal fun ReaderScreen(uri: Uri) {
     )
   } else if (readium != null && sheet == ReaderSheet.Search) {
     SearchSheet(
+      scale = scale,
       search = viewModel::searchReadium,
       resultTitle = { result -> readium.chapterTitle(result).orEmpty() },
       resultSnippet = { result -> result.searchSnippet() },
@@ -437,6 +556,7 @@ internal fun ReaderScreen(uri: Uri) {
   } else if (loaded != null) {
     when (sheet) {
       ReaderSheet.Contents -> ContentsSheet(
+        scale = scale,
         state = loaded,
         onChapterClick = { section ->
           sheet = null
@@ -451,6 +571,7 @@ internal fun ReaderScreen(uri: Uri) {
         onDismiss = { sheet = null },
       )
       ReaderSheet.Search -> SearchSheet(
+        scale = scale,
         content = loaded.content,
         search = viewModel::search,
         onResultClick = { result ->
@@ -459,14 +580,14 @@ internal fun ReaderScreen(uri: Uri) {
         },
         onDismiss = { sheet = null },
       )
-      ReaderSheet.Display, ReaderSheet.Colors, ReaderSheet.ReadAloud, null -> Unit
+      ReaderSheet.Display, ReaderSheet.Colors, ReaderSheet.Controls, ReaderSheet.ReadAloud, null -> Unit
     }
   }
   val readiumHighlight = editedReadiumHighlight
   if (readiumHighlight != null) {
     ReadiumHighlightSheet(
       highlight = readiumHighlight,
-      settings = loaded?.settings ?: ReaderSettings(),
+      settings = settings,
       onDone = { color, note ->
         editedReadiumHighlight = null
         if (color != readiumHighlight.color || note != readiumHighlight.note) {
@@ -482,6 +603,7 @@ internal fun ReaderScreen(uri: Uri) {
   val highlight = editedHighlight
   if (highlight != null && content != null) {
     HighlightSheet(
+      scale = scale,
       highlight = highlight,
       text = content.text(BookRange(highlight.section, highlight.start, highlight.end)),
       highlightNames = loaded.settings.highlightNames,
@@ -495,6 +617,35 @@ internal fun ReaderScreen(uri: Uri) {
         viewModel.onHighlightDelete(highlight)
       },
     )
+  }
+}
+
+/** Keeps the screen on as [mode] says. [touches] and [place] change with every touch, key and turned page. */
+@Composable
+private fun KeepScreenOn(
+  mode: ScreenAwake,
+  idleMinutes: Int,
+  // reading aloud or turning by itself keeps the screen on without a touch
+  busy: Boolean,
+  touches: () -> Int,
+  place: Any?,
+) {
+  val view = LocalView.current
+  var idle by remember { mutableStateOf(false) }
+  LaunchedEffect(mode, idleMinutes, touches(), place) {
+    idle = false
+    if (mode != ScreenAwake.UntilIdle) return@LaunchedEffect
+    delay(idleMinutes.minutes)
+    idle = true
+  }
+  val on = when (mode) {
+    ScreenAwake.System -> false
+    ScreenAwake.WhileReading -> true
+    ScreenAwake.UntilIdle -> busy || !idle
+  }
+  DisposableEffect(view, on) {
+    view.keepScreenOn = on
+    onDispose { view.keepScreenOn = false }
   }
 }
 
@@ -514,6 +665,7 @@ private enum class ReaderSheet {
   Contents,
   Display,
   Colors,
+  Controls,
   ReadAloud,
   Search,
 }
@@ -528,6 +680,7 @@ private fun ReadiumHighlightSheet(
   // the sheet edits only the color and the note, the place in the text isn't used
   val editable = remember(highlight) { Highlight(section = 0, start = 0, end = 0, color = highlight.color, note = highlight.note) }
   HighlightSheet(
+    scale = settings.interfaceScale,
     highlight = editable,
     text = highlight.locator.text.highlight.orEmpty(),
     highlightNames = settings.highlightNames,
@@ -540,20 +693,8 @@ private fun ReadiumHighlightSheet(
 @Composable
 internal fun ReaderTopBar(
   title: String?,
-  readingAloud: Boolean?,
-  // null while the book loads
-  bookmarked: Boolean?,
-  showSearch: Boolean,
-  // null while the book loads
-  auto: AutoMode?,
-  autoRunning: Boolean,
   onCloseClick: () -> Unit,
-  onReadAloudClick: () -> Unit,
-  onContentsClick: () -> Unit,
-  onDisplayClick: () -> Unit,
-  onBookmarkClick: () -> Unit,
-  onSearchClick: () -> Unit,
-  onAutoClick: () -> Unit,
+  actions: @Composable RowScope.() -> Unit,
 ) {
   TopAppBar(
     title = {
@@ -576,8 +717,65 @@ internal fun ReaderTopBar(
         )
       }
     },
-    actions = {
-      if (showSearch) {
+    actions = actions,
+  )
+}
+
+internal val BottomActionsHeight = 72.dp
+
+/** The buttons of the top bar at the bottom of the screen, in reach of a thumb. */
+@Composable
+private fun BottomActions(
+  actions: @Composable RowScope.() -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  Box(
+    modifier
+      .fillMaxWidth()
+      .safeDrawingPadding()
+      .padding(bottom = 8.dp),
+    contentAlignment = Alignment.Center,
+  ) {
+    Surface(
+      shape = CircleShape,
+      color = MaterialTheme.colorScheme.surfaceContainerHigh,
+      shadowElevation = 6.dp,
+    ) {
+      Row(
+        modifier = Modifier
+          .height(BottomActionsHeight - 16.dp)
+          .padding(horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        content = actions,
+      )
+    }
+  }
+}
+
+/** The buttons of the top bar in the order of [actions]. Each one leaves itself out while it has nothing to do. */
+@Composable
+internal fun RowScope.ReaderActionButtons(
+  actions: List<ReaderAction>,
+  // false while the book loads
+  loaded: Boolean,
+  // null while the book loads
+  readingAloud: Boolean?,
+  // null while the book loads
+  bookmarked: Boolean?,
+  showSearch: Boolean,
+  // null while the book loads
+  auto: AutoMode?,
+  autoRunning: Boolean,
+  onReadAloudClick: () -> Unit,
+  onContentsClick: () -> Unit,
+  onDisplayClick: () -> Unit,
+  onBookmarkClick: () -> Unit,
+  onSearchClick: () -> Unit,
+  onAutoClick: () -> Unit,
+) {
+  actions.forEach { action ->
+    when (action) {
+      ReaderAction.Search -> if (showSearch) {
         IconButton(onClick = onSearchClick) {
           Icon(
             imageVector = VoiceIcons.Search,
@@ -585,7 +783,7 @@ internal fun ReaderTopBar(
           )
         }
       }
-      if (bookmarked != null) {
+      ReaderAction.Bookmark -> if (bookmarked != null) {
         IconButton(onClick = onBookmarkClick) {
           Icon(
             imageVector = if (bookmarked) VoiceIcons.BookmarkFilled else VoiceIcons.Bookmark,
@@ -595,13 +793,15 @@ internal fun ReaderTopBar(
           )
         }
       }
-      if (title != null) {
+      ReaderAction.Contents -> if (loaded) {
         IconButton(onClick = onContentsClick) {
           Icon(
             imageVector = VoiceIcons.ViewList,
             contentDescription = stringResource(StringsR.string.reader_contents),
           )
         }
+      }
+      ReaderAction.Display -> if (loaded) {
         IconButton(onClick = onDisplayClick) {
           Icon(
             imageVector = VoiceIcons.Title,
@@ -609,7 +809,7 @@ internal fun ReaderTopBar(
           )
         }
       }
-      if (auto != null) {
+      ReaderAction.HandsFree -> if (auto != null) {
         IconToggleButton(checked = autoRunning, onCheckedChange = { onAutoClick() }) {
           Icon(
             imageVector = if (autoRunning) VoiceIcons.Pause else VoiceIcons.Speed,
@@ -622,7 +822,7 @@ internal fun ReaderTopBar(
           )
         }
       }
-      if (readingAloud != null) {
+      ReaderAction.ReadAloud -> if (readingAloud != null) {
         IconButton(onClick = onReadAloudClick) {
           Icon(
             imageVector = if (readingAloud) VoiceIcons.Pause else VoiceIcons.VolumeUp,
@@ -632,8 +832,8 @@ internal fun ReaderTopBar(
           )
         }
       }
-    },
-  )
+    }
+  }
 }
 
 /** What the automatic button of the top bar does. */
@@ -676,7 +876,8 @@ internal fun Book(
   turnRequests: Flow<Int>,
   onTurnRequest: (step: Int) -> Unit,
   modifier: Modifier = Modifier,
-  onCenterTap: () -> Unit = {},
+  // with where the tap was across the book, from 0 to 1
+  onTap: (Float) -> Unit = {},
   // in dp per second while the scrolled book moves by itself
   autoScrollSpeed: Int? = null,
   onScroll: (EbookPosition) -> Unit = {},
@@ -702,12 +903,13 @@ internal fun Book(
     val textStyle = state.settings.pageTextStyle()
     val paragraphGap = state.settings.paragraphGap()
     val margins = state.settings.pageMargins(pageWidth)
+    val headerHeight = if (state.settings.header == ReaderHeader.Nothing) 0.dp else PageNumberHeight
     val pages = pages(
       content = state.content,
       textStyle = textStyle,
       paragraphGap = paragraphGap,
       textWidth = pageWidth - margins.side * 2,
-      textHeight = maxHeight - margins.top - margins.bottom - PageNumberHeight,
+      textHeight = maxHeight - margins.top - margins.bottom - PageNumberHeight - headerHeight,
       paginateNow = paginateNow,
     )
     if (pages == null) {
@@ -731,7 +933,7 @@ internal fun Book(
           onUserScroll = onUserScroll,
           onHighlightClick = onHighlightClick,
           onVisiblePagesChange = onVisiblePagesChange,
-          onCenterTap = onCenterTap,
+          onTap = onTap,
           onAutoScrollEnd = onAutoScrollEnd,
           modifier = Modifier
             .fillMaxSize()
@@ -751,7 +953,7 @@ internal fun Book(
             selection = selection,
             onHighlightClick = onHighlightClick,
             onVisiblePagesChange = onVisiblePagesChange,
-            onCenterTap = onCenterTap,
+            onTap = onTap,
             turnRequests = turnRequests,
             previewTurn = previewTurn,
           )
@@ -806,12 +1008,13 @@ private fun Spreads(
   selection: PageSelection,
   onHighlightClick: (Highlight) -> Unit,
   onVisiblePagesChange: (List<Page>) -> Unit,
-  onCenterTap: () -> Unit,
+  onTap: (Float) -> Unit,
   turnRequests: Flow<Int>,
   previewTurn: Float?,
 ) {
   if (pages.isEmpty()) return
   val latestState by rememberUpdatedState(state)
+  val latestOnTap by rememberUpdatedState(onTap)
   val latestOnHighlightClick by rememberUpdatedState(onHighlightClick)
   val latestOnVisiblePagesChange by rememberUpdatedState(onVisiblePagesChange)
   val haptics = LocalHapticFeedback.current
@@ -842,15 +1045,18 @@ private fun Spreads(
     transition = state.settings.pageTransition,
     modifier = Modifier
       .fillMaxSize()
-      // the pages turn themselves on a tap at the side and show the bars on a tap in the middle
+      .ignoreEdgeTouches(state.settings.edgeMargin.dp)
       .pageGestures(
         shownPages = { latestCurrent until (latestCurrent + pagesPerSpread).coerceAtMost(pages.size) },
-        onOtherTap = { _, _ -> false },
+        onOtherTap = { offset, size ->
+          latestOnTap(offset.x / size.width)
+          true
+        },
       ),
-    onCenterTap = onCenterTap,
     turnRequests = turnRequests,
     previewTurn = previewTurn,
     spineWidth = spineWidth,
+    minSwipe = state.settings.minSwipe.dp,
     spine = { Spine(spineWidth) },
   ) { index ->
     PageSlot(state, pages, index, textStyle, paragraphGap, margins, selection, Modifier.fillMaxSize())
@@ -890,7 +1096,9 @@ private fun PageSlot(
         page = pages[index],
         pageNumber = index + 1,
         pageCount = pages.size,
+        header = pageHeader(state, pages[index].section),
         footer = footer,
+        settings = state.settings,
         textStyle = textStyle,
         paragraphGap = paragraphGap,
         margins = margins,
@@ -922,7 +1130,9 @@ private fun BookPage(
   page: Page,
   pageNumber: Int,
   pageCount: Int,
+  header: String?,
   footer: String?,
+  settings: ReaderSettings,
   textStyle: TextStyle,
   paragraphGap: TextUnit,
   margins: PageMargins,
@@ -940,6 +1150,7 @@ private fun BookPage(
         .fillMaxSize()
         .padding(start = margins.side, end = margins.side, top = margins.top, bottom = margins.bottom),
     ) {
+      if (header != null) PageHeader(header)
       val marks = pageMarks(page.section, readingRange, highlights, highlightOpacity, searchMatch, selection.range)
       val textStart = remember(content, page) {
         val chapter = content.chapters[page.section]
@@ -974,30 +1185,12 @@ private fun BookPage(
           .fillMaxWidth()
           .onGloballyPositioned { pageText.coordinates = it },
       )
-      Row(
-        Modifier
-          .height(PageNumberHeight)
-          .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-      ) {
-        Text(
-          text = content.chapterTitle(page.section),
-          style = MaterialTheme.typography.labelMedium.bookText(),
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-          modifier = Modifier
-            .weight(1F)
-            .padding(end = 12.dp),
-        )
-        if (footer != null) {
-          Text(
-            text = footer,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-          )
-        }
-      }
+      PageFooter(
+        chapter = content.chapterTitle(page.section),
+        footer = footer,
+        settings = settings,
+        modifier = Modifier.height(PageNumberHeight),
+      )
     }
     is ReaderContent.Pdf -> ZoomablePdfPage(
       pdf = content.pdf,
@@ -1014,4 +1207,18 @@ private fun BookPage(
 @Composable
 internal fun ReaderContent.Epub.chapterTitle(section: Int): String {
   return chapterTitles.getOrNull(section) ?: stringResource(StringsR.string.reader_chapter, section + 1)
+}
+
+/** What [ReaderSettings.header] puts above the text of [section], or null for nothing. */
+@Composable
+internal fun pageHeader(
+  state: ReaderState.Loaded,
+  section: Int,
+): String? {
+  val content = state.content as? ReaderContent.Epub ?: return null
+  return when (state.settings.header) {
+    ReaderHeader.Nothing -> null
+    ReaderHeader.Title -> content.title
+    ReaderHeader.Chapter -> content.chapterTitle(section)
+  }
 }

@@ -165,6 +165,10 @@ internal fun footerText(
     ReaderFooter.TimeLeft -> progress.chapterTimeLeft?.let {
       stringResource(StringsR.string.reader_footer_time_left, formatDuration(it))
     }
+    ReaderFooter.PagesLeft -> (progress.pagesLeftInChapter ?: progress.pagesLeftInBook).let {
+      pluralStringResource(StringsR.plurals.reader_progress_pages_left, it, it)
+    }
+    ReaderFooter.Nothing -> null
   }
 }
 

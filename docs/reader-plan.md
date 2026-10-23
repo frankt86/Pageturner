@@ -39,6 +39,7 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 | Reading aloud, with the natural voice or the phone's | [done] |
 | Page curl, slide or no animation | [done] | The curl turns a picture of the page; two-page spreads curl as a whole. |
 | Scroll mode and automatic scrolling | [done] | One chapter at a time; a sideways swipe or the end of the chapter goes on to the next. |
+| Controls: taps, keys, mouse wheel, buttons, header, footer, screen, accidental touches | [done] | As in the old engine. The shortest swipe doesn't apply to Readium's own slide. |
 
 ## Phase 1: reading modes and layout (sections 1 and 5)
 
@@ -59,17 +60,17 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 | Full-screen reading | [done] | Tap the middle hides bars and system bars. |
 | Fixed-layout and PDF controls: zoom, pan, fit width, fit page | [part] | PDF: pinch zoom, pan, double tap for fit width or fit page. Fixed-layout EPUB opens in the new engine with its own page fitting; **Pages** picks one page or a spread. |
 | Brightness in the reader | [done] | |
-| Screen-awake setting | [part] | Screen stays on today; add Off, While reading, Always. |
-| Tap zones | [part] | Fixed thirds today; add an editor (left, middle, right, top, bottom areas). |
-| Gestures: swipe, double tap, long press actions | [new] | Map gesture to action from a small list. |
-| Hardware keys: volume keys, page buttons, remotes | [part] | Volume keys done; add Page Up/Down, arrows, Bluetooth page turners. |
-| Keyboard shortcuts and remapping | [new] | Default shortcuts first, remapping later. |
-| Mouse wheel: scroll or turn page | [new] | Setting. |
-| Customizable toolbar | [new] | Choose and order the top bar actions. |
-| Header and footer: title, chapter, page, percent, time, battery | [part] | Chapter shown; **Page footer** picks page, chapter page, percent or time left. A header, battery and more slots are left. |
-| Interface size separate from text | [new] | Scale factor applied to the reader's chrome only. |
-| One-handed layout | [new] | Move controls to the left or right edge. |
-| Accidental-input protection | [new] | Minimum swipe distance, ignore palm touches at the edges, confirm jumps of more than N pages. |
+| Screen-awake setting | [done] | **Keep the screen on** in **Controls**: System, While reading (as before) and Until idle, which lets the screen sleep after 5, 10 or 30 minutes without a touch or key, but not while reading aloud or turning by itself. |
+| Tap zones | [done] | **Taps** in **Controls**: Previous page, Next page, Show or hide bars or Nothing for the left, middle and right third, and **Left-handed**. Both engines and the scroll mode. Top and bottom areas aren't planned. |
+| Gestures: swipe, double tap, long press actions | [done] | **Double tap**: Nothing, Show or hide bars or Bookmark. Long press stays selection and swipes stay page turns. |
+| Hardware keys: volume keys, page buttons, remotes | [done] | Page Up and Down, the arrow keys, space and Shift+space, so Bluetooth page turners that send these keys work. Arrows follow right-to-left books in the new engine. |
+| Keyboard shortcuts and remapping | [part] | Ctrl+F search, Ctrl+B bookmark, Ctrl+D display and Esc back. Remapping is left out. |
+| Mouse wheel: scroll or turn page | [done] | **Mouse wheel**: Scroll or Turn pages, a page or in the scroll mode a screen per step. |
+| Customizable toolbar | [done] | **Buttons** in **Controls**: show, hide and move each top bar button. Display always stays. |
+| Header and footer: title, chapter, page, percent, time, battery | [done] | **Page footer** also has Pages left and Nothing; **Show the time**, **Show the battery** and **Page header** (Title or Chapter). PDF pages show none of these. |
+| Interface size separate from text | [done] | **Size of bars and menus**, 80 to 140 %, scales the bars, the page bar, the selection menu and the sheets. |
+| One-handed layout | [done] | **Buttons at the bottom** moves the top bar's buttons to a bar at the bottom. |
+| Accidental-input protection | [done] | **Shortest swipe to turn a page**, **Ignore touches at the edges** and **Ask before jumping over more than** 10, 50 or 100 pages. The shortest swipe doesn't apply to the new engine's slide, which Readium handles itself. |
 
 ## Phase 2: page numbers and progress (section 2)
 
@@ -136,7 +137,7 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 | 4 | Typography: fonts, import, spacing, alignment, hyphenation, overrides, reset | 1 to 2 weeks |
 | 5 | Themes: new presets, custom colors, contrast, highlight names, schedules, saved themes | 1 to 2 weeks |
 | 6 | Scroll mode, auto scroll, auto page turn | 1 week |
-| 7 | Controls: tap zones, gestures, keys, toolbar, header and footer, one-handed, protection | 2 weeks |
+| 7 | Controls: tap zones, gestures, keys, toolbar, header and footer, one-handed, protection | 2 weeks, done |
 
 Each step ships as its own pull request with CI green before the next starts.
 Sizes assume one developer and include translations for every new setting.

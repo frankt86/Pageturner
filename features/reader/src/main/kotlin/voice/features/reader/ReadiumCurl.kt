@@ -91,12 +91,6 @@ internal class ReadiumTurns(private val scope: CoroutineScope) {
     }
   }
 
-  /** Turns to the page on the [right] or the left, like a tap on that side. */
-  fun turnTowards(right: Boolean) {
-    val navigator = navigator ?: return
-    turn(if (right != navigator.rightToLeft) 1 else -1)
-  }
-
   fun onDrag(event: CurlDrag) {
     val navigator = navigator ?: return
     if (transition != PageTransition.Curl || navigator.rightToLeft) {
@@ -265,16 +259,25 @@ internal fun CurlOverlay(
 }
 
 /**
- * Holds the book's pages. Takes the volume keys also while the web view has the focus, e.g. after selecting text, and,
+ * Holds the book's pages. Takes the keys also while the web view has the focus, e.g. after selecting text, and,
  * with [interceptDrags], sideways drags before Readium slides the page, so they can curl it instead.
  */
 @SuppressLint("ViewConstructor", "ClickableViewAccessibility")
 internal class NavigatorContainer(context: Context) : FrameLayout(context) {
 
-  /** Called with 1 or -1 when a volume key goes down and 0 when it goes up, returns whether it took the key. */
-  var onVolumeKey: (step: Int) -> Boolean = { false }
+  /** Gets the key code, whether Ctrl and Shift are held and whether the key went down, returns whether it took the key. */
+  var onKey: (keyCode: Int, ctrl: Boolean, shift: Boolean, down: Boolean) -> Boolean = { _, _, _, _ -> false }
+
+  /** Takes the mouse wheel and gets 1 for each step down and -1 for each step up, or null to let the web view scroll. */
+  var onWheel: ((Int) -> Unit)? = null
   var interceptDrags = false
   var onDrag: (CurlDrag) -> Unit = {}
+
+  /** In pixels, a shorter drag lets the page fall back. */
+  var minSwipe = 0F
+
+  /** In pixels, touches that start this close to the left or right edge are ignored. */
+  var edgeMargin = 0F
 
   /** Called once per touch when the finger moves. */
   var onFingerMove: () -> Unit = {}
@@ -288,12 +291,18 @@ internal class NavigatorContainer(context: Context) : FrameLayout(context) {
   private var dragging = false
   private var touchStart = Offset.Zero
   private var fingerMoved = false
+  private var ignoredTouch = false
+  private var lastWheelTurn = 0L
 
   init {
     addView(fragments)
   }
 
   override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+    if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+      ignoredTouch = edgeMargin > 0F && (event.x < edgeMargin || event.x > width - edgeMargin)
+    }
+    if (ignoredTouch) return true
     when (event.actionMasked) {
       MotionEvent.ACTION_DOWN -> {
         fingerDown = true
@@ -310,13 +319,20 @@ internal class NavigatorContainer(context: Context) : FrameLayout(context) {
   }
 
   override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-    val step = when (event.keyCode) {
-      KeyEvent.KEYCODE_VOLUME_DOWN -> 1
-      KeyEvent.KEYCODE_VOLUME_UP -> -1
-      else -> return super.dispatchKeyEvent(event)
+    val down = event.action == KeyEvent.ACTION_DOWN
+    return onKey(event.keyCode, event.isCtrlPressed, event.isShiftPressed, down) || super.dispatchKeyEvent(event)
+  }
+
+  override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
+    val onWheel = onWheel
+    if (onWheel == null || event.actionMasked != MotionEvent.ACTION_SCROLL) return super.dispatchGenericMotionEvent(event)
+    val delta = event.getAxisValue(MotionEvent.AXIS_VSCROLL)
+    if (delta != 0F && event.eventTime - lastWheelTurn >= WHEEL_TURN_MILLIS) {
+      lastWheelTurn = event.eventTime
+      // the wheel turned down scrolls down, which is a negative value
+      onWheel(if (delta < 0) 1 else -1)
     }
-    // the key up too, or the phone shows its volume panel
-    return onVolumeKey(if (event.action == KeyEvent.ACTION_DOWN) step else 0) || super.dispatchKeyEvent(event)
+    return true
   }
 
   override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
@@ -348,7 +364,7 @@ internal class NavigatorContainer(context: Context) : FrameLayout(context) {
       MotionEvent.ACTION_MOVE -> onDrag(CurlDrag.Move(Offset(event.x, event.y), event.eventTime))
       MotionEvent.ACTION_UP -> {
         dragging = false
-        onDrag(CurlDrag.End)
+        onDrag(if (abs(event.x - down.x) < minSwipe) CurlDrag.Cancel else CurlDrag.End)
       }
       MotionEvent.ACTION_CANCEL -> {
         dragging = false
