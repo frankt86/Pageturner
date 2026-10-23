@@ -61,6 +61,7 @@ internal fun ListBookRow(
         finished = finished,
         unavailable = book.unavailable,
         download = book.download,
+        ebook = book.isEbook,
         modifier = Modifier.size(64.dp),
       )
       Spacer(Modifier.width(16.dp))
@@ -123,4 +124,14 @@ private fun ListBookRowPreviewWithProgress() {
 @Preview
 private fun ListBookRowPreviewFinished() {
   ListBookRow(BookOverviewPreviewParameterProvider().book().copy(progress = 1f), {}, {}, finished = true)
+}
+
+@Composable
+@Preview
+private fun ListBookRowPreviewEbook() {
+  ListBookRow(
+    BookOverviewPreviewParameterProvider().book().copy(progress = 0.4f, remainingTime = "EPUB · 40%", isEbook = true),
+    {},
+    {},
+  )
 }

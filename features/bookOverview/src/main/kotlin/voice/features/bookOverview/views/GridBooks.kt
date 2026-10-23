@@ -50,6 +50,7 @@ internal fun GridBook(
       finished = finished,
       unavailable = book.unavailable,
       download = book.download,
+      ebook = book.isEbook,
       modifier = Modifier
         .fillMaxWidth()
         .aspectRatio(1F),
@@ -104,4 +105,10 @@ private fun GridBookPreviewWithProgress() {
 @Preview(widthDp = 200)
 private fun GridBookPreviewFinished() {
   GridBook(BookOverviewPreviewParameterProvider().book().copy(progress = 1f), {}, {}, finished = true)
+}
+
+@Composable
+@Preview(widthDp = 200)
+private fun GridBookPreviewEbook() {
+  GridBook(BookOverviewPreviewParameterProvider().book().copy(progress = 0.4f, isEbook = true), {}, {})
 }

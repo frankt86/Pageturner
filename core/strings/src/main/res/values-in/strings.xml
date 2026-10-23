@@ -74,6 +74,8 @@
     <string name="book.edit.cover.internet">Sampul dari Internet</string>
     <string name="book.edit.name.label">Judul buku</string>
     <string name="book.edit.rename">Ganti nama</string>
+    <string name="book.remove_from_library">Hapus dari pustaka</string>
+    <string name="book.remove_from_library.summary">Berkas tetap ada di perangkat Anda</string>
     <string name="book.source.device">Di perangkat ini</string>
     <string name="book.source.server_downloaded">%s · sudah diunduh</string>
     <string name="bookmark.action.add_note">Tambah catatan</string>
@@ -141,14 +143,14 @@
     <string name="folder.add.action.audiobookshelf">Hubungkan Audiobookshelf</string>
     <string name="folder.add.action.file">Tambahkan satu berkas saja</string>
     <string name="folder.add.action.folder">Pilih folder</string>
-    <string name="folder.add.help.computer">Buku audio masih ada di komputer Anda? Salin dulu ke ponsel Anda, misalnya ke folder Audiobooks.</string>
+    <string name="folder.add.help.computer">Buku masih ada di komputer Anda? Salin dulu ke ponsel Anda, misalnya ke folder Audiobooks atau Documents.</string>
     <string name="folder.add.help.download">Android tidak mengizinkan aplikasi membuka folder Download secara langsung. Pilih folder di dalamnya.</string>
-    <string name="folder.add.help.title">Buku audio Anda tidak ditemukan?</string>
-    <string name="folder.add.no_picker.message">Pageturner membuka buku audio Anda melalui pemilih berkas Android. Tanpanya, Pageturner tidak dapat membuka folder atau berkas Anda.</string>
+    <string name="folder.add.help.title">Buku Anda tidak ditemukan?</string>
+    <string name="folder.add.no_picker.message">Pageturner membuka buku Anda melalui pemilih berkas Android. Tanpanya, Pageturner tidak dapat membuka folder atau berkas Anda.</string>
     <string name="folder.add.no_picker.title">Perangkat ini tidak memiliki pemilih berkas</string>
-    <string name="folder.add.subtitle">Pilih folder berisi buku audio Anda. Folder ini bisa berisi satu buku atau seluruh pustaka Anda.</string>
-    <string name="folder.add.title.default">Tambahkan buku audio Anda</string>
-    <string name="folder.add.title.onboarding">Tambahkan buku audio pertama Anda</string>
+    <string name="folder.add.subtitle">Pilih folder berisi buku audio atau e-book Anda. Folder ini bisa berisi satu buku atau seluruh pustaka Anda.</string>
+    <string name="folder.add.title.default">Tambahkan buku Anda</string>
+    <string name="folder.add.title.onboarding">Tambahkan buku pertama Anda</string>
     <string name="folder.mode.author.label">Folder adalah penulis</string>
     <string name="folder.mode.author.option">Folder di dalam %s adalah penulis</string>
     <plurals name="folder.mode.book_count">
@@ -166,8 +168,8 @@
         <item quantity="other">Tambahkan %d buku</item>
     </plurals>
     <string name="folder.review.action.change">Ubah cara buku ditemukan</string>
-    <string name="folder.review.empty.subtitle">Pilih folder yang berisi buku audio Anda.</string>
-    <string name="folder.review.empty.title">Tidak ada file audio di %s</string>
+    <string name="folder.review.empty.subtitle">Pilih folder yang berisi buku audio atau e-book Anda.</string>
+    <string name="folder.review.empty.title">Tidak ada buku di %s</string>
     <plurals name="folder.review.folder_count">
         <item quantity="other">%d folder</item>
     </plurals>
@@ -211,18 +213,19 @@
     <string name="history.source.watch">Jam tangan</string>
     <string name="history.source.widget">Widget</string>
     <string name="library.book.downloading">Mengunduh</string>
+    <string name="library.book.ebook">E-book</string>
     <string name="library.book.offline">Tidak tersedia offline</string>
     <string name="library.category.completed.title">Selesai</string>
     <string name="library.category.current.title">Sedang didengarkan</string>
     <string name="library.category.not_started.title">Belum dimulai</string>
     <string name="library.continue_listening">Lanjutkan mendengarkan</string>
-    <string name="library.empty.add_first_book">Mari tambahkan folder buku audio Anda sehingga Anda dapat mulai mendengarkan!</string>
-    <string name="library.empty.title">Buku audio tidak ditemukan</string>
-    <string name="library.empty.message">Pageturner tidak dapat menemukan buku audio apa pun di folder Anda. Pastikan berkasnya masih ada, atau tambahkan folder.</string>
+    <string name="library.empty.add_first_book">Mari tambahkan folder buku Anda agar Anda dapat mulai mendengarkan atau membaca!</string>
+    <string name="library.empty.title">Buku tidak ditemukan</string>
+    <string name="library.empty.message">Pageturner tidak dapat menemukan buku apa pun di folder Anda. Pastikan berkasnya masih ada, atau tambahkan folder.</string>
     <string name="library.empty.action">Tampilkan folder</string>
-    <string name="library.folders.title">Folder buku audio</string>
-    <string name="library.folders.moved.dialog.title">Folder buku audio dipindahkan</string>
-    <string name="library.folders.moved.dialog.message">Sekarang Anda dapat mengelola folder buku audio di Setelan.</string>
+    <string name="library.folders.title">Folder buku</string>
+    <string name="library.folders.moved.dialog.title">Folder buku dipindahkan</string>
+    <string name="library.folders.moved.dialog.message">Sekarang Anda dapat mengelola folder buku di Setelan.</string>
     <string name="library.folders.no_access">Tidak ada akses</string>
     <string name="library.folders.no_access.action">Izinkan akses</string>
     <string name="library.folders.no_access.badge">Izinkan akses ke folder Anda lagi</string>
@@ -344,7 +347,7 @@
     <string name="settings.auto_sleep_timer.summary">Mulai pengatur waktu tidur secara otomatis saat pemutaran dimulai antara %1$s dan %2$s</string>
     <string name="settings.auto_sleep_timer.title">Pengatur waktu tidur otomatis</string>
     <string name="settings.library.audiobookshelf.summary">Streaming buku dari server Anda sendiri</string>
-    <string name="settings.library.folders.summary">Kelola folder yang dipindai untuk buku audio</string>
+    <string name="settings.library.folders.summary">Kelola folder yang dipindai untuk buku</string>
     <string name="settings.library.layout.grid">Kisi</string>
     <string name="settings.library.layout.list">Daftar</string>
     <string name="settings.library.title">Pustaka</string>

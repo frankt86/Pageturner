@@ -62,4 +62,4 @@ Many servers are only reachable at home. Pageturner works with:
     sign in again.
 
 ??? question "I already download my books into a folder that Pageturner scans."
-    Then those books show up twice. Remove that folder under **Settings » Library » Audiobook folders** to keep the server books only.
+    Then those books show up twice. Remove that folder under **Settings » Library » Book folders** to keep the server books only.
