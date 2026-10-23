@@ -2,7 +2,7 @@
 
 Download the newest Pageturner on your phone:
 
-[:material-download: &nbsp;Download Pageturner](https://github.com/frankt86/Pageturner/releases/download/debug/app-free-debug.apk){ .md-button .md-button--primary }
+[:material-download: &nbsp;Download Pageturner](https://frankt86.github.io/Pageturner/pageturner.apk){ .md-button .md-button--primary }
 
 1. Open the link above in your phone's browser, for example Chrome. The file is about 20 MB.
 2. If Chrome warns that the file might be harmful, tap **Download anyway**.
