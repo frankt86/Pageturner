@@ -40,7 +40,7 @@ val Book.category: BookOverviewCategory
 
 val BookOverviewCategory.ebookComparator: Comparator<Ebook>
   get() = when (this) {
-    BookOverviewCategory.NOT_STARTED -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.name }
+    BookOverviewCategory.NOT_STARTED -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.title }
     BookOverviewCategory.CURRENT, BookOverviewCategory.FINISHED -> compareByDescending { it.lastOpened }
   }
 

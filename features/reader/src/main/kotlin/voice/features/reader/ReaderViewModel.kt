@@ -153,14 +153,14 @@ class ReaderViewModel(
       EbookFormat.Epub -> {
         val epub = contentResolver.openInputStream(uri)!!.use { parseEpub(it) }
         ReaderContent.Epub(
-          title = epub.title ?: ebook.name,
+          title = ebook.customName ?: epub.title ?: ebook.name,
           chapters = epub.chapters.map { it.text },
           chapterTitles = epub.chapters.map { it.title },
         )
       }
       EbookFormat.Pdf -> {
         val fileDescriptor = contentResolver.openFileDescriptor(uri, "r")!!
-        ReaderContent.Pdf(title = ebook.name, pdf = PdfFile(fileDescriptor))
+        ReaderContent.Pdf(title = ebook.title, pdf = PdfFile(fileDescriptor))
       }
     }
   }

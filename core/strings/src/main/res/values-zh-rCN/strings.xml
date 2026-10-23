@@ -74,6 +74,8 @@
     <string name="book.edit.cover.internet">从互联网寻找封面图片</string>
     <string name="book.edit.name.label">名称</string>
     <string name="book.edit.rename">重命名</string>
+    <string name="book.remove_from_library">从书库中移除</string>
+    <string name="book.remove_from_library.summary">文件仍保留在您的设备上</string>
     <string name="book.source.device">在本设备上</string>
     <string name="book.source.server_downloaded">%s · 已下载</string>
     <string name="bookmark.action.add_note">添加笔记</string>
@@ -141,14 +143,14 @@
     <string name="folder.add.action.audiobookshelf">连接 Audiobookshelf</string>
     <string name="folder.add.action.file">改为添加单个文件</string>
     <string name="folder.add.action.folder">选择文件夹</string>
-    <string name="folder.add.help.computer">有声书还在电脑上？请先将它们复制到手机，例如复制到 Audiobooks 文件夹中。</string>
+    <string name="folder.add.help.computer">书籍还在电脑上？请先将它们复制到手机，例如复制到 Audiobooks 或 Documents 文件夹中。</string>
     <string name="folder.add.help.download">Android 不允许应用直接打开 Download 文件夹，请选择其中的一个文件夹。</string>
-    <string name="folder.add.help.title">未找到您的有声书？</string>
-    <string name="folder.add.no_picker.message">Pageturner 通过 Android 的文件选择器打开您的有声书。没有它，Pageturner 就无法打开您的文件夹或文件。</string>
+    <string name="folder.add.help.title">未找到您的书籍？</string>
+    <string name="folder.add.no_picker.message">Pageturner 通过 Android 的文件选择器打开您的书籍。没有它，Pageturner 就无法打开您的文件夹或文件。</string>
     <string name="folder.add.no_picker.title">此设备没有文件选择器</string>
-    <string name="folder.add.subtitle">选择存放有声书的文件夹。里面可以只有一本书，也可以是您的整个书库。</string>
-    <string name="folder.add.title.default">添加您的有声书</string>
-    <string name="folder.add.title.onboarding">添加您的第一本有声书</string>
+    <string name="folder.add.subtitle">选择存放有声书或电子书的文件夹。里面可以只有一本书，也可以是您的整个书库。</string>
+    <string name="folder.add.title.default">添加您的书籍</string>
+    <string name="folder.add.title.onboarding">添加您的第一本书</string>
     <string name="folder.mode.author.label">文件夹为作者</string>
     <string name="folder.mode.author.option">%s 中的文件夹为作者</string>
     <plurals name="folder.mode.book_count">
@@ -166,8 +168,8 @@
         <item quantity="other">添加 %d 本书</item>
     </plurals>
     <string name="folder.review.action.change">更改查找书籍的方式</string>
-    <string name="folder.review.empty.subtitle">请选择存放有声书的文件夹。</string>
-    <string name="folder.review.empty.title">%s 中没有声音文件</string>
+    <string name="folder.review.empty.subtitle">请选择存放有声书或电子书的文件夹。</string>
+    <string name="folder.review.empty.title">%s 中没有书籍</string>
     <plurals name="folder.review.folder_count">
         <item quantity="other">%d 个文件夹</item>
     </plurals>
@@ -211,18 +213,19 @@
     <string name="history.source.watch">手表</string>
     <string name="history.source.widget">小部件</string>
     <string name="library.book.downloading">正在下载</string>
+    <string name="library.book.ebook">电子书</string>
     <string name="library.book.offline">离线不可用</string>
     <string name="library.category.completed.title">已听完</string>
     <string name="library.category.current.title">在听</string>
     <string name="library.category.not_started.title">未开始</string>
     <string name="library.continue_listening">继续收听</string>
-    <string name="library.empty.add_first_book">首先添加有声书文件夹，然后就可以开始听书啦！</string>
-    <string name="library.empty.title">未找到有声书</string>
-    <string name="library.empty.message">Pageturner 在您的文件夹中找不到任何有声书。请检查文件是否还在原处，或添加文件夹。</string>
+    <string name="library.empty.add_first_book">首先添加书籍文件夹，然后就可以开始听书或读书啦！</string>
+    <string name="library.empty.title">未找到书籍</string>
+    <string name="library.empty.message">Pageturner 在您的文件夹中找不到任何书籍。请检查文件是否还在原处，或添加文件夹。</string>
     <string name="library.empty.action">查看文件夹</string>
-    <string name="library.folders.title">有声书文件夹</string>
-    <string name="library.folders.moved.dialog.title">有声书文件夹已移动</string>
-    <string name="library.folders.moved.dialog.message">您现在可以在“设置”中管理有声书文件夹。</string>
+    <string name="library.folders.title">书籍文件夹</string>
+    <string name="library.folders.moved.dialog.title">书籍文件夹已移动</string>
+    <string name="library.folders.moved.dialog.message">您现在可以在“设置”中管理书籍文件夹。</string>
     <string name="library.folders.no_access">无法访问</string>
     <string name="library.folders.no_access.action">允许访问</string>
     <string name="library.folders.no_access.badge">请重新允许访问您的文件夹</string>
@@ -362,7 +365,7 @@
     <string name="settings.auto_sleep_timer.summary">在 %1$s 到 %2$s 之间开始播放时，自动启动睡眠定时器</string>
     <string name="settings.auto_sleep_timer.title">自动睡眠定时器</string>
     <string name="settings.library.audiobookshelf.summary">在线收听您自己服务器上的书</string>
-    <string name="settings.library.folders.summary">管理用于扫描有声书的文件夹</string>
+    <string name="settings.library.folders.summary">管理用于扫描书籍的文件夹</string>
     <string name="settings.library.layout.grid">网格</string>
     <string name="settings.library.layout.list">列表</string>
     <string name="settings.library.title">书库</string>
