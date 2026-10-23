@@ -22,6 +22,8 @@ public data class Ebook(
   val lastOpened: Long = 0,
   /** Whether the title, author and cover were read from the file yet. */
   val metadataRead: Boolean = false,
+  val bookmarks: List<EbookPosition> = emptyList(),
+  val highlights: List<Highlight> = emptyList(),
 )
 
 /**
@@ -33,6 +35,23 @@ public data class EbookPosition(
   val section: Int = 0,
   val offset: Int = 0,
 )
+
+/** The text from [start] until [end] in a section, counted like [EbookPosition.offset]. */
+@Serializable
+public data class Highlight(
+  val section: Int,
+  val start: Int,
+  val end: Int,
+  val color: HighlightColor = HighlightColor.Yellow,
+  val note: String? = null,
+)
+
+public enum class HighlightColor {
+  Yellow,
+  Green,
+  Blue,
+  Pink,
+}
 
 public enum class EbookFormat {
   Epub,
