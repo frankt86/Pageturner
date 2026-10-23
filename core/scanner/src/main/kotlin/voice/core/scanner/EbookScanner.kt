@@ -87,7 +87,7 @@ internal class EbookScanner(
           ?.let { renderPdfCover(it, width = 600) }
           ?.let { bitmap ->
             val file = newCoverFile()
-            file.outputStream().use { bitmap.compress(Bitmap.CompressFormat.WEBP_LOSSY, 80, it) }
+            file.outputStream().use { bitmap.compress(Bitmap.CompressFormat.JPEG, 85, it) }
             Metadata(title = null, author = null, cover = file.absolutePath)
           }
       }

@@ -18,8 +18,8 @@ class EpubTest {
     val files = mapOf(
       "META-INF/container.xml" to """<container><rootfiles><rootfile full-path="OEBPS/content.opf"/></rootfiles></container>""",
       "OEBPS/content.opf" to """
-        <package>
-          <metadata>
+        <package xmlns="http://www.idpf.org/2007/opf">
+          <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
             <dc:title>The Quiet Orbit</dc:title>
             <dc:creator>Mara Quill</dc:creator>
             <meta name="cover" content="cover"/>

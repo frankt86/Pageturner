@@ -92,6 +92,8 @@ private class Opf(
 
 private fun parseOpf(xml: String): Opf {
   val parser = Xml.newPullParser()
+  // tags are matched by their name without a prefix, so a book that forgot to declare one still opens
+  parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
   parser.setInput(xml.reader())
   var title: String? = null
   var author: String? = null
