@@ -37,13 +37,26 @@ The **Display** button holds:
 
 - **Theme:** Auto, Day, Sepia, Night or Black.
 - **Font:** serif or sans.
-- **Text size**, **line spacing** and **margins**.
+- **Text size** and **line spacing**.
 - **Brightness**, just for the reader, or the system setting.
 - **Volume keys turn pages**, on or off.
 - **Page turn:** the page curls over like paper, slides sideways, or the next one shows at once.
 - **New book engine (beta)**, for EPUB books, see below.
 
+Under **Layout**:
+
+- **Pages:** Auto shows two pages side by side on wide screens, or always **One page** or **Two pages**.
+- **Margins** at the sides, **Top margin** and **Bottom margin**, and the **Space between pages** when two show side by
+  side.
+- **Shorter lines on wide screens** keeps lines to about 65 characters on tablets and unfolded phones.
+- **Orientation:** Auto turns with your phone, **Portrait** and **Landscape** keep the screen that way while you read.
+
 The screen stays on while you read.
+
+### PDF pages
+
+Pinch to zoom into a PDF page and drag to move around it. Double-tap to switch between the whole page and its full width.
+While a page is zoomed in, dragging moves the page instead of turning it.
 
 ### Bookmarks, highlights and notes
 
