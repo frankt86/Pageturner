@@ -46,7 +46,6 @@ import dev.zacsweers.metro.Provides
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import voice.core.common.rootGraphAs
-import voice.core.data.BookId
 import voice.core.ui.VoiceTheme
 import voice.features.cover.SelectCoverFromInternetViewModel.Events
 import voice.features.cover.SelectCoverFromInternetViewModel.Results
@@ -64,19 +63,25 @@ object SelectCoverFromInternetProvider {
   @IntoSet
   fun selectCoverFromInternetNavEntryProvider(): NavEntryProvider<*> = NavEntryProvider<Destination.CoverFromInternet> { key ->
     NavEntry(key) {
-      SelectCoverFromInternet(
-        bookId = key.bookId,
-      )
+      SelectCoverFromInternet(CoverTarget.ForBook(key.bookId))
+    }
+  }
+
+  @Provides
+  @IntoSet
+  fun selectEbookCoverFromInternetNavEntryProvider(): NavEntryProvider<*> = NavEntryProvider<Destination.EbookCoverFromInternet> { key ->
+    NavEntry(key) {
+      SelectCoverFromInternet(CoverTarget.ForEbook(key.uri))
     }
   }
 }
 
 @Composable
-fun SelectCoverFromInternet(bookId: BookId) {
-  val viewModel = retain(bookId.value) {
+private fun SelectCoverFromInternet(target: CoverTarget) {
+  val viewModel = retain(target) {
     rootGraphAs<SelectCoverFromInternetViewModel.Factory.Provider>()
       .factory
-      .create(bookId)
+      .create(target)
   }
 
   // a new flow would restart the view model's event collection and cancel a running download

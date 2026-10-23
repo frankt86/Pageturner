@@ -4,6 +4,7 @@ import androidx.core.net.toUri
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -16,6 +17,8 @@ import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.overview.BookOverviewCategory
 import voice.features.bookOverview.overview.category
 import voice.features.bookOverview.overview.toItemViewState
+import voice.navigation.Destination
+import voice.navigation.Navigator
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -34,10 +37,11 @@ class EbookActionsViewModelTest {
     lastOpened = 1_000,
   )
   private val store = MemoryDataStore(listOf(ebook))
+  private val navigator = mockk<Navigator>(relaxUnitFun = true)
   private val viewModel = EbookActionsViewModel(
     store = store,
     application = ApplicationProvider.getApplicationContext(),
-    navigator = mockk(relaxUnitFun = true),
+    navigator = navigator,
     dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
     uri = ebook.uri,
   )
@@ -86,6 +90,13 @@ class EbookActionsViewModelTest {
     testScheduler.advanceUntilIdle()
 
     assertNull(stored().customName)
+  }
+
+  @Test
+  fun `cover from the internet opens the cover search for the ebook`() {
+    viewModel.onInternetCover()
+
+    verify { navigator.goTo(Destination.EbookCoverFromInternet(ebook.uri)) }
   }
 
   @Test
