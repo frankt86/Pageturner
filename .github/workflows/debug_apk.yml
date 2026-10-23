@@ -19,13 +19,20 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/build_setup
+      # a shrunk release build, small enough to download on a phone, with the debug app id and key
       - name: Build
-        run: ./gradlew :app:assembleFreeDebug
+        run: |
+          ./gradlew :app:assembleFreeRelease \
+            -Pvoice.applicationIdSuffix=.debug \
+            -Pandroid.injected.signing.store.file="$PWD/app/debug.keystore" \
+            -Pandroid.injected.signing.store.password=android \
+            -Pandroid.injected.signing.key.alias=androiddebugkey \
+            -Pandroid.injected.signing.key.password=android
       - name: Publish to the debug release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp app/build/outputs/apk/free/debug/*.apk app-free-debug.apk
+          cp app/build/outputs/apk/free/release/app-free-release.apk app-free-debug.apk
           gh release delete debug --yes --cleanup-tag || true
           gh release create debug app-free-debug.apk \
             --prerelease \
