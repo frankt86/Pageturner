@@ -390,6 +390,10 @@
     <string name="reader.new_engine">Новый движок книг (бета)</string>
     <string name="reader.nothing_to_read_aloud">Здесь нет текста для чтения вслух</string>
     <string name="reader.page">%1$d из %2$d</string>
+    <string name="reader.page_turn">Перелистывание</string>
+    <string name="reader.page_turn.curl">Загиб</string>
+    <string name="reader.page_turn.none">Без эффекта</string>
+    <string name="reader.page_turn.slide">Сдвиг</string>
     <string name="reader.read_aloud">Читать вслух</string>
     <string name="reader.read_aloud_unavailable">Чтение вслух недоступно на этом устройстве</string>
     <string name="reader.search">Поиск по книге</string>

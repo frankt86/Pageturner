@@ -41,6 +41,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import voice.core.data.PageTransition
 import voice.core.data.ReaderFont
 import voice.core.data.ReaderSettings
 import voice.core.data.ReaderTheme
@@ -88,6 +89,10 @@ private fun DisplaySettings(
     ThemeChoice(
       theme = settings.theme,
       onThemeSelect = { onSettingsChange(settings.copy(theme = it)) },
+    )
+    TransitionChoice(
+      transition = settings.pageTransition,
+      onTransitionSelect = { onSettingsChange(settings.copy(pageTransition = it)) },
     )
     if (showTextOptions) {
       FontChoice(
@@ -256,6 +261,51 @@ private fun FontChoice(
             ReaderFont.Sans -> style
           },
         )
+      }
+    }
+  }
+}
+
+@Composable
+private fun TransitionChoice(
+  transition: PageTransition,
+  onTransitionSelect: (PageTransition) -> Unit,
+) {
+  Column {
+    Text(
+      text = stringResource(StringsR.string.reader_page_turn),
+      style = MaterialTheme.typography.titleSmall,
+    )
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 8.dp)
+        .selectableGroup(),
+      horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+    ) {
+      PageTransition.entries.forEachIndexed { index, option ->
+        ToggleButton(
+          checked = option == transition,
+          onCheckedChange = { onTransitionSelect(option) },
+          shapes = when (index) {
+            0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+            PageTransition.entries.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+            else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+          },
+          modifier = Modifier
+            .weight(1F)
+            .semantics { role = Role.RadioButton },
+        ) {
+          Text(
+            text = stringResource(
+              when (option) {
+                PageTransition.Curl -> StringsR.string.reader_page_turn_curl
+                PageTransition.Slide -> StringsR.string.reader_page_turn_slide
+                PageTransition.None -> StringsR.string.reader_page_turn_none
+              },
+            ),
+          )
+        }
       }
     }
   }

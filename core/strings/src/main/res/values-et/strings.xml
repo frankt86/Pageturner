@@ -354,6 +354,10 @@
     <string name="reader.new_engine">Uus raamatumootor (beeta)</string>
     <string name="reader.nothing_to_read_aloud">Siin pole teksti, mida ette lugeda</string>
     <string name="reader.page">%1$d / %2$d</string>
+    <string name="reader.page_turn">Lehe pööramine</string>
+    <string name="reader.page_turn.curl">Painutus</string>
+    <string name="reader.page_turn.none">Puudub</string>
+    <string name="reader.page_turn.slide">Libistus</string>
     <string name="reader.read_aloud">Loe ette</string>
     <string name="reader.read_aloud_unavailable">Ettelugemine pole selles seadmes saadaval</string>
     <string name="reader.search">Otsi raamatust</string>

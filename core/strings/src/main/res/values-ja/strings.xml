@@ -336,6 +336,10 @@
     <string name="reader.new_engine">新しい本のエンジン（ベータ版）</string>
     <string name="reader.nothing_to_read_aloud">読み上げるテキストがありません</string>
     <string name="reader.page">%1$d / %2$d</string>
+    <string name="reader.page_turn">ページめくり</string>
+    <string name="reader.page_turn.curl">カール</string>
+    <string name="reader.page_turn.none">なし</string>
+    <string name="reader.page_turn.slide">スライド</string>
     <string name="reader.read_aloud">読み上げる</string>
     <string name="reader.read_aloud_unavailable">この端末では読み上げを利用できません</string>
     <string name="reader.search">本の中を検索</string>

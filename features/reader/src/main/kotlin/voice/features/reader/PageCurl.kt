@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
@@ -41,7 +42,9 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
+import voice.core.data.PageTransition
 import kotlin.math.max
+import kotlin.math.min
 
 // The curl geometry follows the pagecurl library by Oleksandr Balan (Apache License 2.0),
 // https://github.com/oleksandrbalan/pagecurl
@@ -78,10 +81,37 @@ private fun Size.foldFor(
   return Fold(middle - along, middle + along)
 }
 
+/** A drag that started outside of [CurlPages], e.g. on the new book engine's web view. */
+internal sealed interface CurlDrag {
+  /** [forward] lifts the right page, otherwise the previous page comes back. */
+  data class Start(
+    val position: Offset,
+    val forward: Boolean,
+  ) : CurlDrag
+
+  data class Move(
+    val position: Offset,
+    val uptimeMillis: Long,
+  ) : CurlDrag
+
+  data object End : CurlDrag
+
+  data object Cancel : CurlDrag
+}
+
+private class DragTracking {
+  var start = Offset.Zero
+  var finger = Offset.Zero
+  var lifted: Animatable<Fold, AnimationVector4D>? = null
+  val velocity = VelocityTracker()
+}
+
 /**
  * Pages lying on top of each other, one at a time or two side by side like an open book. Dragging from the right lifts
  * the corner of the (right) page and curls it over, dragging from the left brings the previous page back. A tap on the
- * outer thirds turns a page, one in the middle calls [onCenterTap]. [onTurn] gets the first page of the new spread.
+ * outer thirds turns a page, one in the middle calls [onCenterTap]. [onTurn] gets the first page of the new spread, and
+ * [onTurnCancel] is called when a drag lets the page fall back. [transition] slides the pages or swaps them at once
+ * instead of curling them.
  */
 @Composable
 internal fun CurlPages(
@@ -91,9 +121,12 @@ internal fun CurlPages(
   onTurn: (Int) -> Unit,
   backColor: Color,
   modifier: Modifier = Modifier,
+  transition: PageTransition = PageTransition.Curl,
   onCenterTap: () -> Unit = {},
+  onTurnCancel: () -> Unit = {},
   // each request turns a page forward (positive) or back (negative), like a tap on the edge
   turnRequests: Flow<Int> = emptyFlow(),
+  drags: Flow<CurlDrag> = emptyFlow(),
   // previews can't drag, this shows the page curled this far
   previewTurn: Float? = null,
   spineWidth: Dp = 0.dp,
@@ -119,27 +152,32 @@ internal fun CurlPages(
       Animatable(start ?: pageSize.flat(), FoldConverter)
     }
     val backward = remember(pageSize) { Animatable(pageSize.turned(gap), FoldConverter) }
+    val drag = remember(pageSize, spreadCount) { DragTracking() }
     val latestSpread by rememberUpdatedState(spread)
     val latestOnTurn by rememberUpdatedState(onTurn)
+    val latestOnTurnCancel by rememberUpdatedState(onTurnCancel)
     val latestOnCenterTap by rememberUpdatedState(onCenterTap)
+    val latestTransition by rememberUpdatedState(transition)
     val scope = rememberCoroutineScope()
 
     fun turnForward(fromCorner: Boolean) {
       if (latestSpread >= spreadCount - 1) return
       scope.launch {
         val turnFrom = latestSpread
-        forward.animateTo(
-          pageSize.turned(gap),
-          if (fromCorner) {
-            keyframes {
-              durationMillis = TURN_MILLIS
-              pageSize.corner() at 0
-              pageSize.halfway() at TURN_MILLIS / 3
-            }
-          } else {
-            tween(TURN_MILLIS / 2)
-          },
-        )
+        if (latestTransition != PageTransition.None) {
+          forward.animateTo(
+            pageSize.turned(gap),
+            if (fromCorner && latestTransition == PageTransition.Curl) {
+              keyframes {
+                durationMillis = TURN_MILLIS
+                pageSize.corner() at 0
+                pageSize.halfway() at TURN_MILLIS / 3
+              }
+            } else {
+              tween(TURN_MILLIS / 2)
+            },
+          )
+        }
         latestOnTurn((turnFrom + 1) * pagesPerSpread)
         forward.snapTo(pageSize.flat())
       }
@@ -149,26 +187,112 @@ internal fun CurlPages(
       if (latestSpread <= 0) return
       scope.launch {
         val turnFrom = latestSpread
-        backward.animateTo(
-          pageSize.flat(),
-          if (fromCorner) {
-            keyframes {
-              durationMillis = TURN_MILLIS
-              pageSize.turned(gap) at 0
-              pageSize.halfway() at TURN_MILLIS * 2 / 3
-            }
-          } else {
-            tween(TURN_MILLIS / 2)
-          },
-        )
+        if (latestTransition != PageTransition.None) {
+          backward.animateTo(
+            pageSize.flat(),
+            if (fromCorner && latestTransition == PageTransition.Curl) {
+              keyframes {
+                durationMillis = TURN_MILLIS
+                pageSize.turned(gap) at 0
+                pageSize.halfway() at TURN_MILLIS * 2 / 3
+              }
+            } else {
+              tween(TURN_MILLIS / 2)
+            },
+          )
+        }
         latestOnTurn((turnFrom - 1) * pagesPerSpread)
         backward.snapTo(pageSize.turned(gap))
+      }
+    }
+
+    fun dragStart(
+      offset: Offset,
+      forwardHint: Boolean?,
+    ) {
+      drag.start = offset
+      drag.finger = offset
+      drag.velocity.resetTracking()
+      val liftsForward = forwardHint ?: (offset.x >= width / 2)
+      drag.lifted = when {
+        liftsForward && latestSpread < spreadCount - 1 -> forward
+        !liftsForward && latestSpread > 0 -> backward
+        else -> null
+      }
+    }
+
+    fun dragMove(
+      position: Offset,
+      uptimeMillis: Long,
+    ): Boolean {
+      val fold = drag.lifted ?: return false
+      drag.finger = position
+      drag.velocity.addPosition(uptimeMillis, position)
+      // with no animation, the page only turns once the finger lets go
+      if (latestTransition == PageTransition.None) return true
+      val moved = position - drag.start
+      val row = drag.start.y
+      // a turned page lies mirrored left of the spine, so its corner starts a page width out and comes back twice as fast
+      val corner = if (fold === forward) {
+        Offset(pageSize.width, row) + moved
+      } else {
+        Offset(-pageSize.width - 2 * gap, row) + moved * 2F
+      }
+      scope.launch { fold.snapTo(pageSize.foldFor(corner, row)) }
+      return true
+    }
+
+    fun dragEnd() {
+      val fold = drag.lifted ?: return
+      drag.lifted = null
+      val travelled = drag.finger.x + drag.velocity.calculateVelocity().x * FLING_SECONDS - drag.start.x
+      if (fold === forward) {
+        if (-travelled > pageSize.width * TURN_DISTANCE) {
+          turnForward(fromCorner = false)
+        } else {
+          scope.launch {
+            forward.animateTo(pageSize.flat())
+            latestOnTurnCancel()
+          }
+        }
+      } else {
+        if (travelled > pageSize.width * TURN_DISTANCE) {
+          turnBackward(fromCorner = false)
+        } else {
+          scope.launch {
+            backward.animateTo(pageSize.turned(gap))
+            latestOnTurnCancel()
+          }
+        }
+      }
+    }
+
+    fun dragCancel() {
+      if (drag.lifted == null) return
+      drag.lifted = null
+      scope.launch {
+        forward.animateTo(pageSize.flat())
+        backward.animateTo(pageSize.turned(gap))
+        latestOnTurnCancel()
       }
     }
 
     LaunchedEffect(turnRequests, pageSize) {
       turnRequests.collect { step ->
         if (step > 0) turnForward(fromCorner = true) else turnBackward(fromCorner = true)
+      }
+    }
+
+    LaunchedEffect(drags, pageSize) {
+      drags.collect { event ->
+        when (event) {
+          is CurlDrag.Start -> dragStart(event.position, event.forward)
+          is CurlDrag.Move -> {
+            val _ = dragMove(event.position, event.uptimeMillis)
+          }
+          CurlDrag.End -> dragEnd()
+          CurlDrag.Cancel -> dragCancel()
+        }
       }
     }
 
@@ -185,59 +309,13 @@ internal fun CurlPages(
           }
         }
         .pointerInput(pageSize, spreadCount) {
-          val velocity = VelocityTracker()
-          var start = Offset.Zero
-          var finger = Offset.Zero
-          var lifted: Animatable<Fold, AnimationVector4D>? = null
           detectDragGestures(
-            onDragStart = { offset ->
-              start = offset
-              finger = offset
-              velocity.resetTracking()
-              lifted = when {
-                offset.x >= width / 2 && latestSpread < spreadCount - 1 -> forward
-                offset.x < width / 2 && latestSpread > 0 -> backward
-                else -> null
-              }
-            },
+            onDragStart = { offset -> dragStart(offset, forwardHint = null) },
             onDrag = { change, _ ->
-              val fold = lifted ?: return@detectDragGestures
-              change.consume()
-              finger = change.position
-              velocity.addPosition(change.uptimeMillis, finger)
-              val moved = finger - start
-              val row = start.y
-              // a turned page lies mirrored left of the spine, so its corner starts a page width out and comes back twice as fast
-              val corner = if (fold === forward) {
-                Offset(pageSize.width, row) + moved
-              } else {
-                Offset(-pageSize.width - 2 * gap, row) + moved * 2F
-              }
-              scope.launch { fold.snapTo(pageSize.foldFor(corner, row)) }
+              if (dragMove(change.position, change.uptimeMillis)) change.consume()
             },
-            onDragEnd = {
-              val fold = lifted ?: return@detectDragGestures
-              lifted = null
-              val travelled = finger.x + velocity.calculateVelocity().x * FLING_SECONDS - start.x
-              if (fold === forward) {
-                if (-travelled > pageSize.width * TURN_DISTANCE) {
-                  turnForward(fromCorner = false)
-                } else {
-                  scope.launch { forward.animateTo(pageSize.flat()) }
-                }
-              } else {
-                if (travelled > pageSize.width * TURN_DISTANCE) {
-                  turnBackward(fromCorner = false)
-                } else {
-                  scope.launch { backward.animateTo(pageSize.turned(gap)) }
-                }
-              }
-            },
-            onDragCancel = {
-              lifted = null
-              scope.launch { forward.animateTo(pageSize.flat()) }
-              scope.launch { backward.animateTo(pageSize.turned(gap)) }
-            },
+            onDragEnd = { dragEnd() },
+            onDragCancel = { dragCancel() },
           )
         },
     ) {
@@ -251,6 +329,7 @@ internal fun CurlPages(
           spine()
         }
       }
+      val slide = transition == PageTransition.Slide
       for (index in (spread + 1) downTo (spread - 1)) {
         if (index !in 0 until spreadCount) continue
         val fold = when (index) {
@@ -258,7 +337,14 @@ internal fun CurlPages(
           spread - 1 -> backward
           else -> null
         }
-        val slots = if (twoPages) {
+        val slots = if (slide) {
+          // the whole spread slides, nothing curls
+          val slid = if (fold == null) Modifier else Modifier.slide(pageSize, gap, width) { fold.value }
+          listOfNotNull(
+            Placed(page = index * pagesPerSpread, x = 0.dp, modifier = slid),
+            if (twoPages) Placed(page = index * 2 + 1, x = rightPageX, modifier = slid) else null,
+          )
+        } else if (twoPages) {
           listOfNotNull(
             Placed(
               page = index * 2,
@@ -311,6 +397,19 @@ internal fun CurlPages(
       }
     }
   }
+}
+
+// moves a whole spread sideways as far as the fold has come over the page
+private fun Modifier.slide(
+  page: Size,
+  gap: Float,
+  spreadWidth: Float,
+  fold: () -> Fold,
+): Modifier = graphicsLayer {
+  val current = fold()
+  val x = min(current.top.x, current.bottom.x)
+  val progress = ((page.width - x) / (page.width + gap)).coerceIn(0F, 1F)
+  translationX = -progress * spreadWidth
 }
 
 private class Placed(

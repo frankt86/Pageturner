@@ -609,6 +609,14 @@
     <string name="reader.nothing_to_read_aloud">There\'s no text here to read aloud</string>
     <!-- Page number at the bottom of an ebook page, e.g. "12 of 240". -->
     <string name="reader.page">%1$d of %2$d</string>
+    <!-- Heading of the choice in the display sheet of the ebook reader for how a page turns: curl, slide or none. -->
+    <string name="reader.page_turn">Page turn</string>
+    <!-- Choice for the page turn in the ebook reader: the page curls over like paper. -->
+    <string name="reader.page_turn.curl">Curl</string>
+    <!-- Choice for the page turn in the ebook reader: the next page shows at once, without an animation. -->
+    <string name="reader.page_turn.none">None</string>
+    <!-- Choice for the page turn in the ebook reader: the page slides sideways. -->
+    <string name="reader.page_turn.slide">Slide</string>
     <!-- Button in the ebook reader that starts reading the book aloud from the current page. -->
     <string name="reader.read_aloud">Read aloud</string>
     <!-- Snackbar in the ebook reader when the device has no text-to-speech engine. -->

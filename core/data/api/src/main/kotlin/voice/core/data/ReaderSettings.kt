@@ -19,7 +19,20 @@ public data class ReaderSettings(
   val volumeKeysTurnPages: Boolean = true,
   /** Shows EPUBs with Readium, which keeps the book's own layout, instead of as plain text. */
   val newBookEngine: Boolean = false,
+  val pageTransition: PageTransition = PageTransition.Curl,
 )
+
+@Serializable
+public enum class PageTransition {
+  @SerialName("curl")
+  Curl,
+
+  @SerialName("slide")
+  Slide,
+
+  @SerialName("none")
+  None,
+}
 
 @Serializable
 public enum class ReaderFont {

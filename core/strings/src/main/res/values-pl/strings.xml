@@ -390,6 +390,10 @@
     <string name="reader.new_engine">Nowy silnik książek (beta)</string>
     <string name="reader.nothing_to_read_aloud">Nie ma tu tekstu do czytania na głos</string>
     <string name="reader.page">%1$d z %2$d</string>
+    <string name="reader.page_turn">Przewracanie stron</string>
+    <string name="reader.page_turn.curl">Zawinięcie</string>
+    <string name="reader.page_turn.none">Brak</string>
+    <string name="reader.page_turn.slide">Przesunięcie</string>
     <string name="reader.read_aloud">Czytaj na głos</string>
     <string name="reader.read_aloud_unavailable">Czytanie na głos nie jest dostępne na tym urządzeniu</string>
     <string name="reader.search">Szukaj w książce</string>

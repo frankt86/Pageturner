@@ -652,6 +652,7 @@ private fun Spreads(
     pagesPerSpread = pagesPerSpread,
     onTurn = { first -> onPageTurn(pages[first], pages.progressAt(first, pagesPerSpread)) },
     backColor = MaterialTheme.colorScheme.surface,
+    transition = state.settings.pageTransition,
     modifier = Modifier
       .fillMaxSize()
       // the pages turn themselves on a tap at the side and show the bars on a tap in the middle

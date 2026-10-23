@@ -354,6 +354,10 @@
     <string name="reader.new_engine">Nieuwe boekengine (bèta)</string>
     <string name="reader.nothing_to_read_aloud">Er is hier geen tekst om voor te lezen</string>
     <string name="reader.page">%1$d van %2$d</string>
+    <string name="reader.page_turn">Pagina omslaan</string>
+    <string name="reader.page_turn.curl">Krullen</string>
+    <string name="reader.page_turn.none">Geen</string>
+    <string name="reader.page_turn.slide">Schuiven</string>
     <string name="reader.read_aloud">Voorlezen</string>
     <string name="reader.read_aloud_unavailable">Voorlezen is niet beschikbaar op dit apparaat</string>
     <string name="reader.search">Zoeken in boek</string>

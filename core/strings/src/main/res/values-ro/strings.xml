@@ -372,6 +372,10 @@
     <string name="reader.new_engine">Motor nou pentru cărți (beta)</string>
     <string name="reader.nothing_to_read_aloud">Nu există text de citit cu voce tare aici</string>
     <string name="reader.page">%1$d din %2$d</string>
+    <string name="reader.page_turn">Întoarcerea paginii</string>
+    <string name="reader.page_turn.curl">Îndoire</string>
+    <string name="reader.page_turn.none">Fără</string>
+    <string name="reader.page_turn.slide">Glisare</string>
     <string name="reader.read_aloud">Citește cu voce tare</string>
     <string name="reader.read_aloud_unavailable">Citirea cu voce tare nu este disponibilă pe acest dispozitiv</string>
     <string name="reader.search">Caută în carte</string>

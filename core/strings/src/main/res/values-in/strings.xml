@@ -336,6 +336,10 @@
     <string name="reader.new_engine">Mesin buku baru (beta)</string>
     <string name="reader.nothing_to_read_aloud">Tidak ada teks untuk dibacakan di sini</string>
     <string name="reader.page">%1$d dari %2$d</string>
+    <string name="reader.page_turn">Membalik halaman</string>
+    <string name="reader.page_turn.curl">Lengkung</string>
+    <string name="reader.page_turn.none">Tanpa</string>
+    <string name="reader.page_turn.slide">Geser</string>
     <string name="reader.read_aloud">Bacakan</string>
     <string name="reader.read_aloud_unavailable">Fitur bacakan tidak tersedia di perangkat ini</string>
     <string name="reader.search">Cari di buku</string>

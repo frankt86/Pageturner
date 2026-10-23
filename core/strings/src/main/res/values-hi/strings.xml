@@ -354,6 +354,10 @@
     <string name="reader.new_engine">नया पुस्तक इंजन (बीटा)</string>
     <string name="reader.nothing_to_read_aloud">यहाँ ज़ोर से पढ़ने के लिए कोई टेक्स्ट नहीं है</string>
     <string name="reader.page">%2$d में से %1$d</string>
+    <string name="reader.page_turn">पन्ना पलटना</string>
+    <string name="reader.page_turn.curl">मोड़</string>
+    <string name="reader.page_turn.none">कोई नहीं</string>
+    <string name="reader.page_turn.slide">स्लाइड</string>
     <string name="reader.read_aloud">ज़ोर से पढ़ें</string>
     <string name="reader.read_aloud_unavailable">इस डिवाइस पर ज़ोर से पढ़ना उपलब्ध नहीं है</string>
     <string name="reader.search">पुस्तक में खोजें</string>

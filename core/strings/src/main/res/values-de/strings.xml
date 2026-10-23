@@ -354,6 +354,10 @@
     <string name="reader.new_engine">Neue Buch-Engine (Beta)</string>
     <string name="reader.nothing_to_read_aloud">Hier gibt es keinen Text zum Vorlesen</string>
     <string name="reader.page">%1$d von %2$d</string>
+    <string name="reader.page_turn">Umblättern</string>
+    <string name="reader.page_turn.curl">Blättern</string>
+    <string name="reader.page_turn.none">Keine</string>
+    <string name="reader.page_turn.slide">Schieben</string>
     <string name="reader.read_aloud">Vorlesen</string>
     <string name="reader.read_aloud_unavailable">Vorlesen ist auf diesem Gerät nicht verfügbar</string>
     <string name="reader.search">Im Buch suchen</string>
