@@ -276,7 +276,7 @@ internal fun ReaderScreen(uri: Uri) {
     if (selected != null && epub != null) {
       SelectionToolbar(
         selectedText = epub.text(selected),
-        highlightNames = loaded?.settings?.highlightNames.orEmpty(),
+        highlightNames = loaded.settings.highlightNames,
         onHighlightClick = { color ->
           val _ = viewModel.onHighlightAdd(selected, color)
           selection.clear()
@@ -443,8 +443,8 @@ internal fun ReaderScreen(uri: Uri) {
     HighlightSheet(
       highlight = highlight,
       text = content.text(BookRange(highlight.section, highlight.start, highlight.end)),
-      highlightNames = loaded?.settings?.highlightNames.orEmpty(),
-      highlightOpacity = loaded?.settings?.highlightOpacity ?: ReaderSettings().highlightOpacity,
+      highlightNames = loaded.settings.highlightNames,
+      highlightOpacity = loaded.settings.highlightOpacity,
       onDone = { changed ->
         editedHighlight = null
         if (changed != highlight) viewModel.onHighlightChange(highlight, changed)

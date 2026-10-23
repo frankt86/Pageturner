@@ -37,6 +37,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -409,10 +410,16 @@ private fun ColorSlider(
       style = MaterialTheme.typography.bodyMedium,
       modifier = Modifier.widthIn(min = 88.dp),
     )
+    val sliderState = rememberSliderState(value = value, trackRange = range)
+    LaunchedEffect(value) {
+      if (sliderState.value != value) sliderState.value = value
+    }
     Slider(
-      value = value,
-      onValueChange = onValueChange,
-      valueRange = range,
+      state = sliderState,
+      onValueChange = {
+        sliderState.value = it
+        onValueChange(it)
+      },
       modifier = Modifier
         .weight(1F)
         .semantics { contentDescription = label },
