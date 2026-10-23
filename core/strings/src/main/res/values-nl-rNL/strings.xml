@@ -227,6 +227,7 @@
     <string name="library.book.offline">Niet offline beschikbaar</string>
     <string name="library.category.completed.title">Voltooid</string>
     <string name="library.category.current.title">Huidig</string>
+    <string name="library.category.ebooks.title">E-books</string>
     <string name="library.category.not_started.title">Nog niet begonnen</string>
     <string name="library.continue_listening">Verder luisteren</string>
     <string name="library.empty.add_first_book">Laten we je luisterboekmap toevoegen om te beginnen met luisteren!</string>
@@ -318,6 +319,12 @@
     <string name="playback.speed.increase">Sneller</string>
     <string name="playback.speed.title">Afspeelsnelheid</string>
     <string name="playback.volume_boost.off">Uit</string>
+    <string name="reader.failed">Dit boek kon niet worden geopend</string>
+    <string name="reader.nothing_to_read_aloud">Er is hier geen tekst om voor te lezen</string>
+    <string name="reader.page">%1$d van %2$d</string>
+    <string name="reader.read_aloud">Voorlezen</string>
+    <string name="reader.read_aloud_unavailable">Voorlezen is niet beschikbaar op dit apparaat</string>
+    <string name="reader.stop_reading_aloud">Stoppen met voorlezen</string>
     <string name="review.prompt.action.feedback">Feedback geven</string>
     <string name="review.prompt.action.later">Niet nu</string>
     <string name="review.prompt.action.rate">Beoordelen op Google Play</string>

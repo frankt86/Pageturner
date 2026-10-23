@@ -240,6 +240,7 @@
     <string name="library.book.offline">No disponible sin conexión</string>
     <string name="library.category.completed.title">Completado</string>
     <string name="library.category.current.title">En curso</string>
+    <string name="library.category.ebooks.title">Libros electrónicos</string>
     <string name="library.category.not_started.title">Aún no comenzado</string>
     <string name="library.continue_listening">Seguir escuchando</string>
     <string name="library.empty.add_first_book">¡Agreguemos tu carpeta de audiolibros para que puedas empezar a escuchar!</string>
@@ -335,6 +336,12 @@
     <string name="playback.speed.increase">Más rápido</string>
     <string name="playback.speed.title">Velocidad de reproducción</string>
     <string name="playback.volume_boost.off">Desactivado</string>
+    <string name="reader.failed">No se pudo abrir este libro</string>
+    <string name="reader.nothing_to_read_aloud">Aquí no hay texto para leer en voz alta</string>
+    <string name="reader.page">%1$d de %2$d</string>
+    <string name="reader.read_aloud">Leer en voz alta</string>
+    <string name="reader.read_aloud_unavailable">La lectura en voz alta no está disponible en este dispositivo</string>
+    <string name="reader.stop_reading_aloud">Detener lectura en voz alta</string>
     <string name="review.prompt.action.feedback">Enviar comentarios</string>
     <string name="review.prompt.action.later">Ahora no</string>
     <string name="review.prompt.action.rate">Valorar en Google Play</string>

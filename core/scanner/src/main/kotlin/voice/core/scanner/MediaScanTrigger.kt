@@ -25,6 +25,7 @@ public class MediaScanTrigger
 internal constructor(
   private val audiobookFolders: AudiobookFolders,
   private val scanner: MediaScanner,
+  private val ebookScanner: EbookScanner,
   private val coverScanner: CoverScanner,
   private val bookRepo: BookRepository,
   private val documentFileFactory: CachedDocumentFileFactory,
@@ -55,6 +56,7 @@ internal constructor(
             }
           }
         scanner.scan(folders)
+        ebookScanner.scan(folders.values.flatten())
       }.also {
         Logger.i("scan took $it")
       }

@@ -1,8 +1,10 @@
 package voice.features.bookOverview.overview
 
+import android.net.Uri
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.State
 import voice.core.data.BookId
+import voice.core.data.EbookFormat
 
 @Immutable
 data class BookOverviewViewState(
@@ -17,6 +19,7 @@ data class BookOverviewViewState(
   val showFolderAccessBadge: Boolean,
   val showFolderPickerIcon: Boolean,
   val dialog: Dialog?,
+  val ebooks: List<EbookItemViewState> = emptyList(),
 ) {
 
   companion object {
@@ -44,3 +47,11 @@ data class BookOverviewViewState(
     FolderPickerMovedToSettings,
   }
 }
+
+@Immutable
+data class EbookItemViewState(
+  val uri: Uri,
+  val name: String,
+  val format: EbookFormat,
+  val progress: Float,
+)

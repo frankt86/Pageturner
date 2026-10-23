@@ -227,6 +227,7 @@
     <string name="library.book.offline">Inte tillgänglig offline</string>
     <string name="library.category.completed.title">Färdiglyssnade</string>
     <string name="library.category.current.title">Pågående</string>
+    <string name="library.category.ebooks.title">E-böcker</string>
     <string name="library.category.not_started.title">Inte påbörjade</string>
     <string name="library.continue_listening">Fortsätt lyssna</string>
     <string name="library.empty.add_first_book">Lägg till din ljudboksmapp för att börja lyssna!</string>
@@ -318,6 +319,12 @@
     <string name="playback.speed.increase">Snabbare</string>
     <string name="playback.speed.title">Uppspelningshastighet</string>
     <string name="playback.volume_boost.off">Av</string>
+    <string name="reader.failed">Boken kunde inte öppnas</string>
+    <string name="reader.nothing_to_read_aloud">Det finns ingen text att läsa upp här</string>
+    <string name="reader.page">%1$d av %2$d</string>
+    <string name="reader.read_aloud">Läs upp</string>
+    <string name="reader.read_aloud_unavailable">Uppläsning är inte tillgänglig på den här enheten</string>
+    <string name="reader.stop_reading_aloud">Stoppa uppläsningen</string>
     <string name="review.prompt.action.feedback">Ge feedback</string>
     <string name="review.prompt.action.later">Inte nu</string>
     <string name="review.prompt.action.rate">Betygsätt på Google Play</string>

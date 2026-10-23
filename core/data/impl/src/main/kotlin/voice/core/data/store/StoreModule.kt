@@ -11,10 +11,12 @@ import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.builtins.serializer
 import voice.core.data.BookId
+import voice.core.data.Ebook
 import voice.core.data.GridMode
 import voice.core.data.ReviewPromptState
 import voice.core.data.ThemeColorScheme
@@ -268,6 +270,17 @@ public object StoreModule {
       serializer = Float.serializer(),
       defaultValue = 1F,
       fileName = "lastPlaybackSpeed",
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @EbooksStore
+  private fun ebooks(factory: VoiceDataStoreFactory): DataStore<List<Ebook>> {
+    return factory.create(
+      serializer = ListSerializer(Ebook.serializer()),
+      defaultValue = emptyList(),
+      fileName = "ebooks",
     )
   }
 }

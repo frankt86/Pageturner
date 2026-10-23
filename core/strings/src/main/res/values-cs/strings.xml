@@ -253,6 +253,7 @@
     <string name="library.book.offline">Není k dispozici offline</string>
     <string name="library.category.completed.title">Dokončené</string>
     <string name="library.category.current.title">Aktuální</string>
+    <string name="library.category.ebooks.title">E-knihy</string>
     <string name="library.category.not_started.title">Nezačaté</string>
     <string name="library.continue_listening">Pokračovat v poslechu</string>
     <string name="library.empty.add_first_book">Pojďme přidat vaši složku s audioknihami ať můžete začít poslouchat!</string>
@@ -352,6 +353,12 @@
     <string name="playback.speed.increase">Rychleji</string>
     <string name="playback.speed.title">Rychlost přehrávání</string>
     <string name="playback.volume_boost.off">Vypnuto</string>
+    <string name="reader.failed">Tuto knihu se nepodařilo otevřít</string>
+    <string name="reader.nothing_to_read_aloud">Tady není žádný text k předčítání</string>
+    <string name="reader.page">%1$d z %2$d</string>
+    <string name="reader.read_aloud">Předčítat</string>
+    <string name="reader.read_aloud_unavailable">Předčítání není na tomto zařízení k dispozici</string>
+    <string name="reader.stop_reading_aloud">Zastavit předčítání</string>
     <string name="review.prompt.action.feedback">Sdílet zpětnou vazbu</string>
     <string name="review.prompt.action.later">Teď ne</string>
     <string name="review.prompt.action.rate">Ohodnotit na Google Play</string>

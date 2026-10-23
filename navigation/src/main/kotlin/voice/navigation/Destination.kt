@@ -34,6 +34,15 @@ sealed interface Destination {
     override val trackingName: String get() = "CoverFromInternet"
   }
 
+  @Serializable
+  data class Reader(
+    val uri:
+    @Serializable(with = UriSerializer::class)
+    Uri,
+  ) : Compose {
+    override val trackingName: String get() = "Reader"
+  }
+
   data class Website(val url: String) : Destination
 
   @Serializable

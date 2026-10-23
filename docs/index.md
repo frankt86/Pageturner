@@ -8,7 +8,8 @@ hide:
 A clean, user-focused audiobook player for Android.
 
 Voice turns your own audiobook files into a calm listening library with resume positions, bookmarks, sleep timer, playback speed, silence
-skipping, and Android Auto support.
+skipping, and Android Auto support. It also reads your EPUB and PDF books, two pages side by side on an unfolded foldable, and
+can read them aloud.
 
 [:simple-googleplay: &nbsp;Google Play](https://play.google.com/store/apps/details?id=de.ph1b.audiobook){ .md-button }
 [:simple-fdroid: &nbsp;F-Droid](https://f-droid.org/packages/de.ph1b.audiobook){ .md-button }
@@ -50,6 +51,12 @@ is what lets me plan the next release. Ko-fi needs no account. You can also
 
   Chapter navigation, sleep timer fade-out, bookmarks, speed control, and resume-where-you-left-off.
 
+- :material-book-open-page-variant:{ .lg .middle } **Ebooks too**
+
+  ---
+
+  EPUB and PDF books from your folders, one page folded, two pages unfolded, and read aloud on request. See [Ebooks](ebooks.md).
+
 - :material-update:{ .lg .middle } **Actively maintained**
 
   ---
@@ -60,5 +67,6 @@ is what lets me plan the next release. Ko-fi needs no account. You can also
 
 ## Learn more
 
-Read [About Voice](about.md) for the philosophy behind the app, [Organizing Audiobooks](organizing.md) for setting up your library, or
+Read [About Voice](about.md) for the philosophy behind the app, [Organizing Audiobooks](organizing.md) for setting up your library,
+[Ebooks](ebooks.md) for reading EPUB and PDF books, or
 the [FAQ](faq.md) for common questions. Want to contribute? See [Development](development.md) and [Architecture](architecture.md).

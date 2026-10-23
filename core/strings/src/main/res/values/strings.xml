@@ -372,6 +372,8 @@
     <string name="library.category.completed.title">Completed</string>
     <!-- Library category header for books currently being listened to. -->
     <string name="library.category.current.title">Current</string>
+    <!-- Library section header for the EPUB and PDF books found in the library folders. -->
+    <string name="library.category.ebooks.title">Ebooks</string>
     <!-- Library category header for books not started yet. -->
     <string name="library.category.not_started.title">Not started yet</string>
     <!-- Label above the hero card on the library screen that resumes the current audiobook. -->
@@ -540,6 +542,18 @@
     <string name="playback.speed.title">Playback speed</string>
     <!-- Button that turns volume boost off. -->
     <string name="playback.volume_boost.off">Off</string>
+    <!-- Shown in the ebook reader when an EPUB or PDF file can't be read. -->
+    <string name="reader.failed">This book couldn\'t be opened</string>
+    <!-- Snackbar in the ebook reader when there is no text to read aloud, e.g. a scanned PDF. -->
+    <string name="reader.nothing_to_read_aloud">There\'s no text here to read aloud</string>
+    <!-- Page number at the bottom of an ebook page, e.g. "12 of 240". -->
+    <string name="reader.page">%1$d of %2$d</string>
+    <!-- Button in the ebook reader that starts reading the book aloud from the current page. -->
+    <string name="reader.read_aloud">Read aloud</string>
+    <!-- Snackbar in the ebook reader when the device has no text-to-speech engine. -->
+    <string name="reader.read_aloud_unavailable">Reading aloud isn\'t available on this device</string>
+    <!-- Button in the ebook reader that stops reading aloud. -->
+    <string name="reader.stop_reading_aloud">Stop reading aloud</string>
     <!-- Button in the rating prompt that opens the ways to share feedback. -->
     <string name="review.prompt.action.feedback" tools:ignore="UnusedResources">Share feedback</string>
     <!-- Button that closes the rating prompt without rating. -->

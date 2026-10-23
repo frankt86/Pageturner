@@ -227,6 +227,7 @@
     <string name="library.book.offline">ऑफ़लाइन उपलब्ध नहीं</string>
     <string name="library.category.completed.title">पूर्ण</string>
     <string name="library.category.current.title">जारी</string>
+    <string name="library.category.ebooks.title">ई-पुस्तकें</string>
     <string name="library.category.not_started.title">अभी शुरू नहीं</string>
     <string name="library.continue_listening">सुनना जारी रखें</string>
     <string name="library.empty.add_first_book">चलिए आपका ऑडियोबुक फ़ोल्डर जोड़ते हैं ताकि आप सुनना शुरू कर सकें!</string>
@@ -318,6 +319,12 @@
     <string name="playback.speed.increase">तेज़ करें</string>
     <string name="playback.speed.title">प्लेबैक की गति</string>
     <string name="playback.volume_boost.off">बंद</string>
+    <string name="reader.failed">यह पुस्तक खुल नहीं पाई</string>
+    <string name="reader.nothing_to_read_aloud">यहाँ ज़ोर से पढ़ने के लिए कोई टेक्स्ट नहीं है</string>
+    <string name="reader.page">%2$d में से %1$d</string>
+    <string name="reader.read_aloud">ज़ोर से पढ़ें</string>
+    <string name="reader.read_aloud_unavailable">इस डिवाइस पर ज़ोर से पढ़ना उपलब्ध नहीं है</string>
+    <string name="reader.stop_reading_aloud">ज़ोर से पढ़ना बंद करें</string>
     <string name="review.prompt.action.feedback">फ़ीडबैक साझा करें</string>
     <string name="review.prompt.action.later">अभी नहीं</string>
     <string name="review.prompt.action.rate">Google Play पर रेटिंग दें</string>
