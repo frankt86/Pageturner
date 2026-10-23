@@ -78,7 +78,7 @@ chmod +x .git/hooks/pre-commit
 
 ## Releasing
 
-To release a new version, trigger the [Release Workflow](https://github.com/PaulWoitaschek/Voice/actions/workflows/release.yml)
+To release a new version, trigger the [Release Workflow](https://github.com/frankt86/Pageturner/actions/workflows/release.yml)
 
 This creates a draft GitHub release with the APK and keeps the Play AAB as a workflow artifact. With `submit_to_stores` enabled,
 it also uploads the AAB to the Play Store’s internal track and promotes it to a 0.1% production rollout.
@@ -130,7 +130,7 @@ F-Droid takes a release in three steps:
 ### Tester Builds
 
 To send a build to testers, trigger the
-[Firebase App Distribution Workflow](https://github.com/PaulWoitaschek/Voice/actions/workflows/firebase_app_distribution.yml)
+[Firebase App Distribution Workflow](https://github.com/frankt86/Pageturner/actions/workflows/firebase_app_distribution.yml)
 on the branch to test. Testers install the build through the Firebase App Tester app.
 
 The workflow builds a `playRelease` APK with the version code of the upcoming release and a version name suffixed
@@ -199,8 +199,8 @@ This code is embedded in the git tag by `determine_release_tag.main.kts` and use
 
 ## Pages Deployment
 
-To projects [Website](https://voice.woitaschek.de/) uses Github Pages and Mkdocs.
+The [website](https://frankt86.github.io/Pageturner/) uses GitHub Pages and MkDocs and deploys on every push to `main`.
 To deploy a new website, use dispatch a workflow
 manually.
 
-[👉 Dispatch Workflow](https://github.com/PaulWoitaschek/Voice/actions/workflows/deploy_pages.yml)
+[👉 Dispatch Workflow](https://github.com/frankt86/Pageturner/actions/workflows/deploy_pages.yml)

@@ -1,24 +1,21 @@
 site_name: Pageturner
 site_description: "Pageturner is an open source audiobook player and ebook reader, based on Voice."
-site_author: Paul Woitaschek
-site_url: https://voice.woitaschek.de
+site_author: frankt86
+site_url: https://frankt86.github.io/Pageturner/
 
-repo_url: https://github.com/frankt86/Voice
+repo_url: https://github.com/frankt86/Pageturner
 repo_name: "Pageturner on GitHub"
 
 nav:
   - Home: index.md
-  - Download Sources: download-sources.md
   - Organizing Audiobooks: organizing.md
   - Ebooks: ebooks.md
-  - Privacy Policy: privacy-policy.md
-  - License: license.md
-  - Contributing: contributing.md
-  - About: about.md
-  - Product Spec: product.md
+  - Audiobookshelf: audiobookshelf.md
+  - FAQ: faq.md
   - Development: development.md
   - Architecture: architecture.md
-  - FAQ: faq.md
+  - Privacy Policy: privacy-policy.md
+  - License: license.md
 
 theme:
   name: material
@@ -75,9 +72,4 @@ markdown_extensions:
   - pymdownx.superfences
 
 plugins:
-  - redirects:
-      redirect_maps:
-        'privacy_policy.md': 'privacy-policy.md'
-        'privacy.md': 'privacy-policy.md'
-
-copyright: <a href="https://woitaschek.de/impressum/">Impressum</a>
+  - search

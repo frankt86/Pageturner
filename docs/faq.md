@@ -2,13 +2,8 @@
 
 Yes, Pageturner fully supports Android Auto!
 
-Android Auto only shows apps installed from a trusted source such as
-[Google Play](https://play.google.com/store/apps/details?id=de.ph1b.audiobook). If you installed Pageturner from F-Droid, GitHub
-or IzzyDroid, follow [Google's steps to allow unknown sources](https://developer.android.com/training/cars/testing#unknown-sources)
-in Android Auto.
-
-Google Play is the only officially supported source for Android Auto. See the [download source comparison](download-sources.md)
-for details.
+Android Auto only shows apps installed from a trusted source. Pageturner is installed from GitHub, so follow
+[Google's steps to allow unknown sources](https://developer.android.com/training/cars/testing#unknown-sources) in Android Auto.
 
 ### Why doesn't Pageturner support the xyz Media Format?
 
@@ -22,24 +17,12 @@ If a file that should be supported is not displayed, it is most likely either co
 I add features when they make listening better for many listeners. Each one has to be maintained for years, and every new setting makes
 the app a bit harder to use. So I prefer good defaults over options and keep each screen focused on listening.
 
-If you're missing something, [open a feature request](https://github.com/PaulWoitaschek/Voice/discussions/new?category=ideas) and describe
+If you're missing something, [open an issue](https://github.com/frankt86/Pageturner/issues/new) and describe
 what you'd like to do.
 
-### Which Pageturner version should I use on older Android?
+### Which Android version do I need?
 
-!!! tip
-
-    To check your API level, go to **Settings » About » Android version** on your device.
-
-If you’re running an Android release that’s not supported by the latest Pageturner build, pick the version below that matches your OS/API level:
-
-| Android Version | API Level (SDK) | Pageturner Version                                                           |
-|-----------------|-----------------|-------------------------------------------------------------------------|
-| Android 9+      | 28+             | Supported in the latest version 🎉                                      |
-| Android 8.1     | 27              | [8.2.4‑2](https://github.com/PaulWoitaschek/Voice/releases/tag/8.2.4-2) |
-| Android 8       | 26              | [8.2.4‑2](https://github.com/PaulWoitaschek/Voice/releases/tag/8.2.4-2) |
-| Android 7.1     | 25              | [8.2.4‑2](https://github.com/PaulWoitaschek/Voice/releases/tag/8.2.4-2) |
-| Android 7.0     | 24              | [6.0.10](https://github.com/PaulWoitaschek/Voice/releases/tag/6.0.10)   |
+Pageturner runs on Android 9 or newer.
 
 ### How do I resume playback after the sleep timer stops?
 
