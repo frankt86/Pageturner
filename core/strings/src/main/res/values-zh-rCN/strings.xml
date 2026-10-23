@@ -310,6 +310,15 @@
     <string name="reader.read_aloud_unavailable">此设备不支持朗读</string>
     <string name="reader.stop_reading_aloud">停止朗读</string>
     <string name="reader.text_size">文字大小</string>
+    <string name="reader.voice.natural">自然语音</string>
+    <string name="reader.voice.natural.downloading">正在下载语音… %d%%</string>
+    <string name="reader.voice.natural.failed">无法下载语音。点按即可重试。</string>
+    <string name="reader.voice.natural.summary">听起来就像真人在朗读。只需下载一次，约 130 MB。</string>
+    <string name="reader.voice.natural.unavailable">自然语音无法启动，已改用手机的语音朗读。</string>
+    <string name="reader.voice.phone">手机语音</string>
+    <string name="reader.voice.phone.summary">您手机的文字转语音声音</string>
+    <string name="reader.voice.speed">速度</string>
+    <string name="reader.voice.start">开始朗读</string>
     <string name="review.prompt.action.feedback">分享反馈</string>
     <string name="review.prompt.action.later">以后再说</string>
     <string name="review.prompt.action.rate">在 Google Play 上评分</string>

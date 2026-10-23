@@ -361,6 +361,15 @@
     <string name="reader.read_aloud_unavailable">Читання вголос недоступне на цьому пристрої</string>
     <string name="reader.stop_reading_aloud">Зупинити читання вголос</string>
     <string name="reader.text_size">Розмір тексту</string>
+    <string name="reader.voice.natural">Природний голос</string>
+    <string name="reader.voice.natural.downloading">Завантаження голосу… %d%%</string>
+    <string name="reader.voice.natural.failed">Не вдалося завантажити голос. Торкніться, щоб повторити.</string>
+    <string name="reader.voice.natural.summary">Звучить як жива людина. Завантажується один раз, близько 130 МБ.</string>
+    <string name="reader.voice.natural.unavailable">Не вдалося запустити природний голос, тому читає голос телефона.</string>
+    <string name="reader.voice.phone">Голос телефона</string>
+    <string name="reader.voice.phone.summary">Голос синтезу мовлення на вашому телефоні</string>
+    <string name="reader.voice.speed">Швидкість</string>
+    <string name="reader.voice.start">Почати читання</string>
     <string name="review.prompt.action.feedback">Залишити відгук</string>
     <string name="review.prompt.action.later">Не зараз</string>
     <string name="review.prompt.action.rate">Оцінити в Google Play</string>

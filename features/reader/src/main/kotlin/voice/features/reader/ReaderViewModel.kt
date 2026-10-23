@@ -3,6 +3,7 @@ package voice.features.reader
 import android.app.Application
 import android.net.Uri
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
@@ -22,6 +23,8 @@ import voice.core.data.Ebook
 import voice.core.data.EbookFormat
 import voice.core.data.EbookPosition
 import voice.core.data.store.EbooksStore
+import voice.core.data.store.ReaderNaturalVoiceStore
+import voice.core.data.store.ReaderSpeechRateStore
 import voice.core.data.store.ReaderTextSizeStore
 import voice.core.ebook.parseEpub
 import voice.core.logging.api.Logger
@@ -58,12 +61,23 @@ internal sealed interface ReaderState {
     /** The part of the text read aloud right now, in the section of [position]. */
     val readingRange: IntRange?,
     val textSize: Float,
+    val voice: VoiceState,
   ) : ReaderState
 }
+
+internal data class VoiceState(
+  val natural: Boolean,
+  val naturalReady: Boolean,
+  /** 0 to 1 while the natural voice downloads. */
+  val downloadProgress: Float?,
+  val downloadFailed: Boolean,
+  val speechRate: Float,
+)
 
 internal enum class ReaderMessage {
   ReadAloudUnavailable,
   NothingToReadAloud,
+  NaturalVoiceUnavailable,
 }
 
 @AssistedInject
@@ -72,6 +86,10 @@ class ReaderViewModel(
   private val store: DataStore<List<Ebook>>,
   @ReaderTextSizeStore
   private val textSizeStore: DataStore<Float>,
+  @ReaderNaturalVoiceStore
+  private val naturalVoiceStore: DataStore<Boolean>,
+  @ReaderSpeechRateStore
+  private val speechRateStore: DataStore<Float>,
   private val application: Application,
   private val navigator: Navigator,
   private val dispatcherProvider: DispatcherProvider,
@@ -86,7 +104,13 @@ class ReaderViewModel(
   private var readAloudJob by mutableStateOf<Job?>(null)
   private var readAloud: ReadAloud? = null
   private var readingRange by mutableStateOf<IntRange?>(null)
-  private var textSize by mutableStateOf(DEFAULT_TEXT_SIZE)
+  private var textSize by mutableFloatStateOf(DEFAULT_TEXT_SIZE)
+  private val neuralVoice by lazy { NeuralVoice(application) }
+  private var naturalVoice by mutableStateOf(true)
+  private var naturalReady by mutableStateOf(false)
+  private var downloadProgress by mutableStateOf<Float?>(null)
+  private var downloadFailed by mutableStateOf(false)
+  private var speechRate by mutableFloatStateOf(1F)
 
   private val messageChannel = Channel<ReaderMessage>(Channel.CONFLATED)
   internal val messages: Flow<ReaderMessage> = messageChannel.receiveAsFlow()
@@ -94,6 +118,13 @@ class ReaderViewModel(
   init {
     scope.launch {
       textSizeStore.data.collect { textSize = it }
+    }
+    scope.launch {
+      speechRateStore.data.collect { speechRate = it }
+    }
+    scope.launch {
+      naturalReady = withContext(dispatcherProvider.io) { neuralVoice.isDownloaded }
+      naturalVoice = naturalVoiceStore.data.first()
     }
     scope.launch {
       val ebook = store.data.first().firstOrNull { it.uri == uri }
@@ -144,6 +175,13 @@ class ReaderViewModel(
         readingAloud = readAloudJob != null,
         readingRange = readingRange,
         textSize = textSize,
+        voice = VoiceState(
+          natural = naturalVoice,
+          naturalReady = naturalReady,
+          downloadProgress = downloadProgress,
+          downloadFailed = downloadFailed,
+          speechRate = speechRate,
+        ),
       )
     }
   }
@@ -170,11 +208,32 @@ class ReaderViewModel(
     navigator.goBack()
   }
 
-  fun onReadAloudClick() {
-    if (readAloudJob != null) {
-      stopReadingAloud()
-      return
+  internal fun onVoiceSelect(natural: Boolean) {
+    naturalVoice = natural
+    scope.launch { naturalVoiceStore.updateData { natural } }
+    if (natural && !naturalReady && downloadProgress == null) {
+      downloadFailed = false
+      downloadProgress = 0F
+      scope.launch {
+        val ready = neuralVoice.download { progress -> downloadProgress = progress }
+        downloadProgress = null
+        naturalReady = ready
+        downloadFailed = !ready
+      }
     }
+  }
+
+  internal fun onSpeechRateChange(rate: Float) {
+    speechRate = rate
+    scope.launch { speechRateStore.updateData { rate } }
+  }
+
+  internal fun stopReadingAloudClick() {
+    stopReadingAloud()
+  }
+
+  internal fun onStartReadingClick() {
+    if (readAloudJob != null) return
     val content = content ?: return
     val speaker = readAloud ?: ReadAloud(application).also { readAloud = it }
     readAloudJob = scope.launch {
@@ -196,6 +255,7 @@ class ReaderViewModel(
     var section = position.section
     var offset = position.offset
     var spokeAnything = false
+    var useNaturalVoice = naturalVoice && naturalReady
     while (section < content.sectionCount) {
       val text = when (content) {
         is ReaderContent.Epub -> content.chapters[section]
@@ -205,7 +265,12 @@ class ReaderViewModel(
         val chunk = nextChunk(text, offset) ?: break
         moveTo(EbookPosition(section, chunk.first))
         readingRange = chunk
-        if (!speaker.speak(text.substring(chunk))) {
+        val next = nextChunk(text, chunk.last + 1)?.let { text.substring(it) }
+        if (useNaturalVoice && !neuralVoice.speak(text.substring(chunk), next, speechRate)) {
+          useNaturalVoice = false
+          messageChannel.trySend(ReaderMessage.NaturalVoiceUnavailable)
+        }
+        if (!useNaturalVoice && !speaker.speak(text.substring(chunk), speechRate)) {
           messageChannel.trySend(ReaderMessage.ReadAloudUnavailable)
           return
         }
@@ -257,6 +322,7 @@ class ReaderViewModel(
   fun close() {
     stopReadingAloud()
     readAloud?.shutdown()
+    if (naturalReady) neuralVoice.release()
     val content = content
     scope.launch {
       if (content is ReaderContent.Pdf) content.pdf.close()

@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">इस डिवाइस पर ज़ोर से पढ़ना उपलब्ध नहीं है</string>
     <string name="reader.stop_reading_aloud">ज़ोर से पढ़ना बंद करें</string>
     <string name="reader.text_size">टेक्स्ट का आकार</string>
+    <string name="reader.voice.natural">स्वाभाविक आवाज़</string>
+    <string name="reader.voice.natural.downloading">आवाज़ डाउनलोड हो रही है… %d%%</string>
+    <string name="reader.voice.natural.failed">आवाज़ डाउनलोड नहीं हो पाई। फिर से कोशिश करने के लिए टैप करें।</string>
+    <string name="reader.voice.natural.summary">किसी इंसान के पढ़ने जैसी लगती है। एक बार डाउनलोड होगी, लगभग 130 MB।</string>
+    <string name="reader.voice.natural.unavailable">स्वाभाविक आवाज़ शुरू नहीं हो पाई, इसलिए आपके फ़ोन की आवाज़ पढ़ रही है।</string>
+    <string name="reader.voice.phone">फ़ोन की आवाज़</string>
+    <string name="reader.voice.phone.summary">आपके फ़ोन की टेक्स्ट-टू-स्पीच आवाज़</string>
+    <string name="reader.voice.speed">गति</string>
+    <string name="reader.voice.start">पढ़ना शुरू करें</string>
     <string name="review.prompt.action.feedback">फ़ीडबैक साझा करें</string>
     <string name="review.prompt.action.later">अभी नहीं</string>
     <string name="review.prompt.action.rate">Google Play पर रेटिंग दें</string>

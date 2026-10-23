@@ -344,6 +344,15 @@
     <string name="reader.read_aloud_unavailable">La lectura en veu alta no està disponible en aquest dispositiu</string>
     <string name="reader.stop_reading_aloud">Atura la lectura en veu alta</string>
     <string name="reader.text_size">Mida del text</string>
+    <string name="reader.voice.natural">Veu natural</string>
+    <string name="reader.voice.natural.downloading">S\'està baixant la veu… %d%%</string>
+    <string name="reader.voice.natural.failed">No s\'ha pogut baixar la veu. Toqueu per tornar-ho a provar.</string>
+    <string name="reader.voice.natural.summary">Sona com una persona llegint. Es baixa un sol cop, uns 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">La veu natural no s\'ha pogut iniciar, així que llegeix la veu del telèfon.</string>
+    <string name="reader.voice.phone">Veu del telèfon</string>
+    <string name="reader.voice.phone.summary">La veu de síntesi de veu del vostre telèfon</string>
+    <string name="reader.voice.speed">Velocitat</string>
+    <string name="reader.voice.start">Comença a llegir</string>
     <string name="review.prompt.action.feedback">Envia comentaris</string>
     <string name="review.prompt.action.later">Ara no</string>
     <string name="review.prompt.action.rate">Valora a Google Play</string>

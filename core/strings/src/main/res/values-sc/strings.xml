@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">Sa letura a boghe arta no est disponìbile in custu dispositivu</string>
     <string name="reader.stop_reading_aloud">Firma sa letura a boghe arta</string>
     <string name="reader.text_size">Mannària de su testu</string>
+    <string name="reader.voice.natural">Boghe naturale</string>
+    <string name="reader.voice.natural.downloading">Iscarrighende sa boghe… %d%%</string>
+    <string name="reader.voice.natural.failed">No est istadu possìbile iscarrigare sa boghe. Toca pro torrare a proare.</string>
+    <string name="reader.voice.natural.summary">Paret una persone chi leghet. S\'iscàrrigat una borta ebbia, prus o mancu 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Sa boghe naturale no est partida, duncas leghet sa boghe de su telèfonu.</string>
+    <string name="reader.voice.phone">Boghe de su telèfonu</string>
+    <string name="reader.voice.phone.summary">Sa boghe de sìntesi vocale de su telèfonu tuo</string>
+    <string name="reader.voice.speed">Velotzidade</string>
+    <string name="reader.voice.start">Cumintza a lèghere</string>
     <string name="review.prompt.action.feedback">Cumpartzi unu parre</string>
     <string name="review.prompt.action.later">Immoe nono</string>
     <string name="review.prompt.action.rate">Vota in Google Play</string>

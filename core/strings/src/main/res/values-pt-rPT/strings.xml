@@ -344,6 +344,15 @@
     <string name="reader.read_aloud_unavailable">A leitura em voz alta não está disponível neste dispositivo</string>
     <string name="reader.stop_reading_aloud">Parar leitura em voz alta</string>
     <string name="reader.text_size">Tamanho do texto</string>
+    <string name="reader.voice.natural">Voz natural</string>
+    <string name="reader.voice.natural.downloading">A transferir a voz… %d%%</string>
+    <string name="reader.voice.natural.failed">Não foi possível transferir a voz. Toque para tentar novamente.</string>
+    <string name="reader.voice.natural.summary">Soa como uma pessoa a ler. Transferida uma única vez, cerca de 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Não foi possível iniciar a voz natural, por isso lê a voz do telemóvel.</string>
+    <string name="reader.voice.phone">Voz do telemóvel</string>
+    <string name="reader.voice.phone.summary">A voz de texto para voz do telemóvel</string>
+    <string name="reader.voice.speed">Velocidade</string>
+    <string name="reader.voice.start">Começar a ler</string>
     <string name="review.prompt.action.feedback">Enviar feedback</string>
     <string name="review.prompt.action.later">Agora não</string>
     <string name="review.prompt.action.rate">Avaliar no Google Play</string>

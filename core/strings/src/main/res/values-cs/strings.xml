@@ -361,6 +361,15 @@
     <string name="reader.read_aloud_unavailable">Předčítání není na tomto zařízení k dispozici</string>
     <string name="reader.stop_reading_aloud">Zastavit předčítání</string>
     <string name="reader.text_size">Velikost textu</string>
+    <string name="reader.voice.natural">Přirozený hlas</string>
+    <string name="reader.voice.natural.downloading">Stahování hlasu… %d %%</string>
+    <string name="reader.voice.natural.failed">Hlas se nepodařilo stáhnout. Klepnutím to zkuste znovu.</string>
+    <string name="reader.voice.natural.summary">Zní jako člověk, který čte. Stáhne se jednou, asi 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Přirozený hlas se nepodařilo spustit, takže místo něj čte hlas telefonu.</string>
+    <string name="reader.voice.phone">Hlas telefonu</string>
+    <string name="reader.voice.phone.summary">Hlas pro převod textu na řeč ve vašem telefonu</string>
+    <string name="reader.voice.speed">Rychlost</string>
+    <string name="reader.voice.start">Začít číst</string>
     <string name="review.prompt.action.feedback">Sdílet zpětnou vazbu</string>
     <string name="review.prompt.action.later">Teď ne</string>
     <string name="review.prompt.action.rate">Ohodnotit na Google Play</string>

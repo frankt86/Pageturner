@@ -361,6 +361,15 @@
     <string name="reader.read_aloud_unavailable">Чтение вслух недоступно на этом устройстве</string>
     <string name="reader.stop_reading_aloud">Остановить чтение вслух</string>
     <string name="reader.text_size">Размер текста</string>
+    <string name="reader.voice.natural">Естественный голос</string>
+    <string name="reader.voice.natural.downloading">Скачивание голоса… %d%%</string>
+    <string name="reader.voice.natural.failed">Не удалось скачать голос. Нажмите, чтобы повторить.</string>
+    <string name="reader.voice.natural.summary">Звучит как живой человек. Скачивается один раз, около 130 МБ.</string>
+    <string name="reader.voice.natural.unavailable">Не удалось запустить естественный голос, поэтому читает голос телефона.</string>
+    <string name="reader.voice.phone">Голос телефона</string>
+    <string name="reader.voice.phone.summary">Голос синтеза речи на вашем телефоне</string>
+    <string name="reader.voice.speed">Скорость</string>
+    <string name="reader.voice.start">Начать чтение</string>
     <string name="review.prompt.action.feedback">Оставить отзыв</string>
     <string name="review.prompt.action.later">Не сейчас</string>
     <string name="review.prompt.action.rate">Оценить в Google Play</string>

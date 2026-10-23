@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">Uppläsning är inte tillgänglig på den här enheten</string>
     <string name="reader.stop_reading_aloud">Stoppa uppläsningen</string>
     <string name="reader.text_size">Textstorlek</string>
+    <string name="reader.voice.natural">Naturlig röst</string>
+    <string name="reader.voice.natural.downloading">Laddar ned rösten… %d %%</string>
+    <string name="reader.voice.natural.failed">Det gick inte att ladda ned rösten. Tryck för att försöka igen.</string>
+    <string name="reader.voice.natural.summary">Låter som en människa som läser. Laddas ned en gång, cirka 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Den naturliga rösten kunde inte starta, så telefonens röst läser i stället.</string>
+    <string name="reader.voice.phone">Telefonens röst</string>
+    <string name="reader.voice.phone.summary">Telefonens röst för text till tal</string>
+    <string name="reader.voice.speed">Hastighet</string>
+    <string name="reader.voice.start">Börja läsa</string>
     <string name="review.prompt.action.feedback">Ge feedback</string>
     <string name="review.prompt.action.later">Inte nu</string>
     <string name="review.prompt.action.rate">Betygsätt på Google Play</string>

@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">خواندن با صدای بلند در این دستگاه در دسترس نیست</string>
     <string name="reader.stop_reading_aloud">توقف خواندن با صدای بلند</string>
     <string name="reader.text_size">اندازه متن</string>
+    <string name="reader.voice.natural">صدای طبیعی</string>
+    <string name="reader.voice.natural.downloading">در حال دانلود صدا… %d%%</string>
+    <string name="reader.voice.natural.failed">صدا دانلود نشد. برای تلاش دوباره ضربه بزنید.</string>
+    <string name="reader.voice.natural.summary">مثل آدمی که کتاب می‌خواند. یک بار دانلود می‌شود، حدود ۱۳۰ مگابایت.</string>
+    <string name="reader.voice.natural.unavailable">صدای طبیعی راه نیفتاد، برای همین صدای گوشی شما می‌خواند.</string>
+    <string name="reader.voice.phone">صدای گوشی</string>
+    <string name="reader.voice.phone.summary">صدای تبدیل متن به گفتار گوشی شما</string>
+    <string name="reader.voice.speed">سرعت</string>
+    <string name="reader.voice.start">شروع خواندن</string>
     <string name="review.prompt.action.feedback">اشتراک بازخورد</string>
     <string name="review.prompt.action.later">الان نه</string>
     <string name="review.prompt.action.rate">امتیاز دادن در Google Play</string>

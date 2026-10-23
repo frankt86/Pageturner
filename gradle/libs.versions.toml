@@ -20,6 +20,7 @@ navigation3 = "1.2.0"
 androidx-lifecycle = "2.11.0"
 
 [libraries]
+commonsCompress = "org.apache.commons:commons-compress:1.28.0"
 androidPluginForGradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 junit = "junit:junit:4.13.2"
 materialKolor = "com.materialkolor:material-kolor:5.0.1"

@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">Sesli okuma bu cihazda kullanılamıyor</string>
     <string name="reader.stop_reading_aloud">Sesli okumayı durdur</string>
     <string name="reader.text_size">Metin boyutu</string>
+    <string name="reader.voice.natural">Doğal ses</string>
+    <string name="reader.voice.natural.downloading">Ses indiriliyor… %%%d</string>
+    <string name="reader.voice.natural.failed">Ses indirilemedi. Tekrar denemek için dokunun.</string>
+    <string name="reader.voice.natural.summary">Kitap okuyan bir insan gibi. Bir kez indirilir, yaklaşık 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Doğal ses başlatılamadı, bu yüzden telefonunuzun sesi okuyor.</string>
+    <string name="reader.voice.phone">Telefon sesi</string>
+    <string name="reader.voice.phone.summary">Telefonunuzun metin okuma sesi</string>
+    <string name="reader.voice.speed">Hız</string>
+    <string name="reader.voice.start">Okumaya başla</string>
     <string name="review.prompt.action.feedback">Geri bildirim paylaş</string>
     <string name="review.prompt.action.later">Şimdi değil</string>
     <string name="review.prompt.action.rate">Google Play\'de puan ver</string>

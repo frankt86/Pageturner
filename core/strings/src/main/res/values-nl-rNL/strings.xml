@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">Voorlezen is niet beschikbaar op dit apparaat</string>
     <string name="reader.stop_reading_aloud">Stoppen met voorlezen</string>
     <string name="reader.text_size">Tekstgrootte</string>
+    <string name="reader.voice.natural">Natuurlijke stem</string>
+    <string name="reader.voice.natural.downloading">Stem downloaden… %d%%</string>
+    <string name="reader.voice.natural.failed">De stem kon niet worden gedownload. Tik om het opnieuw te proberen.</string>
+    <string name="reader.voice.natural.summary">Klinkt als een mens die voorleest. Eenmalige download van ongeveer 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">De natuurlijke stem kon niet starten, dus leest de stem van je telefoon voor.</string>
+    <string name="reader.voice.phone">Telefoonstem</string>
+    <string name="reader.voice.phone.summary">De tekst-naar-spraakstem van je telefoon</string>
+    <string name="reader.voice.speed">Snelheid</string>
+    <string name="reader.voice.start">Voorlezen starten</string>
     <string name="review.prompt.action.feedback">Feedback geven</string>
     <string name="review.prompt.action.later">Niet nu</string>
     <string name="review.prompt.action.rate">Beoordelen op Google Play</string>

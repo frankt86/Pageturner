@@ -361,6 +361,15 @@
     <string name="reader.read_aloud_unavailable">Czytanie na głos nie jest dostępne na tym urządzeniu</string>
     <string name="reader.stop_reading_aloud">Zatrzymaj czytanie na głos</string>
     <string name="reader.text_size">Rozmiar tekstu</string>
+    <string name="reader.voice.natural">Naturalny głos</string>
+    <string name="reader.voice.natural.downloading">Pobieranie głosu… %d%%</string>
+    <string name="reader.voice.natural.failed">Nie udało się pobrać głosu. Kliknij, aby spróbować ponownie.</string>
+    <string name="reader.voice.natural.summary">Brzmi jak czytający człowiek. Pobierany raz, około 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Nie udało się uruchomić naturalnego głosu, więc czyta głos telefonu.</string>
+    <string name="reader.voice.phone">Głos telefonu</string>
+    <string name="reader.voice.phone.summary">Głos przetwarzania tekstu na mowę w telefonie</string>
+    <string name="reader.voice.speed">Szybkość</string>
+    <string name="reader.voice.start">Zacznij czytać</string>
     <string name="review.prompt.action.feedback">Podziel się opinią</string>
     <string name="review.prompt.action.later">Nie teraz</string>
     <string name="review.prompt.action.rate">Oceń w Google Play</string>

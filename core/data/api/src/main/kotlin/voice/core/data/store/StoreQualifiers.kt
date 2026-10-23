@@ -80,3 +80,11 @@ public annotation class EbooksStore
 /** The size of the text in the ebook reader, in sp. */
 @Qualifier
 public annotation class ReaderTextSizeStore
+
+/** Whether reading aloud uses the downloaded natural voice instead of the phone's text-to-speech voice. */
+@Qualifier
+public annotation class ReaderNaturalVoiceStore
+
+/** How fast reading aloud speaks, 1 being normal. */
+@Qualifier
+public annotation class ReaderSpeechRateStore

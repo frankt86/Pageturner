@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">Ettelugemine pole selles seadmes saadaval</string>
     <string name="reader.stop_reading_aloud">Lõpeta ettelugemine</string>
     <string name="reader.text_size">Teksti suurus</string>
+    <string name="reader.voice.natural">Loomulik hääl</string>
+    <string name="reader.voice.natural.downloading">Hääle allalaadimine… %d%%</string>
+    <string name="reader.voice.natural.failed">Häält ei õnnestunud alla laadida. Puuduta, et uuesti proovida.</string>
+    <string name="reader.voice.natural.summary">Kõlab nagu inimene, kes loeb. Laaditakse alla üks kord, umbes 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Loomulik hääl ei käivitunud, seega loeb hoopis sinu telefoni hääl.</string>
+    <string name="reader.voice.phone">Telefoni hääl</string>
+    <string name="reader.voice.phone.summary">Sinu telefoni kõnesünteesi hääl</string>
+    <string name="reader.voice.speed">Kiirus</string>
+    <string name="reader.voice.start">Alusta lugemist</string>
     <string name="review.prompt.action.feedback">Jaga tagasisidet</string>
     <string name="review.prompt.action.later">Mitte praegu</string>
     <string name="review.prompt.action.rate">Hinda Google Plays</string>

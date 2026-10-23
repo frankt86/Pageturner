@@ -36,8 +36,12 @@ internal class ReadAloud(context: Context) {
   }
 
   /** Returns once the text was spoken, or false if this device can't speak. */
-  suspend fun speak(text: String): Boolean {
+  suspend fun speak(
+    text: String,
+    speed: Float,
+  ): Boolean {
     if (!ready.await()) return false
+    textToSpeech.setSpeechRate(speed)
     val id = UUID.randomUUID().toString()
     suspendCancellableCoroutine { continuation ->
       pending[id] = continuation
