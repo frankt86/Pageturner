@@ -7,6 +7,8 @@
 
 Voice turns your own audiobook files into a calm, focused listening library. It remembers where you stopped, keeps playback controls close, and includes the audiobook-specific details that generic music players miss: chapter navigation, sleep timer, bookmarks, playback speed, silence skipping, and auto-rewind after pauses.
 
+Voice also reads your EPUB and PDF books, and can read them aloud. On a foldable, a book opens to two pages side by side when you unfold it.
+
 <p align="center">
   <img alt="Voice library view" width="30%" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1_en-US.png" />
   <img alt="Voice player view" width="30%" src="fastlane/metadata/android/en-US/images/phoneScreenshots/2_en-US.png" />
@@ -17,7 +19,17 @@ Voice turns your own audiobook files into a calm, focused listening library. It 
 
 - **Made for your files:** Add a folder once and Voice organizes your local M4B, MP3, M4A, OGG, OGA, and OPUS audiobooks.
 - **Built for listening:** Resume positions, bookmarks, sleep timer fade-out, volume boost, speed control, and Android Auto support are part of the core experience.
+- **Reads your ebooks too:** EPUB and PDF files in your folders get their own section. Read them page by page, see two pages side by side on an unfolded foldable, or have them read aloud.
 - **Private and uncluttered:** No account, no ads, no forced cloud sync. Your library stays on your device.
+
+## Ebooks
+
+<p align="center">
+  <img alt="Sketch: the Ebooks section in the library" width="30%" src="docs/sketches/library-ebooks.png" />
+  <img alt="Sketch: one page folded, two pages unfolded" width="65%" src="docs/sketches/ebooks-reader.png" />
+</p>
+
+These are sketches of the new screens. See [Ebooks](docs/ebooks.md) for how it works.
 
 ## Download
 
