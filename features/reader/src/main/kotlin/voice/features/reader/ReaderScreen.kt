@@ -86,6 +86,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
+import org.readium.r2.shared.publication.Link
 import voice.core.common.rootGraphAs
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
@@ -155,6 +156,7 @@ internal fun ReaderScreen(uri: Uri) {
   val selection = remember { PageSelection() }
   var visiblePages by remember { mutableStateOf(emptyList<Page>()) }
   var editedHighlight by remember { mutableStateOf<Highlight?>(null) }
+  val readiumJumps = remember { MutableSharedFlow<Link>(extraBufferCapacity = 1) }
   ReaderWindow(immersive = !barsVisible && loaded != null, brightness = loaded?.settings?.brightness)
   val turnPage = { page: Page, progress: Float ->
     barsVisible = false
@@ -182,28 +184,42 @@ internal fun ReaderScreen(uri: Uri) {
           textAlign = TextAlign.Center,
         )
       }
-      is ReaderState.Loaded -> Book(
-        state = state,
-        onPageTurn = turnPage,
-        selection = selection,
-        onHighlightClick = { editedHighlight = it },
-        onVisiblePagesChange = { visiblePages = it },
-        onCenterTap = { barsVisible = !barsVisible },
-        // the insets of hidden bars too, or showing them would lay out all pages anew
-        modifier = Modifier
-          .fillMaxSize()
-          .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout)),
-        overlay = { pages, pagesPerSpread, turn ->
-          ReaderControls(
-            state = state,
-            pages = pages,
-            pagesPerSpread = pagesPerSpread,
-            barsVisible = barsVisible,
-            onTurn = turn,
-            onJump = viewModel::onPageTurned,
-          )
-        },
-      )
+      is ReaderState.Loaded -> if (state.readium != null) {
+        ReadiumPages(
+          book = state.readium,
+          settings = state.settings,
+          jumps = readiumJumps,
+          onLocatorChange = viewModel::onLocatorChange,
+          onPageTurn = { barsVisible = false },
+          onCenterTap = { barsVisible = !barsVisible },
+          modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout)),
+        )
+      } else {
+        Book(
+          state = state,
+          onPageTurn = turnPage,
+          selection = selection,
+          onHighlightClick = { editedHighlight = it },
+          onVisiblePagesChange = { visiblePages = it },
+          onCenterTap = { barsVisible = !barsVisible },
+          // the insets of hidden bars too, or showing them would lay out all pages anew
+          modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout)),
+          overlay = { pages, pagesPerSpread, turn ->
+            ReaderControls(
+              state = state,
+              pages = pages,
+              pagesPerSpread = pagesPerSpread,
+              barsVisible = barsVisible,
+              onTurn = turn,
+              onJump = viewModel::onPageTurned,
+            )
+          },
+        )
+      }
     }
     val selected = selection.range
     val epub = loaded?.content as? ReaderContent.Epub
@@ -230,11 +246,13 @@ internal fun ReaderScreen(uri: Uri) {
       enter = fadeIn() + slideInVertically { -it },
       exit = fadeOut() + slideOutVertically { -it },
     ) {
+      // bookmarks, search and reading aloud don't work in the new book engine yet
+      val oldEngine = loaded?.readium == null
       ReaderTopBar(
         title = loaded?.content?.title,
-        readingAloud = loaded?.readingAloud,
-        bookmarked = loaded?.bookmarks?.any { bookmark -> visiblePages.any { it.contains(bookmark) } },
-        showSearch = loaded?.content?.searchable == true,
+        readingAloud = loaded?.readingAloud?.takeIf { oldEngine },
+        bookmarked = loaded?.bookmarks?.any { bookmark -> visiblePages.any { it.contains(bookmark) } }?.takeIf { oldEngine },
+        showSearch = loaded?.content?.searchable == true && oldEngine,
         onCloseClick = viewModel::onCloseClick,
         onReadAloudClick = {
           if (loaded?.readingAloud == true) viewModel.stopReadingAloudClick() else sheet = ReaderSheet.ReadAloud
@@ -274,7 +292,17 @@ internal fun ReaderScreen(uri: Uri) {
       onDismiss = { sheet = null },
     )
   }
-  if (loaded != null) {
+  val readium = loaded?.readium
+  if (readium != null && sheet == ReaderSheet.Contents) {
+    ReadiumContentsSheet(
+      book = readium,
+      onLinkClick = { link ->
+        sheet = null
+        val _ = readiumJumps.tryEmit(link)
+      },
+      onDismiss = { sheet = null },
+    )
+  } else if (loaded != null) {
     when (sheet) {
       ReaderSheet.Contents -> ContentsSheet(
         state = loaded,
@@ -379,14 +407,14 @@ internal fun ReaderTopBar(
             ),
           )
         }
+      }
+      if (title != null) {
         IconButton(onClick = onContentsClick) {
           Icon(
             imageVector = VoiceIcons.ViewList,
             contentDescription = stringResource(StringsR.string.reader_contents),
           )
         }
-      }
-      if (title != null) {
         IconButton(onClick = onDisplayClick) {
           Icon(
             imageVector = VoiceIcons.Title,

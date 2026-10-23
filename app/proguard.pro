@@ -17,3 +17,6 @@
 -dontwarn org.brotli.dec.**
 -dontwarn io.airlift.compress.**
 -dontwarn org.objectweb.asm.**
+
+# Readium uses a few helpers of Koi, whose other parts need the old support library
+-dontwarn android.support.**

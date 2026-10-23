@@ -351,6 +351,7 @@
     <string name="reader.line_spacing">Sorköz</string>
     <string name="reader.look_up">Szó jelentése</string>
     <string name="reader.margins">Margók</string>
+    <string name="reader.new_engine">Új könyvmotor (béta)</string>
     <string name="reader.nothing_to_read_aloud">Itt nincs felolvasható szöveg</string>
     <string name="reader.page">%1$d / %2$d</string>
     <string name="reader.read_aloud">Felolvasás</string>

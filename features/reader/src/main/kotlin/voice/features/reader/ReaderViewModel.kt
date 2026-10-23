@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.readium.r2.shared.publication.Locator
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.Ebook
@@ -74,6 +75,8 @@ internal sealed interface ReaderState {
     val highlights: List<Highlight> = emptyList(),
     /** Shown for a moment after jumping to a search result. */
     val searchMatch: BookRange? = null,
+    /** The book in the new book engine, while it's on. */
+    val readium: ReadiumBook? = null,
   ) : ReaderState
 }
 
@@ -136,6 +139,7 @@ class ReaderViewModel(
   private var highlights by mutableStateOf(emptyList<Highlight>())
   private var searchMatch by mutableStateOf<BookRange?>(null)
   private var searchMatchJob: Job? = null
+  private var readium by mutableStateOf<ReadiumBook?>(null)
 
   private val messageChannel = Channel<ReaderMessage>(Channel.CONFLATED)
   internal val messages: Flow<ReaderMessage> = messageChannel.receiveAsFlow()
@@ -172,6 +176,12 @@ class ReaderViewModel(
       } catch (e: Exception) {
         Logger.w(e, "Could not open a ${ebook.format}")
         failed = true
+        return@launch
+      }
+      if (ebook.format == EbookFormat.Epub) {
+        val _ = settingsStore.data.first { it.newBookEngine }
+        val latest = store.data.first().firstOrNull { it.uri == uri } ?: ebook
+        readium = withContext(dispatcherProvider.io) { openReadiumBook(application, uri, latest) }
       }
     }
   }
@@ -217,7 +227,24 @@ class ReaderViewModel(
         bookmarks = bookmarks,
         highlights = highlights,
         searchMatch = searchMatch,
+        // when the new engine can't open the book, the old one shows it
+        readium = readium?.takeIf { settings.newBookEngine },
       )
+    }
+  }
+
+  internal fun onLocatorChange(locator: Locator) {
+    val book = readium ?: return
+    if (book.locator == locator) return
+    book.locator = locator
+    val json = locator.toJsonString()
+    val progress = locator.locations.totalProgression?.toFloat()
+    scope.launch {
+      store.updateData { ebooks ->
+        ebooks.map { ebook ->
+          if (ebook.uri == uri) ebook.copy(readiumLocator = json, progress = progress ?: ebook.progress) else ebook
+        }
+      }
     }
   }
 
@@ -435,8 +462,10 @@ class ReaderViewModel(
     readAloud?.shutdown()
     if (naturalReady) neuralVoice.release()
     val content = content
+    val publication = readium?.publication
     scope.launch {
       if (content is ReaderContent.Pdf) content.pdf.close()
+      publication?.close()
     }
   }
 

@@ -369,6 +369,7 @@
     <string name="reader.line_spacing">מרווח בין שורות</string>
     <string name="reader.look_up">חיפוש פירוש</string>
     <string name="reader.margins">שוליים</string>
+    <string name="reader.new_engine">מנוע ספרים חדש (בטא)</string>
     <string name="reader.nothing_to_read_aloud">אין כאן טקסט להקראה</string>
     <string name="reader.page">%1$d מתוך %2$d</string>
     <string name="reader.read_aloud">הקראה</string>

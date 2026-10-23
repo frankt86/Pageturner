@@ -351,6 +351,7 @@
     <string name="reader.line_spacing">पंक्तियों के बीच की दूरी</string>
     <string name="reader.look_up">मतलब देखें</string>
     <string name="reader.margins">हाशिये</string>
+    <string name="reader.new_engine">नया पुस्तक इंजन (बीटा)</string>
     <string name="reader.nothing_to_read_aloud">यहाँ ज़ोर से पढ़ने के लिए कोई टेक्स्ट नहीं है</string>
     <string name="reader.page">%2$d में से %1$d</string>
     <string name="reader.read_aloud">ज़ोर से पढ़ें</string>

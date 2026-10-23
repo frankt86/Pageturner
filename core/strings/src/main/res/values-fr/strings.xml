@@ -369,6 +369,7 @@
     <string name="reader.line_spacing">Interligne</string>
     <string name="reader.look_up">Rechercher le sens</string>
     <string name="reader.margins">Marges</string>
+    <string name="reader.new_engine">Nouveau moteur de livres (bêta)</string>
     <string name="reader.nothing_to_read_aloud">Aucun texte à lire à voix haute ici</string>
     <string name="reader.page">%1$d sur %2$d</string>
     <string name="reader.read_aloud">Lire à voix haute</string>

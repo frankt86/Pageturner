@@ -351,6 +351,7 @@
     <string name="reader.line_spacing">வரி இடைவெளி</string>
     <string name="reader.look_up">பொருளைப் பார்</string>
     <string name="reader.margins">ஓரங்கள்</string>
+    <string name="reader.new_engine">புதிய புத்தக இன்ஜின் (பீட்டா)</string>
     <string name="reader.nothing_to_read_aloud">இங்கே சத்தமாகப் படிக்க உரை எதுவும் இல்லை</string>
     <string name="reader.page">%2$d இல் %1$d</string>
     <string name="reader.read_aloud">சத்தமாகப் படி</string>

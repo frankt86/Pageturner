@@ -17,6 +17,8 @@ public data class ReaderSettings(
   /** The screen brightness while reading, from 0 to 1, or null to leave it to the phone. */
   val brightness: Float? = null,
   val volumeKeysTurnPages: Boolean = true,
+  /** Shows EPUBs with Readium, which keeps the book's own layout, instead of as plain text. */
+  val newBookEngine: Boolean = false,
 )
 
 @Serializable

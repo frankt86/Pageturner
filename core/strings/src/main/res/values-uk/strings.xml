@@ -387,6 +387,7 @@
     <string name="reader.line_spacing">Міжрядковий інтервал</string>
     <string name="reader.look_up">Знайти значення</string>
     <string name="reader.margins">Поля</string>
+    <string name="reader.new_engine">Новий рушій книг (бета)</string>
     <string name="reader.nothing_to_read_aloud">Тут немає тексту для читання вголос</string>
     <string name="reader.page">%1$d з %2$d</string>
     <string name="reader.read_aloud">Читати вголос</string>
