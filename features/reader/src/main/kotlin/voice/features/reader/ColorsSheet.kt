@@ -71,7 +71,6 @@ import voice.core.ui.VoiceTheme
 import voice.core.ui.icons.VoiceIcons
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 import kotlin.math.roundToInt
 import android.graphics.Color as AndroidColor
 import voice.core.strings.R as StringsR
@@ -451,7 +450,7 @@ private fun Contrast(
         .padding(start = 16.dp),
     ) {
       Text(
-        text = stringResource(StringsR.string.reader_contrast, String.format(Locale.getDefault(), "%.1f:1", ratio)),
+        text = stringResource(StringsR.string.reader_contrast, String.format(LocalConfiguration.current.locales.get(0), "%.1f:1", ratio)),
         style = MaterialTheme.typography.bodyLarge,
       )
       if (low) {
@@ -521,7 +520,7 @@ private fun TimeStepper(
   onMinutesChange: (Int) -> Unit,
 ) {
   val context = LocalContext.current
-  val locale = LocalConfiguration.current.locales.get(0) ?: Locale.getDefault()
+  val locale = LocalConfiguration.current.locales.get(0)
   val formatter = remember(context, locale) {
     DateTimeFormatter.ofPattern(if (DateFormat.is24HourFormat(context)) "HH:mm" else "h:mm a", locale)
   }
