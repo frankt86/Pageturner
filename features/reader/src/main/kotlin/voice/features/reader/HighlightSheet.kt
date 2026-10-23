@@ -27,9 +27,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SheetValue.Expanded
+import androidx.compose.material3.SheetValue.Hidden
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -68,7 +70,10 @@ internal fun HighlightSheet(
   val done = { onDone(highlight.copy(color = color, note = note.trim().ifEmpty { null })) }
   ModalBottomSheet(
     onDismissRequest = done,
-    sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+    sheetState = rememberBottomSheetState(
+      initialValue = Hidden,
+      enabledValues = setOf(Hidden, Expanded),
+    ),
   ) {
     Column(
       Modifier
