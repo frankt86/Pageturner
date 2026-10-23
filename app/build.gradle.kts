@@ -28,6 +28,11 @@ android {
     includeInApk = false
   }
 
+  // Readium's libraries ask for it
+  compileOptions {
+    isCoreLibraryDesugaringEnabled = true
+  }
+
   defaultConfig {
     applicationId = "de.ph1b.audiobook"
     versionName = providers.gradleProperty("voice.versionName").orNull ?: "1.0.0"
@@ -142,6 +147,8 @@ tasks.matching {
 }
 
 dependencies {
+  coreLibraryDesugaring(libs.desugarJdkLibs)
+
   implementation(projects.core.strings)
   implementation(projects.core.ui)
   implementation(projects.core.common)
