@@ -10,14 +10,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextIndent
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import voice.core.data.ReaderFont
 import voice.core.data.ReaderSettings
+import voice.core.data.ReaderTextAlign
 import voice.core.data.ReaderTheme
-import voice.core.ui.bookText
 
 internal data class PageColors(
   val paper: Color,
@@ -91,14 +94,33 @@ internal fun ReaderPageTheme(
 @Composable
 internal fun ReaderSettings.pageTextStyle(): TextStyle {
   val base = MaterialTheme.typography.bodyLarge
-  return when (font) {
-    ReaderFont.Serif -> base.bookText()
-    ReaderFont.Sans -> base.copy(fontFamily = FontFamily.SansSerif)
-  }.copy(
+  return base.copy(
+    fontFamily = pageFontFamily(opticalSize = base.fontSize),
     fontSize = textSize.sp,
     lineHeight = (textSize * lineSpacing).sp,
+    fontWeight = fontWeight?.let(::FontWeight) ?: base.fontWeight,
+    letterSpacing = letterSpacing?.em ?: base.letterSpacing,
+    textIndent = paragraphIndent?.let { TextIndent(firstLine = it.em) },
+    textAlign = when (textAlign) {
+      ReaderTextAlign.Left -> TextAlign.Left
+      ReaderTextAlign.Center -> TextAlign.Center
+      ReaderTextAlign.Right -> TextAlign.Right
+      ReaderTextAlign.Justify -> TextAlign.Justify
+      null -> base.textAlign
+    },
+    fontFeatureSettings = if (ligatures) base.fontFeatureSettings else "\"liga\" 0, \"clig\" 0",
     // the same breaks on screen as when the pages were measured, so no line spills over
     lineBreak = LineBreak.Simple,
-    hyphens = Hyphens.None,
+    hyphens = if (hyphens) Hyphens.Auto else Hyphens.None,
   )
+}
+
+/**
+ * The height of each line between two paragraphs, or unspecified to keep the blank line in the text. Laid out apart,
+ * the two line breaks between paragraphs make three lines, which together take one line as before.
+ */
+internal fun ReaderSettings.paragraphGap(): TextUnit {
+  if (paragraphSpacing == null && paragraphIndent == null) return TextUnit.Unspecified
+  val lines = (paragraphSpacing ?: 1F).coerceAtLeast(0.05F)
+  return (textSize * lineSpacing * lines / 3).sp
 }

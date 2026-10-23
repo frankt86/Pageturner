@@ -27,6 +27,7 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 |---|---|
 | Book layout: formatting, images, links, footnotes | [done] |
 | Theme, font, text size, line spacing, margins | [done] |
+| Fonts, added fonts, spacing, alignment, hyphenation, the book's own style | [done] |
 | Page turns: side taps, swipes, volume keys; middle tap shows the bars | [done] |
 | Place kept as a Readium Locator, progress in the library | [done] |
 | Contents | [done] |
@@ -91,21 +92,21 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 | Feature | Status | How |
 |---|---|---|
 | Serif, sans | [done] | |
-| Monospace and more reading fonts (for example Atkinson Hyperlegible, OpenDyslexic, Literata, Merriweather) | [new] | Bundle a few, offer more as downloads to keep the APK small. |
-| Publisher fonts | [new] | Needs engine A or B. |
-| Custom font import | [new] | Pick a .ttf or .otf file, copy into app storage. |
-| Font size: slider, presets, exact number | [part] | Slider done; add presets and a number field. |
-| Weight, letter spacing, word spacing | [new] | |
+| Monospace and more reading fonts (for example Atkinson Hyperlegible, OpenDyslexic, Literata, Merriweather) | [done] | Mono, Atkinson Hyperlegible (bundled, about 220 KB with its license next to it) and OpenDyslexic (comes with Readium). Literata, the app's serif, is the old engine's Serif and its own choice in the new one. No downloads. |
+| Publisher fonts | [done] | New engine: **Book's own style** turns on Readium's publisher styles; the text size and colors still change. |
+| Custom font import | [done] | **Add font** copies a .ttf or .otf into the app's fonts folder. The new engine gets it from the book's own address, so the web view loads it. Added fonts can't be removed yet. |
+| Font size: slider, presets, exact number | [done] | Slider with minus, plus and the size in between. |
+| Weight, letter spacing, word spacing | [done] | Word spacing only in the new engine; Compose text has none. |
 | Line spacing | [done] | |
-| Paragraph spacing and first-line indent | [new] | |
-| Alignment: left, right, center, justified | [new] | |
-| Hyphenation (by book language) | [new] | Android hyphenation in our engine, CSS hyphens in Readium. |
-| Ligatures on or off | [new] | |
-| Headings styled separately | [new] | Needs the book's structure (engine A or B). |
-| Drop caps and ornaments: keep or simplify | [new] | Needs engine A or B. |
+| Paragraph spacing and first-line indent | [done] | The old engine lays the paragraphs out apart once either is set, and keeps one blank line otherwise. |
+| Alignment: left, right, center, justified | [done] | Readium can't center, so the new engine has left, right and justified. |
+| Hyphenation (by book language) | [done] | Old engine: Android's hyphenation in the phone's language, the old engine has no book language. New engine: the book's language. |
+| Ligatures on or off | [done] | Readium's switch only covers Arabic script. |
+| Headings styled separately | [part] | **Book's own style** keeps the book's headings. Readium has no separate heading settings, so there are none. |
+| Drop caps and ornaments: keep or simplify | [part] | Kept with **Book's own style**. |
 | Font fallback for missing characters | [part] | System fallback works for system fonts; check bundled ones. |
-| Selective overrides (change body text, keep italics and headings) | [new] | Readium "publisher styles" switch. |
-| Reset to publisher defaults or my defaults | [new] | |
+| Selective overrides (change body text, keep italics and headings) | [part] | **Book's own style** keeps all of the book's styling. Nothing in between yet. |
+| Reset to publisher defaults or my defaults | [done] | **Reset text settings** puts all of these back. Saved "my defaults" aren't planned. |
 
 ## Phase 4: colors and themes (section 4)
 

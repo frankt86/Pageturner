@@ -89,6 +89,9 @@ internal sealed interface ReaderState {
     /** The book in the new book engine, while it's on. */
     val readium: ReadiumBook? = null,
     val pace: ReadingPace = ReadingPace(),
+    /** The file names of the fonts the reader added. */
+    val fonts: List<String> = emptyList(),
+    val fontImportFailed: Boolean = false,
   ) : ReaderState
 }
 
@@ -139,6 +142,8 @@ class ReaderViewModel(
   private var readAloud: ReadAloud? = null
   private var readingRange by mutableStateOf<IntRange?>(null)
   private var settings by mutableStateOf(ReaderSettings())
+  private var fonts by mutableStateOf(emptyList<String>())
+  private var fontImportFailed by mutableStateOf(false)
   private val neuralVoice by lazy { NeuralVoice(application) }
   private var naturalVoice by mutableStateOf(true)
   private var naturalReady by mutableStateOf(false)
@@ -168,6 +173,9 @@ class ReaderViewModel(
     }
     scope.launch {
       speechRateStore.data.collect { speechRate = it }
+    }
+    scope.launch {
+      fonts = withContext(dispatcherProvider.io) { importedFonts(application) }
     }
     scope.launch {
       paceStore.data.collect { pace = it }
@@ -251,6 +259,8 @@ class ReaderViewModel(
         // when the new engine can't open the book, the old one shows it
         readium = readium?.takeIf { settings.newBookEngine },
         pace = pace,
+        fonts = fonts,
+        fontImportFailed = fontImportFailed,
       )
     }
   }
@@ -468,6 +478,17 @@ class ReaderViewModel(
   internal fun onSettingsChange(settings: ReaderSettings) {
     this.settings = settings
     scope.launch { settingsStore.updateData { settings } }
+  }
+
+  internal fun onFontImport(uri: Uri) {
+    scope.launch {
+      val name = withContext(dispatcherProvider.io) { importFont(application, uri) }
+      fontImportFailed = name == null
+      if (name != null) {
+        fonts = withContext(dispatcherProvider.io) { importedFonts(application) }
+        onSettingsChange(settings.copy(customFont = name))
+      }
+    }
   }
 
   fun onCloseClick() {

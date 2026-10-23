@@ -9,6 +9,8 @@ public data class ReaderSettings(
   /** In sp. */
   val textSize: Float = 18F,
   val font: ReaderFont = ReaderFont.Serif,
+  /** The file name of a font the reader added, in the app's fonts folder. It's used instead of [font]. */
+  val customFont: String? = null,
   /** The line height as a multiple of the text size. */
   val lineSpacing: Float = 1.55F,
   /** The space left and right of the text, in dp. */
@@ -38,7 +40,58 @@ public data class ReaderSettings(
   val progressBodyOnly: Boolean = false,
   /** What the line at the bottom of the page shows next to the chapter. */
   val footer: ReaderFooter = ReaderFooter.Page,
-)
+  /** Keeps the book's own fonts and formatting in the new book engine, only the text size and colors change. */
+  val publisherStyles: Boolean = false,
+  /** From 100 to 900, or null for the font's regular weight. */
+  val fontWeight: Int? = null,
+  /** In em, or null to leave it to the font and the book. */
+  val letterSpacing: Float? = null,
+  /** In em, or null to leave it to the book. Only the new book engine has it. */
+  val wordSpacing: Float? = null,
+  /** As a multiple of the line height, or null for one blank line in the old engine and the book's own in the new one. */
+  val paragraphSpacing: Float? = null,
+  /** The indent of a paragraph's first line in em, or null for none in the old engine and the book's own in the new one. */
+  val paragraphIndent: Float? = null,
+  /** Null for the book's own, which is the start of the line in the old engine. */
+  val textAlign: ReaderTextAlign? = null,
+  val hyphens: Boolean = false,
+  val ligatures: Boolean = true,
+) {
+  /** These settings with the text looking like it does at first. */
+  public fun withDefaultTypography(): ReaderSettings {
+    val defaults = ReaderSettings()
+    return copy(
+      textSize = defaults.textSize,
+      font = defaults.font,
+      customFont = defaults.customFont,
+      lineSpacing = defaults.lineSpacing,
+      publisherStyles = defaults.publisherStyles,
+      fontWeight = defaults.fontWeight,
+      letterSpacing = defaults.letterSpacing,
+      wordSpacing = defaults.wordSpacing,
+      paragraphSpacing = defaults.paragraphSpacing,
+      paragraphIndent = defaults.paragraphIndent,
+      textAlign = defaults.textAlign,
+      hyphens = defaults.hyphens,
+      ligatures = defaults.ligatures,
+    )
+  }
+}
+
+@Serializable
+public enum class ReaderTextAlign {
+  @SerialName("left")
+  Left,
+
+  @SerialName("center")
+  Center,
+
+  @SerialName("right")
+  Right,
+
+  @SerialName("justify")
+  Justify,
+}
 
 @Serializable
 public enum class ProgressBarStyle {
@@ -130,6 +183,18 @@ public enum class ReaderFont {
 
   @SerialName("sans")
   Sans,
+
+  @SerialName("monospace")
+  Monospace,
+
+  @SerialName("literata")
+  Literata,
+
+  @SerialName("atkinson_hyperlegible")
+  AtkinsonHyperlegible,
+
+  @SerialName("open_dyslexic")
+  OpenDyslexic,
 }
 
 @Serializable

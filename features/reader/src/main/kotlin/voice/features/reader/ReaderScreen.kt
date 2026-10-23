@@ -65,13 +65,17 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
@@ -325,7 +329,10 @@ internal fun ReaderScreen(uri: Uri) {
     DisplaySheet(
       settings = loaded.settings,
       showTextOptions = content != null,
-      showProgressScope = loaded.readium != null,
+      newEngine = loaded.readium != null,
+      fonts = loaded.fonts,
+      fontImportFailed = loaded.fontImportFailed,
+      onFontImport = viewModel::onFontImport,
       onSettingsChange = viewModel::onSettingsChange,
       onDismiss = { sheet = null },
     )
@@ -595,10 +602,12 @@ internal fun Book(
     val spineWidth = state.settings.pageGap?.dp ?: SpineWidth
     val pageWidth = if (twoPages) (maxWidth - spineWidth) / 2 else maxWidth
     val textStyle = state.settings.pageTextStyle()
+    val paragraphGap = state.settings.paragraphGap()
     val margins = state.settings.pageMargins(pageWidth)
     val pages = pages(
       content = state.content,
       textStyle = textStyle,
+      paragraphGap = paragraphGap,
       textWidth = pageWidth - margins.side * 2,
       textHeight = maxHeight - margins.top - margins.bottom - PageNumberHeight,
       paginateNow = paginateNow,
@@ -618,6 +627,7 @@ internal fun Book(
           pages = pages,
           pagesPerSpread = pagesPerSpread,
           textStyle = textStyle,
+          paragraphGap = paragraphGap,
           margins = margins,
           spineWidth = spineWidth,
           onPageTurn = onPageTurn,
@@ -638,6 +648,7 @@ internal fun Book(
 private fun pages(
   content: ReaderContent,
   textStyle: TextStyle,
+  paragraphGap: TextUnit,
   textWidth: Dp,
   textHeight: Dp,
   paginateNow: Boolean,
@@ -650,13 +661,13 @@ private fun pages(
       val width = with(density) { textWidth.roundToPx() }
       val height = with(density) { textHeight.roundToPx() }
       if (paginateNow) {
-        remember(content, textStyle, width, height) {
-          paginate(content.chapters, textMeasurer, textStyle, width, height)
+        remember(content, textStyle, paragraphGap, width, height) {
+          paginate(content.chapters, textMeasurer, textStyle, paragraphGap, width, height)
         }
       } else {
-        produceState<List<Page>?>(null, content, textStyle, width, height, textMeasurer) {
+        produceState<List<Page>?>(null, content, textStyle, paragraphGap, width, height, textMeasurer) {
           value = withContext(Dispatchers.Default) {
-            paginate(content.chapters, textMeasurer, textStyle, width, height)
+            paginate(content.chapters, textMeasurer, textStyle, paragraphGap, width, height)
           }
         }.value
       }
@@ -670,6 +681,7 @@ private fun Spreads(
   pages: List<Page>,
   pagesPerSpread: Int,
   textStyle: TextStyle,
+  paragraphGap: TextUnit,
   margins: PageMargins,
   spineWidth: Dp,
   onPageTurn: (Page, Float) -> Unit,
@@ -723,7 +735,7 @@ private fun Spreads(
     spineWidth = spineWidth,
     spine = { Spine(spineWidth) },
   ) { index ->
-    PageSlot(state, pages, index, textStyle, margins, selection, Modifier.fillMaxSize())
+    PageSlot(state, pages, index, textStyle, paragraphGap, margins, selection, Modifier.fillMaxSize())
   }
 }
 
@@ -733,6 +745,7 @@ private fun PageSlot(
   pages: List<Page>,
   index: Int,
   textStyle: TextStyle,
+  paragraphGap: TextUnit,
   margins: PageMargins,
   selection: PageSelection,
   modifier: Modifier = Modifier,
@@ -754,6 +767,7 @@ private fun PageSlot(
         pageCount = pages.size,
         footer = footer,
         textStyle = textStyle,
+        paragraphGap = paragraphGap,
         margins = margins,
         readingRange = state.readingRange.takeIf { pages[index].section == state.position.section },
         highlights = state.highlights,
@@ -783,6 +797,7 @@ private fun BookPage(
   pageCount: Int,
   footer: String?,
   textStyle: TextStyle,
+  paragraphGap: TextUnit,
   margins: PageMargins,
   readingRange: IntRange?,
   highlights: List<Highlight>,
@@ -803,8 +818,16 @@ private fun BookPage(
         while (start < page.end && chapter[start] == '\n') start++
         start
       }
-      val text = remember(content, page, textStart, marks) {
-        markedText(content.chapters[page.section].substring(textStart, page.end), textStart, marks)
+      val text = remember(content, page, textStart, marks, paragraphGap) {
+        val chapter = content.chapters[page.section]
+        val shown = chapter.substring(textStart, page.end)
+        val tail = pageTail(chapter, page.end)
+        val continued = textStart > 0 && chapter[textStart - 1] != '\n'
+        buildAnnotatedString {
+          append(markedText(shown, textStart, marks))
+          withStyle(SpanStyle(color = Color.Transparent)) { append(tail) }
+          paragraphStyles(shown + tail, paragraphGap, continued).forEach { addStyle(it.item, it.start, it.end) }
+        }
       }
       val pageText = remember { PageText() }
       SideEffect {
