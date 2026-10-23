@@ -5,13 +5,13 @@
         <item quantity="one">Downloading %d book</item>
         <item quantity="other">Downloading %d books</item>
     </plurals>
-    <!-- Notification text once a server book finished downloading while Voice was in the background. The title is the name of the book. -->
+    <!-- Notification text once a server book finished downloading while Pageturner was in the background. The title is the name of the book. -->
     <string name="audiobookshelf.download.notification.done">Ready to listen offline</string>
     <!-- Notification button that starts a failed download again. -->
     <string name="audiobookshelf.download.notification.retry">Try again</string>
     <!-- Notification button that stops the running downloads and removes what they downloaded so far. -->
     <string name="audiobookshelf.download.notification.stop">Stop</string>
-    <!-- Title of the download notification for the moment before Voice knows which book downloads. -->
+    <!-- Title of the download notification for the moment before Pageturner knows which book downloads. -->
     <string name="audiobookshelf.download.notification.title">Downloading…</string>
     <!-- Name of the notification channel for books that download from an Audiobookshelf server. -->
     <string name="audiobookshelf.downloads.channel">Downloads</string>
@@ -22,13 +22,13 @@
     <!-- Example address shown in the empty server address field. -->
     <string name="audiobookshelf.login.address.placeholder" translatable="false">audiobooks.example.com</string>
     <!-- Explains on the first step of connecting what an Audiobookshelf server brings: its books, and the listening position kept the same on all devices. -->
-    <string name="audiobookshelf.login.address.subtitle">Listen to the books on your own server. Voice keeps your place in step with your other devices.</string>
+    <string name="audiobookshelf.login.address.subtitle">Listen to the books on your own server. Pageturner keeps your place in step with your other devices.</string>
     <!-- Title of the first step of connecting an Audiobookshelf server, a self-hosted audiobook server. Audiobookshelf is a product name. -->
     <string name="audiobookshelf.login.address.title">Connect Audiobookshelf</string>
     <!-- Primary action on the sign in step, signs in with the username and password. -->
     <string name="audiobookshelf.login.credentials.action">Sign in</string>
     <!-- Shown instead of the username and password when the server only allows signing in through single sign-on (OpenID). -->
-    <string name="audiobookshelf.login.credentials.no_password">This server only allows single sign-on, which Voice can\'t do yet. Ask whoever runs it to turn on signing in with a password.</string>
+    <string name="audiobookshelf.login.credentials.no_password">This server only allows single sign-on, which Pageturner can\'t do yet. Ask whoever runs it to turn on signing in with a password.</string>
     <!-- Subtitle of the sign in step. %s is the address of the server, like audiobooks.example.com. -->
     <string name="audiobookshelf.login.credentials.subtitle">Use your account on %s.</string>
     <!-- Title of the step where the listener signs in to the Audiobookshelf server. -->
@@ -40,18 +40,18 @@
     <!-- Error under the password field when signing in failed for an unknown reason. -->
     <string name="audiobookshelf.login.error.failed">Signing in didn\'t work. Try again.</string>
     <!-- Error under the server address when nothing at that address answered like an Audiobookshelf server. Many servers are only reachable at home or over a VPN. -->
-    <string name="audiobookshelf.login.error.not_found">Voice can\'t reach an Audiobookshelf server there. Are you on the right network?</string>
+    <string name="audiobookshelf.login.error.not_found">Pageturner can\'t reach an Audiobookshelf server there. Are you on the right network?</string>
     <!-- Error under the server address when the server was installed, but its first setup in the web app isn't done. -->
     <string name="audiobookshelf.login.error.not_set_up">This server isn\'t set up yet. Finish the setup in its web app first.</string>
     <!-- Shown under the password when signing in again, after the server declined the stored login, with another account than before. Switching accounts takes a sign out first. -->
     <string name="audiobookshelf.login.error.other_account">That\'s another account. To switch accounts, sign out first.</string>
     <!-- Error under the server address when the server is too old. %s is the version the server runs, like 2.20.0. -->
-    <string name="audiobookshelf.login.error.too_old">Voice needs Audiobookshelf 2.26 or newer. This server runs %s.</string>
+    <string name="audiobookshelf.login.error.too_old">Pageturner needs Audiobookshelf 2.26 or newer. This server runs %s.</string>
     <!-- Error under the password field when the server stopped answering while signing in. -->
     <string name="audiobookshelf.login.error.unreachable">The server stopped answering. Try again in a moment.</string>
-    <!-- Primary action on the last step of connecting, adds the books of the chosen libraries to Voice's library. -->
+    <!-- Primary action on the last step of connecting, adds the books of the chosen libraries to Pageturner's library. -->
     <string name="audiobookshelf.login.libraries.action">Add to my library</string>
-    <!-- Title while Voice loads the libraries of the server after signing in. -->
+    <!-- Title while Pageturner loads the libraries of the server after signing in. -->
     <string name="audiobookshelf.login.libraries.loading">Looking for books…</string>
     <!-- Title when the server has no audiobook libraries, only podcast ones or none at all. -->
     <string name="audiobookshelf.login.libraries.none">No audiobook libraries here</string>
@@ -83,7 +83,7 @@
     <string name="audiobookshelf.settings.downloads.remove">Remove all</string>
     <!-- How much storage the downloaded server books take. %s is a size like 1.2 GB. -->
     <string name="audiobookshelf.settings.downloads.used">%s on this device</string>
-    <!-- Title of the section where the listener picks which libraries of the server show up in Voice. -->
+    <!-- Title of the section where the listener picks which libraries of the server show up in Pageturner. -->
     <string name="audiobookshelf.settings.libraries">Libraries</string>
     <!-- Switch that lets books download over mobile data, not only over Wi-Fi. -->
     <string name="audiobookshelf.settings.mobile_data">Download over mobile data</string>
@@ -91,7 +91,7 @@
     <string name="audiobookshelf.settings.mobile_data.summary">Otherwise downloads wait for Wi-Fi</string>
     <!-- Button next to the status when the server declined the stored login and the listener has to sign in again. -->
     <string name="audiobookshelf.settings.sign_in_again">Sign in</string>
-    <!-- Action that signs out of the Audiobookshelf server and removes its books from Voice. -->
+    <!-- Action that signs out of the Audiobookshelf server and removes its books from Pageturner. -->
     <string name="audiobookshelf.settings.sign_out">Sign out</string>
     <!-- Shown under the server address. %s is the username. -->
     <string name="audiobookshelf.settings.signed_in_as">Signed in as %s</string>
@@ -107,7 +107,7 @@
     <string name="audiobookshelf.status.needs_login">The server wants you to sign in again</string>
     <!-- Status of the server connection when it can't be reached, for example without internet or outside the home network. -->
     <string name="audiobookshelf.status.offline">Can\'t reach the server right now. Downloaded books still play.</string>
-    <!-- Status of the server connection while Voice syncs books and progress with it. -->
+    <!-- Status of the server connection while Pageturner syncs books and progress with it. -->
     <string name="audiobookshelf.status.syncing">Syncing…</string>
     <!-- Name of the self-hosted audiobook server. Product name, not translated. -->
     <string name="audiobookshelf.title" translatable="false">Audiobookshelf</string>
@@ -121,7 +121,7 @@
     <string name="book.delete.bottom_sheet.title">Delete Book</string>
     <!-- Checkbox label confirming that book files should be deleted. -->
     <string name="book.delete.dialog.confirm_files">Delete my files</string>
-    <!-- Warning in the delete-book sheet. Voice deletes the files right away, there is no trash to restore them from. -->
+    <!-- Warning in the delete-book sheet. Pageturner deletes the files right away, there is no trash to restore them from. -->
     <string name="book.delete.dialog.message">This deletes the files from your device for good. You can\'t get them back.</string>
     <!-- Title for the delete-book confirmation dialog. -->
     <string name="book.delete.dialog.title">Delete Book</string>
@@ -258,7 +258,7 @@
     <!-- Title of the tips on the add content screen, shown after the system folder picker was closed without a folder. -->
     <string name="folder.add.help.title">Didn\'t find your audiobooks?</string>
     <!-- Text on the add content screen when the device has no system file picker, so tapping Choose a folder or Add a single file instead can't open anything. Happens on reduced Android builds like bike computers. Use the word Android uses for the system picker that opens files and folders. -->
-    <string name="folder.add.no_picker.message">Voice opens your audiobooks through Android\'s file picker. Without it, Voice can\'t open your folders or files.</string>
+    <string name="folder.add.no_picker.message">Pageturner opens your audiobooks through Android\'s file picker. Without it, Pageturner can\'t open your folders or files.</string>
     <!-- Title on the add content screen when the device has no system file picker, so tapping Choose a folder or Add a single file instead can't open anything. -->
     <string name="folder.add.no_picker.title">This device has no file picker</string>
     <!-- Subtitle on the add content screen. Explains that picking a folder works for one book as well as for a whole library. -->
@@ -308,7 +308,7 @@
         <item quantity="one">%d folder</item>
         <item quantity="other">%d folders</item>
     </plurals>
-    <!-- Title while Voice looks for books in a picked folder. %s is the folder name. -->
+    <!-- Title while Pageturner looks for books in a picked folder. %s is the folder name. -->
     <string name="folder.review.loading">Looking through %s…</string>
     <!-- Hint on a book whose subfolders look like books of their own. Tapping it shows the options for how books are found. -->
     <plurals name="folder.review.possible_books">
@@ -383,7 +383,7 @@
     <!-- Title of the card on the library screen when no audiobooks were found, for example because the files were moved or deleted. -->
     <string name="library.empty.title">No audiobooks found</string>
     <!-- Message of the card on the library screen when no audiobooks were found. -->
-    <string name="library.empty.message">Voice can\'t find any audiobooks in your folders. Check that the files are still there, or add a folder.</string>
+    <string name="library.empty.message">Pageturner can\'t find any audiobooks in your folders. Check that the files are still there, or add a folder.</string>
     <!-- Button on the library card shown when no audiobooks were found. Opens the audiobook folders screen. -->
     <string name="library.empty.action">Show folders</string>
     <!-- Title for screens and rows that manage audiobook folders. -->
@@ -392,11 +392,11 @@
     <string name="library.folders.moved.dialog.title">Audiobook folders moved</string>
     <!-- Body for the one-time dialog shown from the old audiobook folders shortcut. -->
     <string name="library.folders.moved.dialog.message">You can now manage audiobook folders in Settings.</string>
-    <!-- Label on a row of the audiobook folders screen for a folder or file Voice can no longer open, for example after a restore from a backup on a new phone. -->
+    <!-- Label on a row of the audiobook folders screen for a folder or file Pageturner can no longer open, for example after a restore from a backup on a new phone. -->
     <string name="library.folders.no_access">No access</string>
-    <!-- Button on a folder row without access. Opens the system picker so Voice may open the folder or file again. -->
+    <!-- Button on a folder row without access. Opens the system picker so Pageturner may open the folder or file again. -->
     <string name="library.folders.no_access.action">Allow access</string>
-    <!-- Read out by screen readers for the exclamation mark badge on the settings button of the library screen and on the audiobook folders row in settings. Shown while Voice can no longer open some audiobook folders, for example after a restore from a backup on a new phone. -->
+    <!-- Read out by screen readers for the exclamation mark badge on the settings button of the library screen and on the audiobook folders row in settings. Shown while Pageturner can no longer open some audiobook folders, for example after a restore from a backup on a new phone. -->
     <string name="library.folders.no_access.badge">Allow access to your folders again</string>
     <!-- Library screen greeting shown in the afternoon. -->
     <string name="library.greeting.afternoon">Good afternoon</string>
@@ -451,7 +451,7 @@
     <!-- Tag on a library search result that matched by its series. %s is the series, followed by the part, e.g. "Harry Potter 1". -->
     <string name="library.search.match.series">Series · %s</string>
     <!-- Hint below the audiobook folders button when the library search finds nothing. -->
-    <string name="library.search.no_results.folders_hint">Not on the list? Its folder may not be added to Voice yet.</string>
+    <string name="library.search.no_results.folders_hint">Not on the list? Its folder may not be added to Pageturner yet.</string>
     <!-- Explanation when the library search finds nothing. -->
     <string name="library.search.no_results.message">Search looks through titles, authors, narrators, series and genres.</string>
     <!-- Button when the library search finds nothing with a filter on. Removes the filter. -->
@@ -467,7 +467,7 @@
     <!-- Button label for granting the storage permission workaround. -->
     <string name="library.storage_permission_bug.action">Grant permission</string>
     <!-- Message explaining why a storage permission workaround is needed. -->
-    <string name="library.storage_permission_bug.message">For certain devices, a system app is missing the necessary permission to access the external storage. This access is essential for Voice to read your audiobooks.</string>
+    <string name="library.storage_permission_bug.message">For certain devices, a system app is missing the necessary permission to access the external storage. This access is essential for Pageturner to read your audiobooks.</string>
     <!-- Title for the card explaining a required storage permission workaround. -->
     <string name="library.storage_permission_bug.title">Permission required</string>
     <!-- Media browser title for recently played audiobooks. -->
@@ -483,22 +483,22 @@
     <!-- Link label for opening the privacy policy from analytics consent. -->
     <string name="onboarding.analytics_consent.action.privacy_policy">Privacy Policy</string>
     <!-- One short line on the onboarding welcome screen, above the buttons to continue with or without analytics. Asks whether the listener shares anonymous usage data and says they can change it in settings. -->
-    <string name="onboarding.analytics_consent.description">Share anonymous usage data to help improve Voice? You can change this in settings.</string>
+    <string name="onboarding.analytics_consent.description">Share anonymous usage data to help improve Pageturner? You can change this in settings.</string>
     <!-- Button label for leaving onboarding and starting playback. -->
     <string name="onboarding.completion.action.start_listening">Start Listening</string>
     <!-- Subtitle on the onboarding completion screen. -->
-    <string name="onboarding.completion.subtitle">Your first audiobook is ready to play. Enjoy your journey with Voice!</string>
+    <string name="onboarding.completion.subtitle">Your first audiobook is ready to play. Enjoy your journey with Pageturner!</string>
     <!-- Title on the onboarding completion screen. -->
     <string name="onboarding.completion.title">You\'re All Set!</string>
     <!-- Subtitle on the onboarding explanation screen. Explains that the user picks a folder and sees the books found in it before adding them. -->
-    <string name="onboarding.explanation.subtitle.folder">Pick the folder with your audiobooks. Voice shows you the books it finds before adding them.</string>
+    <string name="onboarding.explanation.subtitle.folder">Pick the folder with your audiobooks. Pageturner shows you the books it finds before adding them.</string>
     <!-- Title on the onboarding explanation screen. -->
     <string name="onboarding.explanation.title">Your Library, Your Way</string>
     <!-- Button label for starting the onboarding from the welcome screen. -->
     <string name="onboarding.welcome.action.start">Let\'s go</string>
-    <!-- Subtitle on the onboarding welcome screen, the first thing a new listener reads. Says what Voice does for them: it plays the audiobook files on their phone, remembers where they stopped in every book, costs nothing, shows no ads and needs no account. -->
-    <string name="onboarding.welcome.subtitle">Voice plays the audiobooks on your phone and remembers your place in each one. Free, with no ads and no account.</string>
-    <!-- Title on the onboarding welcome screen, shown below the Voice app icon. Says that Voice is an app made just for listening to audiobooks. Title case in English; use the language's own capitalization. -->
+    <!-- Subtitle on the onboarding welcome screen, the first thing a new listener reads. Says what Pageturner does for them: it plays the audiobook files on their phone, remembers where they stopped in every book, costs nothing, shows no ads and needs no account. -->
+    <string name="onboarding.welcome.subtitle">Pageturner plays the audiobooks on your phone and remembers your place in each one. Free, with no ads and no account.</string>
+    <!-- Title on the onboarding welcome screen, shown below the Pageturner app icon. Says that Pageturner is an app made just for listening to audiobooks. Title case in English; use the language's own capitalization. -->
     <string name="onboarding.welcome.title">Made for Your Audiobooks</string>
     <!-- Label for the playback action that skips forward. -->
     <string name="playback.action.fast_forward">Fast forward</string>
@@ -508,9 +508,9 @@
     <string name="playback.action.play">Play</string>
     <!-- Label for the playback action that skips backward. -->
     <string name="playback.action.rewind">Rewind</string>
-    <!-- Button of the snackbar on the player about battery optimization. Turns battery optimization off for Voice: it opens Android's dialog that asks whether Voice may always run in the background. Keep it short, it sits next to the snackbar text. -->
+    <!-- Button of the snackbar on the player about battery optimization. Turns battery optimization off for Pageturner: it opens Android's dialog that asks whether Pageturner may always run in the background. Keep it short, it sits next to the snackbar text. -->
     <string name="playback.battery_optimization.action">Turn off</string>
-    <!-- Snackbar on the player after pressing play, on phones where Android's battery optimization is on for Voice. It can stop playback while Voice is in the background, for example with the screen off. Use Android's word for battery optimization. -->
+    <!-- Snackbar on the player after pressing play, on phones where Android's battery optimization is on for Pageturner. It can stop playback while Pageturner is in the background, for example with the screen off. Use Android's word for battery optimization. -->
     <string name="playback.battery_optimization.rationale">Battery optimization might stop playback in the background.</string>
     <!-- Global book progress on the playback screen. The placeholder is a localized percentage, e.g. "72%". -->
     <string name="playback.book_progress.read">%1$s of book</string>
@@ -558,10 +558,10 @@
     <string name="review.prompt.action.feedback" tools:ignore="UnusedResources">Share feedback</string>
     <!-- Button that closes the rating prompt without rating. -->
     <string name="review.prompt.action.later" tools:ignore="UnusedResources">Not now</string>
-    <!-- Button in the rating prompt that opens Voice on Google Play. -->
+    <!-- Button in the rating prompt that opens Pageturner on Google Play. -->
     <string name="review.prompt.action.rate" tools:ignore="UnusedResources">Rate on Google Play</string>
     <!-- Subject of the feedback email started from the rating prompt. -->
-    <string name="review.prompt.email.subject" tools:ignore="UnusedResources">Feedback on Voice</string>
+    <string name="review.prompt.email.subject" tools:ignore="UnusedResources">Feedback on Pageturner</string>
     <!-- Description of the rating prompt option for reporting a bug. -->
     <string name="review.prompt.feedback.bug.subtitle" tools:ignore="UnusedResources">Opens a bug report on GitHub</string>
     <!-- Rating prompt option for reporting a bug. -->
@@ -576,8 +576,8 @@
     <string name="review.prompt.feedback.title" tools:ignore="UnusedResources">What\'s on your mind?</string>
     <!-- Title of the rating prompt after a book was finished. The name of the book is shown above it. -->
     <string name="review.prompt.finished.title" tools:ignore="UnusedResources">Book finished!</string>
-    <!-- Message of the rating prompt. Everyone sees it, so it must not take for granted that the listener likes Voice. -->
-    <string name="review.prompt.message" tools:ignore="UnusedResources">Thanks for listening with Voice! If you like it, a rating on Google Play helps other listeners find it.</string>
+    <!-- Message of the rating prompt. Everyone sees it, so it must not take for granted that the listener likes Pageturner. -->
+    <string name="review.prompt.message" tools:ignore="UnusedResources">Thanks for listening with Pageturner! If you like it, a rating on Google Play helps other listeners find it.</string>
     <!-- Title of the rating prompt that celebrates the hours of audiobooks listened to. -->
     <plurals name="review.prompt.milestone.title" tools:ignore="UnusedResources">
         <item quantity="one">%d hour of stories!</item>
@@ -589,9 +589,9 @@
     <string name="review.prompt.stat.finished" tools:ignore="UnusedResources">Books finished</string>
     <!-- Label below the number of hours listened, in the rating prompt. -->
     <string name="review.prompt.stat.hours" tools:ignore="UnusedResources">Hours listened</string>
-    <!-- Message after choosing to rate Voice, right before Google Play opens. -->
+    <!-- Message after choosing to rate Pageturner, right before Google Play opens. -->
     <string name="review.prompt.thanks.message" tools:ignore="UnusedResources">Taking you to Google Play…</string>
-    <!-- Title after choosing to rate Voice. -->
+    <!-- Title after choosing to rate Pageturner. -->
     <string name="review.prompt.thanks.title" tools:ignore="UnusedResources">Thank you!</string>
     <!-- Settings about row showing the app version. -->
     <string name="settings.about.app_version.title">App version</string>
@@ -608,8 +608,8 @@
     <string name="settings.appearance.color_scheme.dynamic">Dynamic color</string>
     <!-- Description for Android dynamic color. -->
     <string name="settings.appearance.color_scheme.dynamic.summary">Uses colors from your wallpaper and system theme.</string>
-    <!-- Label for selecting Voice blue as app color scheme. -->
-    <string name="settings.appearance.color_scheme.voice_blue">Voice blue</string>
+    <!-- Label for selecting Pageturner blue as app color scheme. -->
+    <string name="settings.appearance.color_scheme.voice_blue">Pageturner blue</string>
     <!-- Label for selecting a teal, sea inspired app color scheme. -->
     <string name="settings.appearance.color_scheme.lagoon">Lagoon</string>
     <!-- Label for selecting a green, forest inspired app color scheme. -->
@@ -669,7 +669,7 @@
     <!-- Title for the setting that controls skip-forward and rewind duration. -->
     <string name="settings.playback.seek_time.title">Skip amount</string>
     <!-- Playful subtitle below the settings title. -->
-    <string name="settings.subtitle">Make Voice yours</string>
+    <string name="settings.subtitle">Make Pageturner yours</string>
     <!-- Settings support row for opening the FAQ. -->
     <string name="settings.support.faq.title">FAQ</string>
     <!-- Settings support row for getting help. -->
@@ -678,13 +678,13 @@
     <!-- Settings support row for reporting a problem. -->
     <string name="settings.support.report_issue.title">Report a problem</string>
     <!-- Description on the settings card that opens the support screen, for subscribing, tipping or donating. -->
-    <string name="settings.support.support_voice.summary">Keeps Voice free and ad-free</string>
+    <string name="settings.support.support_voice.summary">Keeps Pageturner free and ad-free</string>
     <!-- Settings row for opening the donation/support screen. -->
     <string name="settings.support.support_voice.title">Support development</string>
     <!-- Settings support row for suggesting a product idea. -->
     <string name="settings.support.suggest_idea.title">Suggest an idea</string>
-    <!-- Title of the settings support card for someone who already supported Voice with a subscription or tip. -->
-    <string name="settings.support.supporter.title">Thanks for supporting Voice</string>
+    <!-- Title of the settings support card for someone who already supported Pageturner with a subscription or tip. -->
+    <string name="settings.support.supporter.title">Thanks for supporting Pageturner</string>
     <!-- Title of the settings section with the FAQ, getting help, reporting problems, suggesting ideas and translating. -->
     <string name="settings.support.title">Help and feedback</string>
     <!-- Support screen button that opens the Google Play subscription settings. -->
@@ -712,7 +712,7 @@
     <!-- Support screen action for donating through Ko-fi. -->
     <string name="support.action.donate_kofi">Donate on Ko-fi</string>
     <!-- Support screen text explaining why support is useful. -->
-    <string name="support.description.maintenance">Voice is free, open source, and maintained by one developer.</string>
+    <string name="support.description.maintenance">Pageturner is free, open source, and maintained by one developer.</string>
     <!-- Support screen text under the main description, explaining why monthly support helps more than a one-time tip. Written by the developer in first person. -->
     <string name="support.description.monthly">Monthly support is what lets me plan the next release, not just the next fix.</string>
     <!-- Small print below the subscribe button. Makes clear that paying gives no features. -->
@@ -725,10 +725,10 @@
     <string name="support.helps.maintenance">Bug fixes and maintenance</string>
     <!-- Support screen list item: new features. -->
     <string name="support.helps.features">New features</string>
-    <!-- Support screen list item: keeping Voice free, open source, and ad-free. -->
-    <string name="support.helps.open_source">Keeping Voice ad-free</string>
-    <!-- Title on top of the support screen. Playful: the app is called Voice, and support keeps it going. -->
-    <string name="support.hero.title">Keep Voice talking</string>
+    <!-- Support screen list item: keeping Pageturner free, open source, and ad-free. -->
+    <string name="support.helps.open_source">Keeping Pageturner ad-free</string>
+    <!-- Title on top of the support screen. Playful: the app is called Pageturner, and support keeps the pages turning. -->
+    <string name="support.hero.title">Keep the pages turning</string>
     <!-- Hint below the Ko-fi donation button. Ko-fi offers monthly support first and a one-time tip, both without an account. -->
     <string name="support.kofi.hint">Ko-fi opens in your browser. Monthly or once, no account needed.</string>
     <!-- Shown on the support screen when starting a payment failed. -->
@@ -749,14 +749,14 @@
     <string name="support.price.yearly">%1$s a year</string>
     <!-- Price of a one-time tip. %1$s is the price, for example "€4.99". Shown in the support button, for example "Support for €4.99 once". -->
     <string name="support.price.once">%1$s once</string>
-    <!-- Since when someone supports Voice. %1$s is a month and year, for example "March 2026". -->
+    <!-- Since when someone supports Pageturner. %1$s is a month and year, for example "March 2026". -->
     <string name="support.supporter.since">Supporter since %1$s</string>
-    <!-- Title on the support screen for someone who already supported Voice. -->
+    <!-- Title on the support screen for someone who already supported Pageturner. -->
     <string name="support.supporter.title">You\'re a supporter</string>
     <!-- Button that closes the thank-you screen after a payment. -->
     <string name="support.thank_you.action">Back to listening</string>
     <!-- Thank-you message after a payment. Playful: refers to the tea tiers. -->
-    <string name="support.thank_you.message">That really hits the spot. Thank you for keeping Voice going.</string>
+    <string name="support.thank_you.message">That really hits the spot. Thank you for keeping Pageturner going.</string>
     <!-- Title of the thank-you screen after a payment. -->
     <string name="support.thank_you.title">Thank you!</string>
     <!-- Label on the subscription tier the user currently pays for. -->

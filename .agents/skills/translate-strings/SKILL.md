@@ -1,6 +1,6 @@
 ---
 name: translate-strings
-description: Voice's tone of voice and translating its UI strings into all locales. Use when adding, changing, or removing strings in core/strings/src/main/res/values/strings.xml, when translating or backfilling a locale, or when reviewing translations.
+description: Pageturner's tone of voice and translating its UI strings into all locales. Use when adding, changing, or removing strings in core/strings/src/main/res/values/strings.xml, when translating or backfilling a locale, or when reviewing translations.
 ---
 
 # Translating strings
@@ -10,9 +10,9 @@ per locale in [locales.md](locales.md).
 Since Weblate was removed, agents write the translations and no translator community catches mistakes. Every string
 has to read as if a native speaker wrote it for this app.
 
-## Voice's tone
+## Pageturner's tone
 
-Voice is a calm, friendly audiobook player for people who love stories. It talks like a helpful friend, not like a
+Pageturner is a calm, friendly audiobook player and ebook reader for people who love stories. It talks like a helpful friend, not like a
 system or an ad. This applies to new English strings as well as translations.
 
 - Plain and warm: short sentences, everyday words. "Lost your place?", "Nothing here yet".
@@ -44,9 +44,9 @@ system or an ad. This applies to new English strings as well as translations.
 - Keep labels about as short as the English. Buttons, tabs, chips, and stat labels have little room; find a shorter
   wording rather than an unusual abbreviation.
 - Use the language's own capitalization (German nouns, sentence case elsewhere), not English Title Case.
-- Voice is the app's name: keep it as Voice, in Latin script, in every locale. Never translate it into the word for
-  "voice" (குரல் in Tamil) or write it in another script (فويس). Inflect it where the grammar needs it (`Voice-szal`,
-  `Voice\'u`, `Voice-க்கு`). A sentence may leave the name out, but never swaps it for another word.
+- Pageturner is the app's name: keep it as Pageturner, in Latin script, in every locale. Never translate it into the
+  words for "page turner" or write it in another script. Inflect it where the grammar needs it (`Pageturnerrel`,
+  `Pageturner\'ı`, `Pageturner-க்கு`). A sentence may leave the name out, but never swaps it for another word.
 - Don't translate Google Play, GitHub, Ko-fi, or Bluetooth.
 - Keep emoji.
 

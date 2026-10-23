@@ -24,11 +24,11 @@ This is a proposal. Once something ships, it moves into the [product spec](produ
 [#3235]: https://github.com/PaulWoitaschek/Voice/discussions/3235
 [#3397]: https://github.com/PaulWoitaschek/Voice/discussions/3397
 
-## What Voice knows today
+## What Pageturner knows today
 
 - Every book has a title, author, narrator, genre, series and part. The library only shows the title and the author,
   and search only lists books.
-- Series and part rarely arrive. Voice reads them from Audiobookshelf and from MP3 tags written one particular way.
+- Series and part rarely arrive. Pageturner reads them from Audiobookshelf and from MP3 tags written one particular way.
   M4B, FLAC and OGG files lose them, and so do MP3 files from the usual taggers.
 - A book of one file is named after its album. 160 episodes with the album "Die drei ???" all get that name, and their
   own titles are neither shown nor searched.
@@ -36,14 +36,14 @@ This is a proposal. Once something ships, it moves into the [product spec](produ
   ways.
 - Folder names never become an author or a series. With "Folders are authors", a series folder in an author's folder
   becomes one long book.
-- Only the title and the cover can be changed, and only for books on the device. Voice never writes tags.
+- Only the title and the cover can be changed, and only for books on the device. Pageturner never writes tags.
 - Current and Completed are in the order they were last listened, Not started yet by title. There's no sorting,
   filtering or hiding.
 
 **So: group by series, not by author.** A series is short and ordered by its parts. Authors are messy, most of them
 have a single book, and a group per author makes the list longer, not shorter. Authors get their own screen instead.
 
-**But most series aren't in the tags.** They're in the album or in the folders, so Voice reads them from there, and
+**But most series aren't in the tags.** They're in the album or in the folders, so Pageturner reads them from there, and
 fixing many books at once has to take a few taps.
 
 ## Ground rules
@@ -94,7 +94,7 @@ fixing many books at once has to take a few taps.
 
 ## 4. Where series and authors come from
 
-An edit in Voice comes first, then Audiobookshelf and the tags, then the folders, and last the album.
+An edit in Pageturner comes first, then Audiobookshelf and the tags, then the folders, and last the album.
 
 - **Tags:** `MVNM` and `MVIN`, and `SERIES` and `SERIES-PART` like Audiobookshelf reads them, in MP3, M4B, FLAC and
   OGG files.
@@ -151,7 +151,7 @@ For books already in the library:
 
 - **Sort by:** Last listened, Title, Author, Recently added. Last listened is the default and what the library does
   today. The order applies to Not started yet and Completed, and Current stays in the order it was listened in.
-  Author sorts by author, then by the title or the series' name. Books added before Voice kept the date come last in
+  Author sorts by author, then by the title or the series' name. Books added before Pageturner kept the date come last in
   Recently added.
 - A stack sorts by its last listened book, the series' name, its author or its newest book. Inside a stack, the order
   of the series always holds.
@@ -179,8 +179,8 @@ For books already in the library:
 - Edit replaces Rename, with title, author, series and part. The author and series fields suggest the names in the
   library, so one name isn't there twice.
 - "Use the names from the files" undoes all edits.
-- Edits stay in Voice and sync through `.voice`, like the name does. What wasn't edited still follows the files, so a
-  fixed tag shows up in Voice.
+- Edits stay in Pageturner and sync through `.voice`, like the name does. What wasn't edited still follows the files, so a
+  fixed tag shows up in Pageturner.
 - Books from Audiobookshelf are edited on the server, like their title and cover today.
 
 ### Several books at once
@@ -217,16 +217,16 @@ For books already in the library:
 - Asking Android Auto to play something uses the same search instead of its own. "Play The Signal Saga" plays the book
   that's next. Chapter names are no longer searched there.
 
-## 10. Voice finds the books
+## 10. Pageturner finds the books
 
 The three layouts are hard to understand, and many libraries fit none of them ([#3162]): M4B files next to author
-folders, and series folders in some of those. Instead, Voice looks at each folder on its own, and the listener fixes
+folders, and series folders in some of those. Instead, Pageturner looks at each folder on its own, and the listener fixes
 what it gets wrong.
 
 **The plan is to replace all three layouts with this.** An A/B test with new listeners shows first whether it works as
 well as the layouts. Until then, no library that's already set up changes.
 
-![Sketch: what Voice finds in a mixed library](sketches/find-books-layouts.png)
+![Sketch: what Pageturner finds in a mixed library](sketches/find-books-layouts.png)
 
 **Finding books**
 
@@ -250,7 +250,7 @@ well as the layouts. Until then, no library that's already set up changes.
 
 ![Sketch: splitting and joining in the preview](sketches/find-books-preview.png)
 
-- The preview shows the books and series Voice found, with one button to add them. A tap on one asks how its folder
+- The preview shows the books and series Pageturner found, with one button to add them. A tap on one asks how its folder
   is organized, with two of today's options: it's one book, or every folder or file in it is a book. The preview is
   there when adding a folder, and later in the folder settings.
 - A split or a join is saved for the folder and wins over the guess, also when files are added later.
@@ -265,7 +265,7 @@ well as the layouts. Until then, no library that's already set up changes.
 
 ### Testing it with new listeners
 
-- In the Play build, Remote Config puts half of the listeners who start Voice for the first time in a test group. The
+- In the Play build, Remote Config puts half of the listeners who start Pageturner for the first time in a test group. The
   group is set before the first folder is added and kept, so a library never changes because Remote Config did.
 - The test group only gets this way of finding books, with no layouts to pick, because a split or a join can make
   every result the layouts make. The other half gets the layouts like today.
@@ -278,7 +278,7 @@ well as the layouts. Until then, no library that's already set up changes.
 
 ### Replacing the layouts
 
-Once the test shows it works, it becomes the only way Voice finds books, also for the folders that are already added.
+Once the test shows it works, it becomes the only way Pageturner finds books, also for the folders that are already added.
 They move over with a split or a join saved for them, so only books that look like several books change:
 
 | Today | Moves over as | Books that change |
@@ -327,7 +327,7 @@ What goes:
   first one.
 - An author tag with several names gets one author screen for all of them. Names in another order, like
   "Rowling, J. K.", are joined by one rename.
-- Folders only become series with "Folders are authors", or with "Voice finds the books".
+- Folders only become series with "Folders are authors", or with "Pageturner finds the books".
 - Search doesn't look through chapter names or file names.
 - Splits and joins stay on the device and don't sync through `.voice`.
 
@@ -350,13 +350,13 @@ Each step helps on its own.
 11. The sort sheet.
 12. Selecting several books.
 13. Android Auto using the library search.
-14. "Voice finds the books", as an A/B test with new listeners. It needs the series stacks from step 5 to show what it
+14. "Pageturner finds the books", as an A/B test with new listeners. It needs the series stacks from step 5 to show what it
     found.
 15. If the test works, replacing the layouts for everyone.
 
 ## Open questions
 
-- Should books from Audiobookshelf be editable in Voice after all?
-- Are folders enough as shelves ([#1214]), or do listeners need shelves they make in Voice?
+- Should books from Audiobookshelf be editable in Pageturner after all?
+- Are folders enough as shelves ([#1214]), or do listeners need shelves they make in Pageturner?
 - Should step 7 go, since replacing the layouts splits series folders anyway, and no library changes before the test?
 - When the layouts are replaced: should folders that look like several books be split, or keep their books with a join?

@@ -1,18 +1,18 @@
-### Does Voice support Android Auto?
+### Does Pageturner support Android Auto?
 
-Yes, Voice fully supports Android Auto!
+Yes, Pageturner fully supports Android Auto!
 
 Android Auto only shows apps installed from a trusted source such as
-[Google Play](https://play.google.com/store/apps/details?id=de.ph1b.audiobook). If you installed Voice from F-Droid, GitHub
+[Google Play](https://play.google.com/store/apps/details?id=de.ph1b.audiobook). If you installed Pageturner from F-Droid, GitHub
 or IzzyDroid, follow [Google's steps to allow unknown sources](https://developer.android.com/training/cars/testing#unknown-sources)
 in Android Auto.
 
 Google Play is the only officially supported source for Android Auto. See the [download source comparison](download-sources.md)
 for details.
 
-### Why doesn't Voice support the xyz Media Format?
+### Why doesn't Pageturner support the xyz Media Format?
 
-Voice relies on the media formats that are natively supported by the Android platform.
+Pageturner relies on the media formats that are natively supported by the Android platform.
 
 You can review the currently supported file extensions [here](https://developer.android.com/media/media3/exoplayer/supported-formats).
 If a file that should be supported is not displayed, it is most likely either corrupted or incompatible with your Android version.
@@ -25,15 +25,15 @@ the app a bit harder to use. So I prefer good defaults over options and keep eac
 If you're missing something, [open a feature request](https://github.com/PaulWoitaschek/Voice/discussions/new?category=ideas) and describe
 what you'd like to do.
 
-### Which Voice version should I use on older Android?
+### Which Pageturner version should I use on older Android?
 
 !!! tip
 
     To check your API level, go to **Settings » About » Android version** on your device.
 
-If you’re running an Android release that’s not supported by the latest Voice build, pick the version below that matches your OS/API level:
+If you’re running an Android release that’s not supported by the latest Pageturner build, pick the version below that matches your OS/API level:
 
-| Android Version | API Level (SDK) | Voice Version                                                           |
+| Android Version | API Level (SDK) | Pageturner Version                                                           |
 |-----------------|-----------------|-------------------------------------------------------------------------|
 | Android 9+      | 28+             | Supported in the latest version 🎉                                      |
 | Android 8.1     | 27              | [8.2.4‑2](https://github.com/PaulWoitaschek/Voice/releases/tag/8.2.4-2) |
@@ -43,7 +43,7 @@ If you’re running an Android release that’s not supported by the latest Voic
 
 ### How do I resume playback after the sleep timer stops?
 
-Once the sleep timer elapses, Voice pauses playback (after a brief fade-out). To keep listening, you have two options:
+Once the sleep timer elapses, Pageturner pauses playback (after a brief fade-out). To keep listening, you have two options:
 
 - **Shake to resume**: Shake your device within 30 seconds of pause to restart playback.
 - **Open to resume**: Open the App and simply press on play again
@@ -54,9 +54,9 @@ Once the sleep timer elapses, Voice pauses playback (after a brief fade-out). To
 
 ### How do I continue a book on another device?
 
-Voice keeps your place, your playback speed, your bookmarks and the names you gave your books in a hidden `.voice`
+Pageturner keeps your place, your playback speed, your bookmarks and the names you gave your books in a hidden `.voice`
 folder inside each audiobook folder you added. Sync these folders between your devices with a tool of your own, like
-[Syncthing](https://syncthing.net), and when you open Voice on the other device, it picks up where you left off.
+[Syncthing](https://syncthing.net), and when you open Pageturner on the other device, it picks up where you left off.
 
 - Add the same folder on every device, and the same way, for example as "Every folder is a book" on both. Where the
   folder is on each device doesn't matter.

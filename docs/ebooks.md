@@ -1,10 +1,10 @@
 # Ebooks
 
-Voice also reads EPUB and PDF books, and can read them aloud.
+Pageturner also reads EPUB and PDF books, and can read them aloud.
 
 ## Adding ebooks
 
-Put `.epub` or `.pdf` files anywhere in your audiobook folders. Voice finds them when it scans your library and lists them in
+Put `.epub` or `.pdf` files anywhere in your audiobook folders. Pageturner finds them when it scans your library and lists them in
 their own **Ebooks** section, with how far you've read. It doesn't matter how the folder is organized: an ebook next to the
 audiobook of the same story shows up too.
 
@@ -21,7 +21,7 @@ a paper book. The same happens on a tablet or a phone turned on its side. Your p
 
 ## Reading aloud
 
-Tap the speaker button to have the book read aloud with your phone's text-to-speech voice. Voice turns the pages as it reads
+Tap the speaker button to have the book read aloud with your phone's text-to-speech voice. Pageturner turns the pages as it reads
 and keeps going when you fold or unfold. Turning a page yourself, tapping the button again or leaving the book stops it.
 
 ## Good to know

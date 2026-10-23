@@ -9,19 +9,19 @@ basics stay simple ([#1034]).
 
 - **Clean, not minimal.** A feature has to make listening better for many listeners, because each one is maintained for
   years ([FAQ](faq.md)).
-- **Good defaults before settings.** Every setting makes Voice a bit harder to use ([#860]).
-- **The data stays with the listener.** No account, no ads, nothing behind a paywall, and no Voice server.
+- **Good defaults before settings.** Every setting makes Pageturner a bit harder to use ([#860]).
+- **The data stays with the listener.** No account, no ads, nothing behind a paywall, and no Pageturner server.
 - **Never interrupt listening.** Prompts wait for a calm moment, ask once, and accept no.
 - **Reliable before new.** A feature that breaks listening waits until it has tests.
 
-Decisions follow upvotes on ideas ([#1330]) and opt-in analytics in the Play build ([#3212]). Voice is neither a podcast
+Decisions follow upvotes on ideas ([#1330]) and opt-in analytics in the Play build ([#3212]). Pageturner is neither a podcast
 or music player ([#970]) nor an app for other platforms than Android ([#83]).
 
 ## Keeping this spec
 
 Each area lists the problems listeners have, under **Solved**, **Planned**, **Open** and **Won't solve**.
 
-- Write the problem the way a listener would say it, and what Voice does about it in a sentence or two.
+- Write the problem the way a listener would say it, and what Pageturner does about it in a sentence or two.
 - Link the one issue or discussion that matters, for open problems and decisions. Put the links below their area.
 - Only add something under **Won't solve** if it would otherwise be proposed again, and give the reason.
 - Leave out history, releases, counts, bugs, one-off opinions and how it's built.
@@ -41,12 +41,12 @@ A new listener adds a folder of audiobooks and is listening within minutes, with
 
 **Solved**
 
-- **My books come out wrong when I add a folder.** Voice guesses how the folder is laid out and shows the books it
+- **My books come out wrong when I add a folder.** Pageturner guesses how the folder is laid out and shows the books it
   found before adding them. The layout can be changed later without losing progress.
-- **Voice can't see my files.** Android's folder picker. When Voice loses access to a folder, the library asks to allow
+- **Pageturner can't see my files.** Android's folder picker. When Pageturner loses access to a folder, the library asks to allow
   it again.
-- **My new books don't show up.** Voice scans on its own and reads changed files again.
-- **Moving or renaming a folder loses my progress.** Voice recognizes a book by its files, so progress and bookmarks
+- **My new books don't show up.** Pageturner scans on its own and reads changed files again.
+- **Moving or renaming a folder loses my progress.** Pageturner recognizes a book by its files, so progress and bookmarks
   stay.
 
 **Planned**, see the [library spec](library.md)
@@ -58,8 +58,8 @@ A new listener adds a folder of audiobooks and is listening within minutes, with
 
 **Won't solve**
 
-- **More folder layouts:** the ones Voice has are already hard to understand ([#3162]).
-- **A rescan button:** Voice scans on its own ([#555]).
+- **More folder layouts:** the ones Pageturner has are already hard to understand ([#3162]).
+- **A rescan button:** Pageturner scans on its own ([#555]).
 
 [#555]: https://github.com/PaulWoitaschek/Voice/issues/555
 [#3502]: https://github.com/PaulWoitaschek/Voice/discussions/3502
@@ -76,14 +76,14 @@ Listeners find the book they want in seconds and see how far along they are in e
 - **I can't see how far along I am.** Every book shows its progress.
 - **Finding a book takes too long.** Search finds titles, authors, narrators, series and genres, and can browse by each.
 - **A book's name or cover is wrong.** Rename a book, or pick a cover from a file or the internet.
-- **Deleting a book can delete more than I meant.** Voice shows which files go and that they can't be brought back.
+- **Deleting a book can delete more than I meant.** Pageturner shows which files go and that they can't be brought back.
 
 **Planned**, see the [library spec](library.md)
 
-- **The books of a series aren't grouped or in order.** A series becomes one stack, its books are in order, and Voice
+- **The books of a series aren't grouped or in order.** A series becomes one stack, its books are in order, and Pageturner
   offers the next one when a book ends. [#1748]
 - **I can't put my books in the order I want.** Sort by last listened, title, author or recently added. [#1543]
-- **Fixing the author means editing the files.** Edit the title, author, series and part in Voice. [#1407]
+- **Fixing the author means editing the files.** Edit the title, author, series and part in Pageturner. [#1407]
 - **Removing a book from the library deletes its files.** Hide a book or a series and keep its files. [#3397]
 - **The episodes of a radio play all have the album's name.** Each episode keeps its own title, the album becomes the
   series, and search finds an episode by its number. [#3132]
@@ -109,7 +109,7 @@ Listeners press play, follow the story at their own pace, and never lose their p
 
 **Solved**
 
-- **Playback stops on its own.** Voice asks to lift battery limits and keeps the phone awake while playing.
+- **Playback stops on its own.** Pageturner asks to lift battery limits and keeps the phone awake while playing.
 - **I lose the thread after a pause.** Auto rewind goes back a little when playback pauses, 2 seconds by default.
 - **I have to set the speed again for every book.** Speed is saved per book, and a new book starts at the speed
   listened at last.
@@ -117,7 +117,7 @@ Listeners press play, follow the story at their own pace, and never lose their p
 - **One slip loses my place.** After a big seek, a chapter change or going to a bookmark, the jump-back pill takes the
   listener back.
 - **A book is too quiet or full of pauses.** Volume boost and skip silence, saved per book.
-- **Calls and navigation prompts talk over my book.** Voice pauses and carries on afterwards.
+- **Calls and navigation prompts talk over my book.** Pageturner pauses and carries on afterwards.
 
 **Open**
 
@@ -153,7 +153,7 @@ Listeners fall asleep to a book and find their place the next night.
 - **The book keeps playing after I fall asleep.** A timer from the moon button, in minutes or to the end of the chapter.
   It only counts listening time.
 - **I forget to set the timer.** The automatic sleep timer starts one when playback begins at night.
-- **The stop wakes me up.** The last 10 seconds fade out, and Voice rewinds a little.
+- **The stop wakes me up.** The last 10 seconds fade out, and Pageturner rewinds a little.
 - **The timer stops while I'm still awake.** Shaking the phone within 30 seconds of the stop starts the timer again.
 - **I don't know where I fell asleep.** The night shows in the listening history, with what the listener last did before
   the timer stopped.
@@ -178,7 +178,7 @@ Listeners fall asleep to a book and find their place the next night.
 ## Bookmarks and history
 
 Listeners keep the moments that matter and can always get back to where they were. Bookmarks are only what the
-listener saved. Everything Voice records on its own goes into the history.
+listener saved. Everything Pageturner records on its own goes into the history.
 
 **Solved**
 
@@ -191,7 +191,7 @@ listener saved. Everything Voice records on its own goes into the history.
 **Open**
 
 - **Saving a moment means taking out the phone.** [#2983]
-- **My notes can't be read outside Voice.** [#2549]
+- **My notes can't be read outside Pageturner.** [#2549]
 
 **Won't solve**
 
@@ -203,7 +203,7 @@ listener saved. Everything Voice records on its own goes into the history.
 
 ## Outside the app
 
-Listeners control their book from headphones, the lock screen, the car and the home screen, without opening Voice.
+Listeners control their book from headphones, the lock screen, the car and the home screen, without opening Pageturner.
 
 **Solved**
 
@@ -214,7 +214,7 @@ Listeners control their book from headphones, the lock screen, the car and the h
 - **The lock screen slider loses my place.** It only covers the current chapter, and a setting turns it off.
 - **My book isn't on my home screen.** A Now playing widget, down to 1×1, and a Shelf widget with the books in
   progress. As space runs out, Now playing keeps play first, then the cover, the title, rewind and fast forward.
-- **Automations have to open Voice.** Tasker can play, pause, skip and start a book.
+- **Automations have to open Pageturner.** Tasker can play, pause, skip and start a book.
 
 **Open**
 
@@ -227,7 +227,7 @@ Listeners control their book from headphones, the lock screen, the car and the h
 - **Next and previous change the chapter:** seeking matters far more than chapters ([#3846]).
 - **Choosing what each headphone press does:** too specific ([#456]).
 - **Jumping to a chapter by voice:** a misheard request could lose the listener's place ([#231]).
-- **Controlling Voice through the phone's Assistant:** only players on Google's allowlist can be controlled ([#1071]).
+- **Controlling Pageturner through the phone's Assistant:** only players on Google's allowlist can be controlled ([#1071]).
 
 [#231]: https://github.com/PaulWoitaschek/Voice/issues/231
 [#456]: https://github.com/PaulWoitaschek/Voice/issues/456
@@ -240,7 +240,7 @@ Listeners control their book from headphones, the lock screen, the car and the h
 ## Servers, sync and backup
 
 Listeners have their books, progress and bookmarks on all their devices, and keep them when they change phones. There's
-no Voice account and no Voice server.
+no Pageturner account and no Pageturner server.
 
 **Solved**
 
@@ -249,7 +249,7 @@ no Voice account and no Voice server.
 - **My books in cloud storage can't be added.** Folders from apps that work with Android's folder picker. Syncing the
   folder to the phone works better.
 - **I lose my place when I switch devices.** With Audiobookshelf, or by syncing the library folders with a tool like
-  Syncthing. Voice keeps places, speed, names and bookmarks in a hidden `.voice` folder there ([FAQ](faq.md)).
+  Syncthing. Pageturner keeps places, speed, names and bookmarks in a hidden `.voice` folder there ([FAQ](faq.md)).
 - **A new phone means losing my progress.** Android's backup, or the synced library folders. After a restore, the
   library asks to allow access to the folders again.
 
@@ -273,22 +273,22 @@ no Voice account and no Voice server.
 
 ## Look and feel
 
-Voice feels calm day and night and works in the listener's language. Good defaults come before options, see the
+Pageturner feels calm day and night and works in the listener's language. Good defaults come before options, see the
 [design principles](https://github.com/PaulWoitaschek/Voice/blob/main/.agents/skills/design/SKILL.md).
 
 **Solved**
 
-- **I want Voice dark or light, whatever my phone does.** Light, dark or follow the system.
+- **I want Pageturner dark or light, whatever my phone does.** Light, dark or follow the system.
 - **Dark mode isn't black enough for bed.** A pure black switch for the dark theme.
-- **The colors don't match my taste or my book.** Voice blue, dynamic color or one of six palettes. The player takes
+- **The colors don't match my taste or my book.** Pageturner blue, dynamic color or one of six palettes. The player takes
   its colors from the cover.
 - **Large fonts or a small window break the layout.** Layouts follow large fonts and right-to-left languages, and the
   play controls stay on screen in a short split screen.
-- **Voice isn't in my language.** A language is added when a listener asks for it.
+- **Pageturner isn't in my language.** A language is added when a listener asks for it.
 
 **Open**
 
-- **Voice may be hard to use with a screen reader.** Nobody has checked it with TalkBack.
+- **Pageturner may be hard to use with a screen reader.** Nobody has checked it with TalkBack.
 
 ## Feedback and support
 
