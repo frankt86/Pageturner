@@ -2,16 +2,12 @@
 
 package voice.features.reader
 
-import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.view.ActionMode
-import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.FrameLayout
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -53,7 +49,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentFactory
 import androidx.fragment.app.commitNow
 import kotlinx.coroutines.flow.Flow
@@ -74,6 +69,7 @@ import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.util.AbsoluteUrl
 import org.readium.r2.shared.util.toUri
 import voice.core.data.HighlightColor
+import voice.core.data.PageTransition
 import voice.core.data.ReaderFont
 import voice.core.data.ReaderSettings
 import voice.core.data.ReaderTheme
@@ -97,6 +93,7 @@ internal fun ReadiumPages(
   book: ReadiumBook,
   settings: ReaderSettings,
   volumeKeysTurnPages: Boolean,
+  transition: PageTransition,
   jumps: Flow<Locator>,
   onLocatorChange: (Locator) -> Unit,
   onPageTurn: () -> Unit,
@@ -125,15 +122,16 @@ internal fun ReadiumPages(
       stringResource(StringsR.string.reader_look_up),
   )
   var navigator by remember { mutableStateOf<EpubNavigatorFragment?>(null) }
-  val turn: (Int) -> Unit = { step ->
-    val current = navigator
-    if (step > 0) current?.goForward() else current?.goBackward()
-  }
+  val turns = remember { ReadiumTurns(scope) }
   val container = remember(context) { NavigatorContainer(context) }
   SideEffect {
+    turns.transition = transition
+    // Readium slides the pages itself
+    container.interceptDrags = transition != PageTransition.Slide
+    container.onDrag = turns::onDrag
     container.onVolumeKey = { step ->
       if (latestVolumeKeysTurnPages) {
-        if (step != 0) turn(step)
+        if (step != 0) turns.turn(step)
         true
       } else {
         false
@@ -142,9 +140,19 @@ internal fun ReadiumPages(
   }
   Box(modifier) {
     AndroidView(factory = { container }, modifier = Modifier.fillMaxSize())
+    turns.cover?.let { TurnCover(it, Modifier.fillMaxSize()) }
+    turns.curl?.let { turn ->
+      CurlOverlay(
+        turn = turn,
+        backColor = settings.theme.pageColors()?.paper ?: MaterialTheme.colorScheme.surface,
+        onDone = turns::onCurlDone,
+        onCancel = turns::onCurlCancel,
+        modifier = Modifier.fillMaxSize(),
+      )
+    }
     // while the web view has no focus, the volume keys come to Compose
     if (volumeKeysTurnPages) {
-      VolumeKeyPageTurns { step -> turn(step) }
+      VolumeKeyPageTurns { step -> turns.turn(step) }
     }
   }
   DisposableEffect(book, activity, container) {
@@ -207,12 +215,17 @@ internal fun ReadiumPages(
       )
       .instantiate(activity.classLoader, EpubNavigatorFragment::class.java.name) as EpubNavigatorFragment
     created = fragment
-    // the left and right edges turn the pages, so a tap anywhere else is in the middle
-    fragment.addInputListener(DirectionalNavigationAdapter(fragment))
+    // the arrow keys of a keyboard turn the pages too
+    fragment.addInputListener(DirectionalNavigationAdapter(fragment, tapEdges = emptySet()))
     fragment.addInputListener(
       object : InputListener {
         override fun onTap(event: TapEvent): Boolean {
-          latestOnCenterTap()
+          val width = fragment.publicationView.width
+          when {
+            event.point.x > width * 2 / 3 -> turns.turnTowards(right = true)
+            event.point.x < width / 3 -> turns.turnTowards(right = false)
+            else -> latestOnCenterTap()
+          }
           return true
         }
       },
@@ -229,8 +242,12 @@ internal fun ReadiumPages(
     )
     fragmentManager.commitNow(allowStateLoss = true) { add(container.fragments, fragment, NAVIGATOR_TAG) }
     navigator = fragment
+    turns.navigator = fragment
+    turns.view = container
+    turns.window = activity.window
     onDispose {
       navigator = null
+      turns.navigator = null
       // when the state is saved, the activity is recreated and readerFragmentFactory takes over
       if (!fragmentManager.isStateSaved) {
         fragmentManager.commitNow { remove(fragment) }
@@ -289,30 +306,6 @@ internal fun ReadiumPages(
 private const val HIGHLIGHTS = "highlights"
 private const val SEARCH = "search"
 private const val READ_ALOUD = "read_aloud"
-
-/** Turns the pages with the volume keys also while the book's web view has the focus, e.g. after selecting text. */
-@SuppressLint("ViewConstructor")
-private class NavigatorContainer(context: Context) : FrameLayout(context) {
-
-  /** Called with 1 or -1 when a volume key goes down and 0 when it goes up, returns whether it took the key. */
-  var onVolumeKey: (step: Int) -> Boolean = { false }
-
-  val fragments = FragmentContainerView(context).apply { id = View.generateViewId() }
-
-  init {
-    addView(fragments)
-  }
-
-  override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-    val step = when (event.keyCode) {
-      KeyEvent.KEYCODE_VOLUME_DOWN -> 1
-      KeyEvent.KEYCODE_VOLUME_UP -> -1
-      else -> return super.dispatchKeyEvent(event)
-    }
-    // the key up too, or the phone shows its volume panel
-    return onVolumeKey(if (event.action == KeyEvent.ACTION_DOWN) step else 0) || super.dispatchKeyEvent(event)
-  }
-}
 
 @Composable
 private fun ReaderSettings.epubPreferences(): EpubPreferences {

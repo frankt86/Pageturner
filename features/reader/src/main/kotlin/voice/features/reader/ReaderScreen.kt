@@ -200,6 +200,7 @@ internal fun ReaderScreen(uri: Uri) {
             settings = state.settings,
             // reading aloud keeps the volume keys for the volume
             volumeKeysTurnPages = state.settings.volumeKeysTurnPages && !state.readingAloud,
+            transition = state.settings.pageTransition,
             jumps = readiumJumps,
             onLocatorChange = viewModel::onLocatorChange,
             onPageTurn = { barsVisible = false },
