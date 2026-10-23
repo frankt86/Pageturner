@@ -19,6 +19,25 @@ About half of your list needs that formatting, so the engine choice decides the 
 Recommendation: A, with the curl kept as a page transition that animates a snapshot of the page.
 PDFs keep the current Android PdfRenderer path (zoom and pan added in phase 1).
 
+Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Display sheet, off by default.
+
+### Where the new engine stands
+
+| Feature | Status |
+|---|---|
+| Book layout: formatting, images, links, footnotes | [done] |
+| Theme, font, text size, line spacing, margins | [done] |
+| Page turns: side taps, swipes, volume keys; middle tap shows the bars | [done] |
+| Place kept as a Readium Locator, progress in the library | [done] |
+| Contents | [done] |
+| Page bar with "page X of Y" from Readium positions | [done] |
+| Bookmarks | [done] |
+| Links to websites open in the browser | [done] |
+| Highlights and notes | [new] |
+| Search | [new] |
+| Reading aloud | [new] |
+| Page curl | [new] |
+
 ## Phase 1: reading modes and layout (sections 1 and 5)
 
 | Feature | Status | How |
@@ -54,8 +73,8 @@ PDFs keep the current Android PdfRenderer path (zoom and pan added in phase 1).
 
 | Feature | Status | How |
 |---|---|---|
-| Screen page numbers | [done] | From current font, margins and screen. |
-| Stable locations | [part] | We store chapter plus character offset, which survives reformatting. Readium Locators would add standard CFI. |
+| Screen page numbers | [done] | From current font, margins and screen. The new engine counts Readium positions instead, which stay the same for every screen. |
+| Stable locations | [part] | The old engine stores chapter plus character offset. The new engine stores Readium Locators. |
 | Publisher page labels | [new] | Read the EPUB page-list; label it "Print page 42" so its basis is clear. Hidden when the book has none. |
 | Estimated standard pages | [new] | Fixed 1,024 characters per page, labelled "about 320 standard pages". |
 | Book and chapter page counters | [part] | Book counter done; add "Page 4 of 18 in this chapter". |

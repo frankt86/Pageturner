@@ -40,6 +40,7 @@ The **Display** button holds:
 - **Text size**, **line spacing** and **margins**.
 - **Brightness**, just for the reader, or the system setting.
 - **Volume keys turn pages**, on or off.
+- **New book engine (beta)**, for EPUB books, see below.
 
 The screen stays on while you read.
 
@@ -68,10 +69,22 @@ Set the speed, then tap **Start reading**. Pageturner reads a sentence or two at
 highlights the passage it's reading. Turning a page yourself, jumping elsewhere, tapping the button again or leaving the book
 stops it. While it reads, the volume keys change the volume instead of turning pages.
 
+## New book engine (beta)
+
+Turn on **New book engine (beta)** under **Display** to show EPUB books the way they were made: with their pictures, headings,
+bold and italic text, tables, links and footnotes. It's built on [Readium](https://readium.org).
+
+- Your theme, font, text size, line spacing and margins carry over.
+- Tap the left or right side, swipe or use the volume keys to turn the page, and tap the middle to show or hide the bars.
+- The page bar counts the book in pages that stay the same whatever the screen or text size, and jumps anywhere.
+- Contents and bookmarks work as usual. Links to websites open in your browser.
+- Not there yet: highlights and notes, search, reading aloud and the page curl. Turn the engine off to use them.
+- The new engine keeps its own place in the book. When you first turn it on, it opens about where you were.
+
 ## Good to know
 
-- EPUB books show their text. Pictures and text styling, like bold or headings, are left out for now. A new book engine that
-  keeps them is on the way, see the [reader plan](reader-plan.md).
+- Without the new book engine, EPUB books show their text only. Pictures and text styling, like bold or headings, are left
+  out. See the [reader plan](reader-plan.md).
 - PDF pages show exactly as they're printed. Searching or reading a PDF aloud needs Android 15 or newer, and a PDF made of
   scanned pages has no text. Highlights work in EPUB books only.
 - The natural voice needs a 64-bit phone, which nearly every phone from the last years is. On older phones it may pause briefly
