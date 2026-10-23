@@ -36,7 +36,7 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 | Highlights and notes | [done] |
 | Search | [done] |
 | Reading aloud, with the natural voice or the phone's | [done] |
-| Page curl | [new] |
+| Page curl, slide or no animation | [done] | The curl turns a picture of the page; two-page spreads curl as a whole. |
 
 ## Phase 1: reading modes and layout (sections 1 and 5)
 
@@ -46,7 +46,7 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 | Single-page and two-page view | [done] | Two pages when the screen is wide. |
 | Adaptive layout | [part] | Add a setting: Auto (today), Always one, Always two. |
 | Continuous scrolling (chapter or whole book) | [new] | Readium scroll mode, or a LazyColumn of paragraphs in our engine. |
-| Page transitions: none, slide, curl | [part] | Curl exists. Add instant and slide as choices. |
+| Page transitions: none, slide, curl | [done] | **Page turn** in the Display sheet, for both engines. |
 | Scroll behavior: smooth, stepped, snap | [new] | Only in scroll mode. |
 | Automatic scrolling with speed, pause on touch | [new] | Timer that scrolls N px per second, stops while a finger is down or text is selected. |
 | Automatic page turns at an interval | [new] | Timer that calls the existing turn; pause while menus are open. |
