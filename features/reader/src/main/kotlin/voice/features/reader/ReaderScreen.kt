@@ -99,7 +99,7 @@ object ReaderProvider {
 }
 
 @Composable
-fun ReaderScreen(uri: Uri) {
+internal fun ReaderScreen(uri: Uri) {
   val viewModel = retain(uri.toString()) {
     rootGraphAs<ReaderGraph>().readerViewModelFactory.create(uri)
   }
@@ -153,7 +153,7 @@ fun ReaderScreen(uri: Uri) {
       }
       is ReaderState.Loaded -> Book(
         state = state,
-        onPageTurned = viewModel::onPageTurned,
+        onPageTurn = viewModel::onPageTurned,
         modifier = modifier,
       )
     }
@@ -211,7 +211,7 @@ private val SpineWidth = 24.dp
 @Composable
 private fun Book(
   state: ReaderState.Loaded,
-  onPageTurned: (Page) -> Unit,
+  onPageTurn: (Page) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   BoxWithConstraints(modifier) {
@@ -244,7 +244,7 @@ private fun Book(
         pages = pages,
         pagesPerSpread = pagesPerSpread,
         textStyle = textStyle,
-        onPageTurned = onPageTurned,
+        onPageTurn = onPageTurn,
       )
     }
   }
@@ -279,7 +279,7 @@ private fun Spreads(
   pages: List<Page>,
   pagesPerSpread: Int,
   textStyle: TextStyle,
-  onPageTurned: (Page) -> Unit,
+  onPageTurn: (Page) -> Unit,
 ) {
   if (pages.isEmpty()) return
   val currentSpread = pages.indexOfPosition(state.position) / pagesPerSpread
@@ -293,11 +293,11 @@ private fun Spreads(
     }
   }
   val latestSpread by rememberUpdatedState(currentSpread)
-  val latestOnPageTurned by rememberUpdatedState(onPageTurned)
+  val latestOnPageTurn by rememberUpdatedState(onPageTurn)
   LaunchedEffect(pagerState) {
     snapshotFlow { pagerState.settledPage }.collect { spread ->
       if (spread != latestSpread) {
-        latestOnPageTurned(pages[spread * pagesPerSpread])
+        latestOnPageTurn(pages[spread * pagesPerSpread])
       }
     }
   }
