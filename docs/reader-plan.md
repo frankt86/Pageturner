@@ -33,9 +33,9 @@ Decision: A. Readium 3.4.0 is in the app as **New book engine (beta)** in the Di
 | Page bar with "page X of Y" from Readium positions | [done] |
 | Bookmarks | [done] |
 | Links to websites open in the browser | [done] |
-| Highlights and notes | [new] |
-| Search | [new] |
-| Reading aloud | [new] |
+| Highlights and notes | [done] |
+| Search | [done] |
+| Reading aloud, with the natural voice or the phone's | [done] |
 | Page curl | [new] |
 
 ## Phase 1: reading modes and layout (sections 1 and 5)

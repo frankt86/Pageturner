@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalReadiumApi::class)
+
 package voice.features.reader
 
 import android.app.Application
@@ -19,7 +21,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.readium.r2.shared.ExperimentalReadiumApi
 import org.readium.r2.shared.publication.Locator
+import org.readium.r2.shared.publication.services.content.Content
+import org.readium.r2.shared.publication.services.content.content
+import org.readium.r2.shared.publication.services.search.search
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.Ebook
@@ -28,6 +34,7 @@ import voice.core.data.EbookPosition
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
 import voice.core.data.ReaderSettings
+import voice.core.data.ReadiumHighlight
 import voice.core.data.store.EbooksStore
 import voice.core.data.store.ReaderNaturalSpeakerStore
 import voice.core.data.store.ReaderNaturalVoiceStore
@@ -140,6 +147,7 @@ class ReaderViewModel(
   private var searchMatch by mutableStateOf<BookRange?>(null)
   private var searchMatchJob: Job? = null
   private var readium by mutableStateOf<ReadiumBook?>(null)
+  private var useNaturalVoice = false
 
   private val messageChannel = Channel<ReaderMessage>(Channel.CONFLATED)
   internal val messages: Flow<ReaderMessage> = messageChannel.receiveAsFlow()
@@ -243,6 +251,74 @@ class ReaderViewModel(
       book.bookmarks - onPage.toSet()
     }
     saveReadiumBookmarks(book)
+  }
+
+  internal fun onReadiumJump() {
+    stopReadingAloud()
+  }
+
+  internal fun onReadiumHighlightAdd(
+    locator: Locator,
+    color: HighlightColor,
+  ): LocatedHighlight? {
+    val book = readium ?: return null
+    val highlight = LocatedHighlight(locator, color, note = null)
+    book.highlights = (book.highlights + highlight).sortedBy { it.locator.locations.totalProgression ?: 0.0 }
+    saveReadiumHighlights(book)
+    return highlight
+  }
+
+  internal fun onReadiumHighlightChange(
+    old: LocatedHighlight,
+    color: HighlightColor,
+    note: String?,
+  ) {
+    val book = readium ?: return
+    book.highlights = book.highlights.map { if (it == old) it.copy(color = color, note = note) else it }
+    saveReadiumHighlights(book)
+  }
+
+  internal fun onReadiumHighlightDelete(highlight: LocatedHighlight) {
+    val book = readium ?: return
+    book.highlights = book.highlights - highlight
+    saveReadiumHighlights(book)
+  }
+
+  private fun saveReadiumHighlights(book: ReadiumBook) {
+    val highlights = book.highlights.map { ReadiumHighlight(it.locator.toJsonString(), it.color, it.note) }
+    scope.launch {
+      store.updateData { ebooks ->
+        ebooks.map { if (it.uri == uri) it.copy(readiumHighlights = highlights) else it }
+      }
+    }
+  }
+
+  internal suspend fun searchReadium(query: String): List<Locator> {
+    val book = readium ?: return emptyList()
+    return withContext(dispatcherProvider.io) {
+      val iterator = book.publication.search(query) ?: return@withContext emptyList()
+      val results = mutableListOf<Locator>()
+      try {
+        while (results.size < 500) {
+          val page = iterator.next().getOrNull() ?: break
+          results += page.locators
+        }
+      } finally {
+        iterator.close()
+      }
+      results
+    }
+  }
+
+  internal fun onReadiumSearchResultClick(locator: Locator) {
+    val book = readium ?: return
+    stopReadingAloud()
+    searchMatchJob?.cancel()
+    book.searchMatch = locator
+    searchMatchJob = scope.launch {
+      delay(3.seconds)
+      book.searchMatch = null
+    }
   }
 
   internal fun onReadiumBookmarkDelete(bookmark: Locator) {
@@ -399,16 +475,69 @@ class ReaderViewModel(
   internal fun onStartReadingClick() {
     if (readAloudJob != null) return
     val content = content ?: return
+    val book = readium?.takeIf { settings.newBookEngine }
     val speaker = readAloud ?: ReadAloud(application).also { readAloud = it }
+    useNaturalVoice = naturalVoice && naturalReady
     readAloudJob = scope.launch {
       try {
-        readAloudFrom(content, speaker)
+        if (book != null) readAloudFrom(book, speaker) else readAloudFrom(content, speaker)
       } finally {
         if (readAloudJob == coroutineContext[Job]) {
           readAloudJob = null
           readingRange = null
+          book?.readingAloud = null
         }
       }
+    }
+  }
+
+  /** Speaks [text] with the natural voice, or the phone's when that fails, and returns false when the phone can't speak. */
+  private suspend fun speak(
+    text: String,
+    next: String?,
+    speaker: ReadAloud,
+  ): Boolean {
+    val naturalSpeaker = selectedSpeaker
+    if (useNaturalVoice && (naturalSpeaker == null || !neuralVoice.speak(text, next, speechRate, naturalSpeaker))) {
+      useNaturalVoice = false
+      messageChannel.trySend(ReaderMessage.NaturalVoiceUnavailable)
+    }
+    if (!useNaturalVoice && !speaker.speak(text, speechRate)) {
+      messageChannel.trySend(ReaderMessage.ReadAloudUnavailable)
+      return false
+    }
+    return true
+  }
+
+  private suspend fun readAloudFrom(
+    book: ReadiumBook,
+    speaker: ReadAloud,
+  ) {
+    val iterator = book.publication.content(book.locator)?.iterator()
+    var spokeAnything = false
+    while (iterator != null && iterator.hasNext()) {
+      val element = iterator.next() as? Content.TextElement ?: continue
+      val text = element.text
+      var offset = 0
+      while (true) {
+        val chunk = nextChunk(text, offset) ?: break
+        val spoken = text.substring(chunk)
+        // the text around it finds the part of the paragraph to highlight
+        book.readingAloud = element.locator.copy(
+          text = Locator.Text(
+            before = text.substring((chunk.first - 40).coerceAtLeast(0), chunk.first).ifEmpty { null },
+            highlight = spoken,
+            after = text.substring(chunk.last + 1, (chunk.last + 41).coerceAtMost(text.length)).ifEmpty { null },
+          ),
+        )
+        val next = nextChunk(text, chunk.last + 1)?.let { text.substring(it) }
+        if (!speak(spoken, next, speaker)) return
+        spokeAnything = true
+        offset = chunk.last + 1
+      }
+    }
+    if (!spokeAnything) {
+      messageChannel.trySend(ReaderMessage.NothingToReadAloud)
     }
   }
 
@@ -419,7 +548,6 @@ class ReaderViewModel(
     var section = position.section
     var offset = position.offset
     var spokeAnything = false
-    var useNaturalVoice = naturalVoice && naturalReady
     while (section < content.sectionCount) {
       val text = when (content) {
         is ReaderContent.Epub -> content.chapters[section]
@@ -430,15 +558,7 @@ class ReaderViewModel(
         moveTo(EbookPosition(section, chunk.first))
         readingRange = chunk
         val next = nextChunk(text, chunk.last + 1)?.let { text.substring(it) }
-        val naturalSpeaker = selectedSpeaker
-        if (useNaturalVoice && (naturalSpeaker == null || !neuralVoice.speak(text.substring(chunk), next, speechRate, naturalSpeaker))) {
-          useNaturalVoice = false
-          messageChannel.trySend(ReaderMessage.NaturalVoiceUnavailable)
-        }
-        if (!useNaturalVoice && !speaker.speak(text.substring(chunk), speechRate)) {
-          messageChannel.trySend(ReaderMessage.ReadAloudUnavailable)
-          return
-        }
+        if (!speak(text.substring(chunk), next, speaker)) return
         spokeAnything = true
         offset = chunk.last + 1
       }
@@ -454,6 +574,7 @@ class ReaderViewModel(
     readAloudJob?.cancel()
     readAloudJob = null
     readingRange = null
+    readium?.readingAloud = null
   }
 
   private fun moveTo(

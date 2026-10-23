@@ -77,7 +77,7 @@ internal fun highlightColorName(color: HighlightColor): String = stringResource(
 )
 
 // dictionaries and translators offer themselves for selected text, a web search is the fallback
-private fun lookUp(
+internal fun lookUp(
   context: Context,
   text: String,
 ) {

@@ -157,6 +157,11 @@ internal fun ReaderScreen(uri: Uri) {
   var visiblePages by remember { mutableStateOf(emptyList<Page>()) }
   var editedHighlight by remember { mutableStateOf<Highlight?>(null) }
   val readiumJumps = remember { MutableSharedFlow<Locator>(extraBufferCapacity = 1) }
+  val readiumJump = { locator: Locator ->
+    viewModel.onReadiumJump()
+    val _ = readiumJumps.tryEmit(locator)
+  }
+  var editedReadiumHighlight by remember { mutableStateOf<LocatedHighlight?>(null) }
   ReaderWindow(immersive = !barsVisible && loaded != null, brightness = loaded?.settings?.brightness)
   val turnPage = { page: Page, progress: Float ->
     barsVisible = false
@@ -193,16 +198,21 @@ internal fun ReaderScreen(uri: Uri) {
           ReadiumPages(
             book = state.readium,
             settings = state.settings,
+            // reading aloud keeps the volume keys for the volume
+            volumeKeysTurnPages = state.settings.volumeKeysTurnPages && !state.readingAloud,
             jumps = readiumJumps,
             onLocatorChange = viewModel::onLocatorChange,
             onPageTurn = { barsVisible = false },
             onCenterTap = { barsVisible = !barsVisible },
+            onHighlightAdd = { locator, color -> val _ = viewModel.onReadiumHighlightAdd(locator, color) },
+            onNoteAdd = { locator -> editedReadiumHighlight = viewModel.onReadiumHighlightAdd(locator, HighlightColor.Yellow) },
+            onHighlightClick = { editedReadiumHighlight = it },
             modifier = Modifier.fillMaxSize(),
           )
           ReadiumPageBar(
             book = state.readium,
             visible = barsVisible,
-            onJump = { locator -> val _ = readiumJumps.tryEmit(locator) },
+            onJump = readiumJump,
           )
         }
       } else {
@@ -255,18 +265,16 @@ internal fun ReaderScreen(uri: Uri) {
       enter = fadeIn() + slideInVertically { -it },
       exit = fadeOut() + slideOutVertically { -it },
     ) {
-      // search and reading aloud don't work in the new book engine yet
       val readium = loaded?.readium
-      val oldEngine = readium == null
       ReaderTopBar(
         title = loaded?.content?.title,
-        readingAloud = loaded?.readingAloud?.takeIf { oldEngine },
+        readingAloud = loaded?.readingAloud,
         bookmarked = if (readium != null) {
           readium.bookmarks.any { readium.isOnPage(it, readium.locator) }
         } else {
           loaded?.bookmarks?.any { bookmark -> visiblePages.any { it.contains(bookmark) } }
         },
-        showSearch = loaded?.content?.searchable == true && oldEngine,
+        showSearch = loaded?.content?.searchable == true,
         onCloseClick = viewModel::onCloseClick,
         onReadAloudClick = {
           if (loaded?.readingAloud == true) viewModel.stopReadingAloudClick() else sheet = ReaderSheet.ReadAloud
@@ -314,9 +322,22 @@ internal fun ReaderScreen(uri: Uri) {
       book = readium,
       onJump = { locator ->
         sheet = null
-        val _ = readiumJumps.tryEmit(locator)
+        readiumJump(locator)
       },
       onBookmarkDelete = viewModel::onReadiumBookmarkDelete,
+      onHighlightDelete = viewModel::onReadiumHighlightDelete,
+      onDismiss = { sheet = null },
+    )
+  } else if (readium != null && sheet == ReaderSheet.Search) {
+    SearchSheet(
+      search = viewModel::searchReadium,
+      resultTitle = { result -> readium.chapterTitle(result).orEmpty() },
+      resultSnippet = { result -> result.searchSnippet() },
+      onResultClick = { result ->
+        sheet = null
+        readiumJump(result)
+        viewModel.onReadiumSearchResultClick(result)
+      },
       onDismiss = { sheet = null },
     )
   } else if (loaded != null) {
@@ -347,6 +368,22 @@ internal fun ReaderScreen(uri: Uri) {
       ReaderSheet.Display, ReaderSheet.ReadAloud, null -> Unit
     }
   }
+  val readiumHighlight = editedReadiumHighlight
+  if (readiumHighlight != null) {
+    ReadiumHighlightSheet(
+      highlight = readiumHighlight,
+      onDone = { color, note ->
+        editedReadiumHighlight = null
+        if (color != readiumHighlight.color || note != readiumHighlight.note) {
+          viewModel.onReadiumHighlightChange(readiumHighlight, color, note)
+        }
+      },
+      onDelete = {
+        editedReadiumHighlight = null
+        viewModel.onReadiumHighlightDelete(readiumHighlight)
+      },
+    )
+  }
   val highlight = editedHighlight
   if (highlight != null && content != null) {
     HighlightSheet(
@@ -364,11 +401,39 @@ internal fun ReaderScreen(uri: Uri) {
   }
 }
 
+private fun Locator.searchSnippet(): SearchSnippet {
+  val before = text.before.orEmpty().replace('\n', ' ').takeLast(40)
+  val match = text.highlight.orEmpty()
+  val after = text.after.orEmpty().replace('\n', ' ').take(80)
+  val prefix = if (before.isEmpty()) "" else "…"
+  return SearchSnippet(
+    text = prefix + before + match + after + "…",
+    matchStart = prefix.length + before.length,
+    matchEnd = prefix.length + before.length + match.length,
+  )
+}
+
 private enum class ReaderSheet {
   Contents,
   Display,
   ReadAloud,
   Search,
+}
+
+@Composable
+private fun ReadiumHighlightSheet(
+  highlight: LocatedHighlight,
+  onDone: (HighlightColor, String?) -> Unit,
+  onDelete: () -> Unit,
+) {
+  // the sheet edits only the color and the note, the place in the text isn't used
+  val editable = remember(highlight) { Highlight(section = 0, start = 0, end = 0, color = highlight.color, note = highlight.note) }
+  HighlightSheet(
+    highlight = editable,
+    text = highlight.locator.text.highlight.orEmpty(),
+    onDone = { changed -> onDone(changed.color, changed.note) },
+    onDelete = onDelete,
+  )
 }
 
 @Composable

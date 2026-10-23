@@ -77,8 +77,11 @@ bold and italic text, tables, links and footnotes. It's built on [Readium](https
 - Your theme, font, text size, line spacing and margins carry over.
 - Tap the left or right side, swipe or use the volume keys to turn the page, and tap the middle to show or hide the bars.
 - The page bar counts the book in pages that stay the same whatever the screen or text size, and jumps anywhere.
-- Contents and bookmarks work as usual. Links to websites open in your browser.
-- Not there yet: highlights and notes, search, reading aloud and the page curl. Turn the engine off to use them.
+- Contents, bookmarks and search work as usual. Links to websites open in your browser.
+- Long-press a word and drag to select more, then pick a highlight color, **Note** or **Look up** from the menu. Tap a
+  highlight to change its color, edit its note or delete it.
+- Reading aloud works with the natural voice and the phone voice, and highlights the passage it's reading.
+- Not there yet: the page curl. Bookmarks and highlights made with one engine don't show in the other.
 - The new engine keeps its own place in the book. When you first turn it on, it opens about where you were.
 
 ## Good to know

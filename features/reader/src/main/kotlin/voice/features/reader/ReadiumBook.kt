@@ -22,6 +22,7 @@ import org.readium.r2.shared.util.toAbsoluteUrl
 import org.readium.r2.streamer.PublicationOpener
 import org.readium.r2.streamer.parser.DefaultPublicationParser
 import voice.core.data.Ebook
+import voice.core.data.HighlightColor
 import voice.core.logging.api.Logger
 
 /** An EPUB opened with Readium, the new book engine. */
@@ -32,12 +33,20 @@ internal class ReadiumBook(
   val positions: List<Locator>,
   locator: Locator?,
   bookmarks: List<Locator>,
+  highlights: List<LocatedHighlight>,
 ) {
   val navigatorFactory = EpubNavigatorFactory(publication)
 
   /** Where the reader is, and where to start when the pages are shown again, e.g. after unfolding. */
   var locator by mutableStateOf(locator)
   var bookmarks by mutableStateOf(bookmarks)
+  var highlights by mutableStateOf(highlights)
+
+  /** Shown for a moment after jumping to a search result. */
+  var searchMatch by mutableStateOf<Locator?>(null)
+
+  /** What's read aloud right now. */
+  var readingAloud by mutableStateOf<Locator?>(null)
 
   /** The table of contents with the depth of each entry, or the chapters when the book has none. */
   val tableOfContents: List<Pair<Int, Link>> = publication.tableOfContents
@@ -77,6 +86,15 @@ private fun List<Link>.flattenWithDepth(depth: Int = 0): List<Pair<Int, Link>> {
   return flatMap { link -> listOf(depth to link) + link.children.flattenWithDepth(depth + 1) }
 }
 
+internal data class LocatedHighlight(
+  val locator: Locator,
+  val color: HighlightColor,
+  val note: String?,
+) {
+  /** Stays the same when the color or note changes, so Readium updates the highlight in place. */
+  val id: String = locator.toJsonString().hashCode().toString()
+}
+
 internal suspend fun openReadiumBook(
   context: Context,
   uri: Uri,
@@ -109,6 +127,9 @@ internal suspend fun openReadiumBook(
     positions = publication.positions(),
     locator = locator,
     bookmarks = ebook.readiumBookmarks.mapNotNull { it.toLocator() },
+    highlights = ebook.readiumHighlights.mapNotNull { highlight ->
+      highlight.locator.toLocator()?.let { LocatedHighlight(it, highlight.color, highlight.note) }
+    },
   )
 }
 
