@@ -20,7 +20,43 @@ public data class ReaderSettings(
   /** Shows EPUBs with Readium, which keeps the book's own layout, instead of as plain text. */
   val newBookEngine: Boolean = false,
   val pageTransition: PageTransition = PageTransition.Curl,
+  val pages: ReaderPages = ReaderPages.Auto,
+  /** The space between two pages side by side, in dp, or null for the reader's own. */
+  val pageGap: Int? = null,
+  /** The space above the text, in dp, or null for the reader's own. */
+  val topMargin: Int? = null,
+  /** The space below the text, in dp, or null for the reader's own. */
+  val bottomMargin: Int? = null,
+  /** Keeps lines to about 65 characters on wide screens. */
+  val shortLines: Boolean = false,
+  val orientation: ReaderOrientation = ReaderOrientation.Auto,
 )
+
+/** One page or two side by side. */
+@Serializable
+public enum class ReaderPages {
+  /** Two pages when the screen is wide. */
+  @SerialName("auto")
+  Auto,
+
+  @SerialName("one")
+  One,
+
+  @SerialName("two")
+  Two,
+}
+
+@Serializable
+public enum class ReaderOrientation {
+  @SerialName("auto")
+  Auto,
+
+  @SerialName("portrait")
+  Portrait,
+
+  @SerialName("landscape")
+  Landscape,
+}
 
 @Serializable
 public enum class PageTransition {

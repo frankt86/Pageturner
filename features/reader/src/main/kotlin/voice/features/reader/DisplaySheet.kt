@@ -39,10 +39,13 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import voice.core.data.PageTransition
 import voice.core.data.ReaderFont
+import voice.core.data.ReaderOrientation
+import voice.core.data.ReaderPages
 import voice.core.data.ReaderSettings
 import voice.core.data.ReaderTheme
 import voice.core.ui.VoiceTheme
@@ -90,9 +93,20 @@ private fun DisplaySettings(
       theme = settings.theme,
       onThemeSelect = { onSettingsChange(settings.copy(theme = it)) },
     )
-    TransitionChoice(
-      transition = settings.pageTransition,
-      onTransitionSelect = { onSettingsChange(settings.copy(pageTransition = it)) },
+    OptionChoice(
+      label = stringResource(StringsR.string.reader_page_turn),
+      options = PageTransition.entries,
+      selected = settings.pageTransition,
+      optionLabel = {
+        stringResource(
+          when (it) {
+            PageTransition.Curl -> StringsR.string.reader_page_turn_curl
+            PageTransition.Slide -> StringsR.string.reader_page_turn_slide
+            PageTransition.None -> StringsR.string.reader_page_turn_none
+          },
+        )
+      },
+      onSelect = { onSettingsChange(settings.copy(pageTransition = it)) },
     )
     if (showTextOptions) {
       FontChoice(
@@ -112,14 +126,12 @@ private fun DisplaySettings(
         steps = 7,
         onValueChange = { onSettingsChange(settings.copy(lineSpacing = (it * 20).roundToInt() / 20F)) },
       )
-      SettingSlider(
-        label = stringResource(StringsR.string.reader_margins),
-        value = settings.margin.toFloat(),
-        range = 8F..56F,
-        steps = 5,
-        onValueChange = { onSettingsChange(settings.copy(margin = it.roundToInt())) },
-      )
     }
+    LayoutSettings(
+      settings = settings,
+      showTextOptions = showTextOptions,
+      onSettingsChange = onSettingsChange,
+    )
     Brightness(
       brightness = settings.brightness,
       onBrightnessChange = { onSettingsChange(settings.copy(brightness = it)) },
@@ -267,13 +279,98 @@ private fun FontChoice(
 }
 
 @Composable
-private fun TransitionChoice(
-  transition: PageTransition,
-  onTransitionSelect: (PageTransition) -> Unit,
+private fun LayoutSettings(
+  settings: ReaderSettings,
+  showTextOptions: Boolean,
+  onSettingsChange: (ReaderSettings) -> Unit,
+) {
+  Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Text(
+      text = stringResource(StringsR.string.reader_layout),
+      style = MaterialTheme.typography.titleMedium,
+      modifier = Modifier
+        .padding(top = 8.dp)
+        .semantics { heading() },
+    )
+    OptionChoice(
+      label = stringResource(StringsR.string.reader_pages),
+      options = ReaderPages.entries,
+      selected = settings.pages,
+      optionLabel = {
+        stringResource(
+          when (it) {
+            ReaderPages.Auto -> StringsR.string.reader_theme_auto
+            ReaderPages.One -> StringsR.string.reader_pages_one
+            ReaderPages.Two -> StringsR.string.reader_pages_two
+          },
+        )
+      },
+      onSelect = { onSettingsChange(settings.copy(pages = it)) },
+    )
+    if (showTextOptions) {
+      SettingSlider(
+        label = stringResource(StringsR.string.reader_margins),
+        value = settings.margin.toFloat(),
+        range = 8F..56F,
+        steps = 5,
+        onValueChange = { onSettingsChange(settings.copy(margin = it.roundToInt())) },
+      )
+      SettingSlider(
+        label = stringResource(StringsR.string.reader_margin_top),
+        value = (settings.topMargin ?: 8).toFloat(),
+        range = 0F..64F,
+        steps = 7,
+        onValueChange = { onSettingsChange(settings.copy(topMargin = it.roundToInt())) },
+      )
+      SettingSlider(
+        label = stringResource(StringsR.string.reader_margin_bottom),
+        value = (settings.bottomMargin ?: 8).toFloat(),
+        range = 0F..64F,
+        steps = 7,
+        onValueChange = { onSettingsChange(settings.copy(bottomMargin = it.roundToInt())) },
+      )
+      SettingSlider(
+        label = stringResource(StringsR.string.reader_page_gap),
+        value = (settings.pageGap ?: 24).toFloat(),
+        range = 0F..64F,
+        steps = 7,
+        onValueChange = { onSettingsChange(settings.copy(pageGap = it.roundToInt())) },
+      )
+      SwitchRow(
+        label = stringResource(StringsR.string.reader_short_lines),
+        checked = settings.shortLines,
+        onCheckedChange = { onSettingsChange(settings.copy(shortLines = it)) },
+      )
+    }
+    OptionChoice(
+      label = stringResource(StringsR.string.reader_orientation),
+      options = ReaderOrientation.entries,
+      selected = settings.orientation,
+      optionLabel = {
+        stringResource(
+          when (it) {
+            ReaderOrientation.Auto -> StringsR.string.reader_theme_auto
+            ReaderOrientation.Portrait -> StringsR.string.reader_orientation_portrait
+            ReaderOrientation.Landscape -> StringsR.string.reader_orientation_landscape
+          },
+        )
+      },
+      onSelect = { onSettingsChange(settings.copy(orientation = it)) },
+    )
+  }
+}
+
+@Composable
+private fun <T> OptionChoice(
+  label: String,
+  options: List<T>,
+  selected: T,
+  optionLabel: @Composable (T) -> String,
+  onSelect: (T) -> Unit,
 ) {
   Column {
     Text(
-      text = stringResource(StringsR.string.reader_page_turn),
+      text = label,
       style = MaterialTheme.typography.titleSmall,
     )
     Row(
@@ -283,13 +380,13 @@ private fun TransitionChoice(
         .selectableGroup(),
       horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
     ) {
-      PageTransition.entries.forEachIndexed { index, option ->
+      options.forEachIndexed { index, option ->
         ToggleButton(
-          checked = option == transition,
-          onCheckedChange = { onTransitionSelect(option) },
+          checked = option == selected,
+          onCheckedChange = { onSelect(option) },
           shapes = when (index) {
             0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-            PageTransition.entries.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+            options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
             else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
           },
           modifier = Modifier
@@ -297,13 +394,9 @@ private fun TransitionChoice(
             .semantics { role = Role.RadioButton },
         ) {
           Text(
-            text = stringResource(
-              when (option) {
-                PageTransition.Curl -> StringsR.string.reader_page_turn_curl
-                PageTransition.Slide -> StringsR.string.reader_page_turn_slide
-                PageTransition.None -> StringsR.string.reader_page_turn_none
-              },
-            ),
+            text = optionLabel(option),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
           )
         }
       }
