@@ -39,7 +39,8 @@ class EpubTest {
           <navPoint><navLabel><text>Drift &amp; Return</text></navLabel><content src="text/two%20b.xhtml#start"/></navPoint>
         </navMap></ncx>
       """.trimIndent(),
-      "OEBPS/text/one.xhtml" to "<html><head><title>x</title><style>p{}</style></head><body><p>First line.</p><p>Second line.</p></body></html>",
+      "OEBPS/text/one.xhtml" to
+        "<html><head><title>x</title><style>p{}</style></head><body><p>First line.</p><p>Second line.</p></body></html>",
       "OEBPS/text/two b.xhtml" to "<html><body><p>Third line.</p></body></html>",
     )
     val bytes = ByteArrayOutputStream()
