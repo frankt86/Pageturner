@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">Højtlæsning er ikke tilgængelig på denne enhed</string>
     <string name="reader.stop_reading_aloud">Stop højtlæsning</string>
     <string name="reader.text_size">Tekststørrelse</string>
+    <string name="reader.voice.natural">Naturlig stemme</string>
+    <string name="reader.voice.natural.downloading">Downloader stemmen… %d %%</string>
+    <string name="reader.voice.natural.failed">Stemmen kunne ikke downloades. Tryk for at prøve igen.</string>
+    <string name="reader.voice.natural.summary">Lyder som et menneske, der læser højt. Downloades én gang, ca. 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Den naturlige stemme kunne ikke starte, så telefonens stemme læser i stedet.</string>
+    <string name="reader.voice.phone">Telefonens stemme</string>
+    <string name="reader.voice.phone.summary">Telefonens tekst-til-tale-stemme</string>
+    <string name="reader.voice.speed">Hastighed</string>
+    <string name="reader.voice.start">Begynd at læse</string>
     <string name="review.prompt.action.feedback">Giv feedback</string>
     <string name="review.prompt.action.later">Ikke nu</string>
     <string name="review.prompt.action.rate">Bedøm på Google Play</string>

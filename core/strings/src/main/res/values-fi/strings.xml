@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">Ääneen lukeminen ei ole käytettävissä tällä laitteella</string>
     <string name="reader.stop_reading_aloud">Lopeta ääneen lukeminen</string>
     <string name="reader.text_size">Tekstin koko</string>
+    <string name="reader.voice.natural">Luonnollinen ääni</string>
+    <string name="reader.voice.natural.downloading">Ladataan ääntä… %d %%</string>
+    <string name="reader.voice.natural.failed">Ääntä ei voitu ladata. Yritä uudelleen napauttamalla.</string>
+    <string name="reader.voice.natural.summary">Kuulostaa ihmiseltä, joka lukee. Ladataan kerran, noin 130 Mt.</string>
+    <string name="reader.voice.natural.unavailable">Luonnollinen ääni ei käynnistynyt, joten puhelimesi ääni lukee sen sijaan.</string>
+    <string name="reader.voice.phone">Puhelimen ääni</string>
+    <string name="reader.voice.phone.summary">Puhelimesi tekstistä puheeksi -ääni</string>
+    <string name="reader.voice.speed">Nopeus</string>
+    <string name="reader.voice.start">Aloita lukeminen</string>
     <string name="review.prompt.action.feedback">Anna palautetta</string>
     <string name="review.prompt.action.later">Ei nyt</string>
     <string name="review.prompt.action.rate">Arvioi Google Playssa</string>

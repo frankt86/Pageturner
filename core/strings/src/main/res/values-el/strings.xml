@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">Η ανάγνωση φωναχτά δεν είναι διαθέσιμη σε αυτήν τη συσκευή</string>
     <string name="reader.stop_reading_aloud">Διακοπή ανάγνωσης φωναχτά</string>
     <string name="reader.text_size">Μέγεθος κειμένου</string>
+    <string name="reader.voice.natural">Φυσική φωνή</string>
+    <string name="reader.voice.natural.downloading">Λήψη φωνής… %d%%</string>
+    <string name="reader.voice.natural.failed">Δεν ήταν δυνατή η λήψη της φωνής. Πατήστε για να δοκιμάσετε ξανά.</string>
+    <string name="reader.voice.natural.summary">Ακούγεται σαν άνθρωπος που διαβάζει. Λήψη μία φορά, περίπου 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Η φυσική φωνή δεν μπόρεσε να ξεκινήσει, οπότε διαβάζει η φωνή του τηλεφώνου σας.</string>
+    <string name="reader.voice.phone">Φωνή τηλεφώνου</string>
+    <string name="reader.voice.phone.summary">Η φωνή μετατροπής κειμένου σε ομιλία του τηλεφώνου σας</string>
+    <string name="reader.voice.speed">Ταχύτητα</string>
+    <string name="reader.voice.start">Έναρξη ανάγνωσης</string>
     <string name="review.prompt.action.feedback">Κοινοποίηση σχολίων</string>
     <string name="review.prompt.action.later">Όχι τώρα</string>
     <string name="review.prompt.action.rate">Αξιολόγηση στο Google Play</string>

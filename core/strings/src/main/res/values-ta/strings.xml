@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">இந்தச் சாதனத்தில் சத்தமாகப் படிக்கும் வசதி கிடைக்கவில்லை</string>
     <string name="reader.stop_reading_aloud">சத்தமாகப் படிப்பதை நிறுத்து</string>
     <string name="reader.text_size">உரையின் அளவு</string>
+    <string name="reader.voice.natural">இயல்பான குரல்</string>
+    <string name="reader.voice.natural.downloading">குரலைப் பதிவிறக்குகிறது… %d%%</string>
+    <string name="reader.voice.natural.failed">குரலைப் பதிவிறக்க முடியவில்லை. மீண்டும் முயற்சிக்கத் தட்டவும்.</string>
+    <string name="reader.voice.natural.summary">ஒருவர் வாசிப்பது போலவே ஒலிக்கும். ஒருமுறை மட்டும் பதிவிறக்கப்படும், சுமார் 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">இயல்பான குரலைத் தொடங்க முடியவில்லை, எனவே உங்கள் போனின் குரல் வாசிக்கும்.</string>
+    <string name="reader.voice.phone">போன் குரல்</string>
+    <string name="reader.voice.phone.summary">உங்கள் போனின் உரையிலிருந்து பேச்சு குரல்</string>
+    <string name="reader.voice.speed">வேகம்</string>
+    <string name="reader.voice.start">வாசிக்கத் தொடங்கு</string>
     <string name="review.prompt.action.feedback">கருத்தைப் பகிர்</string>
     <string name="review.prompt.action.later">இப்போது வேண்டாம்</string>
     <string name="review.prompt.action.rate">Google Play-இல் மதிப்பிடு</string>

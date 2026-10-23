@@ -310,6 +310,15 @@
     <string name="reader.read_aloud_unavailable">Fitur bacakan tidak tersedia di perangkat ini</string>
     <string name="reader.stop_reading_aloud">Berhenti membacakan</string>
     <string name="reader.text_size">Ukuran teks</string>
+    <string name="reader.voice.natural">Suara alami</string>
+    <string name="reader.voice.natural.downloading">Mengunduh suara… %d%%</string>
+    <string name="reader.voice.natural.failed">Suara tidak dapat diunduh. Ketuk untuk mencoba lagi.</string>
+    <string name="reader.voice.natural.summary">Terdengar seperti orang yang sedang membaca. Diunduh sekali, sekitar 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Suara alami tidak dapat dimulai, jadi suara ponsel Anda yang membaca.</string>
+    <string name="reader.voice.phone">Suara ponsel</string>
+    <string name="reader.voice.phone.summary">Suara text-to-speech ponsel Anda</string>
+    <string name="reader.voice.speed">Kecepatan</string>
+    <string name="reader.voice.start">Mulai membaca</string>
     <string name="review.prompt.action.feedback">Bagikan masukan</string>
     <string name="review.prompt.action.later">Nanti saja</string>
     <string name="review.prompt.action.rate">Beri rating di Google Play</string>

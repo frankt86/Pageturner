@@ -130,12 +130,14 @@ internal fun ReaderScreen(uri: Uri) {
   val snackbarHostState = remember { SnackbarHostState() }
   val unavailableMessage = stringResource(StringsR.string.reader_read_aloud_unavailable)
   val nothingToReadMessage = stringResource(StringsR.string.reader_nothing_to_read_aloud)
+  val naturalVoiceUnavailableMessage = stringResource(StringsR.string.reader_voice_natural_unavailable)
   LaunchedEffect(viewModel) {
     viewModel.messages.collect { message ->
       snackbarHostState.showSnackbar(
         when (message) {
           ReaderMessage.ReadAloudUnavailable -> unavailableMessage
           ReaderMessage.NothingToReadAloud -> nothingToReadMessage
+          ReaderMessage.NaturalVoiceUnavailable -> naturalVoiceUnavailableMessage
         },
       )
     }
@@ -156,7 +158,9 @@ internal fun ReaderScreen(uri: Uri) {
         readingAloud = loaded?.readingAloud,
         showTextOptions = loaded?.content is ReaderContent.Epub,
         onCloseClick = viewModel::onCloseClick,
-        onReadAloudClick = viewModel::onReadAloudClick,
+        onReadAloudClick = {
+          if (loaded?.readingAloud == true) viewModel.stopReadingAloudClick() else sheet = ReaderSheet.ReadAloud
+        },
         onContentsClick = { sheet = ReaderSheet.Contents },
         onTextSizeClick = { sheet = ReaderSheet.TextSize },
       )
@@ -184,6 +188,18 @@ internal fun ReaderScreen(uri: Uri) {
     }
   }
   val content = loaded?.content as? ReaderContent.Epub
+  if (loaded != null && sheet == ReaderSheet.ReadAloud) {
+    ReadAloudSheet(
+      voice = loaded.voice,
+      onVoiceSelect = viewModel::onVoiceSelect,
+      onSpeechRateChange = viewModel::onSpeechRateChange,
+      onStartClick = {
+        sheet = null
+        viewModel.onStartReadingClick()
+      },
+      onDismiss = { sheet = null },
+    )
+  }
   if (loaded != null && content != null) {
     when (sheet) {
       ReaderSheet.Contents -> ContentsSheet(
@@ -200,7 +216,7 @@ internal fun ReaderScreen(uri: Uri) {
         onTextSizeChange = viewModel::onTextSizeChange,
         onDismiss = { sheet = null },
       )
-      null -> Unit
+      ReaderSheet.ReadAloud, null -> Unit
     }
   }
 }
@@ -208,6 +224,7 @@ internal fun ReaderScreen(uri: Uri) {
 private enum class ReaderSheet {
   Contents,
   TextSize,
+  ReadAloud,
 }
 
 @Composable

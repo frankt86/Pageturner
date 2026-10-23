@@ -344,6 +344,15 @@
     <string name="reader.read_aloud_unavailable">Citirea cu voce tare nu este disponibilă pe acest dispozitiv</string>
     <string name="reader.stop_reading_aloud">Oprește citirea cu voce tare</string>
     <string name="reader.text_size">Dimensiunea textului</string>
+    <string name="reader.voice.natural">Voce naturală</string>
+    <string name="reader.voice.natural.downloading">Se descarcă vocea… %d%%</string>
+    <string name="reader.voice.natural.failed">Vocea nu a putut fi descărcată. Atinge pentru a încerca din nou.</string>
+    <string name="reader.voice.natural.summary">Sună ca un om care citește. Se descarcă o singură dată, cam 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Vocea naturală nu a putut porni, așa că citește vocea telefonului.</string>
+    <string name="reader.voice.phone">Vocea telefonului</string>
+    <string name="reader.voice.phone.summary">Vocea de transformare a textului în vorbire a telefonului tău</string>
+    <string name="reader.voice.speed">Viteză</string>
+    <string name="reader.voice.start">Începe să citești</string>
     <string name="review.prompt.action.feedback">Trimite feedback</string>
     <string name="review.prompt.action.later">Nu acum</string>
     <string name="review.prompt.action.rate">Evaluează pe Google Play</string>

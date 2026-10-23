@@ -344,6 +344,15 @@
     <string name="reader.read_aloud_unavailable">La lectura en voz alta no está disponible en este dispositivo</string>
     <string name="reader.stop_reading_aloud">Detener lectura en voz alta</string>
     <string name="reader.text_size">Tamaño del texto</string>
+    <string name="reader.voice.natural">Voz natural</string>
+    <string name="reader.voice.natural.downloading">Descargando la voz… %d %%</string>
+    <string name="reader.voice.natural.failed">No se pudo descargar la voz. Toca para volver a intentarlo.</string>
+    <string name="reader.voice.natural.summary">Suena como una persona leyendo. Se descarga una vez, unos 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">La voz natural no pudo iniciarse, así que lee la voz de tu teléfono.</string>
+    <string name="reader.voice.phone">Voz del teléfono</string>
+    <string name="reader.voice.phone.summary">La voz de texto a voz de tu teléfono</string>
+    <string name="reader.voice.speed">Velocidad</string>
+    <string name="reader.voice.start">Empezar a leer</string>
     <string name="review.prompt.action.feedback">Enviar comentarios</string>
     <string name="review.prompt.action.later">Ahora no</string>
     <string name="review.prompt.action.rate">Valorar en Google Play</string>

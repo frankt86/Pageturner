@@ -558,6 +558,24 @@
     <string name="reader.stop_reading_aloud">Stop reading aloud</string>
     <!-- Button and title of the sheet in the ebook reader where the reader makes the book's text bigger or smaller. -->
     <string name="reader.text_size">Text size</string>
+    <!-- Option in the read aloud sheet of the ebook reader: a natural sounding voice that runs on the phone. -->
+    <string name="reader.voice.natural">Natural voice</string>
+    <!-- Shown while the natural voice downloads. %d is how much is done, from 0 to 100. -->
+    <string name="reader.voice.natural.downloading">Downloading the voice… %d%%</string>
+    <!-- Shown under the natural voice option when its download failed. -->
+    <string name="reader.voice.natural.failed">The voice couldn\'t be downloaded. Tap to try again.</string>
+    <!-- Shown under the natural voice option before it's downloaded. -->
+    <string name="reader.voice.natural.summary">Sounds like a person reading. Downloads once, about 130 MB.</string>
+    <!-- Snackbar in the ebook reader when the natural voice can't start and the phone's voice reads instead. -->
+    <string name="reader.voice.natural.unavailable">The natural voice couldn\'t start, so your phone\'s voice reads instead.</string>
+    <!-- Option in the read aloud sheet of the ebook reader: the phone's own text-to-speech voice. -->
+    <string name="reader.voice.phone">Phone voice</string>
+    <!-- Shown under the phone voice option. -->
+    <string name="reader.voice.phone.summary">Your phone\'s text-to-speech voice</string>
+    <!-- Label of the slider in the read aloud sheet that sets how fast the book is read. -->
+    <string name="reader.voice.speed">Speed</string>
+    <!-- Primary button of the read aloud sheet in the ebook reader. Starts reading the book aloud from the current page. -->
+    <string name="reader.voice.start">Start reading</string>
     <!-- Button in the rating prompt that opens the ways to share feedback. -->
     <string name="review.prompt.action.feedback" tools:ignore="UnusedResources">Share feedback</string>
     <!-- Button that closes the rating prompt without rating. -->

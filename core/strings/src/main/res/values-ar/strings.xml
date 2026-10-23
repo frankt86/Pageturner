@@ -395,6 +395,15 @@
     <string name="reader.read_aloud_unavailable">القراءة بصوت عالٍ غير متاحة على هذا الجهاز</string>
     <string name="reader.stop_reading_aloud">إيقاف القراءة بصوت عالٍ</string>
     <string name="reader.text_size">حجم النص</string>
+    <string name="reader.voice.natural">الصوت الطبيعي</string>
+    <string name="reader.voice.natural.downloading">جارٍ تنزيل الصوت… %d%%</string>
+    <string name="reader.voice.natural.failed">تعذّر تنزيل الصوت. يمكنك النقر لإعادة المحاولة.</string>
+    <string name="reader.voice.natural.summary">يبدو كشخص يقرأ. يُنزَّل مرة واحدة، نحو 130 ميغابايت.</string>
+    <string name="reader.voice.natural.unavailable">تعذّر تشغيل الصوت الطبيعي، لذا يقرأ صوت الهاتف بدلًا منه.</string>
+    <string name="reader.voice.phone">صوت الهاتف</string>
+    <string name="reader.voice.phone.summary">صوت تحويل النص إلى كلام في الهاتف</string>
+    <string name="reader.voice.speed">السرعة</string>
+    <string name="reader.voice.start">بدء القراءة</string>
     <string name="review.prompt.action.feedback">مشاركة ملاحظات</string>
     <string name="review.prompt.action.later">ليس الآن</string>
     <string name="review.prompt.action.rate">التقييم على Google Play</string>

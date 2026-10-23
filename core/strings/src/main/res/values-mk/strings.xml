@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">Читањето на глас не е достапно на овој уред</string>
     <string name="reader.stop_reading_aloud">Запри го читањето на глас</string>
     <string name="reader.text_size">Големина на текстот</string>
+    <string name="reader.voice.natural">Природен глас</string>
+    <string name="reader.voice.natural.downloading">Се презема гласот… %d%%</string>
+    <string name="reader.voice.natural.failed">Гласот не можеше да се преземе. Допрете за да се обидете повторно.</string>
+    <string name="reader.voice.natural.summary">Звучи како човек што чита. Се презема еднаш, околу 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Природниот глас не можеше да започне, па наместо него чита гласот на телефонот.</string>
+    <string name="reader.voice.phone">Глас на телефонот</string>
+    <string name="reader.voice.phone.summary">Гласот за претворање текст во говор на вашиот телефон</string>
+    <string name="reader.voice.speed">Брзина</string>
+    <string name="reader.voice.start">Почни со читање</string>
     <string name="review.prompt.action.feedback">Сподели повратни информации</string>
     <string name="review.prompt.action.later">Не сега</string>
     <string name="review.prompt.action.rate">Оцени на Google Play</string>

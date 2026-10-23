@@ -310,6 +310,15 @@
     <string name="reader.read_aloud_unavailable">この端末では読み上げを利用できません</string>
     <string name="reader.stop_reading_aloud">読み上げを停止</string>
     <string name="reader.text_size">文字サイズ</string>
+    <string name="reader.voice.natural">自然な音声</string>
+    <string name="reader.voice.natural.downloading">音声をダウンロード中… %d%%</string>
+    <string name="reader.voice.natural.failed">音声をダウンロードできませんでした。タップしてもう一度お試しください。</string>
+    <string name="reader.voice.natural.summary">人が読んでいるような声です。ダウンロードは 1 回のみ、約 130 MB です。</string>
+    <string name="reader.voice.natural.unavailable">自然な音声を開始できなかったため、スマートフォンの音声で読み上げます。</string>
+    <string name="reader.voice.phone">スマートフォンの音声</string>
+    <string name="reader.voice.phone.summary">スマートフォンのテキスト読み上げ音声</string>
+    <string name="reader.voice.speed">速度</string>
+    <string name="reader.voice.start">読み上げを開始</string>
     <string name="review.prompt.action.feedback">フィードバックを送る</string>
     <string name="review.prompt.action.later">今はしない</string>
     <string name="review.prompt.action.rate">Google Play で評価</string>

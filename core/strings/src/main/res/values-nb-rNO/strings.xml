@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">Opplesning er ikke tilgjengelig på denne enheten</string>
     <string name="reader.stop_reading_aloud">Stopp opplesning</string>
     <string name="reader.text_size">Tekststørrelse</string>
+    <string name="reader.voice.natural">Naturlig stemme</string>
+    <string name="reader.voice.natural.downloading">Laster ned stemmen… %d %%</string>
+    <string name="reader.voice.natural.failed">Kunne ikke laste ned stemmen. Trykk for å prøve igjen.</string>
+    <string name="reader.voice.natural.summary">Høres ut som et menneske som leser. Lastes ned én gang, omtrent 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Den naturlige stemmen kunne ikke starte, så telefonens stemme leser i stedet.</string>
+    <string name="reader.voice.phone">Telefonens stemme</string>
+    <string name="reader.voice.phone.summary">Telefonens tekst-til-tale-stemme</string>
+    <string name="reader.voice.speed">Hastighet</string>
+    <string name="reader.voice.start">Begynn å lese</string>
     <string name="review.prompt.action.feedback">Gi tilbakemelding</string>
     <string name="review.prompt.action.later">Ikke nå</string>
     <string name="review.prompt.action.rate">Vurder på Google Play</string>

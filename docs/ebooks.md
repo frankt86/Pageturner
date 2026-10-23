@@ -24,9 +24,15 @@ a paper book. The same happens on a tablet or a phone turned on its side. Your p
 
 ## Reading aloud
 
-Tap the speaker button to have the book read aloud with your phone's text-to-speech voice. Pageturner turns the pages as it reads
-and highlights the passage it's reading. It keeps going when you fold or unfold. Turning a page yourself, jumping to a chapter,
-tapping the button again or leaving the book stops it.
+Tap the speaker button and pick a voice:
+
+- **Natural voice** sounds like a person reading. It runs on your phone, so it works offline, and it's downloaded once, about
+  130 MB. It speaks the languages most books come in and works out the language from the text.
+- **Phone voice** is your phone's text-to-speech voice.
+
+Set the speed, then tap **Start reading**. Pageturner turns the pages as it reads and highlights the passage it's reading. It
+keeps going when you fold or unfold. Turning a page yourself, jumping to a chapter, tapping the button again or leaving the book
+stops it.
 
 ## Good to know
 
@@ -34,3 +40,4 @@ tapping the button again or leaving the book stops it.
 - PDF pages show exactly as they're printed. Reading a PDF aloud needs Android 15 or newer, and a PDF made of scanned pages
   has no text to read.
 - Reading aloud stops when you leave the book. It has no controls on the lock screen yet.
+- The natural voice needs a 64-bit phone, which nearly every phone from the last years is.

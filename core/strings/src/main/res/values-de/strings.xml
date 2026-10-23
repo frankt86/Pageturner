@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">Vorlesen ist auf diesem Gerät nicht verfügbar</string>
     <string name="reader.stop_reading_aloud">Vorlesen beenden</string>
     <string name="reader.text_size">Textgröße</string>
+    <string name="reader.voice.natural">Natürliche Stimme</string>
+    <string name="reader.voice.natural.downloading">Stimme wird heruntergeladen… %d %%</string>
+    <string name="reader.voice.natural.failed">Die Stimme konnte nicht heruntergeladen werden. Tippe, um es erneut zu versuchen.</string>
+    <string name="reader.voice.natural.summary">Klingt wie ein Mensch, der vorliest. Einmaliger Download, etwa 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">Die natürliche Stimme konnte nicht starten, deshalb liest die Stimme Deines Handys vor.</string>
+    <string name="reader.voice.phone">Handystimme</string>
+    <string name="reader.voice.phone.summary">Die Sprachausgabe Deines Handys</string>
+    <string name="reader.voice.speed">Geschwindigkeit</string>
+    <string name="reader.voice.start">Vorlesen starten</string>
     <string name="review.prompt.action.feedback">Feedback geben</string>
     <string name="review.prompt.action.later">Nicht jetzt</string>
     <string name="review.prompt.action.rate">Auf Google Play bewerten</string>

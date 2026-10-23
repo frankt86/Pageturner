@@ -14,4 +14,5 @@ dependencies {
 
   implementation(libs.androidxCore)
   implementation(libs.navigation3.ui)
+  implementation(libs.commonsCompress)
 }

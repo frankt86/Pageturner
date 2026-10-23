@@ -344,6 +344,15 @@
     <string name="reader.read_aloud_unavailable">La lettura ad alta voce non è disponibile su questo dispositivo</string>
     <string name="reader.stop_reading_aloud">Interrompi lettura ad alta voce</string>
     <string name="reader.text_size">Dimensione testo</string>
+    <string name="reader.voice.natural">Voce naturale</string>
+    <string name="reader.voice.natural.downloading">Download della voce… %d%%</string>
+    <string name="reader.voice.natural.failed">Impossibile scaricare la voce. Tocca per riprovare.</string>
+    <string name="reader.voice.natural.summary">Sembra una persona che legge. Si scarica una volta sola, circa 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">La voce naturale non è partita, quindi legge la voce del telefono.</string>
+    <string name="reader.voice.phone">Voce del telefono</string>
+    <string name="reader.voice.phone.summary">La sintesi vocale del tuo telefono</string>
+    <string name="reader.voice.speed">Velocità</string>
+    <string name="reader.voice.start">Inizia a leggere</string>
     <string name="review.prompt.action.feedback">Lascia un feedback</string>
     <string name="review.prompt.action.later">Non ora</string>
     <string name="review.prompt.action.rate">Valuta su Google Play</string>

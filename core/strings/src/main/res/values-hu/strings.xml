@@ -327,6 +327,15 @@
     <string name="reader.read_aloud_unavailable">A felolvasás nem érhető el ezen az eszközön</string>
     <string name="reader.stop_reading_aloud">Felolvasás leállítása</string>
     <string name="reader.text_size">Szövegméret</string>
+    <string name="reader.voice.natural">Természetes hang</string>
+    <string name="reader.voice.natural.downloading">A hang letöltése… %d%%</string>
+    <string name="reader.voice.natural.failed">Nem sikerült letölteni a hangot. Koppintson az újrapróbáláshoz.</string>
+    <string name="reader.voice.natural.summary">Olyan, mintha egy ember olvasna. Egyszer kell letölteni, kb. 130 MB.</string>
+    <string name="reader.voice.natural.unavailable">A természetes hang nem indult el, ezért a telefon hangja olvas helyette.</string>
+    <string name="reader.voice.phone">Telefon hangja</string>
+    <string name="reader.voice.phone.summary">A telefon szövegfelolvasó hangja</string>
+    <string name="reader.voice.speed">Sebesség</string>
+    <string name="reader.voice.start">Felolvasás indítása</string>
     <string name="review.prompt.action.feedback">Visszajelzés küldése</string>
     <string name="review.prompt.action.later">Most nem</string>
     <string name="review.prompt.action.rate">Értékelés a Google Playen</string>

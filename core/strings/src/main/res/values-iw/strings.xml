@@ -344,6 +344,15 @@
     <string name="reader.read_aloud_unavailable">הקראה אינה זמינה במכשיר הזה</string>
     <string name="reader.stop_reading_aloud">עצירת ההקראה</string>
     <string name="reader.text_size">גודל הטקסט</string>
+    <string name="reader.voice.natural">קול טבעי</string>
+    <string name="reader.voice.natural.downloading">מתבצעת הורדה של הקול… %d%%</string>
+    <string name="reader.voice.natural.failed">לא ניתן היה להוריד את הקול. אפשר להקיש כדי לנסות שוב.</string>
+    <string name="reader.voice.natural.summary">נשמע כמו אדם שמקריא. הורדה חד־פעמית, כ־130 MB.</string>
+    <string name="reader.voice.natural.unavailable">לא ניתן היה להפעיל את הקול הטבעי, ולכן הקול של הטלפון מקריא במקומו.</string>
+    <string name="reader.voice.phone">קול הטלפון</string>
+    <string name="reader.voice.phone.summary">קול ההמרה של טקסט לדיבור בטלפון</string>
+    <string name="reader.voice.speed">מהירות</string>
+    <string name="reader.voice.start">התחלת ההקראה</string>
     <string name="review.prompt.action.feedback">שיתוף משוב</string>
     <string name="review.prompt.action.later">לא עכשיו</string>
     <string name="review.prompt.action.rate">דירוג ב-Google Play</string>

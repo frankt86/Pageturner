@@ -16,7 +16,7 @@ Pageturner also reads your EPUB and PDF books, and can read them aloud. On a fol
 
 - **Made for your files:** Add a folder once and Pageturner organizes your local M4B, MP3, M4A, OGG, OGA, and OPUS audiobooks.
 - **Built for listening:** Resume positions, bookmarks, sleep timer fade-out, volume boost, speed control, and Android Auto support are part of the core experience.
-- **Reads your ebooks too:** EPUB and PDF files in your folders sit next to your audiobooks, with their covers. Turn pages like paper, jump through the table of contents, see two pages side by side on an unfolded foldable, or have them read aloud.
+- **Reads your ebooks too:** EPUB and PDF files in your folders sit next to your audiobooks, with their covers. Turn pages like paper, jump through the table of contents, see two pages side by side on an unfolded foldable, or have a natural voice read them to you, offline.
 - **Private and uncluttered:** No account, no ads, no forced cloud sync. Your library stays on your device.
 
 ## Ebooks

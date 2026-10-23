@@ -275,6 +275,24 @@ public object StoreModule {
 
   @Provides
   @SingleIn(AppScope::class)
+  @ReaderNaturalVoiceStore
+  private fun readerNaturalVoice(factory: VoiceDataStoreFactory): DataStore<Boolean> {
+    return factory.boolean("readerNaturalVoice", defaultValue = true)
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @ReaderSpeechRateStore
+  private fun readerSpeechRate(factory: VoiceDataStoreFactory): DataStore<Float> {
+    return factory.create(
+      serializer = Float.serializer(),
+      defaultValue = 1F,
+      fileName = "readerSpeechRate",
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
   @ReaderTextSizeStore
   private fun readerTextSize(factory: VoiceDataStoreFactory): DataStore<Float> {
     return factory.create(
