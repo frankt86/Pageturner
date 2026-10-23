@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -30,8 +29,6 @@ import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -46,26 +43,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -93,7 +85,6 @@ import dev.zacsweers.metro.Provides
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import voice.core.common.rootGraphAs
 import voice.core.data.Highlight
@@ -102,10 +93,6 @@ import voice.core.ui.bookText
 import voice.core.ui.icons.VoiceIcons
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
-import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.floor
-import kotlin.math.sin
 import voice.core.strings.R as StringsR
 
 @ContributesTo(AppScope::class)
@@ -542,193 +529,33 @@ private fun Spreads(
     onOtherTap = onOtherTap,
   )
 
-  if (pagesPerSpread == 1) {
-    val current = pages.indexOfPosition(state.position)
-    val latestCurrent by rememberUpdatedState(current)
-    LaunchedEffect(current) {
-      selection.clear()
-      latestOnVisiblePagesChange(listOf(pages[current]))
-    }
-    CurlPages(
-      count = pages.size,
-      current = current,
-      onTurn = { index -> onPageTurn(pages[index], (index + 1F) / pages.size) },
-      backColor = MaterialTheme.colorScheme.surface,
-      modifier = Modifier
-        .fillMaxSize()
-        // the pages turn themselves on a tap at the side and show the bars on a tap in the middle
-        .pageGestures(shownPages = { latestCurrent..latestCurrent }, onOtherTap = { _, _ -> false }),
-      onCenterTap = onCenterTap,
-      turnRequests = turnRequests,
-      previewTurn = previewTurn,
-    ) { index ->
-      PageSlot(state, pages, index, textStyle, selection, Modifier.fillMaxSize())
-    }
-    return
-  }
-  val currentSpread = pages.indexOfPosition(state.position) / pagesPerSpread
-  val spreadCount = (pages.size + pagesPerSpread - 1) / pagesPerSpread
-  val pagerState = rememberPagerState(initialPage = currentSpread) { spreadCount }
-
-  // follows reading aloud from page to page, and jumps further away
-  LaunchedEffect(currentSpread) {
-    when (abs(pagerState.currentPage - currentSpread)) {
-      0 -> Unit
-      1 -> pagerState.animateScrollToPage(currentSpread)
-      else -> pagerState.scrollToPage(currentSpread)
-    }
-  }
-  val latestSpread by rememberUpdatedState(currentSpread)
-  val latestOnPageTurn by rememberUpdatedState(onPageTurn)
-  val latestOnCenterTap by rememberUpdatedState(onCenterTap)
-  LaunchedEffect(pagerState, turnRequests) {
-    turnRequests.collect { step ->
-      val target = pagerState.currentPage + step
-      if (target in 0 until spreadCount) pagerState.animateScrollToPage(target)
-    }
-  }
-  LaunchedEffect(pagerState) {
-    snapshotFlow { pagerState.settledPage }.collect { spread ->
-      if (spread != latestSpread) {
-        val first = spread * pagesPerSpread
-        latestOnPageTurn(pages[first], pages.progressAt(first, pagesPerSpread))
-      }
-    }
-  }
-
-  LaunchedEffect(currentSpread) {
+  val current = pages.indexOfPosition(state.position) / pagesPerSpread * pagesPerSpread
+  val latestCurrent by rememberUpdatedState(current)
+  LaunchedEffect(current) {
     selection.clear()
-    val first = currentSpread * pagesPerSpread
-    latestOnVisiblePagesChange(pages.subList(first, (first + pagesPerSpread).coerceAtMost(pages.size)))
+    latestOnVisiblePagesChange(pages.subList(current, (current + pagesPerSpread).coerceAtMost(pages.size)))
   }
-
-  val turning by remember {
-    derivedStateOf {
-      floor(pagerState.currentPage + pagerState.currentPageOffsetFraction).toInt().coerceIn(0, spreadCount - 1)
-    }
+  CurlPages(
+    count = pages.size,
+    current = current,
+    pagesPerSpread = pagesPerSpread,
+    onTurn = { first -> onPageTurn(pages[first], pages.progressAt(first, pagesPerSpread)) },
+    backColor = MaterialTheme.colorScheme.surface,
+    modifier = Modifier
+      .fillMaxSize()
+      // the pages turn themselves on a tap at the side and show the bars on a tap in the middle
+      .pageGestures(
+        shownPages = { latestCurrent until (latestCurrent + pagesPerSpread).coerceAtMost(pages.size) },
+        onOtherTap = { _, _ -> false },
+      ),
+    onCenterTap = onCenterTap,
+    turnRequests = turnRequests,
+    previewTurn = previewTurn,
+    spineWidth = SpineWidth,
+    spine = { Spine() },
+  ) { index ->
+    PageSlot(state, pages, index, textStyle, selection, Modifier.fillMaxSize())
   }
-  val progress = {
-    previewTurn ?: (pagerState.currentPage + pagerState.currentPageOffsetFraction - turning).coerceIn(0F, 1F)
-  }
-  val scope = rememberCoroutineScope()
-  Box(Modifier.fillMaxSize()) {
-    SpreadTurn(state, pages, turning, progress, textStyle, selection)
-    // the pager only follows the finger, the pages are drawn above and turn like paper
-    HorizontalPager(
-      state = pagerState,
-      userScrollEnabled = selection.range == null,
-      modifier = Modifier
-        .fillMaxSize()
-        .pageGestures(
-          shownPages = {
-            val first = pagerState.currentPage * pagesPerSpread
-            first until (first + pagesPerSpread).coerceAtMost(pages.size)
-          },
-          onOtherTap = { offset, size ->
-            // like turning a paper page, a tap near the edge turns it
-            val edge = size.width / 4
-            val target = when {
-              offset.x < edge -> pagerState.currentPage - 1
-              offset.x > size.width - edge -> pagerState.currentPage + 1
-              else -> null
-            }
-            if (target == null) {
-              latestOnCenterTap()
-            } else if (target in 0 until pagerState.pageCount) {
-              scope.launch { pagerState.animateScrollToPage(target) }
-            }
-            true
-          },
-        ),
-    ) {
-      Box(Modifier.fillMaxSize())
-    }
-  }
-}
-
-// the right page turns around the spine like a leaf of a book, its back is the left page of the next spread
-@Composable
-private fun SpreadTurn(
-  state: ReaderState.Loaded,
-  pages: List<Page>,
-  turning: Int,
-  progress: () -> Float,
-  textStyle: TextStyle,
-  selection: PageSelection,
-) {
-  val first = turning * 2
-  Box(Modifier.fillMaxSize()) {
-    Row(Modifier.fillMaxSize()) {
-      PageSlot(
-        state = state,
-        pages = pages,
-        index = first,
-        textStyle = textStyle,
-        selection = selection,
-        modifier = Modifier
-          .weight(1F)
-          .fillMaxHeight()
-          .shade { 0.2F * progress() },
-      )
-      Spine()
-      PageSlot(
-        state = state,
-        pages = pages,
-        index = first + 3,
-        textStyle = textStyle,
-        selection = selection,
-        modifier = Modifier
-          .weight(1F)
-          .fillMaxHeight()
-          .shade { progress().let { if (it > 0F) 0.2F * (1F - it) else 0F } },
-      )
-    }
-    Row(Modifier.fillMaxSize()) {
-      PageSlot(
-        state = state,
-        pages = pages,
-        index = first + 2,
-        textStyle = textStyle,
-        selection = selection,
-        modifier = Modifier
-          .weight(1F)
-          .fillMaxHeight()
-          .graphicsLayer {
-            val turned = progress()
-            alpha = if (turned > 0.5F) 1F else 0F
-            transformOrigin = TransformOrigin(1F, 0.5F)
-            rotationY = -180F * (1F - turned)
-            cameraDistance = 32F * density
-          }
-          .shade { 0.3F * sin(PI.toFloat() * progress()) },
-      )
-      Spacer(Modifier.width(SpineWidth))
-      PageSlot(
-        state = state,
-        pages = pages,
-        index = first + 1,
-        textStyle = textStyle,
-        selection = selection,
-        modifier = Modifier
-          .weight(1F)
-          .fillMaxHeight()
-          .graphicsLayer {
-            val turned = progress()
-            alpha = if (turned <= 0.5F) 1F else 0F
-            transformOrigin = TransformOrigin(0F, 0.5F)
-            rotationY = 180F * turned
-            cameraDistance = 32F * density
-          }
-          .shade { 0.3F * sin(PI.toFloat() * progress()) },
-      )
-    }
-  }
-}
-
-private fun Modifier.shade(alpha: () -> Float): Modifier = drawWithContent {
-  drawContent()
-  val value = alpha()
-  if (value > 0F) drawRect(Color.Black.copy(alpha = value))
 }
 
 @Composable
