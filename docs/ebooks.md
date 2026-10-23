@@ -4,15 +4,18 @@ Pageturner also reads EPUB and PDF books, and can read them aloud.
 
 ## Adding ebooks
 
-Put `.epub` or `.pdf` files anywhere in your audiobook folders. Pageturner finds them when it scans your library and lists them in
-their own **Ebooks** section, with how far you've read. It doesn't matter how the folder is organized: an ebook next to the
+Put `.epub` or `.pdf` files anywhere in your audiobook folders. Pageturner finds them when it scans your library, with their
+cover, title and author, and puts them next to your audiobooks: in **Current** while you read them, **Not started yet** before
+you open them, and **Completed** once you reach the end. It doesn't matter how the folder is organized: an ebook next to the
 audiobook of the same story shows up too.
-
-![Sketch: the Ebooks section in the library](sketches/library-ebooks.png)
 
 ## Reading
 
-Tap an ebook to open it where you left off. Swipe, or tap near the left or right edge, to turn a page.
+Tap an ebook to open it where you left off. Swipe, or tap near the left or right edge, and the page turns over like paper. The
+bottom of each page shows the chapter you're in and the page number.
+
+In an EPUB, **Contents** lists the book's chapters by name, so you can jump to any of them, and **Text size** makes the text
+bigger or smaller. The screen stays on while you read.
 
 On a foldable, the book follows the screen. Folded, you see one page. Unfolded, the book opens to two pages side by side, like
 a paper book. The same happens on a tablet or a phone turned on its side. Your place stays the same when you fold or unfold.
@@ -22,7 +25,8 @@ a paper book. The same happens on a tablet or a phone turned on its side. Your p
 ## Reading aloud
 
 Tap the speaker button to have the book read aloud with your phone's text-to-speech voice. Pageturner turns the pages as it reads
-and keeps going when you fold or unfold. Turning a page yourself, tapping the button again or leaving the book stops it.
+and highlights the passage it's reading. It keeps going when you fold or unfold. Turning a page yourself, jumping to a chapter,
+tapping the button again or leaving the book stops it.
 
 ## Good to know
 

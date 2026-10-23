@@ -227,7 +227,6 @@
     <string name="library.book.offline">Offline nem érhető el</string>
     <string name="library.category.completed.title">Befejezett</string>
     <string name="library.category.current.title">Aktuális</string>
-    <string name="library.category.ebooks.title">E-könyvek</string>
     <string name="library.category.not_started.title">Még nem elkezdett</string>
     <string name="library.continue_listening">Hallgatás folytatása</string>
     <string name="library.empty.add_first_book">Adja hozzá a hangoskönyveit tartalmazó mappát, hogy elkezdhesse a hallgatást!</string>
@@ -319,12 +318,15 @@
     <string name="playback.speed.increase">Gyorsabb</string>
     <string name="playback.speed.title">Lejátszási sebesség</string>
     <string name="playback.volume_boost.off">Ki</string>
+    <string name="reader.chapter">%d. fejezet</string>
+    <string name="reader.contents">Tartalom</string>
     <string name="reader.failed">Ezt a könyvet nem sikerült megnyitni</string>
     <string name="reader.nothing_to_read_aloud">Itt nincs felolvasható szöveg</string>
     <string name="reader.page">%1$d / %2$d</string>
     <string name="reader.read_aloud">Felolvasás</string>
     <string name="reader.read_aloud_unavailable">A felolvasás nem érhető el ezen az eszközön</string>
     <string name="reader.stop_reading_aloud">Felolvasás leállítása</string>
+    <string name="reader.text_size">Szövegméret</string>
     <string name="review.prompt.action.feedback">Visszajelzés küldése</string>
     <string name="review.prompt.action.later">Most nem</string>
     <string name="review.prompt.action.rate">Értékelés a Google Playen</string>

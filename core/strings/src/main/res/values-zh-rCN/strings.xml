@@ -214,7 +214,6 @@
     <string name="library.book.offline">离线不可用</string>
     <string name="library.category.completed.title">已听完</string>
     <string name="library.category.current.title">在听</string>
-    <string name="library.category.ebooks.title">电子书</string>
     <string name="library.category.not_started.title">未开始</string>
     <string name="library.continue_listening">继续收听</string>
     <string name="library.empty.add_first_book">首先添加有声书文件夹，然后就可以开始听书啦！</string>
@@ -302,12 +301,15 @@
     <string name="playback.speed.increase">加速</string>
     <string name="playback.speed.title">播放速度</string>
     <string name="playback.volume_boost.off">关闭</string>
+    <string name="reader.chapter">第 %d 章</string>
+    <string name="reader.contents">目录</string>
     <string name="reader.failed">无法打开这本书</string>
     <string name="reader.nothing_to_read_aloud">这里没有可朗读的文字</string>
     <string name="reader.page">%1$d / %2$d</string>
     <string name="reader.read_aloud">朗读</string>
     <string name="reader.read_aloud_unavailable">此设备不支持朗读</string>
     <string name="reader.stop_reading_aloud">停止朗读</string>
+    <string name="reader.text_size">文字大小</string>
     <string name="review.prompt.action.feedback">分享反馈</string>
     <string name="review.prompt.action.later">以后再说</string>
     <string name="review.prompt.action.rate">在 Google Play 上评分</string>

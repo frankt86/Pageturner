@@ -15,6 +15,13 @@ public data class Ebook(
   val progress: Float = 0F,
   // kept when the file is gone, so the place isn't lost while a folder is unreachable
   val available: Boolean = true,
+  val author: String? = null,
+  /** The path of the cover image taken from the book. */
+  val cover: String? = null,
+  /** Epoch milliseconds, 0 before the book was first opened. */
+  val lastOpened: Long = 0,
+  /** Whether the title, author and cover were read from the file yet. */
+  val metadataRead: Boolean = false,
 )
 
 /**

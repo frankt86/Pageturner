@@ -227,7 +227,6 @@
     <string name="library.book.offline">Ei saatavilla offline-tilassa</string>
     <string name="library.category.completed.title">Kuunneltu</string>
     <string name="library.category.current.title">Nykyinen</string>
-    <string name="library.category.ebooks.title">E-kirjat</string>
     <string name="library.category.not_started.title">Ei vielä aloitettu</string>
     <string name="library.continue_listening">Jatka kuuntelua</string>
     <string name="library.empty.add_first_book">Lisätään äänikirjakansiosi jotta voit aloittaa kuuntelemisen!</string>
@@ -319,12 +318,15 @@
     <string name="playback.speed.increase">Nopeammin</string>
     <string name="playback.speed.title">Toiston nopeus</string>
     <string name="playback.volume_boost.off">Pois</string>
+    <string name="reader.chapter">Luku %d</string>
+    <string name="reader.contents">Sisällys</string>
     <string name="reader.failed">Kirjaa ei voitu avata</string>
     <string name="reader.nothing_to_read_aloud">Täällä ei ole tekstiä luettavaksi ääneen</string>
     <string name="reader.page">%1$d / %2$d</string>
     <string name="reader.read_aloud">Lue ääneen</string>
     <string name="reader.read_aloud_unavailable">Ääneen lukeminen ei ole käytettävissä tällä laitteella</string>
     <string name="reader.stop_reading_aloud">Lopeta ääneen lukeminen</string>
+    <string name="reader.text_size">Tekstin koko</string>
     <string name="review.prompt.action.feedback">Anna palautetta</string>
     <string name="review.prompt.action.later">Ei nyt</string>
     <string name="review.prompt.action.rate">Arvioi Google Playssa</string>

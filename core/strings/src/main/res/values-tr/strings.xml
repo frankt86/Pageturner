@@ -227,7 +227,6 @@
     <string name="library.book.offline">Çevrimdışı kullanılamaz</string>
     <string name="library.category.completed.title">Tamamlandı</string>
     <string name="library.category.current.title">Dinleniyor</string>
-    <string name="library.category.ebooks.title">E-kitaplar</string>
     <string name="library.category.not_started.title">Henüz başlanmadı</string>
     <string name="library.continue_listening">Dinlemeye devam et</string>
     <string name="library.empty.add_first_book">Dinlemeye başlayabilmeniz için sesli kitap klasörünüzü ekleyelim!</string>
@@ -319,12 +318,15 @@
     <string name="playback.speed.increase">Daha hızlı</string>
     <string name="playback.speed.title">Oynatma hızı</string>
     <string name="playback.volume_boost.off">Kapalı</string>
+    <string name="reader.chapter">Bölüm %d</string>
+    <string name="reader.contents">İçindekiler</string>
     <string name="reader.failed">Bu kitap açılamadı</string>
     <string name="reader.nothing_to_read_aloud">Burada sesli okunacak metin yok</string>
     <string name="reader.page">%1$d / %2$d</string>
     <string name="reader.read_aloud">Sesli oku</string>
     <string name="reader.read_aloud_unavailable">Sesli okuma bu cihazda kullanılamıyor</string>
     <string name="reader.stop_reading_aloud">Sesli okumayı durdur</string>
+    <string name="reader.text_size">Metin boyutu</string>
     <string name="review.prompt.action.feedback">Geri bildirim paylaş</string>
     <string name="review.prompt.action.later">Şimdi değil</string>
     <string name="review.prompt.action.rate">Google Play\'de puan ver</string>

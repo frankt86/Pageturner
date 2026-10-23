@@ -10,6 +10,7 @@ dependencies {
   implementation(projects.core.ui)
   implementation(projects.core.strings)
   implementation(projects.core.data.api)
+  implementation(projects.core.ebook)
 
   implementation(libs.androidxCore)
   implementation(libs.navigation3.ui)

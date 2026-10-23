@@ -2,7 +2,6 @@
 
 package voice.features.bookOverview.views
 
-import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -90,7 +89,6 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     onSettingsClick = bookOverviewViewModel::onSettingsClick,
     onBookClick = bookOverviewViewModel::onBookClick,
     onBookLongClick = bookOverviewViewModel::onBookLongClick,
-    onEbookClick = bookOverviewViewModel::onEbookClick,
     onBookFolderClick = bookOverviewViewModel::onBookFolderClick,
     onFolderPickerMovedDialogDismiss = bookOverviewViewModel::onFolderPickerMovedDialogDismiss,
     onPlayButtonClick = bookOverviewViewModel::playPause,
@@ -107,7 +105,6 @@ internal fun BookOverview(
   onSettingsClick: () -> Unit,
   onBookClick: (BookId) -> Unit,
   onBookLongClick: (BookId) -> Unit,
-  onEbookClick: (Uri) -> Unit,
   onBookFolderClick: () -> Unit,
   onFolderPickerMovedDialogDismiss: () -> Unit,
   onPlayButtonClick: () -> Unit,
@@ -154,7 +151,6 @@ internal fun BookOverview(
       gridState = gridState,
       onBookClick = onBookClick,
       onBookLongClick = onBookLongClick,
-      onEbookClick = onEbookClick,
       onPlayClick = onPlayButtonClick,
       onPermissionBugCardClick = onPermissionBugCardClick,
       onShowFoldersClick = onShowFoldersClick,
@@ -229,7 +225,6 @@ fun BookOverviewPreview(
       onSettingsClick = {},
       onBookClick = {},
       onBookLongClick = {},
-      onEbookClick = {},
       onBookFolderClick = {},
       onFolderPickerMovedDialogDismiss = {},
       onPlayButtonClick = {},

@@ -240,7 +240,6 @@
     <string name="library.book.offline">Indisponível sem ligação</string>
     <string name="library.category.completed.title">Concluído</string>
     <string name="library.category.current.title">Em curso</string>
-    <string name="library.category.ebooks.title">E-books</string>
     <string name="library.category.not_started.title">Ainda não iniciado</string>
     <string name="library.continue_listening">Continuar a ouvir</string>
     <string name="library.empty.add_first_book">Vamos adicionar uma pasta de audiolivros para começar a ouvir!</string>
@@ -336,12 +335,15 @@
     <string name="playback.speed.increase">Mais rápido</string>
     <string name="playback.speed.title">Velocidade de reprodução</string>
     <string name="playback.volume_boost.off">Desligado</string>
+    <string name="reader.chapter">Capítulo %d</string>
+    <string name="reader.contents">Índice</string>
     <string name="reader.failed">Não foi possível abrir este livro</string>
     <string name="reader.nothing_to_read_aloud">Não há texto aqui para ler em voz alta</string>
     <string name="reader.page">%1$d de %2$d</string>
     <string name="reader.read_aloud">Ler em voz alta</string>
     <string name="reader.read_aloud_unavailable">A leitura em voz alta não está disponível neste dispositivo</string>
     <string name="reader.stop_reading_aloud">Parar leitura em voz alta</string>
+    <string name="reader.text_size">Tamanho do texto</string>
     <string name="review.prompt.action.feedback">Enviar feedback</string>
     <string name="review.prompt.action.later">Agora não</string>
     <string name="review.prompt.action.rate">Avaliar no Google Play</string>

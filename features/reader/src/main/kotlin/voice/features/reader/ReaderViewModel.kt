@@ -22,6 +22,8 @@ import voice.core.data.Ebook
 import voice.core.data.EbookFormat
 import voice.core.data.EbookPosition
 import voice.core.data.store.EbooksStore
+import voice.core.data.store.ReaderTextSizeStore
+import voice.core.ebook.parseEpub
 import voice.core.logging.api.Logger
 import voice.navigation.Navigator
 
@@ -32,6 +34,7 @@ internal sealed interface ReaderContent {
   class Epub(
     override val title: String,
     val chapters: List<String>,
+    val chapterTitles: List<String?>,
   ) : ReaderContent {
     override val sectionCount: Int get() = chapters.size
     val totalLength: Int = chapters.sumOf { it.length }
@@ -52,6 +55,9 @@ internal sealed interface ReaderState {
     val content: ReaderContent,
     val position: EbookPosition,
     val readingAloud: Boolean,
+    /** The part of the text read aloud right now, in the section of [position]. */
+    val readingRange: IntRange?,
+    val textSize: Float,
   ) : ReaderState
 }
 
@@ -64,6 +70,8 @@ internal enum class ReaderMessage {
 class ReaderViewModel(
   @EbooksStore
   private val store: DataStore<List<Ebook>>,
+  @ReaderTextSizeStore
+  private val textSizeStore: DataStore<Float>,
   private val application: Application,
   private val navigator: Navigator,
   private val dispatcherProvider: DispatcherProvider,
@@ -77,11 +85,16 @@ class ReaderViewModel(
   private var position by mutableStateOf(EbookPosition())
   private var readAloudJob by mutableStateOf<Job?>(null)
   private var readAloud: ReadAloud? = null
+  private var readingRange by mutableStateOf<IntRange?>(null)
+  private var textSize by mutableStateOf(DEFAULT_TEXT_SIZE)
 
   private val messageChannel = Channel<ReaderMessage>(Channel.CONFLATED)
   internal val messages: Flow<ReaderMessage> = messageChannel.receiveAsFlow()
 
   init {
+    scope.launch {
+      textSizeStore.data.collect { textSize = it }
+    }
     scope.launch {
       val ebook = store.data.first().firstOrNull { it.uri == uri }
       if (ebook == null) {
@@ -92,6 +105,9 @@ class ReaderViewModel(
         val loaded = withContext(dispatcherProvider.io) { load(ebook) }
         position = ebook.position
         content = loaded
+        store.updateData { ebooks ->
+          ebooks.map { if (it.uri == uri) it.copy(lastOpened = System.currentTimeMillis()) else it }
+        }
       } catch (e: Exception) {
         Logger.w(e, "Could not open a ${ebook.format}")
         failed = true
@@ -103,8 +119,12 @@ class ReaderViewModel(
     val contentResolver = application.contentResolver
     return when (ebook.format) {
       EbookFormat.Epub -> {
-        val epub = contentResolver.openInputStream(uri)!!.use(::parseEpub)
-        ReaderContent.Epub(title = epub.title ?: ebook.name, chapters = epub.chapters)
+        val epub = contentResolver.openInputStream(uri)!!.use { parseEpub(it) }
+        ReaderContent.Epub(
+          title = epub.title ?: ebook.name,
+          chapters = epub.chapters.map { it.text },
+          chapterTitles = epub.chapters.map { it.title },
+        )
       }
       EbookFormat.Pdf -> {
         val fileDescriptor = contentResolver.openFileDescriptor(uri, "r")!!
@@ -122,13 +142,28 @@ class ReaderViewModel(
         content = content,
         position = position,
         readingAloud = readAloudJob != null,
+        readingRange = readingRange,
+        textSize = textSize,
       )
     }
   }
 
-  internal fun onPageTurned(page: Page) {
+  internal fun onPageTurned(
+    page: Page,
+    pageProgress: Float,
+  ) {
     stopReadingAloud()
-    moveTo(EbookPosition(page.section, page.start))
+    moveTo(EbookPosition(page.section, page.start), pageProgress)
+  }
+
+  internal fun onChapterClick(section: Int) {
+    stopReadingAloud()
+    moveTo(EbookPosition(section, 0))
+  }
+
+  internal fun onTextSizeChange(size: Float) {
+    textSize = size
+    scope.launch { textSizeStore.updateData { size } }
   }
 
   fun onCloseClick() {
@@ -146,7 +181,10 @@ class ReaderViewModel(
       try {
         readAloudFrom(content, speaker)
       } finally {
-        if (readAloudJob == coroutineContext[Job]) readAloudJob = null
+        if (readAloudJob == coroutineContext[Job]) {
+          readAloudJob = null
+          readingRange = null
+        }
       }
     }
   }
@@ -166,6 +204,7 @@ class ReaderViewModel(
       while (true) {
         val chunk = nextChunk(text, offset) ?: break
         moveTo(EbookPosition(section, chunk.first))
+        readingRange = chunk
         if (!speaker.speak(text.substring(chunk))) {
           messageChannel.trySend(ReaderMessage.ReadAloudUnavailable)
           return
@@ -184,12 +223,15 @@ class ReaderViewModel(
   private fun stopReadingAloud() {
     readAloudJob?.cancel()
     readAloudJob = null
+    readingRange = null
   }
 
-  private fun moveTo(newPosition: EbookPosition) {
+  private fun moveTo(
+    newPosition: EbookPosition,
+    progress: Float = progress(newPosition),
+  ) {
     if (newPosition == position) return
     position = newPosition
-    val progress = progress(newPosition)
     scope.launch {
       store.updateData { ebooks ->
         ebooks.map { ebook ->
@@ -226,3 +268,5 @@ class ReaderViewModel(
     fun create(uri: Uri): ReaderViewModel
   }
 }
+
+internal const val DEFAULT_TEXT_SIZE = 18F

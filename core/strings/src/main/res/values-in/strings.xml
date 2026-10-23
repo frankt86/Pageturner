@@ -214,7 +214,6 @@
     <string name="library.book.offline">Tidak tersedia offline</string>
     <string name="library.category.completed.title">Selesai</string>
     <string name="library.category.current.title">Sedang didengarkan</string>
-    <string name="library.category.ebooks.title">E-book</string>
     <string name="library.category.not_started.title">Belum dimulai</string>
     <string name="library.continue_listening">Lanjutkan mendengarkan</string>
     <string name="library.empty.add_first_book">Mari tambahkan folder buku audio Anda sehingga Anda dapat mulai mendengarkan!</string>
@@ -302,12 +301,15 @@
     <string name="playback.speed.increase">Lebih cepat</string>
     <string name="playback.speed.title">Kecepatan pemutaran</string>
     <string name="playback.volume_boost.off">Mati</string>
+    <string name="reader.chapter">Bab %d</string>
+    <string name="reader.contents">Daftar isi</string>
     <string name="reader.failed">Buku ini tidak dapat dibuka</string>
     <string name="reader.nothing_to_read_aloud">Tidak ada teks untuk dibacakan di sini</string>
     <string name="reader.page">%1$d dari %2$d</string>
     <string name="reader.read_aloud">Bacakan</string>
     <string name="reader.read_aloud_unavailable">Fitur bacakan tidak tersedia di perangkat ini</string>
     <string name="reader.stop_reading_aloud">Berhenti membacakan</string>
+    <string name="reader.text_size">Ukuran teks</string>
     <string name="review.prompt.action.feedback">Bagikan masukan</string>
     <string name="review.prompt.action.later">Nanti saja</string>
     <string name="review.prompt.action.rate">Beri rating di Google Play</string>
