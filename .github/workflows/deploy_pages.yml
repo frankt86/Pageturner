@@ -10,6 +10,10 @@ on:
       - PRIVACY.md
       - LICENSE.md
       - Pipfile
+  # puts each new APK on the site, a plain file that downloads on phones without GitHub's redirects
+  workflow_run:
+    workflows: [ "Debug APK" ]
+    types: [ completed ]
   workflow_dispatch:
     inputs:
       deploy:
@@ -28,6 +32,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -37,6 +42,8 @@ jobs:
       - run: pip install pipenv
       - run: pipenv install
       - run: pipenv run mkdocs build --strict
+      - name: Add the newest APK
+        run: curl --fail --location --output site/pageturner.apk https://github.com/${{ github.repository }}/releases/download/debug/app-free-debug.apk
       - uses: actions/upload-pages-artifact@v5
         with:
           path: site/

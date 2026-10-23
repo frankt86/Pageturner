@@ -11,7 +11,7 @@ Pageturner turns your own audiobook files into a calm listening library with res
 skipping, and Android Auto support. It also reads your EPUB and PDF books, two pages side by side on an unfolded foldable, and
 can read them aloud.
 
-[:material-download: &nbsp;Download Pageturner](https://github.com/frankt86/Pageturner/releases/download/debug/app-free-debug.apk){ .md-button .md-button--primary }
+[:material-download: &nbsp;Download Pageturner](https://frankt86.github.io/Pageturner/pageturner.apk){ .md-button .md-button--primary }
 
 New to installing apps from outside Google Play? See [Install](install.md).
 
