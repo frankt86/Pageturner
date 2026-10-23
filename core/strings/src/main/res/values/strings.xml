@@ -562,8 +562,30 @@
     <string name="reader.brightness.system">System</string>
     <!-- Name of a chapter in the ebook reader when the book doesn't name it. %d is its number, starting at 1. -->
     <string name="reader.chapter">Chapter %d</string>
+    <!-- Row in the colors sheet of the ebook reader that sets the color of the pages behind the text. -->
+    <string name="reader.color.background">Background</string>
+    <!-- Label of the slider in the color picker of the ebook reader that makes a color lighter or darker (the value in hue, saturation, value). Not the screen brightness. -->
+    <string name="reader.color.brightness">Brightness</string>
+    <!-- Label of the text field in the color picker of the ebook reader where a color is typed as a hex code like #2B3440. -->
+    <string name="reader.color.hex">HEX code</string>
+    <!-- Label of the slider in the color picker of the ebook reader that picks the hue of a color, from red over green to blue. -->
+    <string name="reader.color.hue">Hue</string>
+    <!-- Row in the colors sheet of the ebook reader that sets the color of links in the book's text. -->
+    <string name="reader.color.links">Links</string>
+    <!-- Label of the slider in the color picker of the ebook reader that sets how strong a color is, from gray to vivid. -->
+    <string name="reader.color.saturation">Saturation</string>
+    <!-- Row in the colors sheet of the ebook reader that sets the color behind text the reader selects with a long press. -->
+    <string name="reader.color.selection">Selection</string>
+    <!-- Row in the colors sheet of the ebook reader that sets the color of the book's text. -->
+    <string name="reader.color.text">Text</string>
+    <!-- Button in the display sheet of the ebook reader, and title of the sheet it opens, with custom colors, saved themes, highlight colors and day and night themes. -->
+    <string name="reader.colors">Colors and themes</string>
     <!-- Button and title of the sheet in the ebook reader that lists the chapters of the book, to jump to one. -->
     <string name="reader.contents">Contents</string>
+    <!-- In the colors sheet of the ebook reader, how well the text stands out from the page, as a contrast ratio like 12.6:1 in place of %s. -->
+    <string name="reader.contrast">Text contrast %s</string>
+    <!-- Warning under the text contrast in the colors sheet of the ebook reader when the text and page colors are too close, below the WCAG minimum of 4.5:1. -->
+    <string name="reader.contrast.low">Low contrast. The text may be hard to read.</string>
     <!-- Button and title of the sheet in the ebook reader where the reader changes how the pages look: colors, font, text size, spacing, margins and brightness. -->
     <string name="reader.display">Display</string>
     <!-- Shown in the ebook reader when an EPUB or PDF file can't be read. -->
@@ -606,6 +628,8 @@
     <string name="reader.highlight.green">Green</string>
     <!-- Button under selected text in the ebook reader that highlights it and opens a field to write a note about it. Also the label of that field. -->
     <string name="reader.highlight.note">Note</string>
+    <!-- Label of the slider in the colors sheet of the ebook reader that makes highlight colors behind the text lighter or stronger. -->
+    <string name="reader.highlight.opacity">Highlight strength</string>
     <!-- Color of a highlight in the ebook reader, read out by screen readers for its color dot. -->
     <string name="reader.highlight.pink">Pink</string>
     <!-- Color of a highlight in the ebook reader, read out by screen readers for its color dot. -->
@@ -616,6 +640,14 @@
     <string name="reader.highlights.empty">Nothing highlighted yet. Press and hold a word, then drag to take in more.</string>
     <!-- Switch in the display sheet of the ebook reader. When it's on, long words are split at the end of a line with a hyphen, so the lines are more even. -->
     <string name="reader.hyphens">Hyphenate words</string>
+    <!-- Label of the options in the colors sheet of the ebook reader for how pictures in books and PDF pages look with a dark theme. -->
+    <string name="reader.images">Images on dark pages</string>
+    <!-- Option for images on dark pages in the ebook reader: pictures are shown darker so they don't glare. -->
+    <string name="reader.images.dimmed">Dimmed</string>
+    <!-- Option for images on dark pages in the ebook reader: the colors of pictures and PDF pages are inverted, so white becomes black. -->
+    <string name="reader.images.inverted">Inverted</string>
+    <!-- Option for images on dark pages in the ebook reader: pictures keep their own colors. -->
+    <string name="reader.images.original">Original</string>
     <!-- Heading of the section in the display sheet of the ebook reader with the pages, margins and screen orientation. -->
     <string name="reader.layout">Layout</string>
     <!-- Label of the slider in the display sheet of the ebook reader that sets the space between letters. -->
@@ -660,6 +692,8 @@
     <string name="reader.pages.one">One page</string>
     <!-- Choice in the ebook reader: always show two pages side by side, like an open book. -->
     <string name="reader.pages.two">Two pages</string>
+    <!-- Label of the slider in the colors sheet of the ebook reader that adds a fine grain like paper under the text, from none to strong. -->
+    <string name="reader.paper_texture">Paper texture</string>
     <!-- Label of the slider in the display sheet of the ebook reader that sets how far the first line of each paragraph is moved in. -->
     <string name="reader.paragraph_indent">First-line indent</string>
     <!-- Label of the slider in the display sheet of the ebook reader that sets the space between paragraphs. -->
@@ -714,6 +748,22 @@
     <string name="reader.read_aloud">Read aloud</string>
     <!-- Snackbar in the ebook reader when the device has no text-to-speech engine. -->
     <string name="reader.read_aloud_unavailable">Reading aloud isn\'t available on this device</string>
+    <!-- Section title in the colors sheet of the ebook reader for switching between a day theme and a night theme by the time. -->
+    <string name="reader.schedule">Day and night</string>
+    <!-- Label above the themes in the colors sheet of the ebook reader to pick the theme used during the day. -->
+    <string name="reader.schedule.day">By day</string>
+    <!-- Content description of the minus button in the ebook reader that moves the start or end of the night half an hour earlier. -->
+    <string name="reader.schedule.earlier">Earlier</string>
+    <!-- Content description of the plus button in the ebook reader that moves the start or end of the night half an hour later. -->
+    <string name="reader.schedule.later">Later</string>
+    <!-- Label above the themes in the colors sheet of the ebook reader to pick the theme used at night. -->
+    <string name="reader.schedule.night">At night</string>
+    <!-- Label of the time in the colors sheet of the ebook reader when the day theme comes back, like 7:00. -->
+    <string name="reader.schedule.night_end">Night ends</string>
+    <!-- Label of the time in the colors sheet of the ebook reader when the night theme takes over, like 21:00. -->
+    <string name="reader.schedule.night_start">Night starts</string>
+    <!-- Switch in the colors sheet of the ebook reader that uses the day theme by day and the night theme at night. -->
+    <string name="reader.schedule.switch">Switch themes by the time of day</string>
     <!-- Button in the top bar of the ebook reader and hint of the search field that finds words in the book. -->
     <string name="reader.search">Search in book</string>
     <!-- Shown under the search field of the ebook reader when the book doesn't contain what was typed. -->
@@ -744,12 +794,36 @@
     <string name="reader.theme.auto">Auto</string>
     <!-- Page color option in the display sheet of the ebook reader: light gray text on black pages. -->
     <string name="reader.theme.black">Black</string>
+    <!-- Name of a copy of a saved theme in the ebook reader, with the name of the original theme in place of %s. -->
+    <string name="reader.theme.copy_name">%s copy</string>
+    <!-- Theme of the ebook reader with colors the reader picks. Shown under a small round preview of the page, keep it short. -->
+    <string name="reader.theme.custom">Custom</string>
     <!-- Page color option in the display sheet of the ebook reader: dark text on white pages. -->
     <string name="reader.theme.day">Day</string>
+    <!-- Menu item for a saved theme in the ebook reader that makes a copy of it. -->
+    <string name="reader.theme.duplicate">Duplicate</string>
     <!-- Page color option in the display sheet of the ebook reader: light text on dark gray pages. -->
     <string name="reader.theme.night">Night</string>
+    <!-- Button in the colors sheet of the ebook reader that keeps the colors on screen as a saved theme. -->
+    <string name="reader.theme.save">Save these colors</string>
+    <!-- Name a theme gets when the reader saves the colors on screen, with a number in place of %d. It can be renamed. -->
+    <string name="reader.theme.saved_name">My theme %d</string>
+    <!-- Theme of the ebook reader that switches between a day theme and a night theme by the time. Shown under a small round preview, keep it short. -->
+    <string name="reader.theme.scheduled">By time</string>
     <!-- Page color option in the display sheet of the ebook reader: brown text on warm, yellowish pages like old paper. -->
     <string name="reader.theme.sepia">Sepia</string>
+    <!-- Theme of the ebook reader with a dark blue-gray page and pale gray text, like slate stone. Shown under a small round preview, keep it short. -->
+    <string name="reader.theme.slate">Slate</string>
+    <!-- Theme of the ebook reader with an off-white page and dark gray text, softer than plain white. Shown under a small round preview, keep it short. -->
+    <string name="reader.theme.soft_paper">Soft paper</string>
+    <!-- Button in the colors sheet of the ebook reader that saves all saved themes to a file. -->
+    <string name="reader.themes.export">Export</string>
+    <!-- Shown in the colors sheet of the ebook reader when the themes file couldn't be written, or a picked file has no themes in it. -->
+    <string name="reader.themes.file_failed">Pageturner couldn\'t use that file.</string>
+    <!-- Button in the colors sheet of the ebook reader that adds the themes from a file someone exported. -->
+    <string name="reader.themes.import">Import</string>
+    <!-- Section title in the colors sheet of the ebook reader with the themes the reader saved. -->
+    <string name="reader.themes.saved">Saved themes</string>
     <!-- Option in the read aloud sheet of the ebook reader: a natural sounding voice that runs on the phone. -->
     <string name="reader.voice.natural">Natural voice</string>
     <!-- Shown while the natural voice downloads. %d is how much is done, from 0 to 100. -->

@@ -37,7 +37,8 @@ Tap an ebook to open it where you left off.
 
 The **Display** button holds:
 
-- **Theme:** Auto, Day, Sepia, Night or Black.
+- **Theme:** Auto, Day, Sepia, Night, Black, Soft paper, Slate, Custom or By time.
+- **Colors and themes**, see below.
 - **Font:** Serif, Sans, Mono, Atkinson Hyperlegible (made for easy reading) or OpenDyslexic. **Add font** picks a .ttf or
   .otf file from your phone; Pageturner keeps a copy, and the font is listed with the others from then on.
 - **Text size:** the slider, or minus and plus for one step at a time.
@@ -68,6 +69,26 @@ Under **Progress**:
   **Chapter**, the **Percent** read, or the **Time left** in the chapter.
 - **Show chapters, bookmarks and highlights on the bar** draws small marks where each chapter starts and where your bookmarks
   and highlights are.
+
+### Colors and themes
+
+**Colors and themes**, under the themes in **Display**, holds:
+
+- **Custom:** pick the **Background**, **Text** and **Selection** colors, and in the new book engine the **Links** color.
+  Tap a color to pick from a few to start with, with **Hue**, **Saturation** and **Brightness** sliders, or type its
+  **HEX code**. Changing a color switches to the Custom theme, starting from the colors on screen. Links and selection can
+  stay **Auto**, the theme's own.
+- **Text contrast** shows how well the text stands out from the page, like 12.6:1, and warns below 4.5:1.
+- **Images on dark pages:** **Original**, **Dimmed** or **Inverted**, for pictures in the new book engine and for PDF pages.
+  Light pages always show them as they are.
+- **Paper texture** lays a fine grain like paper under the text, from none to strong.
+- **Day and night:** **Switch themes by the time of day** uses one theme **By day** and another **At night**, from **Night
+  starts** to **Night ends** in steps of half an hour. The **By time** theme in **Display** turns it on too.
+- **Highlights:** give the four highlight colors your own names, like Important, Question or Quote. The names show in the
+  selection menu and the highlight sheet. **Highlight strength** makes them lighter or stronger.
+- **Saved themes:** **Save these colors** keeps the colors on screen as a theme. Tap a saved theme to use it, or open its
+  menu to **Rename**, **Duplicate** or **Delete** it. **Export** writes all saved themes to a file, and **Import** adds the
+  themes from such a file.
 
 The time left comes from how fast you read. Pageturner measures it as you turn pages, leaves out pauses of more than two
 minutes and jumps, and keeps an average of your last hour of reading across all books. Until it knows you, it guesses about
@@ -111,6 +132,8 @@ Turn on **New book engine (beta)** under **Display** to show EPUB books the way 
 bold and italic text, tables, links and footnotes. It's built on [Readium](https://readium.org).
 
 - Your theme, font, text size, spacing and margins carry over. Hyphenation follows the book's language.
+- Link and selection colors and **Highlight strength** take a moment to show, as the pages are made anew. Readium has no
+  separate heading color, so headings keep the book's own or the text color.
 - **Book's own style** keeps the fonts and formatting the book came with, like its headings, drop caps and spacing. Only the
   text size and colors still change.
 - **Word spacing** is only here. Alignment has no **Center**, and **Ligatures** only changes Arabic script.

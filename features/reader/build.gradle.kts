@@ -19,6 +19,7 @@ dependencies {
   implementation(libs.androidxCore)
   implementation(libs.navigation3.ui)
   implementation(libs.commonsCompress)
+  implementation(libs.serialization.json)
   implementation(libs.fragment)
   implementation(libs.readium.shared)
   implementation(libs.readium.streamer)

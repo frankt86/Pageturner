@@ -29,6 +29,7 @@ import voice.core.strings.R as StringsR
 @Composable
 internal fun SelectionToolbar(
   selectedText: String,
+  highlightNames: Map<HighlightColor, String>,
   onHighlightClick: (HighlightColor) -> Unit,
   onNoteClick: () -> Unit,
   onLookUp: () -> Unit,
@@ -40,7 +41,7 @@ internal fun SelectionToolbar(
     modifier = modifier,
   ) {
     HighlightColor.entries.forEach { color ->
-      val name = highlightColorName(color)
+      val name = highlightColorName(color, highlightNames)
       IconButton(
         onClick = { onHighlightClick(color) },
         modifier = Modifier.semantics { contentDescription = name },
@@ -65,16 +66,6 @@ internal fun SelectionToolbar(
     }
   }
 }
-
-@Composable
-internal fun highlightColorName(color: HighlightColor): String = stringResource(
-  when (color) {
-    HighlightColor.Yellow -> StringsR.string.reader_highlight_yellow
-    HighlightColor.Green -> StringsR.string.reader_highlight_green
-    HighlightColor.Blue -> StringsR.string.reader_highlight_blue
-    HighlightColor.Pink -> StringsR.string.reader_highlight_pink
-  },
-)
 
 // dictionaries and translators offer themselves for selected text, a web search is the fallback
 internal fun lookUp(
