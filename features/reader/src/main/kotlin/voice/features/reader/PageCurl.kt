@@ -9,7 +9,10 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,28 +22,26 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.drawscope.rotateRad
-import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.util.VelocityTracker
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
-import kotlin.math.PI
-import kotlin.math.atan2
-import kotlin.math.cos
 import kotlin.math.max
-import kotlin.math.sin
 
 // The curl geometry follows the pagecurl library by Oleksandr Balan (Apache License 2.0),
 // https://github.com/oleksandrbalan/pagecurl
@@ -58,7 +59,8 @@ private val FoldConverter = TwoWayConverter<Fold, AnimationVector4D>(
 
 private fun Size.flat() = Fold(Offset(width, 0F), Offset(width, height))
 
-private fun Size.turned() = Fold(Offset.Zero, Offset(0F, height))
+// a turned page lies on the other side of the spine, which is [gap] left of the page
+private fun Size.turned(gap: Float) = Fold(Offset(-gap, 0F), Offset(-gap, height))
 
 private fun Size.corner() = Fold(Offset(width, height), Offset(width, height))
 
@@ -77,14 +79,15 @@ private fun Size.foldFor(
 }
 
 /**
- * Pages lying on top of each other. Dragging from the right lifts the corner of the page and curls it over,
- * dragging from the left brings the previous page back. A tap on the outer thirds turns a page, one in the middle
- * calls [onCenterTap].
+ * Pages lying on top of each other, one at a time or two side by side like an open book. Dragging from the right lifts
+ * the corner of the (right) page and curls it over, dragging from the left brings the previous page back. A tap on the
+ * outer thirds turns a page, one in the middle calls [onCenterTap]. [onTurn] gets the first page of the new spread.
  */
 @Composable
 internal fun CurlPages(
   count: Int,
   current: Int,
+  pagesPerSpread: Int,
   onTurn: (Int) -> Unit,
   backColor: Color,
   modifier: Modifier = Modifier,
@@ -93,28 +96,40 @@ internal fun CurlPages(
   turnRequests: Flow<Int> = emptyFlow(),
   // previews can't drag, this shows the page curled this far
   previewTurn: Float? = null,
+  spineWidth: Dp = 0.dp,
+  spine: @Composable () -> Unit = {},
   page: @Composable (index: Int) -> Unit,
 ) {
+  val spreadCount = (count + pagesPerSpread - 1) / pagesPerSpread
+  val spread = current / pagesPerSpread
   BoxWithConstraints(modifier) {
-    val pageSize = Size(constraints.maxWidth.toFloat(), constraints.maxHeight.toFloat())
+    val twoPages = pagesPerSpread == 2
+    val spinePx = if (twoPages) with(LocalDensity.current) { spineWidth.toPx() } else 0F
+    val width = constraints.maxWidth.toFloat()
+    val pageWidth = if (twoPages) (maxWidth - spineWidth) / 2 else maxWidth
+    val rightPageX = maxWidth - pageWidth
+    // all folds are measured on the (right) page that turns, the spine lies half its width left of it
+    val pageSize = Size(if (twoPages) (width - spinePx) / 2 else width, constraints.maxHeight.toFloat())
+    val gap = spinePx / 2
+    val pageStart = width - pageSize.width
     val forward = remember(pageSize) {
       val start = previewTurn?.let {
         pageSize.foldFor(corner = Offset(pageSize.width * (1 - 2 * it), pageSize.height * 0.8F), row = pageSize.height)
       }
       Animatable(start ?: pageSize.flat(), FoldConverter)
     }
-    val backward = remember(pageSize) { Animatable(pageSize.turned(), FoldConverter) }
-    val latestCurrent by rememberUpdatedState(current)
+    val backward = remember(pageSize) { Animatable(pageSize.turned(gap), FoldConverter) }
+    val latestSpread by rememberUpdatedState(spread)
     val latestOnTurn by rememberUpdatedState(onTurn)
     val latestOnCenterTap by rememberUpdatedState(onCenterTap)
     val scope = rememberCoroutineScope()
 
     fun turnForward(fromCorner: Boolean) {
-      if (latestCurrent >= count - 1) return
+      if (latestSpread >= spreadCount - 1) return
       scope.launch {
-        val turnFrom = latestCurrent
+        val turnFrom = latestSpread
         forward.animateTo(
-          pageSize.turned(),
+          pageSize.turned(gap),
           if (fromCorner) {
             keyframes {
               durationMillis = TURN_MILLIS
@@ -125,29 +140,29 @@ internal fun CurlPages(
             tween(TURN_MILLIS / 2)
           },
         )
-        latestOnTurn(turnFrom + 1)
+        latestOnTurn((turnFrom + 1) * pagesPerSpread)
         forward.snapTo(pageSize.flat())
       }
     }
 
     fun turnBackward(fromCorner: Boolean) {
-      if (latestCurrent <= 0) return
+      if (latestSpread <= 0) return
       scope.launch {
-        val turnFrom = latestCurrent
+        val turnFrom = latestSpread
         backward.animateTo(
           pageSize.flat(),
           if (fromCorner) {
             keyframes {
               durationMillis = TURN_MILLIS
-              pageSize.turned() at 0
+              pageSize.turned(gap) at 0
               pageSize.halfway() at TURN_MILLIS * 2 / 3
             }
           } else {
             tween(TURN_MILLIS / 2)
           },
         )
-        latestOnTurn(turnFrom - 1)
-        backward.snapTo(pageSize.turned())
+        latestOnTurn((turnFrom - 1) * pagesPerSpread)
+        backward.snapTo(pageSize.turned(gap))
       }
     }
 
@@ -160,16 +175,16 @@ internal fun CurlPages(
     Box(
       Modifier
         .fillMaxSize()
-        .pointerInput(pageSize, count) {
+        .pointerInput(pageSize, spreadCount) {
           detectTapGestures { offset ->
             when {
-              offset.x > pageSize.width * 2 / 3 -> turnForward(fromCorner = true)
-              offset.x < pageSize.width / 3 -> turnBackward(fromCorner = true)
+              offset.x > width * 2 / 3 -> turnForward(fromCorner = true)
+              offset.x < width / 3 -> turnBackward(fromCorner = true)
               else -> latestOnCenterTap()
             }
           }
         }
-        .pointerInput(pageSize, count) {
+        .pointerInput(pageSize, spreadCount) {
           val velocity = VelocityTracker()
           var start = Offset.Zero
           var finger = Offset.Zero
@@ -180,8 +195,8 @@ internal fun CurlPages(
               finger = offset
               velocity.resetTracking()
               lifted = when {
-                offset.x >= pageSize.width / 2 && latestCurrent < count - 1 -> forward
-                offset.x < pageSize.width / 2 && latestCurrent > 0 -> backward
+                offset.x >= width / 2 && latestSpread < spreadCount - 1 -> forward
+                offset.x < width / 2 && latestSpread > 0 -> backward
                 else -> null
               }
             },
@@ -191,13 +206,14 @@ internal fun CurlPages(
               finger = change.position
               velocity.addPosition(change.uptimeMillis, finger)
               val moved = finger - start
+              val row = start.y
               // a turned page lies mirrored left of the spine, so its corner starts a page width out and comes back twice as fast
               val corner = if (fold === forward) {
-                Offset(pageSize.width, start.y) + moved
+                Offset(pageSize.width, row) + moved
               } else {
-                Offset(-pageSize.width, start.y) + moved * 2F
+                Offset(-pageSize.width - 2 * gap, row) + moved * 2F
               }
-              scope.launch { fold.snapTo(pageSize.foldFor(corner, row = start.y)) }
+              scope.launch { fold.snapTo(pageSize.foldFor(corner, row)) }
             },
             onDragEnd = {
               val fold = lifted ?: return@detectDragGestures
@@ -213,29 +229,83 @@ internal fun CurlPages(
                 if (travelled > pageSize.width * TURN_DISTANCE) {
                   turnBackward(fromCorner = false)
                 } else {
-                  scope.launch { backward.animateTo(pageSize.turned()) }
+                  scope.launch { backward.animateTo(pageSize.turned(gap)) }
                 }
               }
             },
             onDragCancel = {
               lifted = null
               scope.launch { forward.animateTo(pageSize.flat()) }
-              scope.launch { backward.animateTo(pageSize.turned()) }
+              scope.launch { backward.animateTo(pageSize.turned(gap)) }
             },
           )
         },
     ) {
-      // keyed, so a page keeps its state when it comes to lie on top
-      for (index in (current + 1) downTo (current - 1)) {
-        if (index !in 0 until count) continue
+      if (twoPages) {
+        Box(
+          Modifier
+            .offset(x = pageWidth)
+            .width(spineWidth)
+            .fillMaxHeight(),
+        ) {
+          spine()
+        }
+      }
+      for (index in (spread + 1) downTo (spread - 1)) {
+        if (index !in 0 until spreadCount) continue
+        val fold = when (index) {
+          spread -> forward
+          spread - 1 -> backward
+          else -> null
+        }
+        val slots = if (twoPages) {
+          listOfNotNull(
+            Placed(
+              page = index * 2,
+              x = 0.dp,
+              modifier = if (fold === backward) Modifier.hiddenWhenTurned(gap) { backward.value } else Modifier,
+            ),
+            Placed(
+              page = index * 2 + 1,
+              x = rightPageX,
+              modifier = if (fold == null) Modifier else Modifier.curl(gap, Offset.Zero, front = true, flap = null) { fold.value },
+            ),
+            // the back of the turning page is the left page of the spread after it
+            fold?.let {
+              Placed(
+                page = index * 2 + 2,
+                x = 0.dp,
+                modifier = Modifier.curl(gap, Offset(pageStart, 0F), front = false, flap = Flap(mirrored = true, paper = null)) {
+                  it.value
+                },
+              )
+            },
+          )
+        } else {
+          listOf(
+            Placed(
+              page = index,
+              x = 0.dp,
+              modifier = if (fold == null) {
+                Modifier
+              } else {
+                Modifier.curl(0F, Offset.Zero, front = true, flap = Flap(mirrored = false, paper = backColor)) { fold.value }
+              },
+            ),
+          )
+        }
+        // keyed, so a page keeps its state when it comes to lie on top
         key(index) {
-          val fold = when (index) {
-            current -> forward
-            current - 1 -> backward
-            else -> null
-          }
-          Box(if (fold == null) Modifier else Modifier.curl(backColor) { fold.value }) {
-            page(index)
+          for (slot in slots) {
+            Box(
+              Modifier
+                .offset(x = slot.x)
+                .width(pageWidth)
+                .fillMaxHeight()
+                .then(slot.modifier),
+            ) {
+              page(slot.page)
+            }
           }
         }
       }
@@ -243,44 +313,67 @@ internal fun CurlPages(
   }
 }
 
+private class Placed(
+  val page: Int,
+  val x: Dp,
+  val modifier: Modifier,
+)
+
 private const val TURN_MILLIS = 450
 private const val FLING_SECONDS = 0.15F
 private const val TURN_DISTANCE = 0.2F
 
-// the back of the page is the page mirrored, mostly covered by its paper so the print shows through faintly
+// a single page shows itself mirrored on its back, mostly covered by its paper so the print shows through faintly
 private const val PRINT_THROUGH = 0.1F
 
+/**
+ * What the back of the turning page shows. A [mirrored] back shows the page on the other side of the spine, a [paper]
+ * color covers it.
+ */
+private class Flap(
+  val mirrored: Boolean,
+  val paper: Color?,
+)
+
+private fun Modifier.hiddenWhenTurned(
+  gap: Float,
+  fold: () -> Fold,
+): Modifier = drawWithContent {
+  if (fold() != size.turned(gap)) drawContent()
+}
+
+/**
+ * Draws a page against the [fold] of the turning page, which lies at [origin] in this page's coordinates. With [front]
+ * the page is the turning one and only its part before the fold shows. With a [flap] the page is drawn onto the back of
+ * the turning page as it curls over.
+ */
 private fun Modifier.curl(
-  backColor: Color,
+  gap: Float,
+  origin: Offset,
+  front: Boolean,
+  flap: Flap?,
   fold: () -> Fold,
 ): Modifier = drawWithCache {
   val current = fold()
-  if (current == size.turned()) {
+  if (current == size.turned(gap)) {
     return@drawWithCache onDrawWithContent {}
   }
   if (current == size.flat()) {
-    return@drawWithCache onDrawWithContent { drawContent() }
+    return@drawWithCache onDrawWithContent { if (front) drawContent() }
   }
   val topCross = intersection(Offset.Zero, Offset(size.width, 0F), current.top, current.bottom)
   val bottomCross = intersection(Offset(0F, size.height), Offset(size.width, size.height), current.top, current.bottom)
   if (topCross == null || bottomCross == null) {
-    return@drawWithCache onDrawWithContent { drawContent() }
+    return@drawWithCache onDrawWithContent { if (front) drawContent() }
   }
   // the fold can't pass the spine, or the page would look torn off
-  val top = Offset(max(0F, topCross.x), topCross.y)
-  val bottom = Offset(max(0F, bottomCross.x), bottomCross.y)
+  val top = Offset(max(-gap, topCross.x), topCross.y)
+  val bottom = Offset(max(-gap, bottomCross.x), bottomCross.y)
 
-  val front = Path().apply {
-    lineTo(top.x, top.y)
-    lineTo(bottom.x, bottom.y)
-    lineTo(0F, size.height)
-    close()
-  }
-
-  val rightCross = intersection(top, bottom, Offset(size.width, 0F), Offset(size.width, size.height))
-  // always four corners, switching between three and four makes the shadow jump
   val page = size
-  val back = buildList {
+  val rightCross = intersection(top, bottom, Offset(page.width, 0F), Offset(page.width, page.height))
+  // the part of the page past the fold, always four corners: switching between three and four makes the shadow jump
+  val lifted = buildList {
     if (top.x < page.width) {
       add(top)
       add(Offset(page.width, top.y))
@@ -296,34 +389,116 @@ private fun Modifier.curl(
       add(rightCross)
     }
   }
-  val backPath = back.toPath()
-  val line = top - bottom
-  val angle = PI.toFloat() - atan2(line.y, line.x) * 2
+  val reflection = reflectionAcross(top, bottom)
+  val back = lifted.map { reflection.map(it) }
+  val middle = (top + bottom) / 2F
+  val along = (bottom - top).normalized()
+  // points from the fold to the lifted part
+  val outwards = Offset(-along.y, along.x).let { if ((lifted.centroid() - middle).dot(it) < 0) -it else it }
+  val backDepth = back.maxOf { (middle - it).dot(outwards) }.coerceAtLeast(1F)
 
+  val shading = 24.dp.toPx()
   val shadowRadius = 15.dp.toPx()
-  val shadowOffset = Offset(5.dp.toPx(), 0F).rotate(2 * PI.toFloat() - angle)
+  val shadowOffset = outwards * -4.dp.toPx()
   val shadowPaint = android.graphics.Paint().apply {
     color = Color.Transparent.toArgb()
-    setShadowLayer(shadowRadius, shadowOffset.x, shadowOffset.y, Color.Black.copy(alpha = 0.25F).toArgb())
+    setShadowLayer(shadowRadius, shadowOffset.x, shadowOffset.y, Color.Black.copy(alpha = 0.3F).toArgb())
   }
-  val shadowPath = back.grow(shadowRadius).toPath().asAndroidPath()
+
+  val frontPath = Path().apply {
+    moveTo(-gap, 0F)
+    lineTo(top.x, top.y)
+    lineTo(bottom.x, bottom.y)
+    lineTo(-gap, page.height)
+    close()
+  }
+  val liftedPath = lifted.toPath()
+  // the page bends away from the light towards the fold
+  val frontShade = Brush.linearGradient(
+    listOf(Color.Black.copy(alpha = 0.12F), Color.Transparent),
+    start = middle,
+    end = middle - outwards * shading,
+  )
+  // the curled page casts a shadow on the page underneath
+  val underShadow = Brush.linearGradient(
+    listOf(Color.Black.copy(alpha = 0.3F), Color.Transparent),
+    start = middle,
+    end = middle + outwards * shading,
+  )
+
+  val backPath = back.map { it + origin }.toPath()
+  val shadowPath = back.grow(shadowRadius).map { it + origin }.toPath().asAndroidPath()
+  val backShade = Brush.linearGradient(
+    listOf(Color.Black.copy(alpha = 0.18F), Color.Transparent),
+    start = middle + origin,
+    end = middle + origin - outwards * (backDepth * 0.6F),
+  )
+  // the back shows this page's own content, moved to the turning page, mirrored to the other side of the spine
+  // when it is the next page, and then folded over
+  val toBack = android.graphics.Matrix().apply {
+    setTranslate(-origin.x, -origin.y)
+    if (flap?.mirrored == true) postScale(-1F, 1F, -gap, 0F)
+    postConcat(reflection)
+    postTranslate(origin.x, origin.y)
+  }
 
   onDrawWithContent {
-    clipPath(front) {
-      this@onDrawWithContent.drawContent()
+    if (front) {
+      clipPath(frontPath) {
+        this@onDrawWithContent.drawContent()
+        drawRect(frontShade, topLeft = Offset(-gap, 0F), size = Size(page.width + gap, page.height))
+      }
+      clipPath(liftedPath) {
+        drawRect(underShadow)
+      }
     }
-    withTransform({
-      scale(-1F, 1F, pivot = bottom)
-      rotateRad(angle, pivot = bottom)
-    }) {
+    if (flap != null) {
       drawIntoCanvas { it.nativeCanvas.drawPath(shadowPath, shadowPaint) }
       clipPath(backPath) {
+        drawIntoCanvas {
+          it.save()
+          it.nativeCanvas.concat(toBack)
+        }
         this@onDrawWithContent.drawContent()
-        drawRect(backColor.copy(alpha = 1F - PRINT_THROUGH))
+        drawIntoCanvas { it.restore() }
+        flap.paper?.let {
+          drawRect(it.copy(alpha = 1F - PRINT_THROUGH), topLeft = -Offset(page.width * 3, 0F), size = Size(page.width * 6, page.height))
+        }
+        drawRect(backShade, topLeft = -Offset(page.width * 3, 0F), size = Size(page.width * 6, page.height))
       }
     }
   }
 }
+
+// the reflection across the line through [a] and [b]
+private fun reflectionAcross(
+  a: Offset,
+  b: Offset,
+): android.graphics.Matrix {
+  val d = (b - a).normalized()
+  val xx = 2 * d.x * d.x - 1
+  val xy = 2 * d.x * d.y
+  val yy = 2 * d.y * d.y - 1
+  return android.graphics.Matrix().apply {
+    setValues(
+      floatArrayOf(
+        xx, xy, a.x - (xx * a.x + xy * a.y),
+        xy, yy, a.y - (xy * a.x + yy * a.y),
+        0F, 0F, 1F,
+      ),
+    )
+  }
+}
+
+private fun android.graphics.Matrix.map(point: Offset): Offset {
+  val points = floatArrayOf(point.x, point.y)
+  mapPoints(points)
+  return Offset(points[0], points[1])
+}
+
+private fun List<Offset>.centroid() = Offset(sumOf { it.x.toDouble() }.toFloat() / size, sumOf { it.y.toDouble() }.toFloat() / size)
+
+private fun Offset.dot(other: Offset) = x * other.x + y * other.y
 
 private fun List<Offset>.toPath() = Path().apply {
   forEachIndexed { index, point ->
@@ -348,8 +523,6 @@ private fun Offset.normalized(): Offset {
   val length = getDistance()
   return if (length != 0F) this / length else this
 }
-
-private fun Offset.rotate(angle: Float) = Offset(x * cos(angle) - y * sin(angle), x * sin(angle) + y * cos(angle))
 
 private fun intersection(
   a1: Offset,
