@@ -15,6 +15,12 @@ can read them aloud.
 
 New to installing apps from outside Google Play? See [Install](install.md).
 
+<p align="center">
+  <img alt="Library" width="30%" src="images/library.png" />
+  <img alt="Player" width="30%" src="images/player.png" />
+  <img alt="Reader" width="30%" src="images/reader-folded.png" />
+</p>
+
 
 
 ## Why Pageturner?

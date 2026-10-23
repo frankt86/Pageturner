@@ -1,7 +1,7 @@
 # Pageturner
 
 [![CI](https://github.com/frankt86/Pageturner/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/frankt86/Pageturner/actions/workflows/ci.yml)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://voice.woitaschek.de/license/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE.md)
 
 **A clean audiobook player and ebook reader for Android, built to be reliable and a joy to use.**
 
@@ -19,13 +19,19 @@ Pageturner also reads your EPUB and PDF books, and can read them aloud. On a fol
 - **Reads your ebooks too:** EPUB and PDF files in your folders sit next to your audiobooks, with their covers. Turn pages like paper, jump through the table of contents, see two pages side by side on an unfolded foldable, or have a natural voice read them to you, offline.
 - **Private and uncluttered:** No account, no ads, no forced cloud sync. Your library stays on your device.
 
+<p align="center">
+  <img alt="Library" width="30%" src="docs/images/library.png" />
+  <img alt="Player" width="30%" src="docs/images/player.png" />
+  <img alt="Reader" width="30%" src="docs/images/reader-folded.png" />
+</p>
+
 ## Ebooks
 
 <p align="center">
-  <img alt="Sketch: one page folded, two pages unfolded" width="90%" src="docs/sketches/ebooks-reader.png" />
+  <img alt="Two pages side by side on an unfolded foldable" width="90%" src="docs/images/reader-unfolded.png" />
 </p>
 
-This is a sketch of the reader. See [Ebooks](docs/ebooks.md) for how it works.
+See [Ebooks](docs/ebooks.md) for how it works.
 
 ## Download
 
