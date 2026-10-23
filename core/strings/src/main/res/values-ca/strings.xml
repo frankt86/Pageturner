@@ -372,6 +372,10 @@
     <string name="reader.new_engine">Nou motor de llibres (beta)</string>
     <string name="reader.nothing_to_read_aloud">Aquí no hi ha text per llegir en veu alta</string>
     <string name="reader.page">%1$d de %2$d</string>
+    <string name="reader.page_turn">Pas de pàgina</string>
+    <string name="reader.page_turn.curl">Doblegar</string>
+    <string name="reader.page_turn.none">Cap</string>
+    <string name="reader.page_turn.slide">Lliscar</string>
     <string name="reader.read_aloud">Llegeix en veu alta</string>
     <string name="reader.read_aloud_unavailable">La lectura en veu alta no està disponible en aquest dispositiu</string>
     <string name="reader.search">Cerca al llibre</string>

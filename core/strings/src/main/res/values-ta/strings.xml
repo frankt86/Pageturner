@@ -354,6 +354,10 @@
     <string name="reader.new_engine">புதிய புத்தக இன்ஜின் (பீட்டா)</string>
     <string name="reader.nothing_to_read_aloud">இங்கே சத்தமாகப் படிக்க உரை எதுவும் இல்லை</string>
     <string name="reader.page">%2$d இல் %1$d</string>
+    <string name="reader.page_turn">பக்கம் புரட்டல்</string>
+    <string name="reader.page_turn.curl">வளைவு</string>
+    <string name="reader.page_turn.none">எதுவுமில்லை</string>
+    <string name="reader.page_turn.slide">நகர்வு</string>
     <string name="reader.read_aloud">சத்தமாகப் படி</string>
     <string name="reader.read_aloud_unavailable">இந்தச் சாதனத்தில் சத்தமாகப் படிக்கும் வசதி கிடைக்கவில்லை</string>
     <string name="reader.search">புத்தகத்தில் தேடு</string>

@@ -40,6 +40,7 @@ The **Display** button holds:
 - **Text size**, **line spacing** and **margins**.
 - **Brightness**, just for the reader, or the system setting.
 - **Volume keys turn pages**, on or off.
+- **Page turn:** the page curls over like paper, slides sideways, or the next one shows at once.
 - **New book engine (beta)**, for EPUB books, see below.
 
 The screen stays on while you read.
@@ -81,7 +82,9 @@ bold and italic text, tables, links and footnotes. It's built on [Readium](https
 - Long-press a word and drag to select more, then pick a highlight color, **Note** or **Look up** from the menu. Tap a
   highlight to change its color, edit its note or delete it.
 - Reading aloud works with the natural voice and the phone voice, and highlights the passage it's reading.
-- Not there yet: the page curl. Bookmarks and highlights made with one engine don't show in the other.
+- The pages curl, slide or turn at once, as set under **Page turn**. On two pages side by side, the whole spread curls over
+  as one page.
+- Bookmarks and highlights made with one engine don't show in the other.
 - The new engine keeps its own place in the book. When you first turn it on, it opens about where you were.
 
 ## Good to know

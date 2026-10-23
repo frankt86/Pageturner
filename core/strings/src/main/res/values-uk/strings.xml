@@ -390,6 +390,10 @@
     <string name="reader.new_engine">Новий рушій книг (бета)</string>
     <string name="reader.nothing_to_read_aloud">Тут немає тексту для читання вголос</string>
     <string name="reader.page">%1$d з %2$d</string>
+    <string name="reader.page_turn">Гортання</string>
+    <string name="reader.page_turn.curl">Загин</string>
+    <string name="reader.page_turn.none">Без ефекту</string>
+    <string name="reader.page_turn.slide">Зсув</string>
     <string name="reader.read_aloud">Читати вголос</string>
     <string name="reader.read_aloud_unavailable">Читання вголос недоступне на цьому пристрої</string>
     <string name="reader.search">Пошук у книзі</string>

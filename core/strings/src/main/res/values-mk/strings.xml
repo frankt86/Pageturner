@@ -354,6 +354,10 @@
     <string name="reader.new_engine">Нов мотор за книги (бета)</string>
     <string name="reader.nothing_to_read_aloud">Тука нема текст за читање на глас</string>
     <string name="reader.page">%1$d од %2$d</string>
+    <string name="reader.page_turn">Вртење страници</string>
+    <string name="reader.page_turn.curl">Свиткување</string>
+    <string name="reader.page_turn.none">Без</string>
+    <string name="reader.page_turn.slide">Лизгање</string>
     <string name="reader.read_aloud">Читај на глас</string>
     <string name="reader.read_aloud_unavailable">Читањето на глас не е достапно на овој уред</string>
     <string name="reader.search">Пребарај во книгата</string>

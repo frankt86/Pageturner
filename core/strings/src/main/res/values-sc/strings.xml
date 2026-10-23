@@ -354,6 +354,10 @@
     <string name="reader.new_engine">Motore nou pro sos libros (beta)</string>
     <string name="reader.nothing_to_read_aloud">Inoghe non b\'at testu de lèghere a boghe arta</string>
     <string name="reader.page">%1$d de %2$d</string>
+    <string name="reader.page_turn">Bortare sa pàgina</string>
+    <string name="reader.page_turn.curl">Pinnigare</string>
+    <string name="reader.page_turn.none">Nudda</string>
+    <string name="reader.page_turn.slide">Iscùrrere</string>
     <string name="reader.read_aloud">Leghe a boghe arta</string>
     <string name="reader.read_aloud_unavailable">Sa letura a boghe arta no est disponìbile in custu dispositivu</string>
     <string name="reader.search">Chirca in su libru</string>

@@ -354,6 +354,10 @@
     <string name="reader.new_engine">Ny bokmotor (beta)</string>
     <string name="reader.nothing_to_read_aloud">Det er ingen tekst å lese høyt her</string>
     <string name="reader.page">%1$d av %2$d</string>
+    <string name="reader.page_turn">Bla om</string>
+    <string name="reader.page_turn.curl">Bøy</string>
+    <string name="reader.page_turn.none">Ingen</string>
+    <string name="reader.page_turn.slide">Skyv</string>
     <string name="reader.read_aloud">Les høyt</string>
     <string name="reader.read_aloud_unavailable">Opplesning er ikke tilgjengelig på denne enheten</string>
     <string name="reader.search">Søk i boken</string>

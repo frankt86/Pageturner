@@ -390,6 +390,10 @@
     <string name="reader.new_engine">Nové jádro pro knihy (beta)</string>
     <string name="reader.nothing_to_read_aloud">Tady není žádný text k předčítání</string>
     <string name="reader.page">%1$d z %2$d</string>
+    <string name="reader.page_turn">Otáčení stránek</string>
+    <string name="reader.page_turn.curl">Ohyb</string>
+    <string name="reader.page_turn.none">Žádné</string>
+    <string name="reader.page_turn.slide">Posun</string>
     <string name="reader.read_aloud">Předčítat</string>
     <string name="reader.read_aloud_unavailable">Předčítání není na tomto zařízení k dispozici</string>
     <string name="reader.search">Hledat v knize</string>

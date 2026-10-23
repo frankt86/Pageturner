@@ -354,6 +354,10 @@
     <string name="reader.new_engine">Uusi kirjamoottori (beta)</string>
     <string name="reader.nothing_to_read_aloud">Täällä ei ole tekstiä luettavaksi ääneen</string>
     <string name="reader.page">%1$d / %2$d</string>
+    <string name="reader.page_turn">Sivun kääntö</string>
+    <string name="reader.page_turn.curl">Taitto</string>
+    <string name="reader.page_turn.none">Ei mitään</string>
+    <string name="reader.page_turn.slide">Liuku</string>
     <string name="reader.read_aloud">Lue ääneen</string>
     <string name="reader.read_aloud_unavailable">Ääneen lukeminen ei ole käytettävissä tällä laitteella</string>
     <string name="reader.search">Hae kirjasta</string>

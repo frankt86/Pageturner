@@ -372,6 +372,10 @@
     <string name="reader.new_engine">Novo motor de livros (beta)</string>
     <string name="reader.nothing_to_read_aloud">Não há texto aqui para ler em voz alta</string>
     <string name="reader.page">%1$d de %2$d</string>
+    <string name="reader.page_turn">Virar página</string>
+    <string name="reader.page_turn.curl">Curvar</string>
+    <string name="reader.page_turn.none">Nenhum</string>
+    <string name="reader.page_turn.slide">Deslizar</string>
     <string name="reader.read_aloud">Ler em voz alta</string>
     <string name="reader.read_aloud_unavailable">A leitura em voz alta não está disponível neste dispositivo</string>
     <string name="reader.search">Pesquisar no livro</string>
