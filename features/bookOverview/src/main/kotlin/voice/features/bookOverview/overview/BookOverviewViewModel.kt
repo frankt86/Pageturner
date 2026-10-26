@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
-import androidx.datastore.core.DataStore
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.first
@@ -27,18 +26,13 @@ import voice.core.common.MainScope
 import voice.core.data.Book
 import voice.core.data.BookId
 import voice.core.data.Ebook
-import voice.core.data.GridMode
-import voice.core.data.KioskModeDemoData
 import voice.core.data.folders.AudiobookFolders
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.CurrentBookStore
 import voice.core.data.store.EbooksStore
-import voice.core.data.store.FolderPickerMovedDialogShownStore
-import voice.core.data.store.GridModeStore
-import voice.core.featureflag.ExperimentalPlaybackPersistenceQualifier
-import voice.core.featureflag.FeatureFlag
-import voice.core.featureflag.FolderPickerInSettingsFeatureFlagQualifier
-import voice.core.featureflag.KioskModeFeatureFlagQualifier
+import voice.core.kioskmode.KioskModeDemoData
+import voice.core.kioskmode.KioskModeFeatureFlag
+import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
 import voice.core.playback.LivePlaybackState
 import voice.core.playback.PlayerController
 import voice.core.playback.overlay
@@ -46,6 +40,8 @@ import voice.core.playback.playstate.PlayStateManager
 import voice.core.scanner.DeviceHasStoragePermissionBug
 import voice.core.scanner.MediaScanTrigger
 import voice.core.ui.GridCount
+import voice.core.ui.GridMode
+import voice.core.ui.GridModeStore
 import voice.features.bookOverview.di.BookOverviewScope
 import voice.navigation.Destination
 import voice.navigation.Navigator
@@ -58,24 +54,17 @@ class BookOverviewViewModel(
   private val mediaScanner: MediaScanTrigger,
   private val playStateManager: PlayStateManager,
   private val playerController: PlayerController,
-  @CurrentBookStore
-  private val currentBookStoreDataStore: DataStore<BookId?>,
-  @FolderPickerMovedDialogShownStore
-  private val folderPickerMovedDialogShownStore: DataStore<Boolean>,
-  @GridModeStore
-  private val gridModeStore: DataStore<GridMode>,
-  @EbooksStore
-  private val ebooksStore: DataStore<List<Ebook>>,
+  private val currentBookStoreDataStore: CurrentBookStore,
+  private val folderPickerMovedDialogShownStore: FolderPickerMovedDialogShownStore,
+  private val gridModeStore: GridModeStore,
+  private val ebooksStore: EbooksStore,
   private val gridCount: GridCount,
   private val navigator: Navigator,
   private val appInfoProvider: AppInfoProvider,
   private val deviceHasStoragePermissionBug: DeviceHasStoragePermissionBug,
-  @FolderPickerInSettingsFeatureFlagQualifier
-  private val folderPickerInSettingsFeatureFlag: FeatureFlag<Boolean>,
-  @ExperimentalPlaybackPersistenceQualifier
-  private val experimentalPlaybackPersistenceFeatureFlag: FeatureFlag<Boolean>,
-  @KioskModeFeatureFlagQualifier
-  private val kioskModeFeatureFlag: FeatureFlag<Boolean>,
+  private val folderPickerInSettingsFeatureFlag: FolderPickerInSettingsFeatureFlag,
+  private val experimentalPlaybackPersistenceFeatureFlag: ExperimentalPlaybackPersistenceFeatureFlag,
+  private val kioskModeFeatureFlag: KioskModeFeatureFlag,
   dispatcherProvider: DispatcherProvider,
   private val serverLibrary: ServerLibrary,
   private val audiobookFolders: AudiobookFolders,

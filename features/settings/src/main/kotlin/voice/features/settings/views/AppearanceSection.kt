@@ -66,11 +66,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.Morph
-import voice.core.data.ThemeColorScheme
-import voice.core.data.ThemeMode
 import voice.core.ui.CheckBadge
 import voice.core.ui.MorphShape
 import voice.core.ui.ShapedIcon
+import voice.core.ui.ThemeColorScheme
+import voice.core.ui.ThemeMode
 import voice.core.ui.icons.VoiceIcons
 import voice.core.ui.rememberThemeColorScheme
 import androidx.graphics.shapes.toPath as toAndroidPath
@@ -81,10 +81,12 @@ internal fun AppearanceSection(
   themeMode: ThemeMode,
   themeColorScheme: ThemeColorScheme,
   pureBlack: Boolean,
+  coverColors: Boolean,
   dynamicColorAvailable: Boolean,
   onThemeModeSelect: (ThemeMode) -> Unit,
   onThemeColorSchemeSelect: (ThemeColorScheme) -> Unit,
   onPureBlackToggle: () -> Unit,
+  onCoverColorsToggle: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   // a stored dynamic scheme falls back to Voice blue where it's not supported, so that's what shows as selected
@@ -156,6 +158,21 @@ internal fun AppearanceSection(
       }
       Spacer(Modifier.height(16.dp))
       SelectedColorScheme(selectedColorScheme)
+      IslandSwitchRow(
+        modifier = Modifier.padding(top = 12.dp),
+        title = stringResource(StringsR.string.settings_appearance_cover_colors_title),
+        checked = coverColors,
+        onCheckedChange = { onCoverColorsToggle() },
+        leading = {
+          ShapedIcon(
+            icon = VoiceIcons.Palette,
+            shape = MaterialShapes.Flower,
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+          )
+        },
+        summary = { Text(stringResource(StringsR.string.settings_appearance_cover_colors_summary)) },
+      )
     }
   }
 }

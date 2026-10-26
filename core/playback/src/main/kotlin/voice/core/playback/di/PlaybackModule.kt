@@ -24,8 +24,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import voice.core.data.AUDIOBOOKSHELF_SCHEME
 import voice.core.featureflag.FeatureFlag
-import voice.core.featureflag.Media3AudioOffloadFeatureFlagQualifier
 import voice.core.logging.api.Logger
+import voice.core.playback.Media3AudioOffloadFeatureFlag
 import voice.core.playback.history.AutomaticPauseRecorder
 import voice.core.playback.history.CommandSourceResolver
 import voice.core.playback.misc.VolumeGain
@@ -70,7 +70,7 @@ object PlaybackModule {
     durationInconsistenciesUpdater: DurationInconsistenciesUpdater,
     automaticPauseRecorder: AutomaticPauseRecorder,
     listeningSessionRecorder: ListeningSessionRecorder,
-    @Media3AudioOffloadFeatureFlagQualifier media3AudioOffloadFeatureFlag: FeatureFlag<Boolean>,
+    media3AudioOffloadFeatureFlag: Media3AudioOffloadFeatureFlag,
   ): ExoPlayer {
     val audioAttributes = AudioAttributes.Builder()
       .setContentType(C.AUDIO_CONTENT_TYPE_SPEECH)

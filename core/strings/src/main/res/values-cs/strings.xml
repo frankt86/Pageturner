@@ -346,6 +346,7 @@
     <string name="playback.chapter.current.content_description">Aktuální kapitola</string>
     <string name="playback.chapter.next">Následující skladba</string>
     <string name="playback.chapter.previous">Předchozí skladba</string>
+    <string name="playback.chapter.unnamed">Kapitola %1$d</string>
     <string name="playback.chapters.title">Kapitoly</string>
     <string name="playback.jump_back">Zpět na %1$s</string>
     <string name="playback.jump_back.chapter">Zpět na kap. %1$d · %2$s</string>
@@ -577,6 +578,8 @@
     <string name="settings.appearance.color_scheme.forest">Les</string>
     <string name="settings.appearance.color_scheme.lagoon">Laguna</string>
     <string name="settings.appearance.color_scheme.lavender">Levandule</string>
+    <string name="settings.appearance.cover_colors.summary">Přehrávač a widgety převezmou barvy z obalu knihy.</string>
+    <string name="settings.appearance.cover_colors.title">Barvy obalu</string>
     <string name="settings.appearance.color_scheme.sunset">Západ slunce</string>
     <string name="settings.appearance.color_scheme.title">Barevné schéma</string>
     <string name="settings.appearance.color_scheme.dynamic">Dynamická barva</string>

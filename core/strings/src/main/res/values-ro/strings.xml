@@ -329,6 +329,7 @@
     <string name="playback.chapter.current.content_description">Capitolul curent</string>
     <string name="playback.chapter.next">Pista următoare</string>
     <string name="playback.chapter.previous">Pista anterioară</string>
+    <string name="playback.chapter.unnamed">Capitolul %1$d</string>
     <string name="playback.chapters.title">Capitole</string>
     <string name="playback.jump_back">Înapoi la %1$s</string>
     <string name="playback.jump_back.chapter">Înapoi la cap. %1$d · %2$s</string>
@@ -561,6 +562,8 @@
     <string name="settings.appearance.color_scheme.forest">Pădure</string>
     <string name="settings.appearance.color_scheme.lagoon">Lagună</string>
     <string name="settings.appearance.color_scheme.lavender">Lavandă</string>
+    <string name="settings.appearance.cover_colors.summary">Playerul și widgeturile preiau culorile copertei cărții.</string>
+    <string name="settings.appearance.cover_colors.title">Culorile copertei</string>
     <string name="settings.appearance.pure_black.summary">Economisește bateria pe ecranele OLED în tema întunecată.</string>
     <string name="settings.appearance.pure_black.title">Negru pur</string>
     <string name="settings.appearance.theme.dark">Întunecată</string>

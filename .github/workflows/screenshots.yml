@@ -21,7 +21,7 @@ jobs:
       - name: Commit
         run: |
           mkdir -p docs/images
-          find features -path "*/build/snapshots/*" -name "*Screenshot*.png" -exec cp {} docs/images/ \;
+          find features -path "*/build/snapshots/*" -name "*Screenshot*.png" ! -name "*_dark.png" ! -name "*_landscape.png" ! -name "*_tablet.png" -exec cp {} docs/images/ \;
           ls -la docs/images
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

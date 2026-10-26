@@ -25,6 +25,7 @@ import voice.core.data.BookId
 import voice.core.data.Ebook
 import voice.core.data.EbookFormat
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
 import voice.features.cover.SelectCoverFromInternetViewModel.Events
 import voice.features.cover.SelectCoverFromInternetViewModel.Results
 import voice.features.cover.api.CoverApi
@@ -56,7 +57,7 @@ class SelectCoverFromInternetViewModelTest {
     name = "Dune",
     format = EbookFormat.Epub,
   )
-  private val ebooksStore = MemoryDataStore(listOf(ebook))
+  private val ebooksStore = EbooksStore(MemoryDataStore(listOf(ebook)))
 
   private fun viewModel(
     api: CoverApi,

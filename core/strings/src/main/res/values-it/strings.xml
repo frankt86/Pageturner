@@ -329,6 +329,7 @@
     <string name="playback.chapter.current.content_description">Capitolo corrente</string>
     <string name="playback.chapter.next">Traccia successiva</string>
     <string name="playback.chapter.previous">Traccia precedente</string>
+    <string name="playback.chapter.unnamed">Capitolo %1$d</string>
     <string name="playback.chapters.title">Capitoli</string>
     <string name="playback.jump_back">Torna a %1$s</string>
     <string name="playback.jump_back.chapter">Torna al cap. %1$d · %2$s</string>
@@ -557,6 +558,8 @@
     <string name="settings.appearance.color_scheme.forest">Foresta</string>
     <string name="settings.appearance.color_scheme.lagoon">Laguna</string>
     <string name="settings.appearance.color_scheme.lavender">Lavanda</string>
+    <string name="settings.appearance.cover_colors.summary">Il lettore e i widget prendono i colori della copertina del libro.</string>
+    <string name="settings.appearance.cover_colors.title">Colori della copertina</string>
     <string name="settings.appearance.color_scheme.sunset">Tramonto</string>
     <string name="settings.appearance.color_scheme.title">Schema colori</string>
     <string name="settings.appearance.color_scheme.dynamic">Colore dinamico</string>

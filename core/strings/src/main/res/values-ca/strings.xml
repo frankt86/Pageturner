@@ -329,6 +329,7 @@
     <string name="playback.chapter.current.content_description">Capítol actual</string>
     <string name="playback.chapter.next">Pista següent</string>
     <string name="playback.chapter.previous">Pista anterior</string>
+    <string name="playback.chapter.unnamed">Capítol %1$d</string>
     <string name="playback.chapters.title">Capítols</string>
     <string name="playback.jump_back">Torna a %1$s</string>
     <string name="playback.jump_back.chapter">Torna al cap. %1$d · %2$s</string>
@@ -562,6 +563,8 @@
     <string name="settings.appearance.color_scheme.sunset">Posta de sol</string>
     <string name="settings.appearance.color_scheme.berry">Baia</string>
     <string name="settings.appearance.color_scheme.lavender">Lavanda</string>
+    <string name="settings.appearance.cover_colors.summary">El reproductor i els ginys prenen els colors de la portada del llibre.</string>
+    <string name="settings.appearance.cover_colors.title">Colors de la portada</string>
     <string name="settings.appearance.pure_black.summary">Estalvia bateria a les pantalles OLED amb el tema fosc.</string>
     <string name="settings.appearance.pure_black.title">Negre pur</string>
     <string name="settings.appearance.theme.dark">Fosc</string>

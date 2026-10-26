@@ -13,7 +13,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.core.net.toUri
-import androidx.datastore.core.DataStore
 import androidx.paging.LoadState
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -32,7 +31,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import voice.core.common.DispatcherProvider
 import voice.core.data.BookId
-import voice.core.data.Ebook
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.EbooksStore
 import voice.core.logging.api.Logger
@@ -51,8 +49,7 @@ import voice.core.strings.R as StringsR
 class SelectCoverFromInternetViewModel(
   private val api: CoverApi,
   private val bookRepository: BookRepository,
-  @EbooksStore
-  private val ebooksStore: DataStore<List<Ebook>>,
+  private val ebooksStore: EbooksStore,
   private val navigator: Navigator,
   private val context: Context,
   private val coverDownloader: CoverDownloader,

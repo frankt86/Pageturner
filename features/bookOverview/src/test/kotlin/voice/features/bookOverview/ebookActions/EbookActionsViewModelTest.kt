@@ -13,6 +13,7 @@ import voice.core.common.DispatcherProvider
 import voice.core.data.Ebook
 import voice.core.data.EbookFormat
 import voice.core.data.EbookPosition
+import voice.core.data.store.EbooksStore
 import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.overview.BookOverviewCategory
 import voice.features.bookOverview.overview.category
@@ -36,7 +37,7 @@ class EbookActionsViewModelTest {
     progress = 0.4F,
     lastOpened = 1_000,
   )
-  private val store = MemoryDataStore(listOf(ebook))
+  private val store = EbooksStore(MemoryDataStore(listOf(ebook)))
   private val navigator = mockk<Navigator>(relaxUnitFun = true)
   private val viewModel = EbookActionsViewModel(
     store = store,

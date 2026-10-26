@@ -295,6 +295,7 @@
     <string name="playback.chapter.current.content_description">現在のチャプター</string>
     <string name="playback.chapter.next">次のトラック</string>
     <string name="playback.chapter.previous">前のトラック</string>
+    <string name="playback.chapter.unnamed">チャプター %1$d</string>
     <string name="playback.chapters.title">チャプター</string>
     <string name="playback.jump_back">%1$s に戻る</string>
     <string name="playback.jump_back.chapter">第%1$d章 · %2$s に戻る</string>
@@ -517,6 +518,8 @@
     <string name="settings.appearance.color_scheme.forest">フォレスト</string>
     <string name="settings.appearance.color_scheme.lagoon">ラグーン</string>
     <string name="settings.appearance.color_scheme.lavender">ラベンダー</string>
+    <string name="settings.appearance.cover_colors.summary">プレーヤーとウィジェットが本のカバーの色になります。</string>
+    <string name="settings.appearance.cover_colors.title">カバーの色</string>
     <string name="settings.appearance.color_scheme.sunset">サンセット</string>
     <string name="settings.appearance.color_scheme.title">カラースキーム</string>
     <string name="settings.appearance.color_scheme.dynamic">ダイナミックカラー</string>
