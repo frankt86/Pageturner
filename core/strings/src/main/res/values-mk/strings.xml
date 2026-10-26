@@ -312,6 +312,7 @@
     <string name="playback.chapter.current.content_description">Тековно поглавје</string>
     <string name="playback.chapter.next">Следно поглавје</string>
     <string name="playback.chapter.previous">Претходно поглавје</string>
+    <string name="playback.chapter.unnamed">Поглавје %1$d</string>
     <string name="playback.chapters.title">Поглавја</string>
     <string name="playback.jump_back">Назад на %1$s</string>
     <string name="playback.jump_back.chapter">Назад на погл. %1$d · %2$s</string>
@@ -542,6 +543,8 @@
     <string name="settings.appearance.color_scheme.sunset">Зајдисонце</string>
     <string name="settings.appearance.color_scheme.berry">Бобинка</string>
     <string name="settings.appearance.color_scheme.lavender">Лаванда</string>
+    <string name="settings.appearance.cover_colors.summary">Плеерот и виџетите ги добиваат боите од корицата на книгата.</string>
+    <string name="settings.appearance.cover_colors.title">Бои од корицата</string>
     <string name="settings.appearance.pure_black.summary">Штеди батерија на OLED екрани во темната тема.</string>
     <string name="settings.appearance.pure_black.title">Целосно црна</string>
     <string name="settings.appearance.theme.dark">Темна</string>

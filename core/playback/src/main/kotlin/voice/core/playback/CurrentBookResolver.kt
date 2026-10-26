@@ -1,6 +1,5 @@
 package voice.core.playback
 
-import androidx.datastore.core.DataStore
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -9,7 +8,6 @@ import voice.core.data.Book
 import voice.core.data.BookId
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.CurrentBookStore
-import voice.core.featureflag.ExperimentalPlaybackPersistenceQualifier
 import voice.core.featureflag.FeatureFlag
 
 @SingleIn(AppScope::class)
@@ -17,10 +15,8 @@ import voice.core.featureflag.FeatureFlag
 class CurrentBookResolver(
   private val bookRepository: BookRepository,
   private val playerController: PlayerController,
-  @CurrentBookStore
-  private val currentBookStore: DataStore<BookId?>,
-  @ExperimentalPlaybackPersistenceQualifier
-  private val experimentalPlaybackPersistenceFeatureFlag: FeatureFlag<Boolean>,
+  private val currentBookStore: CurrentBookStore,
+  private val experimentalPlaybackPersistenceFeatureFlag: ExperimentalPlaybackPersistenceFeatureFlag,
 ) {
 
   suspend fun currentBook(): Book? {

@@ -530,6 +530,8 @@
     <string name="playback.chapter.next">Next track</string>
     <!-- Content description for moving to the previous chapter or track. -->
     <string name="playback.chapter.previous">Previous track</string>
+    <!-- Label in the chapters sheet for a chapter whose file has no name for it, e.g. "Chapter 3". -->
+    <string name="playback.chapter.unnamed">Chapter %1$d</string>
     <!-- Title of the sheet that lists all chapters of a book. -->
     <string name="playback.chapters.title">Chapters</string>
     <string name="playback.jump_back">Back to %1$s</string>
@@ -980,6 +982,10 @@
     <string name="settings.appearance.color_scheme.berry">Berry</string>
     <!-- Label for selecting a purple, lavender inspired app color scheme. -->
     <string name="settings.appearance.color_scheme.lavender">Lavender</string>
+    <!-- Description of the switch that lets the player, the book sheets, the bookmarks, the Continue listening card and the widgets take their colors from the book's cover instead of the color scheme. -->
+    <string name="settings.appearance.cover_colors.summary">The player and widgets take on the colors of the book\'s cover.</string>
+    <!-- Title of the switch that lets the player, the book sheets, the bookmarks, the Continue listening card and the widgets take their colors from the book's cover instead of the color scheme. -->
+    <string name="settings.appearance.cover_colors.title">Cover colors</string>
     <!-- Description of the switch that turns the background of the dark theme black instead of dark gray. -->
     <string name="settings.appearance.pure_black.summary">Saves battery on OLED screens in the dark theme.</string>
     <!-- Title of the switch that turns the background of the dark theme black instead of dark gray. -->

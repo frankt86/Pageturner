@@ -312,6 +312,7 @@
     <string name="playback.chapter.current.content_description">فصل فعلی</string>
     <string name="playback.chapter.next">تراک بعدی</string>
     <string name="playback.chapter.previous">تراک قبلی</string>
+    <string name="playback.chapter.unnamed">فصل %1$d</string>
     <string name="playback.chapters.title">فصل‌ها</string>
     <string name="playback.jump_back">بازگشت به %1$s</string>
     <string name="playback.jump_back.chapter">بازگشت به فصل %1$d · %2$s</string>
@@ -537,6 +538,8 @@
     <string name="settings.appearance.color_scheme.forest">جنگل</string>
     <string name="settings.appearance.color_scheme.lagoon">تالاب</string>
     <string name="settings.appearance.color_scheme.lavender">اسطوخودوس</string>
+    <string name="settings.appearance.cover_colors.summary">پخش‌کننده و ویجت‌ها رنگ‌های کاور کتاب را به خود می‌گیرند.</string>
+    <string name="settings.appearance.cover_colors.title">رنگ‌های کاور</string>
     <string name="settings.appearance.color_scheme.sunset">غروب</string>
     <string name="settings.appearance.color_scheme.title">طرح رنگ</string>
     <string name="settings.appearance.color_scheme.dynamic">رنگ پویا</string>

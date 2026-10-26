@@ -3,7 +3,6 @@ package voice.features.bookmark.history
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.datastore.core.DataStore
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -23,7 +22,7 @@ import voice.core.data.repo.BookRepository
 import voice.core.data.repo.ListeningHistoryRepo
 import voice.core.data.store.CurrentBookStore
 import voice.core.featureflag.FeatureFlag
-import voice.core.featureflag.KioskModeFeatureFlagQualifier
+import voice.core.kioskmode.KioskModeFeatureFlag
 import voice.core.playback.PlayerController
 import voice.core.playback.playstate.PlayStateManager
 import voice.features.bookmark.BookIndex
@@ -33,8 +32,7 @@ import java.time.Clock
 
 @AssistedInject
 class HistoryViewModel(
-  @CurrentBookStore
-  private val currentBookStore: DataStore<BookId?>,
+  private val currentBookStore: CurrentBookStore,
   private val bookRepository: BookRepository,
   private val listeningHistoryRepo: ListeningHistoryRepo,
   private val playStateManager: PlayStateManager,
@@ -42,8 +40,7 @@ class HistoryViewModel(
   private val navigator: Navigator,
   private val clock: Clock,
   private val dispatcherProvider: DispatcherProvider,
-  @KioskModeFeatureFlagQualifier
-  private val kioskModeFeatureFlag: FeatureFlag<Boolean>,
+  private val kioskModeFeatureFlag: KioskModeFeatureFlag,
   @Assisted
   private val bookId: BookId,
 ) {

@@ -380,6 +380,7 @@
     <string name="playback.chapter.current.content_description">الفصل الحالي</string>
     <string name="playback.chapter.next">المسار التالي</string>
     <string name="playback.chapter.previous">المسار السابق</string>
+    <string name="playback.chapter.unnamed">الفصل %1$d</string>
     <string name="playback.chapters.title">الفصول</string>
     <string name="playback.jump_back">العودة إلى %1$s</string>
     <string name="playback.jump_back.chapter">العودة إلى الفصل %1$d · %2$s</string>
@@ -622,6 +623,8 @@
     <string name="settings.appearance.color_scheme.sunset">غروب</string>
     <string name="settings.appearance.color_scheme.berry">توت</string>
     <string name="settings.appearance.color_scheme.lavender">خزامى</string>
+    <string name="settings.appearance.cover_colors.summary">تأخذ شاشة التشغيل والأدوات المصغّرة ألوان غلاف الكتاب.</string>
+    <string name="settings.appearance.cover_colors.title">ألوان الغلاف</string>
     <string name="settings.appearance.pure_black.summary">يوفّر البطارية على شاشات OLED في الوضع الداكن.</string>
     <string name="settings.appearance.pure_black.title">أسود خالص</string>
     <string name="settings.appearance.theme.dark">داكن</string>

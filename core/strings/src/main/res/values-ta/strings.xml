@@ -312,6 +312,7 @@
     <string name="playback.chapter.current.content_description">தற்போதைய அத்தியாயம்</string>
     <string name="playback.chapter.next">அடுத்த அத்தியாயம்</string>
     <string name="playback.chapter.previous">முந்தைய அத்தியாயம்</string>
+    <string name="playback.chapter.unnamed">அத்தியாயம் %1$d</string>
     <string name="playback.chapters.title">அத்தியாயங்கள்</string>
     <string name="playback.jump_back">%1$s-க்குத் திரும்பு</string>
     <string name="playback.jump_back.chapter">அத். %1$d · %2$s-க்குத் திரும்பு</string>
@@ -537,6 +538,8 @@
     <string name="settings.appearance.color_scheme.forest">காடு</string>
     <string name="settings.appearance.color_scheme.lagoon">கடற்காயல்</string>
     <string name="settings.appearance.color_scheme.lavender">லாவெண்டர்</string>
+    <string name="settings.appearance.cover_colors.summary">பிளேயரும் விட்ஜெட்டுகளும் புத்தகத்தின் அட்டைப்பட நிறங்களைப் பெறும்.</string>
+    <string name="settings.appearance.cover_colors.title">அட்டைப்பட நிறங்கள்</string>
     <string name="settings.appearance.color_scheme.sunset">சூரிய அஸ்தமனம்</string>
     <string name="settings.appearance.color_scheme.title">வண்ணத் திட்டம்</string>
     <string name="settings.appearance.color_scheme.dynamic">மாறும் வண்ணம்</string>

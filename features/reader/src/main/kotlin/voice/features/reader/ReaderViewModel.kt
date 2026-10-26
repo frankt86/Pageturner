@@ -10,7 +10,6 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.datastore.core.DataStore
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -38,11 +37,6 @@ import voice.core.data.ReaderSettings
 import voice.core.data.ReadingPace
 import voice.core.data.ReadiumHighlight
 import voice.core.data.store.EbooksStore
-import voice.core.data.store.ReaderNaturalSpeakerStore
-import voice.core.data.store.ReaderNaturalVoiceStore
-import voice.core.data.store.ReaderSettingsStore
-import voice.core.data.store.ReaderSpeechRateStore
-import voice.core.data.store.ReadingPaceStore
 import voice.core.ebook.parseEpub
 import voice.core.logging.api.Logger
 import voice.navigation.Navigator
@@ -117,18 +111,12 @@ internal enum class ReaderMessage {
 
 @AssistedInject
 class ReaderViewModel(
-  @EbooksStore
-  private val store: DataStore<List<Ebook>>,
-  @ReaderSettingsStore
-  private val settingsStore: DataStore<ReaderSettings>,
-  @ReaderNaturalVoiceStore
-  private val naturalVoiceStore: DataStore<Boolean>,
-  @ReaderNaturalSpeakerStore
-  private val naturalSpeakerStore: DataStore<Int>,
-  @ReaderSpeechRateStore
-  private val speechRateStore: DataStore<Float>,
-  @ReadingPaceStore
-  private val paceStore: DataStore<ReadingPace>,
+  private val store: EbooksStore,
+  private val settingsStore: ReaderSettingsStore,
+  private val naturalVoiceStore: ReaderNaturalVoiceStore,
+  private val naturalSpeakerStore: ReaderNaturalSpeakerStore,
+  private val speechRateStore: ReaderSpeechRateStore,
+  private val paceStore: ReadingPaceStore,
   private val application: Application,
   private val navigator: Navigator,
   private val dispatcherProvider: DispatcherProvider,

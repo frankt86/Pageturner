@@ -3,7 +3,6 @@ package voice.features.settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.datastore.core.DataStore
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -12,33 +11,31 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import voice.core.analytics.api.AnalyticsConsentStore
+import voice.core.audiobookshelf.AudiobookshelfFeatureFlag
 import voice.core.audiobookshelf.ServerLibrary
 import voice.core.common.AppInfoProvider
 import voice.core.common.DispatcherProvider
 import voice.core.common.FeedbackLinks
 import voice.core.common.MainScope
-import voice.core.data.GridMode
-import voice.core.data.KioskModeDemoData
-import voice.core.data.ThemeColorScheme
-import voice.core.data.ThemeMode
 import voice.core.data.folders.AudiobookFolders
-import voice.core.data.sleeptimer.SleepTimerPreference
-import voice.core.data.store.AnalyticsConsentStore
-import voice.core.data.store.AutoRewindAmountStore
-import voice.core.data.store.DeveloperMenuUnlockedStore
-import voice.core.data.store.GridModeStore
-import voice.core.data.store.LockScreenSliderStore
-import voice.core.data.store.PureBlackStore
-import voice.core.data.store.SeekTimeStore
-import voice.core.data.store.SleepTimerPreferenceStore
-import voice.core.data.store.ThemeColorSchemeStore
-import voice.core.data.store.ThemeModeStore
 import voice.core.documentfile.nameWithoutExtension
-import voice.core.featureflag.AudiobookshelfFeatureFlagQualifier
-import voice.core.featureflag.FeatureFlag
-import voice.core.featureflag.KioskModeFeatureFlagQualifier
+import voice.core.kioskmode.KioskModeDemoData
+import voice.core.kioskmode.KioskModeFeatureFlag
+import voice.core.playback.AutoRewindAmountStore
+import voice.core.playback.LockScreenSliderStore
+import voice.core.playback.SeekTimeStore
+import voice.core.sleeptimer.SleepTimerPreferenceStore
+import voice.core.ui.CoverColorsStore
 import voice.core.ui.DynamicColorAvailability
 import voice.core.ui.GridCount
+import voice.core.ui.GridMode
+import voice.core.ui.GridModeStore
+import voice.core.ui.PureBlackStore
+import voice.core.ui.ThemeColorScheme
+import voice.core.ui.ThemeColorSchemeStore
+import voice.core.ui.ThemeMode
+import voice.core.ui.ThemeModeStore
 import voice.navigation.Destination
 import voice.navigation.Navigator
 import voice.navigation.Origin
@@ -46,37 +43,26 @@ import java.time.LocalTime
 
 @Inject
 class SettingsViewModel(
-  @ThemeModeStore
-  private val themeModeStore: DataStore<ThemeMode>,
-  @ThemeColorSchemeStore
-  private val themeColorSchemeStore: DataStore<ThemeColorScheme>,
-  @PureBlackStore
-  private val pureBlackStore: DataStore<Boolean>,
-  @AutoRewindAmountStore
-  private val autoRewindAmountStore: DataStore<Int>,
-  @SeekTimeStore
-  private val seekTimeStore: DataStore<Int>,
-  @LockScreenSliderStore
-  private val lockScreenSliderStore: DataStore<Boolean>,
+  private val themeModeStore: ThemeModeStore,
+  private val themeColorSchemeStore: ThemeColorSchemeStore,
+  private val pureBlackStore: PureBlackStore,
+  private val coverColorsStore: CoverColorsStore,
+  private val autoRewindAmountStore: AutoRewindAmountStore,
+  private val seekTimeStore: SeekTimeStore,
+  private val lockScreenSliderStore: LockScreenSliderStore,
   private val navigator: Navigator,
   private val appInfoProvider: AppInfoProvider,
-  @GridModeStore
-  private val gridModeStore: DataStore<GridMode>,
-  @SleepTimerPreferenceStore
-  private val sleepTimerPreferenceStore: DataStore<SleepTimerPreference>,
-  @AnalyticsConsentStore
-  private val analyticsConsentStore: DataStore<Boolean>,
+  private val gridModeStore: GridModeStore,
+  private val sleepTimerPreferenceStore: SleepTimerPreferenceStore,
+  private val analyticsConsentStore: AnalyticsConsentStore,
   private val gridCount: GridCount,
-  @KioskModeFeatureFlagQualifier
-  private val kioskModeFeatureFlag: FeatureFlag<Boolean>,
-  @DeveloperMenuUnlockedStore
-  private val developerMenuUnlockedStore: DataStore<Boolean>,
+  private val kioskModeFeatureFlag: KioskModeFeatureFlag,
+  private val developerMenuUnlockedStore: DeveloperMenuUnlockedStore,
   private val dynamicColorAvailability: DynamicColorAvailability,
   private val audiobookFolders: AudiobookFolders,
   private val dispatcherProvider: DispatcherProvider,
   private val serverLibrary: ServerLibrary,
-  @AudiobookshelfFeatureFlagQualifier
-  private val audiobookshelfFeatureFlag: FeatureFlag<Boolean>,
+  private val audiobookshelfFeatureFlag: AudiobookshelfFeatureFlag,
 ) : SettingsListener {
 
   private val mainScope = MainScope(dispatcherProvider)
@@ -93,6 +79,7 @@ class SettingsViewModel(
     val themeMode = remember { themeModeStore.data }.collectAsState(initial = null).value
     val themeColorScheme = remember { themeColorSchemeStore.data }.collectAsState(initial = null).value
     val pureBlack = remember { pureBlackStore.data }.collectAsState(initial = null).value
+    val coverColors = remember { coverColorsStore.data }.collectAsState(initial = null).value
     val autoRewindAmount = remember { autoRewindAmountStore.data }.collectAsState(initial = null).value
     val seekTime = remember { seekTimeStore.data }.collectAsState(initial = null).value
     val lockScreenSlider = remember { lockScreenSliderStore.data }.collectAsState(initial = null).value
@@ -115,6 +102,7 @@ class SettingsViewModel(
       themeMode == null ||
       themeColorScheme == null ||
       pureBlack == null ||
+      coverColors == null ||
       autoRewindAmount == null ||
       seekTime == null ||
       lockScreenSlider == null ||
@@ -133,6 +121,7 @@ class SettingsViewModel(
       themeMode = themeMode,
       themeColorScheme = themeColorScheme,
       pureBlack = pureBlack,
+      coverColors = coverColors,
       dynamicColorAvailable = dynamicColorAvailable,
       seekTimeInSeconds = seekTime,
       autoRewindInSeconds = autoRewindAmount,
@@ -199,6 +188,12 @@ class SettingsViewModel(
   override fun togglePureBlack() {
     mainScope.launch {
       pureBlackStore.updateData { !it }
+    }
+  }
+
+  override fun toggleCoverColors() {
+    mainScope.launch {
+      coverColorsStore.updateData { !it }
     }
   }
 

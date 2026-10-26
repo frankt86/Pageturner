@@ -41,6 +41,14 @@ Convention plugins (`voice.library`, `voice.app`, `voice.compose`, `voice.ktlint
 
 - Constructor injection with `@Inject`; bind implementations with `@ContributesBinding(AppScope::class)`.
 - Providers go in `@BindingContainer @ContributesTo(AppScope::class) object …`.
+- A feature flag is a class in the module that reads it, delegating to `FeatureFlagFactory` and contributed with
+  `@ContributesIntoSet` to `Set<FeatureFlag<*>>` for the developer settings (e.g. `AudiobookshelfFeatureFlag`). Readers
+  inject the class; tests wrap a `MemoryFeatureFlag`. A flag read by several features goes in the core module they
+  share. `:core:featureflag` holds no flags.
+- A store is a `@SingleIn(AppScope::class)` class in the module that reads it, delegating to a `DataStore` from
+  `VoiceDataStoreFactory` (e.g. `SeekTimeStore`). Readers inject the class; tests wrap a `MemoryDataStore`. A store read
+  by several modules goes in the core module they share, which adds `api(projects.core.datastore)`. Never change a
+  store's file name, it's where listeners' data is saved. `:core:datastore` holds no stores.
 - The graph is assembled in `app/src/main/kotlin/voice/app/di`.
 
 ## Navigation

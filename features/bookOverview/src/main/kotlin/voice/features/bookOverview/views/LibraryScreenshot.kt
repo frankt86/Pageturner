@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.tooling.preview.Preview
 import voice.core.data.BookId
-import voice.core.data.KioskModeDemoData
+import voice.core.kioskmode.KioskModeDemoData
 import voice.core.ui.VoiceTheme
 import voice.features.bookOverview.overview.BookOverviewCategory
 import voice.features.bookOverview.overview.BookOverviewItemViewState

@@ -2,7 +2,6 @@ package voice.core.scanner
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.datastore.core.DataStore
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 import voice.core.data.Ebook
@@ -20,8 +19,7 @@ import kotlin.uuid.Uuid
 
 @Inject
 internal class EbookScanner(
-  @EbooksStore
-  private val store: DataStore<List<Ebook>>,
+  private val store: EbooksStore,
   private val context: Context,
 ) {
 

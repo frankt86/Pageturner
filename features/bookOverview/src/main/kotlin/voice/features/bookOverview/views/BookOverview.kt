@@ -248,37 +248,40 @@ internal class BookOverviewPreviewParameterProvider : PreviewParameterProvider<B
     )
   }
 
-  override val values = sequenceOf(
-    BookOverviewViewState(
-      currentBookId = null,
-      books = mapOf(
-        BookOverviewCategory.CURRENT to buildMap {
-          repeat(10) {
-            put(
-              BookId(Uuid.random().toString()),
-              mutableStateOf(book()),
-            )
-          }
-        },
-        BookOverviewCategory.FINISHED to buildMap {
-          repeat(2) {
-            put(
-              BookId(Uuid.random().toString()),
-              mutableStateOf(book()),
-            )
-          }
-        },
-      ),
-      layoutMode = BookOverviewLayoutMode.List,
-      playButtonState = BookOverviewViewState.PlayButtonState.Paused,
-      showEmptyLibrary = false,
-      showSearchIcon = true,
-      isLoading = true,
-      showStoragePermissionBugCard = false,
-      showFolderAccessBadge = false,
-      showFolderPickerIcon = true,
-      dialog = null,
+  private val library = BookOverviewViewState(
+    currentBookId = null,
+    books = mapOf(
+      BookOverviewCategory.CURRENT to buildMap {
+        repeat(10) {
+          put(
+            BookId(Uuid.random().toString()),
+            mutableStateOf(book()),
+          )
+        }
+      },
+      BookOverviewCategory.FINISHED to buildMap {
+        repeat(2) {
+          put(
+            BookId(Uuid.random().toString()),
+            mutableStateOf(book()),
+          )
+        }
+      },
     ),
+    layoutMode = BookOverviewLayoutMode.List,
+    playButtonState = BookOverviewViewState.PlayButtonState.Paused,
+    showEmptyLibrary = false,
+    showSearchIcon = true,
+    isLoading = true,
+    showStoragePermissionBugCard = false,
+    showFolderAccessBadge = false,
+    showFolderPickerIcon = true,
+    dialog = null,
+  )
+
+  override val values = sequenceOf(
+    library,
+    library.copy(layoutMode = BookOverviewLayoutMode.Grid),
     BookOverviewViewState.Loading.copy(
       isLoading = false,
       showEmptyLibrary = true,

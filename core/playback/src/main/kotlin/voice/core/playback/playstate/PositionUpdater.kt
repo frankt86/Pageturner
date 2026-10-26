@@ -12,9 +12,9 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import voice.core.data.repo.BookRepository
-import voice.core.featureflag.ExperimentalPlaybackPersistenceQualifier
 import voice.core.featureflag.FeatureFlag
 import voice.core.logging.api.Logger
+import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
 import voice.core.playback.di.PlaybackScope
 import voice.core.playback.session.bookId
 import voice.core.playback.session.positionInChapter
@@ -30,8 +30,7 @@ class PositionUpdater(
   private val bookRepo: BookRepository,
   private val scope: CoroutineScope,
   private val playStateManager: PlayStateManager,
-  @ExperimentalPlaybackPersistenceQualifier
-  private val experimentalPlaybackPersistenceFeatureFlag: FeatureFlag<Boolean>,
+  private val experimentalPlaybackPersistenceFeatureFlag: ExperimentalPlaybackPersistenceFeatureFlag,
 ) : Player.Listener {
 
   private var player: Player? = null

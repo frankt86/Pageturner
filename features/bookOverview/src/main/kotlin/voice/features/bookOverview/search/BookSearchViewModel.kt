@@ -11,7 +11,6 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.datastore.core.DataStore
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -30,13 +29,13 @@ import voice.core.common.comparator.NaturalOrderComparator
 import voice.core.data.Book
 import voice.core.data.BookContent
 import voice.core.data.BookId
-import voice.core.data.KioskModeDemoData
 import voice.core.data.repo.BookRepository
 import voice.core.data.repo.RecentBookSearchRepo
 import voice.core.data.store.CurrentBookStore
-import voice.core.featureflag.ExperimentalPlaybackPersistenceQualifier
 import voice.core.featureflag.FeatureFlag
-import voice.core.featureflag.KioskModeFeatureFlagQualifier
+import voice.core.kioskmode.KioskModeDemoData
+import voice.core.kioskmode.KioskModeFeatureFlag
+import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
 import voice.core.playback.LivePlaybackState
 import voice.core.playback.PlayerController
 import voice.core.playback.overlay
@@ -62,12 +61,9 @@ class BookSearchViewModel(
   private val navigator: Navigator,
   private val playerController: PlayerController,
   private val playStateManager: PlayStateManager,
-  @CurrentBookStore
-  private val currentBookStore: DataStore<BookId?>,
-  @KioskModeFeatureFlagQualifier
-  private val kioskModeFeatureFlag: FeatureFlag<Boolean>,
-  @ExperimentalPlaybackPersistenceQualifier
-  private val experimentalPlaybackPersistenceFeatureFlag: FeatureFlag<Boolean>,
+  private val currentBookStore: CurrentBookStore,
+  private val kioskModeFeatureFlag: KioskModeFeatureFlag,
+  private val experimentalPlaybackPersistenceFeatureFlag: ExperimentalPlaybackPersistenceFeatureFlag,
   private val lastResults: LastBookSearchResults,
   dispatcherProvider: DispatcherProvider,
 ) {

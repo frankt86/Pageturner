@@ -22,12 +22,15 @@ import voice.core.common.AppInfoProvider
 import voice.core.common.DispatcherProvider
 import voice.core.data.Book
 import voice.core.data.BookId
-import voice.core.data.GridMode
-import voice.core.data.KioskModeDemoData
 import voice.core.data.folders.AudiobookFolders
 import voice.core.data.folders.FolderType
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.CurrentBookStore
+import voice.core.data.store.EbooksStore
 import voice.core.featureflag.MemoryFeatureFlag
+import voice.core.kioskmode.KioskModeDemoData
+import voice.core.kioskmode.KioskModeFeatureFlag
+import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
 import voice.core.playback.LivePlaybackState
 import voice.core.playback.PlayerController
 import voice.core.playback.overlay
@@ -35,6 +38,8 @@ import voice.core.playback.playstate.PlayStateManager
 import voice.core.scanner.DeviceHasStoragePermissionBug
 import voice.core.scanner.MediaScanTrigger
 import voice.core.ui.GridCount
+import voice.core.ui.GridMode
+import voice.core.ui.GridModeStore
 import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
 import voice.navigation.Destination
@@ -74,10 +79,10 @@ class BookOverviewViewModelTest {
       playerController = mockk<PlayerController> {
         every { livePlaybackStateFlow(currentBook.id) } returns livePlaybackFlow
       },
-      currentBookStoreDataStore = MemoryDataStore(currentBook.id),
-      folderPickerMovedDialogShownStore = MemoryDataStore(false),
-      gridModeStore = MemoryDataStore(GridMode.LIST),
-      ebooksStore = MemoryDataStore(emptyList()),
+      currentBookStoreDataStore = CurrentBookStore(MemoryDataStore(currentBook.id)),
+      folderPickerMovedDialogShownStore = FolderPickerMovedDialogShownStore(MemoryDataStore(false)),
+      gridModeStore = GridModeStore(MemoryDataStore(GridMode.LIST)),
+      ebooksStore = EbooksStore(MemoryDataStore(emptyList())),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -86,9 +91,9 @@ class BookOverviewViewModelTest {
       deviceHasStoragePermissionBug = mockk<DeviceHasStoragePermissionBug> {
         every { hasBug } returns MutableStateFlow(false)
       },
-      folderPickerInSettingsFeatureFlag = MemoryFeatureFlag(false),
-      experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(true),
-      kioskModeFeatureFlag = MemoryFeatureFlag(false),
+      folderPickerInSettingsFeatureFlag = FolderPickerInSettingsFeatureFlag(MemoryFeatureFlag(false)),
+      experimentalPlaybackPersistenceFeatureFlag = ExperimentalPlaybackPersistenceFeatureFlag(MemoryFeatureFlag(true)),
+      kioskModeFeatureFlag = KioskModeFeatureFlag(MemoryFeatureFlag(false)),
       dispatcherProvider = dispatcherProvider,
       serverLibrary = serverLibrary,
       audiobookFolders = audiobookFolders,
@@ -137,10 +142,10 @@ class BookOverviewViewModelTest {
       },
       playStateManager = PlayStateManager(),
       playerController = mockk(),
-      currentBookStoreDataStore = MemoryDataStore(null),
-      folderPickerMovedDialogShownStore = MemoryDataStore(false),
-      gridModeStore = MemoryDataStore(GridMode.LIST),
-      ebooksStore = MemoryDataStore(emptyList()),
+      currentBookStoreDataStore = CurrentBookStore(MemoryDataStore(null)),
+      folderPickerMovedDialogShownStore = FolderPickerMovedDialogShownStore(MemoryDataStore(false)),
+      gridModeStore = GridModeStore(MemoryDataStore(GridMode.LIST)),
+      ebooksStore = EbooksStore(MemoryDataStore(emptyList())),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -149,9 +154,9 @@ class BookOverviewViewModelTest {
       deviceHasStoragePermissionBug = mockk<DeviceHasStoragePermissionBug> {
         every { hasBug } returns MutableStateFlow(false)
       },
-      folderPickerInSettingsFeatureFlag = MemoryFeatureFlag(false),
-      experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(false),
-      kioskModeFeatureFlag = MemoryFeatureFlag(true),
+      folderPickerInSettingsFeatureFlag = FolderPickerInSettingsFeatureFlag(MemoryFeatureFlag(false)),
+      experimentalPlaybackPersistenceFeatureFlag = ExperimentalPlaybackPersistenceFeatureFlag(MemoryFeatureFlag(false)),
+      kioskModeFeatureFlag = KioskModeFeatureFlag(MemoryFeatureFlag(true)),
       dispatcherProvider = dispatcherProvider,
       serverLibrary = serverLibrary,
       audiobookFolders = audiobookFolders,
@@ -403,10 +408,10 @@ class BookOverviewViewModelTest {
       },
       playStateManager = PlayStateManager(),
       playerController = mockk(),
-      currentBookStoreDataStore = MemoryDataStore(currentBookId),
-      folderPickerMovedDialogShownStore = folderPickerMovedDialogShownStore,
-      gridModeStore = MemoryDataStore(GridMode.LIST),
-      ebooksStore = MemoryDataStore(emptyList()),
+      currentBookStoreDataStore = CurrentBookStore(MemoryDataStore(currentBookId)),
+      folderPickerMovedDialogShownStore = FolderPickerMovedDialogShownStore(folderPickerMovedDialogShownStore),
+      gridModeStore = GridModeStore(MemoryDataStore(GridMode.LIST)),
+      ebooksStore = EbooksStore(MemoryDataStore(emptyList())),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -415,9 +420,9 @@ class BookOverviewViewModelTest {
       deviceHasStoragePermissionBug = mockk<DeviceHasStoragePermissionBug> {
         every { hasBug } returns MutableStateFlow(false)
       },
-      folderPickerInSettingsFeatureFlag = folderPickerInSettingsFeatureFlag,
-      experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(false),
-      kioskModeFeatureFlag = MemoryFeatureFlag(false),
+      folderPickerInSettingsFeatureFlag = FolderPickerInSettingsFeatureFlag(folderPickerInSettingsFeatureFlag),
+      experimentalPlaybackPersistenceFeatureFlag = ExperimentalPlaybackPersistenceFeatureFlag(MemoryFeatureFlag(false)),
+      kioskModeFeatureFlag = KioskModeFeatureFlag(MemoryFeatureFlag(false)),
       dispatcherProvider = dispatcherProvider,
       serverLibrary = serverLibrary,
       audiobookFolders = audiobookFolders,

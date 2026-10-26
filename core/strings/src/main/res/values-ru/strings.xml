@@ -346,6 +346,7 @@
     <string name="playback.chapter.current.content_description">Текущая глава</string>
     <string name="playback.chapter.next">Следующий файл</string>
     <string name="playback.chapter.previous">Предыдущий файл</string>
+    <string name="playback.chapter.unnamed">Глава %1$d</string>
     <string name="playback.chapters.title">Главы</string>
     <string name="playback.jump_back">Вернуться к %1$s</string>
     <string name="playback.jump_back.chapter">Вернуться к гл. %1$d · %2$s</string>
@@ -577,6 +578,8 @@
     <string name="settings.appearance.color_scheme.forest">Лес</string>
     <string name="settings.appearance.color_scheme.lagoon">Лагуна</string>
     <string name="settings.appearance.color_scheme.lavender">Лаванда</string>
+    <string name="settings.appearance.cover_colors.summary">Плеер и виджеты окрашиваются в цвета обложки книги.</string>
+    <string name="settings.appearance.cover_colors.title">Цвета обложки</string>
     <string name="settings.appearance.color_scheme.sunset">Закат</string>
     <string name="settings.appearance.color_scheme.title">Цветовая схема</string>
     <string name="settings.appearance.color_scheme.dynamic">Динамический цвет</string>

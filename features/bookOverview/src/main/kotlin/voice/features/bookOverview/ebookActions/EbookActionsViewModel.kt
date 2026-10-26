@@ -8,7 +8,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.datastore.core.DataStore
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -37,8 +36,7 @@ import kotlin.uuid.Uuid
 
 @AssistedInject
 class EbookActionsViewModel(
-  @EbooksStore
-  private val store: DataStore<List<Ebook>>,
+  private val store: EbooksStore,
   private val application: Application,
   private val navigator: Navigator,
   private val dispatcherProvider: DispatcherProvider,

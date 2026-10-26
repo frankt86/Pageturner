@@ -6,6 +6,7 @@ import kotlinx.coroutines.test.runTest
 import voice.core.data.BookId
 import voice.core.data.Chapter
 import voice.core.data.ChapterId
+import voice.core.data.store.CurrentBookStore
 import voice.core.featureflag.MemoryFeatureFlag
 import voice.core.playback.session.search.book
 import java.time.Instant
@@ -43,8 +44,8 @@ class CurrentBookResolverTest {
         coEvery { get(book.id) } returns book
       },
       playerController = mockk(),
-      currentBookStore = currentBookStore,
-      experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(false),
+      currentBookStore = CurrentBookStore(currentBookStore),
+      experimentalPlaybackPersistenceFeatureFlag = ExperimentalPlaybackPersistenceFeatureFlag(MemoryFeatureFlag(false)),
     )
 
     assertEquals(expected = book, actual = resolver.currentBook())
@@ -65,8 +66,8 @@ class CurrentBookResolverTest {
           playbackSpeed = 1f,
         )
       },
-      currentBookStore = currentBookStore,
-      experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(true),
+      currentBookStore = CurrentBookStore(currentBookStore),
+      experimentalPlaybackPersistenceFeatureFlag = ExperimentalPlaybackPersistenceFeatureFlag(MemoryFeatureFlag(true)),
     )
 
     assertEquals(expected = book.chapters.last().id, actual = resolver.currentBook()?.content?.currentChapter)
@@ -82,8 +83,8 @@ class CurrentBookResolverTest {
       playerController = mockk {
         coEvery { livePlaybackState(book.id) } returns null
       },
-      currentBookStore = currentBookStore,
-      experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(true),
+      currentBookStore = CurrentBookStore(currentBookStore),
+      experimentalPlaybackPersistenceFeatureFlag = ExperimentalPlaybackPersistenceFeatureFlag(MemoryFeatureFlag(true)),
     )
 
     assertEquals(expected = book, actual = resolver.currentBook())

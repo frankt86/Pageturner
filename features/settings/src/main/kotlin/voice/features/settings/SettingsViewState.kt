@@ -1,13 +1,14 @@
 package voice.features.settings
 
-import voice.core.data.ThemeColorScheme
-import voice.core.data.ThemeMode
+import voice.core.ui.ThemeColorScheme
+import voice.core.ui.ThemeMode
 import java.time.LocalTime
 
 data class SettingsViewState(
   val themeMode: ThemeMode,
   val themeColorScheme: ThemeColorScheme,
   val pureBlack: Boolean,
+  val coverColors: Boolean,
   val dynamicColorAvailable: Boolean,
   val seekTimeInSeconds: Int,
   val autoRewindInSeconds: Int,
@@ -31,6 +32,7 @@ data class SettingsViewState(
         themeMode = ThemeMode.FollowSystem,
         themeColorScheme = ThemeColorScheme.VoiceBlue,
         pureBlack = false,
+        coverColors = true,
         dynamicColorAvailable = true,
         seekTimeInSeconds = 20,
         autoRewindInSeconds = 2,
