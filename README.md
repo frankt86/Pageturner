@@ -31,7 +31,7 @@ Pageturner also reads your EPUB and PDF books, with page curls, themes, bookmark
   <img alt="Two pages side by side on an unfolded foldable" width="90%" src="docs/images/reader-unfolded.png" />
 </p>
 
-See [Ebooks](docs/ebooks.md) for how it works, and the [reader plan](docs/reader-plan.md) for what's coming.
+See [Ebooks](docs/ebooks.md) for how it works, [Ebook catalogs](docs/opds.md) for downloading books from Calibre-Web, Komga and other OPDS servers, and the [reader plan](docs/reader-plan.md) for what's coming.
 
 ## Download
 
@@ -39,7 +39,7 @@ See [Ebooks](docs/ebooks.md) for how it works, and the [reader plan](docs/reader
 
 ## Learn more
 
-The [docs](docs/index.md) cover features, how to organize your library, [ebooks](docs/ebooks.md), and the FAQ.
+The [docs](docs/index.md) cover features, how to organize your library, [ebooks](docs/ebooks.md), [ebook catalogs](docs/opds.md), and the FAQ.
 
 ## Contributing
 

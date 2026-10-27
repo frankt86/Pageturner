@@ -14,6 +14,7 @@ import voice.core.audiobookshelf.account.Account
 import voice.core.audiobookshelf.account.AccountStore
 import voice.core.audiobookshelf.download.AudiobookshelfDownloads
 import voice.core.audiobookshelf.http.AudiobookshelfHttp
+import voice.core.audiobookshelf.http.ServerHttpClient
 import voice.core.data.store.CurrentBookStore
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -145,7 +146,7 @@ class AudiobookshelfLoginTest {
   ): Audiobookshelf {
     return Audiobookshelf(
       accountStore = AccountStore(accountStore),
-      http = AudiobookshelfHttp(AccountStore(accountStore), mockk { every { versionName } returns "1.0.0" }),
+      http = AudiobookshelfHttp(AccountStore(accountStore), ServerHttpClient(mockk { every { versionName } returns "1.0.0" })),
       sync = mockk(relaxed = true),
       progressSync = mockk(relaxed = true),
       downloads = downloads,

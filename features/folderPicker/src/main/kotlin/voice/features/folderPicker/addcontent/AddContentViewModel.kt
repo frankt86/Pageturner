@@ -80,6 +80,10 @@ class AddContentViewModel(
     }
   }
 
+  internal fun openCatalogs() {
+    navigator.goTo(Destination.OpdsCatalogs)
+  }
+
   internal fun back() {
     navigator.goBack()
   }

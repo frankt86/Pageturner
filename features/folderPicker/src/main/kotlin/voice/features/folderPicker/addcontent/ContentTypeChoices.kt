@@ -26,6 +26,7 @@ internal fun ColumnScope.ContentTypeChoices(
   onFolderPickerCancel: () -> Unit,
   onNoPicker: () -> Unit,
   onConnectAudiobookshelf: (() -> Unit)?,
+  onOpenCatalogs: (() -> Unit)?,
 ) {
   val openDocumentLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
     if (uri != null) {
@@ -54,6 +55,13 @@ internal fun ColumnScope.ContentTypeChoices(
     OnboardingButton(
       text = stringResource(StringsR.string.folder_add_action_audiobookshelf),
       onClick = onConnectAudiobookshelf,
+      primary = false,
+    )
+  }
+  if (onOpenCatalogs != null) {
+    OnboardingButton(
+      text = stringResource(StringsR.string.folder_add_action_opds),
+      onClick = onOpenCatalogs,
       primary = false,
     )
   }

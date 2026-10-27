@@ -46,5 +46,7 @@ fun AddContent(origin: Origin) {
     },
     onFolderPickerCancel = viewModel::onFolderPickerCancel,
     onConnectAudiobookshelf = if (viewModel.canConnectAudiobookshelf) viewModel::connectAudiobookshelf else null,
+    // the onboarding has no room for a detour through the catalogs
+    onOpenCatalogs = if (origin == Origin.Default) viewModel::openCatalogs else null,
   )
 }

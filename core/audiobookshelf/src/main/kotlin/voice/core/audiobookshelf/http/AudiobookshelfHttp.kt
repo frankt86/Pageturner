@@ -19,11 +19,9 @@ import voice.core.audiobookshelf.account.Account
 import voice.core.audiobookshelf.account.AccountStore
 import voice.core.audiobookshelf.api.AudiobookshelfApi
 import voice.core.audiobookshelf.audiobookshelfJson
-import voice.core.common.AppInfoProvider
 import voice.core.logging.api.Logger
 import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.TimeUnit
 
 /**
  * Talks to the server of the signed in account. Requests to it carry the access token, and an expired token is
@@ -33,22 +31,10 @@ import java.util.concurrent.TimeUnit
 @Inject
 internal class AudiobookshelfHttp(
   private val accountStore: AccountStore,
-  appInfoProvider: AppInfoProvider,
+  serverHttpClient: ServerHttpClient,
 ) {
 
-  private val userAgent = "Pageturner/${appInfoProvider.versionName}"
-
-  val client: OkHttpClient = OkHttpClient.Builder()
-    .connectTimeout(10, TimeUnit.SECONDS)
-    .readTimeout(30, TimeUnit.SECONDS)
-    .addInterceptor { chain ->
-      chain.proceed(
-        chain.request().newBuilder()
-          .header("User-Agent", userAgent)
-          .build(),
-      )
-    }
-    .build()
+  val client: OkHttpClient = serverHttpClient.client
 
   val authenticatedClient: OkHttpClient = client.newBuilder()
     .addInterceptor(AccessTokenInterceptor())

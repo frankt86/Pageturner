@@ -268,6 +268,10 @@ class SettingsViewModel(
     }
   }
 
+  override fun openOpdsCatalogs() {
+    navigator.goTo(Destination.OpdsCatalogs)
+  }
+
   override fun setAutoSleepTimer(checked: Boolean) {
     mainScope.launch {
       sleepTimerPreferenceStore.updateData { currentPrefs ->

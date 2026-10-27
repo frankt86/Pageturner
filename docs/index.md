@@ -49,7 +49,7 @@ New to installing apps from outside Google Play? See [Install](install.md).
 
   ---
 
-  EPUB and PDF books from your folders with a real page curl, themes, bookmarks, highlights, search and a natural read-aloud voice. One page folded, two pages unfolded. See [Ebooks](ebooks.md).
+  EPUB and PDF books from your folders with a real page curl, themes, bookmarks, highlights, search and a natural read-aloud voice. One page folded, two pages unfolded. See [Ebooks](ebooks.md), and [Ebook catalogs](opds.md) to download books from Calibre-Web, Komga and other OPDS servers.
 
 - :material-update:{ .lg .middle } **Actively maintained**
 
@@ -62,5 +62,5 @@ New to installing apps from outside Google Play? See [Install](install.md).
 ## Learn more
 
 Read [Organizing Audiobooks](organizing.md) for setting up your library,
-[Ebooks](ebooks.md) for reading EPUB and PDF books, or
+[Ebooks](ebooks.md) for reading EPUB and PDF books, [Ebook catalogs](opds.md) for downloading them from your server, or
 the [FAQ](faq.md) for common questions. Want to contribute? See [Development](development.md) and [Architecture](architecture.md).

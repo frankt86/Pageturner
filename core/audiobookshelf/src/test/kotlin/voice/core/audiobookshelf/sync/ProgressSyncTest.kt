@@ -22,6 +22,7 @@ import voice.core.audiobookshelf.account.SyncedProgress
 import voice.core.audiobookshelf.account.SyncedProgressStore
 import voice.core.audiobookshelf.api.AbsMediaProgress
 import voice.core.audiobookshelf.http.AudiobookshelfHttp
+import voice.core.audiobookshelf.http.ServerHttpClient
 import voice.core.data.Book
 import voice.core.data.BookId
 import voice.core.data.store.CurrentBookStore
@@ -200,7 +201,7 @@ class ProgressSyncTest {
   private fun progressSync(repo: MemoryBookRepository): ProgressSync {
     val accountStore = MemoryDataStore<Account?>(account)
     return ProgressSync(
-      http = AudiobookshelfHttp(AccountStore(accountStore), mockk { every { versionName } returns "1.0.0" }),
+      http = AudiobookshelfHttp(AccountStore(accountStore), ServerHttpClient(mockk { every { versionName } returns "1.0.0" })),
       bookRepository = repo,
       syncedProgressStore = SyncedProgressStore(syncedProgress),
       currentBookStore = CurrentBookStore(MemoryDataStore<BookId?>(null)),

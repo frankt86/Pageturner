@@ -1,0 +1,70 @@
+{
+  "metadata": {
+    "title": "Example Library",
+    "numberOfItems": 120,
+    "itemsPerPage": 2
+  },
+  "links": [
+    {"rel": "self", "href": "/opds/v2/catalog", "type": "application/opds+json"},
+    {"rel": "next", "href": "/opds/v2/catalog?page=2", "type": "application/opds+json"},
+    {"rel": "search", "href": "/opds/v2/search{?query}", "type": "application/opds+json", "templated": true}
+  ],
+  "navigation": [
+    {"href": "/opds/v2/new", "title": "New Publications", "type": "application/opds+json", "rel": "current"},
+    {"href": "/opds/v2/popular", "title": "Popular Publications", "type": "application/opds+json", "rel": ["popular"]}
+  ],
+  "groups": [
+    {
+      "metadata": {"title": "Science Fiction"},
+      "links": [{"rel": "self", "href": "/opds/v2/scifi", "type": "application/opds+json"}],
+      "publications": [
+        {
+          "metadata": {"title": "Ignored here", "identifier": "urn:isbn:0000"},
+          "links": [{"rel": "http://opds-spec.org/acquisition", "href": "/ignored.epub", "type": "application/epub+zip"}]
+        }
+      ]
+    },
+    {
+      "metadata": {"title": "Featured"},
+      "publications": [
+        {
+          "metadata": {
+            "@type": "http://schema.org/Book",
+            "title": {"en": "Moby-Dick", "fr": "Moby Dick"},
+            "author": [{"name": "Herman Melville", "sortAs": "Melville, Herman"}],
+            "identifier": "urn:isbn:978031600000X",
+            "description": "<p>Call me <b>Ishmael</b>.</p>"
+          },
+          "links": [
+            {"rel": "http://opds-spec.org/acquisition/open-access", "href": "/books/moby-dick.pdf", "type": "application/pdf"}
+          ],
+          "images": [
+            {"href": "/covers/moby-dick-large.jpg", "type": "image/jpeg", "width": 1400, "height": 2100},
+            {"href": "/covers/moby-dick-small.jpg", "type": "image/jpeg", "width": 200, "height": 300}
+          ]
+        }
+      ]
+    }
+  ],
+  "publications": [
+    {
+      "metadata": {
+        "title": "Pride and Prejudice",
+        "author": "Jane Austen",
+        "identifier": "https://example.org/books/1342"
+      },
+      "links": [
+        {"rel": "self", "href": "/books/1342.json", "type": "application/opds-publication+json"},
+        {"rel": "http://opds-spec.org/acquisition/open-access", "href": "/books/1342.epub", "type": "application/epub+zip"},
+        {"rel": "http://opds-spec.org/acquisition/buy", "href": "/shop/1342", "type": "text/html"}
+      ],
+      "images": [
+        {"href": "/covers/1342.jpg", "type": "image/jpeg"}
+      ]
+    },
+    {
+      "metadata": {"title": "Only to buy", "identifier": "urn:x:buy"},
+      "links": [{"rel": "http://opds-spec.org/acquisition/buy", "href": "/shop/2", "type": "text/html"}]
+    }
+  ]
+}

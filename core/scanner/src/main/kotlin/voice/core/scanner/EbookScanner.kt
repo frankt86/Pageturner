@@ -33,7 +33,9 @@ internal class EbookScanner(
       }
       .distinctBy { it.uri }
       .toList()
-    store.updateData { previous ->
+    store.updateData { all ->
+      // downloads from a catalog live in the app's storage, outside of every folder
+      val (downloaded, previous) = all.partition { it.opdsSource != null }
       val previousByUri = previous.associateBy { it.uri }
       val foundUris = found.mapTo(mutableSetOf()) { it.uri }
       val gone = previous.filter { it.uri !in foundUris }
@@ -43,7 +45,7 @@ internal class EbookScanner(
         val known = previousByUri[ebook.uri]
         // once read from the book, its own title wins over the file name
         known?.copy(name = if (known.metadataRead) known.name else ebook.name, available = true) ?: ebook
-      } + gone
+      } + gone + downloaded.map { it.copy(available = it.uri.path?.let(::File)?.exists() == true) }
     }
     store.data.first()
       .filter { it.available && !it.hidden && !it.metadataRead }

@@ -23,6 +23,7 @@ import voice.core.audiobookshelf.account.SyncedBookmarksStore
 import voice.core.audiobookshelf.api.AbsBookmark
 import voice.core.audiobookshelf.api.AbsChapter
 import voice.core.audiobookshelf.http.AudiobookshelfHttp
+import voice.core.audiobookshelf.http.ServerHttpClient
 import voice.core.data.Book
 import voice.core.data.Bookmark
 import voice.core.data.repo.BookmarkRepo
@@ -174,7 +175,7 @@ class BookmarkSyncTest {
     return BookmarkSync(
       http = AudiobookshelfHttp(
         AccountStore(MemoryDataStore<Account?>(account)),
-        mockk { every { versionName } returns "1.0.0" },
+        ServerHttpClient(mockk { every { versionName } returns "1.0.0" }),
       ),
       bookRepository = MemoryBookRepository(book),
       bookmarkRepo = bookmarkRepo,

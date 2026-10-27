@@ -33,10 +33,19 @@ public data class Ebook(
   /** The bookmarks of the new book engine, Readium Locators as JSON. */
   val readiumBookmarks: List<String> = emptyList(),
   val readiumHighlights: List<ReadiumHighlight> = emptyList(),
+  /** Set for a book downloaded from an OPDS catalog, which lives in the app's own storage. */
+  val opdsSource: OpdsSource? = null,
 ) {
 
   val title: String get() = customName ?: name
 }
+
+@Serializable
+public data class OpdsSource(
+  val catalogId: String,
+  val entryId: String,
+  val acquisitionUrl: String,
+)
 
 /**
  * In an EPUB, the chapter and the character in it. In a PDF, the page and the character in its text.

@@ -177,6 +177,8 @@ dependencies {
   implementation(projects.core.audiobookshelf)
   implementation(projects.core.foldersync)
   implementation(projects.features.audiobookshelf)
+  implementation(projects.core.opds)
+  implementation(projects.features.opds)
 
   implementation(libs.appCompat)
   implementation(libs.lifecycle.compose)
