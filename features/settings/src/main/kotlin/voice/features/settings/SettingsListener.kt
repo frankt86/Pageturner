@@ -26,6 +26,7 @@ interface SettingsListener {
   fun toggleAnalytics()
   fun openFolderPicker()
   fun openAudiobookshelf()
+  fun openOpdsCatalogs()
   fun onAppVersionClick()
 
   fun openDeveloperMenu()
@@ -53,6 +54,7 @@ interface SettingsListener {
       override fun toggleAnalytics() {}
       override fun openFolderPicker() {}
       override fun openAudiobookshelf() {}
+      override fun openOpdsCatalogs() {}
       override fun onAppVersionClick() {}
       override fun openDeveloperMenu() {}
     }

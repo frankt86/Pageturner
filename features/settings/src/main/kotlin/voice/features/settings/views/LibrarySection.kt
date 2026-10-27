@@ -77,6 +77,7 @@ internal fun LibrarySection(
   useGrid: Boolean,
   onFoldersClick: () -> Unit,
   onAudiobookshelfClick: () -> Unit,
+  onOpdsClick: () -> Unit,
   onUseGridChange: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -113,6 +114,7 @@ internal fun LibrarySection(
     if (showAudiobookshelf) {
       AudiobookshelfRow(audiobookshelfServer, onAudiobookshelfClick)
     }
+    OpdsRow(onOpdsClick)
     Spacer(Modifier.height(12.dp))
     Row(
       modifier = Modifier
@@ -395,6 +397,23 @@ private fun AudiobookshelfRow(
   )
 }
 
+@Composable
+private fun OpdsRow(onClick: () -> Unit) {
+  IslandRow(
+    title = stringResource(StringsR.string.opds_title),
+    onClick = onClick,
+    leading = {
+      ShapedIcon(
+        icon = VoiceIcons.LibraryBooks,
+        shape = MaterialShapes.Pentagon,
+        containerColor = MaterialTheme.colorScheme.tertiary,
+        contentColor = MaterialTheme.colorScheme.onTertiary,
+      )
+    },
+    summary = { Text(stringResource(StringsR.string.settings_library_opds_summary)) },
+  )
+}
+
 @Preview
 @Composable
 private fun LibrarySectionFoldersWithoutAccessPreview() {
@@ -407,6 +426,7 @@ private fun LibrarySectionFoldersWithoutAccessPreview() {
       useGrid = false,
       onFoldersClick = {},
       onAudiobookshelfClick = {},
+      onOpdsClick = {},
       onUseGridChange = {},
     )
   }

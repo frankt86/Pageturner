@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:dcterms="http://purl.org/dc/terms/">
+  <id>urn:uuid:2853dacf-ed79-42f5-8e8a-a7bb3d1ae6a2</id>
+  <updated>2026-10-20T12:00:00+00:00</updated>
+  <link rel="self" href="/opds/new?" type="application/atom+xml;profile=opds-catalog;type=feed;kind=navigation"/>
+  <link rel="start" title="Start" href="/opds?" type="application/atom+xml;profile=opds-catalog;type=feed;kind=navigation"/>
+  <link rel="next" title="Next" href="/opds/new?offset=60" type="application/atom+xml;profile=opds-catalog;type=feed;kind=navigation"/>
+  <link rel="search" title="Search" href="/opds/osd" type="application/opensearchdescription+xml"/>
+  <title>Calibre-Web</title>
+  <entry>
+    <title>The Left Hand of Darkness</title>
+    <id>urn:uuid:5b3a1f0e-4c2d-4a9b-9f1e-7d8c6b5a4e3f</id>
+    <updated>2026-10-19T08:30:00+00:00</updated>
+    <author>
+      <name>Ursula K. Le Guin</name>
+    </author>
+    <publisher>
+      <name>Ace</name>
+    </publisher>
+    <dcterms:language>eng</dcterms:language>
+    <category scheme="http://www.bisg.org/standards/BISAC_Subject/" term="Science Fiction" label="Science Fiction"/>
+    <summary type="html">&lt;p&gt;A lone human emissary arrives on &lt;em&gt;Winter&lt;/em&gt;, an alien world.&lt;/p&gt;&lt;p&gt;Its people can choose &amp;amp; change their gender.&lt;/p&gt;</summary>
+    <link type="image/jpeg" href="/opds/cover/12" rel="http://opds-spec.org/image"/>
+    <link type="image/jpeg" href="/opds/cover/12" rel="http://opds-spec.org/image/thumbnail"/>
+    <link rel="http://opds-spec.org/acquisition" href="/opds/download/12/mobi/" length="512000" title="MOBI" mtime="2026-10-19T08:30:00+00:00" type="application/x-mobipocket-ebook"/>
+    <link rel="http://opds-spec.org/acquisition" href="/opds/download/12/epub/" length="421337" title="EPUB" mtime="2026-10-19T08:30:00+00:00" type="application/epub+zip"/>
+  </entry>
+  <entry>
+    <title>Watchmen</title>
+    <id>urn:uuid:0a1b2c3d-4e5f-6071-8293-a4b5c6d7e8f9</id>
+    <updated>2026-10-18T08:30:00+00:00</updated>
+    <author>
+      <name>Alan Moore</name>
+    </author>
+    <author>
+      <name>Dave Gibbons</name>
+    </author>
+    <link type="image/jpeg" href="/opds/cover/13" rel="http://opds-spec.org/image"/>
+    <link rel="http://opds-spec.org/acquisition" href="/opds/download/13/cbz/" length="81234567" title="CBZ" type="application/x-cbz"/>
+  </entry>
+</feed>

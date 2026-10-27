@@ -154,4 +154,19 @@ sealed interface Destination {
   data object AudiobookshelfSettings : Compose {
     override val trackingName: String get() = "AudiobookshelfSettings"
   }
+
+  @Serializable
+  data object OpdsCatalogs : Compose {
+    override val trackingName: String get() = "OpdsCatalogs"
+  }
+
+  @Serializable
+  data class OpdsFeed(
+    val catalogId: String,
+    // null for the start page of the catalog
+    val url: String? = null,
+    val title: String? = null,
+  ) : Compose {
+    override val trackingName: String get() = "OpdsFeed"
+  }
 }

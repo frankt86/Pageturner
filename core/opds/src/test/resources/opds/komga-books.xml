@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:opds="http://opds-spec.org/2010/catalog" xmlns:pse="http://vaemendis.net/opds-pse/ns">
+  <id>0B5MNCGK7S9GV</id>
+  <title>Discworld</title>
+  <updated>2026-10-27T10:15:30.123Z</updated>
+  <link type="application/atom+xml;profile=opds-catalog;kind=navigation" rel="self" href="/opds/v1.2/series/0B5MNCGK7S9GV?page=0"/>
+  <link type="application/atom+xml;profile=opds-catalog;kind=navigation" rel="start" href="/opds/v1.2/catalog"/>
+  <link type="application/opensearchdescription+xml" rel="search" href="/opds/v1.2/search"/>
+  <link type="application/atom+xml;profile=opds-catalog;kind=navigation" rel="next" href="/opds/v1.2/series/0B5MNCGK7S9GV?page=1"/>
+  <entry>
+    <title>1 - The Colour of Magic</title>
+    <updated>2026-10-20T09:00:00Z</updated>
+    <id>0B5MNCH8QG7AX</id>
+    <content>The first Discworld novel.</content>
+    <author>
+      <name>Terry Pratchett</name>
+    </author>
+    <link type="image/jpeg" rel="http://opds-spec.org/image" href="/opds/v1.2/books/0B5MNCH8QG7AX/thumbnail"/>
+    <link type="image/jpeg" rel="http://opds-spec.org/image/thumbnail" href="/opds/v1.2/books/0B5MNCH8QG7AX/thumbnail/small"/>
+    <link type="application/epub+zip" rel="http://opds-spec.org/acquisition" href="/opds/v1.2/books/0B5MNCH8QG7AX/file/The%20Colour%20of%20Magic.epub"/>
+  </entry>
+  <entry>
+    <title>2 - The Light Fantastic</title>
+    <updated>2026-10-20T09:00:00Z</updated>
+    <id>0B5MNCHBG9ZQ1</id>
+    <content></content>
+    <link type="image/jpeg" rel="http://opds-spec.org/image" href="/opds/v1.2/books/0B5MNCHBG9ZQ1/thumbnail"/>
+    <link type="application/pdf" rel="http://opds-spec.org/acquisition" href="/opds/v1.2/books/0B5MNCHBG9ZQ1/file/The%20Light%20Fantastic.pdf"/>
+    <link xmlns:pse="http://vaemendis.net/opds-pse/ns" type="image/jpeg" rel="http://vaemendis.net/opds-pse/stream" href="/opds/v1.2/books/0B5MNCHBG9ZQ1/pages/{pageNumber}?zero_based=true" pse:count="320"/>
+  </entry>
+</feed>
