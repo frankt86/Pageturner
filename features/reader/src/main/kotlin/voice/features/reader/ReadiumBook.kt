@@ -29,6 +29,7 @@ import voice.core.data.Ebook
 import voice.core.data.HighlightColor
 import voice.core.data.ReadingPace
 import voice.core.logging.api.Logger
+import voice.core.opds.komga.RemotePlace
 
 /** An EPUB opened with Readium, the new book engine. */
 @Stable
@@ -206,6 +207,8 @@ internal suspend fun openReadiumBook(
   context: Context,
   uri: Uri,
   ebook: Ebook,
+  /** A newer place from the server, which wins over the one saved. */
+  remotePlace: RemotePlace? = null,
 ): ReadiumBook? {
   val url = uri.toAbsoluteUrl() ?: return null
   val httpClient = DefaultHttpClient()
@@ -231,7 +234,8 @@ internal suspend fun openReadiumBook(
     return null
   }
   // without a place from the new engine, start about where the old one was
-  val locator = ebook.readiumLocator?.toLocator()
+  val locator = remotePlace?.let { publication.locatorAt(it) }
+    ?: ebook.readiumLocator?.toLocator()
     ?: ebook.progress.takeIf { it > 0F }?.let { publication.locateProgression(it.toDouble()) }
   return ReadiumBook(
     publication = publication,

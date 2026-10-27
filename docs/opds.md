@@ -49,6 +49,28 @@ without picking a folder, and nothing gets mixed up with the files you manage yo
 To remove a book, long press it in the library and tap **Remove from library**. Download it again and your place in the
 book is still there.
 
+## Syncing your progress with Komga
+
+For a Komga server, Pageturner keeps your place in step with Komga, in both directions. Read a few chapters in Pageturner,
+open the book in Komga's own reader on your computer, and it opens where you stopped, and the other way round.
+
+- **Opening a book:** Pageturner asks Komga where you are. When Komga has a newer place, the book opens there. Without a
+  connection, the book opens where you left it in Pageturner.
+- **While you read:** a few seconds after you turn a page, and when you close the book, Pageturner tells Komga your place.
+- **Finished and Not started:** marking a book **Finished**, or reading to the end, marks it read in Komga too. **Not
+  started** marks it unread.
+- **Your library:** when you open Pageturner, it takes the progress of your Komga books, so the books you read in Komga
+  show how far you got.
+
+When there's no connection, nothing waits for it: your place stays in Pageturner and goes to Komga the next time it can.
+When you read the same book in two places, the place you read last wins.
+
+Syncing is on for every Komga server. To turn it off, tap the menu next to the catalog, tap **Edit** and turn off **Sync
+reading progress**.
+
+PDF books sync to the exact page. EPUB books sync to about the page: Komga counts the pages of an EPUB differently than
+Pageturner, so you might land a paragraph or two before where you stopped.
+
 ## Home servers, VPNs and certificates
 
 Many servers are only reachable at home. Like with Audiobookshelf, Pageturner works with plain `http://` addresses in your
@@ -60,7 +82,8 @@ Your password only goes to the address of the catalog, never to other sites the 
 ## FAQ
 
 ??? question "Does Pageturner keep my progress in step with Komga?"
-    Not yet. For now, books from Komga are downloaded and read in Pageturner. Syncing the reading progress with Komga is planned.
+    Yes, for books you downloaded from a Komga server. See [Syncing your progress with Komga](#syncing-your-progress-with-komga).
+    Other OPDS catalogs have no standard way to keep a reading place, so their books only keep it in Pageturner.
 
 ??? question "My catalog uses a different sign in, like a token or single sign-on."
     Pageturner signs in with a username and password. Ask whoever runs the server whether your account can sign in that way.

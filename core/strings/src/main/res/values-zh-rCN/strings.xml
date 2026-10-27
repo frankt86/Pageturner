@@ -291,6 +291,8 @@
     <string name="opds.catalog.komga_hint">您的 Komga 服务器地址，与浏览器中的相同</string>
     <string name="opds.catalog.name">名称</string>
     <string name="opds.catalog.remove">移除目录</string>
+    <string name="opds.catalog.sync_progress">同步阅读进度</string>
+    <string name="opds.catalog.sync_progress.summary">在这里或 Komga 中都能从上次读到的地方继续</string>
     <string name="opds.catalog.url">地址</string>
     <string name="opds.catalogs.empty.message">添加您的 Calibre-Web、Komga 或其他 OPDS 服务器的目录，即可下载其中的电子书并在这里阅读。</string>
     <string name="opds.catalogs.empty.title">还没有目录</string>

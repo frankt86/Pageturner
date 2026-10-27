@@ -308,6 +308,8 @@
     <string name="opds.catalog.komga_hint">Komga sunucunuzun adresi, tarayıcıdaki gibi</string>
     <string name="opds.catalog.name">Ad</string>
     <string name="opds.catalog.remove">Kataloğu kaldır</string>
+    <string name="opds.catalog.sync_progress">Okuma ilerlemesini eşitle</string>
+    <string name="opds.catalog.sync_progress.summary">Burada ya da Komga\'da kaldığınız yerden devam edin</string>
     <string name="opds.catalog.url">Adres</string>
     <string name="opds.catalogs.empty.message">E-kitaplarını indirip burada okumak için Calibre-Web, Komga veya başka bir OPDS sunucunuzun kataloğunu ekleyin.</string>
     <string name="opds.catalogs.empty.title">Henüz katalog yok</string>

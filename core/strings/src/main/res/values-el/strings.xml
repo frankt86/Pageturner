@@ -308,6 +308,8 @@
     <string name="opds.catalog.komga_hint">Η διεύθυνση του διακομιστή σας Komga, όπως στο πρόγραμμα περιήγησης</string>
     <string name="opds.catalog.name">Όνομα</string>
     <string name="opds.catalog.remove">Αφαίρεση καταλόγου</string>
+    <string name="opds.catalog.sync_progress">Συγχρονισμός προόδου ανάγνωσης</string>
+    <string name="opds.catalog.sync_progress.summary">Συνεχίστε από εκεί που σταματήσατε, εδώ ή στο Komga</string>
     <string name="opds.catalog.url">Διεύθυνση</string>
     <string name="opds.catalogs.empty.message">Προσθέστε τον κατάλογο του διακομιστή σας Calibre-Web, Komga ή άλλου διακομιστή OPDS για να κατεβάζετε τα ηλεκτρονικά του βιβλία και να τα διαβάζετε εδώ.</string>
     <string name="opds.catalogs.empty.title">Δεν υπάρχουν ακόμη κατάλογοι</string>

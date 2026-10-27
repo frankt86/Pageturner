@@ -14,6 +14,7 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import org.readium.r2.shared.ExperimentalReadiumApi
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.services.content.Content
@@ -39,6 +41,9 @@ import voice.core.data.ReadiumHighlight
 import voice.core.data.store.EbooksStore
 import voice.core.ebook.parseEpub
 import voice.core.logging.api.Logger
+import voice.core.opds.komga.KomgaSync
+import voice.core.opds.komga.RemotePlace
+import voice.core.opds.komga.isSamePlaceAs
 import voice.navigation.Navigator
 import java.util.Locale
 import kotlin.time.Duration.Companion.minutes
@@ -120,6 +125,7 @@ class ReaderViewModel(
   private val application: Application,
   private val navigator: Navigator,
   private val dispatcherProvider: DispatcherProvider,
+  private val komgaSync: KomgaSync,
   @Assisted
   private val uri: Uri,
 ) {
@@ -179,13 +185,19 @@ class ReaderViewModel(
       naturalVoice = naturalVoiceStore.data.first()
     }
     scope.launch {
-      val ebook = store.data.first().firstOrNull { it.uri == uri }
-      if (ebook == null) {
+      val stored = store.data.first().firstOrNull { it.uri == uri }
+      if (stored == null) {
         failed = true
         return@launch
       }
+      val newerPlace = scope.async { komgaSync.newerPlace(stored) }
+      var remotePlace: RemotePlace? = null
       try {
-        val loaded = withContext(dispatcherProvider.io) { load(ebook) }
+        val loaded = withContext(dispatcherProvider.io) { load(stored) }
+        // without a connection the book opens where it was here, after a moment at most
+        val place = withTimeoutOrNull(REMOTE_PLACE_WAIT) { newerPlace.await() }
+        val ebook = if (place != null) takePlace(stored, place, loaded) else stored
+        remotePlace = place?.takeUnless { it.isSamePlaceAs(stored.progress) }
         position = ebook.position
         bookmarks = ebook.bookmarks
         highlights = ebook.highlights
@@ -194,16 +206,38 @@ class ReaderViewModel(
           ebooks.map { if (it.uri == uri) it.copy(lastOpened = System.currentTimeMillis()) else it }
         }
       } catch (e: Exception) {
-        Logger.w(e, "Could not open a ${ebook.format}")
+        Logger.w(e, "Could not open a ${stored.format}")
+        newerPlace.cancel()
         failed = true
         return@launch
       }
-      if (ebook.format == EbookFormat.Epub) {
+      if (stored.format == EbookFormat.Epub) {
         val _ = settingsStore.data.first { it.newBookEngine }
-        val latest = store.data.first().firstOrNull { it.uri == uri } ?: ebook
-        readium = withContext(dispatcherProvider.io) { openReadiumBook(application, uri, latest) }
+        val latest = store.data.first().firstOrNull { it.uri == uri } ?: stored
+        readium = withContext(dispatcherProvider.io) { openReadiumBook(application, uri, latest, remotePlace) }
       }
     }
+  }
+
+  /** Moves to the place from the server, unless it's about where the book is already. */
+  private suspend fun takePlace(
+    ebook: Ebook,
+    place: RemotePlace,
+    content: ReaderContent,
+  ): Ebook {
+    val moved = !place.isSamePlaceAs(ebook.progress)
+    val newPosition = if (moved) place.position(content) else ebook.position
+    val progress = if (moved) place.totalProgression.toFloat() else ebook.progress
+    fun Ebook.withPlace() = copy(
+      position = newPosition,
+      progress = progress,
+      // the new book engine finds the place from the server or the progress
+      readiumLocator = if (moved) null else readiumLocator,
+      positionModified = place.modified,
+      opdsSource = opdsSource?.copy(syncedPosition = place.modified),
+    )
+    store.updateData { ebooks -> ebooks.map { if (it.uri == uri) it.withPlace() else it } }
+    return ebook.withPlace()
   }
 
   private fun load(ebook: Ebook): ReaderContent {
@@ -355,14 +389,25 @@ class ReaderViewModel(
   internal fun onLocatorChange(locator: Locator) {
     val book = readium ?: return
     if (book.locator == locator) return
+    // the place that shows when the pages are made isn't a move
+    val moved = book.locator?.locations?.totalProgression != locator.locations.totalProgression
     book.locator = locator
     val json = locator.toJsonString()
     val progress = locator.locations.totalProgression?.toFloat()
     locator.locations.totalProgression?.let { measurePace(it) }
+    val now = System.currentTimeMillis()
     scope.launch {
       store.updateData { ebooks ->
         ebooks.map { ebook ->
-          if (ebook.uri == uri) ebook.copy(readiumLocator = json, progress = progress ?: ebook.progress) else ebook
+          if (ebook.uri == uri) {
+            ebook.copy(
+              readiumLocator = json,
+              progress = progress ?: ebook.progress,
+              positionModified = if (moved) now else ebook.positionModified,
+            )
+          } else {
+            ebook
+          }
         }
       }
     }
@@ -652,10 +697,11 @@ class ReaderViewModel(
   ) {
     if (newPosition == position) return
     position = newPosition
+    val now = System.currentTimeMillis()
     scope.launch {
       store.updateData { ebooks ->
         ebooks.map { ebook ->
-          if (ebook.uri == uri) ebook.copy(position = newPosition, progress = progress) else ebook
+          if (ebook.uri == uri) ebook.copy(position = newPosition, progress = progress, positionModified = now) else ebook
         }
       }
     }
@@ -683,6 +729,7 @@ class ReaderViewModel(
     scope.launch {
       if (content is ReaderContent.Pdf) content.pdf.close()
       publication?.close()
+      komgaSync.flush()
     }
   }
 
@@ -699,5 +746,7 @@ private const val MAX_CHARACTERS_PER_TURN = 6_000
 private val IDLE = 2.minutes
 
 private val SCROLL_PACE_STEP = 10.seconds
+
+private val REMOTE_PLACE_WAIT = 2.seconds
 
 private val positionOrder = compareBy<EbookPosition>({ it.section }, { it.offset })

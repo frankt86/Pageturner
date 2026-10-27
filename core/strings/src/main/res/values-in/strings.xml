@@ -291,6 +291,8 @@
     <string name="opds.catalog.komga_hint">Alamat server Komga Anda, seperti di browser</string>
     <string name="opds.catalog.name">Nama</string>
     <string name="opds.catalog.remove">Hapus katalog</string>
+    <string name="opds.catalog.sync_progress">Sinkronkan progres membaca</string>
+    <string name="opds.catalog.sync_progress.summary">Lanjutkan dari tempat terakhir Anda, di sini atau di Komga</string>
     <string name="opds.catalog.url">Alamat</string>
     <string name="opds.catalogs.empty.message">Tambahkan katalog server Calibre-Web, Komga, atau server OPDS lain milik Anda untuk mengunduh e-book-nya dan membacanya di sini.</string>
     <string name="opds.catalogs.empty.title">Belum ada katalog</string>

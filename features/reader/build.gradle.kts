@@ -15,6 +15,7 @@ dependencies {
   implementation(projects.core.strings)
   implementation(projects.core.data.api)
   implementation(projects.core.ebook)
+  implementation(projects.core.opds)
 
   implementation(libs.androidxCore)
   implementation(libs.navigation3.ui)

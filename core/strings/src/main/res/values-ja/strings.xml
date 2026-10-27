@@ -291,6 +291,8 @@
     <string name="opds.catalog.komga_hint">Komga サーバーのアドレス（ブラウザーで開くものと同じ）</string>
     <string name="opds.catalog.name">名前</string>
     <string name="opds.catalog.remove">カタログを削除</string>
+    <string name="opds.catalog.sync_progress">読書の進み具合を同期</string>
+    <string name="opds.catalog.sync_progress.summary">ここでも Komga でも、続きから読めます</string>
     <string name="opds.catalog.url">アドレス</string>
     <string name="opds.catalogs.empty.message">Calibre-Web や Komga などの OPDS サーバーのカタログを追加すると、電子書籍をダウンロードしてここで読めます。</string>
     <string name="opds.catalogs.empty.title">カタログはまだありません</string>

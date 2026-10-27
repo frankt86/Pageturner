@@ -35,6 +35,8 @@ public data class Ebook(
   val readiumHighlights: List<ReadiumHighlight> = emptyList(),
   /** Set for a book downloaded from an OPDS catalog, which lives in the app's own storage. */
   val opdsSource: OpdsSource? = null,
+  /** Epoch milliseconds of the last move in the book here, which decides against a newer place on a server. */
+  val positionModified: Long = 0,
 ) {
 
   val title: String get() = customName ?: name
@@ -45,6 +47,10 @@ public data class OpdsSource(
   val catalogId: String,
   val entryId: String,
   val acquisitionUrl: String,
+  /** The id of the book on a Komga server, which syncs the reading progress. */
+  val komgaBookId: String? = null,
+  /** The [Ebook.positionModified] the server knows, so a place that couldn't be sent goes out later. */
+  val syncedPosition: Long = 0,
 )
 
 /**

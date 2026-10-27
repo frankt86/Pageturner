@@ -325,6 +325,8 @@
     <string name="opds.catalog.komga_hint">Adresa serverului tău Komga, ca în browser</string>
     <string name="opds.catalog.name">Nume</string>
     <string name="opds.catalog.remove">Elimină catalogul</string>
+    <string name="opds.catalog.sync_progress">Sincronizează progresul lecturii</string>
+    <string name="opds.catalog.sync_progress.summary">Continuă de unde ai rămas, aici sau în Komga</string>
     <string name="opds.catalog.url">Adresă</string>
     <string name="opds.catalogs.empty.message">Adaugă catalogul serverului tău Calibre-Web, Komga sau al altui server OPDS ca să-i descarci cărțile electronice și să le citești aici.</string>
     <string name="opds.catalogs.empty.title">Încă nu ai cataloage</string>

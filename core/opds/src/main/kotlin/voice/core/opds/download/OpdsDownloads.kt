@@ -31,9 +31,11 @@ import voice.core.data.EbookFormat
 import voice.core.data.OpdsSource
 import voice.core.data.store.EbooksStore
 import voice.core.logging.api.Logger
+import voice.core.opds.CatalogType
 import voice.core.opds.OpdsCatalog
 import voice.core.opds.feed.OpdsFormat
 import voice.core.opds.feed.OpdsPublication
+import voice.core.opds.komga.komgaBookId
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
@@ -153,7 +155,12 @@ public class OpdsDownloads(
         cover = cover?.absolutePath,
         // without a cover from the catalog, the next scan takes the one in the book
         metadataRead = cover != null,
-        opdsSource = OpdsSource(catalogId = catalog.id, entryId = publication.id, acquisitionUrl = acquisition.url),
+        opdsSource = OpdsSource(
+          catalogId = catalog.id,
+          entryId = publication.id,
+          acquisitionUrl = acquisition.url,
+          komgaBookId = if (catalog.type == CatalogType.Komga) komgaBookId(acquisition.url, publication.id) else null,
+        ),
       ),
     )
   }

@@ -8,6 +8,7 @@ dependencies {
   implementation(projects.core.audiobookshelf)
   implementation(projects.core.common)
   implementation(projects.core.data.api)
+  implementation(projects.core.initializer)
 
   implementation(libs.androidxCore)
   implementation(libs.okhttp)

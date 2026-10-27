@@ -308,6 +308,8 @@
     <string name="opds.catalog.komga_hint">Die Adresse Deines Komga-Servers, wie im Browser</string>
     <string name="opds.catalog.name">Name</string>
     <string name="opds.catalog.remove">Katalog entfernen</string>
+    <string name="opds.catalog.sync_progress">Lesefortschritt synchronisieren</string>
+    <string name="opds.catalog.sync_progress.summary">Lies weiter, wo Du aufgehört hast, hier oder in Komga</string>
     <string name="opds.catalog.url">Adresse</string>
     <string name="opds.catalogs.empty.message">Füge den Katalog Deines Calibre-Web-, Komga- oder anderen OPDS-Servers hinzu, um seine E-Books herunterzuladen und hier zu lesen.</string>
     <string name="opds.catalogs.empty.title">Noch keine Kataloge</string>

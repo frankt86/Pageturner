@@ -342,6 +342,8 @@
     <string name="opds.catalog.komga_hint">Адреса вашого сервера Komga, як у браузері</string>
     <string name="opds.catalog.name">Назва</string>
     <string name="opds.catalog.remove">Вилучити каталог</string>
+    <string name="opds.catalog.sync_progress">Синхронізувати прогрес читання</string>
+    <string name="opds.catalog.sync_progress.summary">Продовжуйте з того ж місця, тут або в Komga</string>
     <string name="opds.catalog.url">Адреса</string>
     <string name="opds.catalogs.empty.message">Додайте каталог вашого сервера Calibre-Web, Komga чи іншого сервера OPDS, щоб завантажувати електронні книги й читати їх тут.</string>
     <string name="opds.catalogs.empty.title">Каталогів поки немає</string>

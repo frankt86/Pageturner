@@ -376,6 +376,8 @@
     <string name="opds.catalog.komga_hint">عنوان خادم Komga كما يظهر في المتصفح</string>
     <string name="opds.catalog.name">الاسم</string>
     <string name="opds.catalog.remove">إزالة الفهرس</string>
+    <string name="opds.catalog.sync_progress">مزامنة تقدّم القراءة</string>
+    <string name="opds.catalog.sync_progress.summary">يمكنك متابعة القراءة من المكان نفسه، هنا أو في Komga</string>
     <string name="opds.catalog.url">العنوان</string>
     <string name="opds.catalogs.empty.message">يمكنك إضافة فهرس خادم Calibre-Web أو Komga أو أي خادم OPDS آخر لتنزيل كتبه الإلكترونية وقراءتها هنا.</string>
     <string name="opds.catalogs.empty.title">لا توجد فهارس بعد</string>

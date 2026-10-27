@@ -308,6 +308,8 @@
     <string name="opds.catalog.komga_hint">உலாவியில் உள்ளது போல, உங்கள் Komga சர்வரின் முகவரி</string>
     <string name="opds.catalog.name">பெயர்</string>
     <string name="opds.catalog.remove">கேட்டலாகை அகற்று</string>
+    <string name="opds.catalog.sync_progress">வாசிப்பு முன்னேற்றத்தை ஒத்திசை</string>
+    <string name="opds.catalog.sync_progress.summary">இங்கேயோ Komga-விலோ, நிறுத்திய இடத்திலிருந்து தொடருங்கள்</string>
     <string name="opds.catalog.url">முகவரி</string>
     <string name="opds.catalogs.empty.message">உங்கள் Calibre-Web, Komga அல்லது வேறு OPDS சர்வரின் கேட்டலாகைச் சேர்த்து, அதன் மின்புத்தகங்களைப் பதிவிறக்கி இங்கே படியுங்கள்.</string>
     <string name="opds.catalogs.empty.title">இன்னும் கேட்டலாக் எதுவும் இல்லை</string>
