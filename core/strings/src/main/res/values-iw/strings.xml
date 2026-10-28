@@ -325,6 +325,8 @@
     <string name="opds.catalog.komga_hint">הכתובת של שרת ה-Komga שלכם, כמו בדפדפן</string>
     <string name="opds.catalog.name">שם</string>
     <string name="opds.catalog.remove">הסרת הקטלוג</string>
+    <string name="opds.catalog.sync_progress">סנכרון התקדמות הקריאה</string>
+    <string name="opds.catalog.sync_progress.summary">אפשר להמשיך מאותו מקום, כאן או ב־Komga</string>
     <string name="opds.catalog.url">כתובת</string>
     <string name="opds.catalogs.empty.message">אפשר להוסיף את הקטלוג של שרת Calibre-Web, Komga או OPDS אחר כדי להוריד ממנו ספרים דיגיטליים ולקרוא אותם כאן.</string>
     <string name="opds.catalogs.empty.title">עדיין אין קטלוגים</string>

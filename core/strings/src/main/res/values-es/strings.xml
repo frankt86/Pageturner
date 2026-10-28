@@ -325,6 +325,8 @@
     <string name="opds.catalog.komga_hint">La dirección de tu servidor Komga, como en el navegador</string>
     <string name="opds.catalog.name">Nombre</string>
     <string name="opds.catalog.remove">Quitar catálogo</string>
+    <string name="opds.catalog.sync_progress">Sincronizar el progreso de lectura</string>
+    <string name="opds.catalog.sync_progress.summary">Sigue donde lo dejaste, aquí o en Komga</string>
     <string name="opds.catalog.url">Dirección</string>
     <string name="opds.catalogs.empty.message">Añade el catálogo de tu servidor Calibre-Web, Komga u otro servidor OPDS para descargar sus libros electrónicos y leerlos aquí.</string>
     <string name="opds.catalogs.empty.title">Aún no hay catálogos</string>

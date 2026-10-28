@@ -308,6 +308,8 @@
     <string name="opds.catalog.komga_hint">A Komga-szervere címe, ahogy a böngészőben</string>
     <string name="opds.catalog.name">Név</string>
     <string name="opds.catalog.remove">Katalógus eltávolítása</string>
+    <string name="opds.catalog.sync_progress">Olvasási előrehaladás szinkronizálása</string>
+    <string name="opds.catalog.sync_progress.summary">Folytassa ott, ahol abbahagyta, itt vagy a Komgában</string>
     <string name="opds.catalog.url">Cím</string>
     <string name="opds.catalogs.empty.message">Adja hozzá Calibre-Web-, Komga- vagy más OPDS-szervere katalógusát, hogy letölthesse az e-könyveit, és itt olvashassa őket.</string>
     <string name="opds.catalogs.empty.title">Még nincsenek katalógusok</string>

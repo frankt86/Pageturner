@@ -308,6 +308,8 @@
     <string name="opds.catalog.komga_hint">Komga-palvelimesi osoite, kuten selaimessa</string>
     <string name="opds.catalog.name">Nimi</string>
     <string name="opds.catalog.remove">Poista luettelo</string>
+    <string name="opds.catalog.sync_progress">Synkronoi lukemisen edistyminen</string>
+    <string name="opds.catalog.sync_progress.summary">Jatka siitä, mihin jäit, täällä tai Komgassa</string>
     <string name="opds.catalog.url">Osoite</string>
     <string name="opds.catalogs.empty.message">Lisää Calibre-Web-, Komga- tai muun OPDS-palvelimesi luettelo, niin voit ladata sen e-kirjat ja lukea ne täällä.</string>
     <string name="opds.catalogs.empty.title">Ei vielä luetteloita</string>

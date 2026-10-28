@@ -522,6 +522,10 @@
     <string name="opds.catalog.name">Name</string>
     <!-- Button that removes a catalog from Pageturner. The books downloaded from it stay in the library. -->
     <string name="opds.catalog.remove">Remove catalog</string>
+    <!-- Switch in the settings of a Komga catalog. When on, the place in books downloaded from Komga is kept in step with the server, in both directions. -->
+    <string name="opds.catalog.sync_progress">Sync reading progress</string>
+    <!-- Shown under the switch that syncs the reading progress with Komga: the reader can continue at the same place in Pageturner or in Komga's own web reader. Komga is a product name. -->
+    <string name="opds.catalog.sync_progress.summary">Pick up where you left off, here or in Komga</string>
     <!-- Option for a catalog that is a Komga server. Product name, not translated. -->
     <string name="opds.catalog.type.komga" translatable="false">Komga</string>
     <!-- Option for a catalog of any other OPDS server. Technical name, not translated. -->

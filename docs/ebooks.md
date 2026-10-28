@@ -11,7 +11,8 @@ reach the end. A small book badge on the cover tells ebooks and audiobooks apart
 
 Long-press an ebook to:
 
-- mark it **Not started**, **Current** or **Finished**,
+- mark it **Not started**, **Current** or **Finished**. For a book from Komga, this also marks it read or unread in Komga,
+  see [Ebook catalogs](opds.md#syncing-your-progress-with-komga),
 - **Rename** it,
 - set a **Cover from the Internet** (searched by title and author) or a **Cover from the file system**,
 - **Remove from library**. The file stays on your phone.

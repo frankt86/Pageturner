@@ -5,12 +5,15 @@ package voice.features.opds.catalogs
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -28,6 +31,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetValue.Expanded
 import androidx.compose.material3.SheetValue.Hidden
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.rememberBottomSheetState
@@ -36,6 +40,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.res.stringResource
@@ -155,6 +160,13 @@ internal fun CatalogEditorSheet(
         onPasswordChange = { onChange(state.copy(password = it)) },
         onDone = onSave,
       )
+      if (state.type == CatalogType.Komga) {
+        SyncProgressRow(
+          checked = state.syncProgress,
+          enabled = !state.busy,
+          onCheckedChange = { onChange(state.copy(syncProgress = it)) },
+        )
+      }
       state.error?.let { error ->
         Text(
           modifier = Modifier
@@ -246,6 +258,40 @@ private fun TypeChoice(
         )
       }
     }
+  }
+}
+
+@Composable
+private fun SyncProgressRow(
+  checked: Boolean,
+  enabled: Boolean,
+  onCheckedChange: (Boolean) -> Unit,
+) {
+  Row(
+    modifier = Modifier
+      .fillMaxWidth()
+      .toggleable(
+        value = checked,
+        enabled = enabled,
+        role = Role.Switch,
+        onValueChange = onCheckedChange,
+      )
+      .heightIn(min = 56.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Column(Modifier.weight(1F)) {
+      Text(
+        text = stringResource(StringsR.string.opds_catalog_sync_progress),
+        style = MaterialTheme.typography.bodyLarge,
+      )
+      Text(
+        text = stringResource(StringsR.string.opds_catalog_sync_progress_summary),
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+      )
+    }
+    Spacer(Modifier.width(12.dp))
+    Switch(checked = checked, onCheckedChange = null, enabled = enabled)
   }
 }
 

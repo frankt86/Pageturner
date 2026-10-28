@@ -308,6 +308,8 @@
     <string name="opds.catalog.komga_hint">आपके Komga सर्वर का पता, जैसा ब्राउज़र में होता है</string>
     <string name="opds.catalog.name">नाम</string>
     <string name="opds.catalog.remove">कैटलॉग हटाएँ</string>
+    <string name="opds.catalog.sync_progress">पढ़ने की प्रगति सिंक करें</string>
+    <string name="opds.catalog.sync_progress.summary">जहाँ छोड़ा था, वहीं से आगे पढ़ें, यहाँ या Komga में</string>
     <string name="opds.catalog.url">पता</string>
     <string name="opds.catalogs.empty.message">अपने Calibre-Web, Komga या किसी दूसरे OPDS सर्वर का कैटलॉग जोड़ें, ताकि उसकी ई-बुक डाउनलोड करके यहाँ पढ़ी जा सकें।</string>
     <string name="opds.catalogs.empty.title">अभी कोई कैटलॉग नहीं है</string>

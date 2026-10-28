@@ -14,7 +14,7 @@ import voice.core.datastore.VoiceDataStoreFactory
 public enum class CatalogType {
   Opds,
 
-  /** A Komga server. Its catalog lives at a fixed path, and its own api can sync the progress later on. */
+  /** A Komga server. Its catalog lives at a fixed path, and its own api syncs the reading progress. */
   Komga,
 }
 
@@ -27,6 +27,8 @@ public data class OpdsCatalog(
   val type: CatalogType = CatalogType.Opds,
   val username: String? = null,
   val password: String? = null,
+  /** Only for [CatalogType.Komga]: keeps the place in its books in step with the server. */
+  val syncProgress: Boolean = true,
 ) {
 
   val feedUrl: String

@@ -93,14 +93,19 @@ class EbookActionsViewModel(
     val now = System.currentTimeMillis()
     update { ebook ->
       when (category) {
-        BookOverviewCategory.NOT_STARTED -> ebook.copy(position = EbookPosition(), progress = 0F, lastOpened = 0)
+        BookOverviewCategory.NOT_STARTED -> ebook.copy(
+          position = EbookPosition(),
+          progress = 0F,
+          lastOpened = 0,
+          positionModified = now,
+        )
         // a finished book starts over
         BookOverviewCategory.CURRENT -> if (ebook.category == BookOverviewCategory.FINISHED) {
-          ebook.copy(position = EbookPosition(), progress = 0F, lastOpened = now)
+          ebook.copy(position = EbookPosition(), progress = 0F, lastOpened = now, positionModified = now)
         } else {
           ebook.copy(lastOpened = now)
         }
-        BookOverviewCategory.FINISHED -> ebook.copy(progress = 1F, lastOpened = now)
+        BookOverviewCategory.FINISHED -> ebook.copy(progress = 1F, lastOpened = now, positionModified = now)
       }
     }
   }

@@ -58,6 +58,7 @@ class OpdsCatalogsViewModel(
         type = catalog.type,
         username = catalog.username.orEmpty(),
         password = catalog.password.orEmpty(),
+        syncProgress = catalog.syncProgress,
       )
     }
   }
@@ -84,6 +85,7 @@ class OpdsCatalogsViewModel(
           type = state.type,
           username = state.username,
           password = state.password,
+          syncProgress = state.syncProgress,
         ),
       )
       // closed while the catalog was checked
@@ -129,6 +131,7 @@ internal data class CatalogEditorState(
   val type: CatalogType = CatalogType.Opds,
   val username: String = "",
   val password: String = "",
+  val syncProgress: Boolean = true,
   val busy: Boolean = false,
   val error: CatalogError? = null,
 ) {

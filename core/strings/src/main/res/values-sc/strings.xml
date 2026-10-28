@@ -308,6 +308,8 @@
     <string name="opds.catalog.komga_hint">S\'indiritzu de su serbidore Komga tuo, comente in su navigadore</string>
     <string name="opds.catalog.name">Nùmene</string>
     <string name="opds.catalog.remove">Boga su catàlogu</string>
+    <string name="opds.catalog.sync_progress">Sincroniza su progressu de letura</string>
+    <string name="opds.catalog.sync_progress.summary">Sighi dae ue as lassadu, inoghe o in Komga</string>
     <string name="opds.catalog.url">Indiritzu</string>
     <string name="opds.catalogs.empty.message">Agiunghe su catàlogu de su serbidore tuo Calibre-Web, Komga o de un\'àteru serbidore OPDS pro iscarrigare sos libros eletrònicos suos e los lèghere inoghe.</string>
     <string name="opds.catalogs.empty.title">Galu perunu catàlogu</string>

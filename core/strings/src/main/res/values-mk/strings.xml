@@ -308,6 +308,8 @@
     <string name="opds.catalog.komga_hint">Адресата на вашиот Komga сервер, како во прелистувачот</string>
     <string name="opds.catalog.name">Име</string>
     <string name="opds.catalog.remove">Отстрани каталог</string>
+    <string name="opds.catalog.sync_progress">Синхронизирај го напредокот во читањето</string>
+    <string name="opds.catalog.sync_progress.summary">Продолжете од каде што застанавте, тука или во Komga</string>
     <string name="opds.catalog.url">Адреса</string>
     <string name="opds.catalogs.empty.message">Додајте го каталогот на вашиот Calibre-Web, Komga или друг OPDS сервер за да ги преземате неговите е-книги и да ги читате тука.</string>
     <string name="opds.catalogs.empty.title">Сè уште нема каталози</string>

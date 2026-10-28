@@ -308,6 +308,8 @@
     <string name="opds.catalog.komga_hint">نشانی سرور Komga شما، همان‌طور که در مرورگر است</string>
     <string name="opds.catalog.name">نام</string>
     <string name="opds.catalog.remove">حذف کاتالوگ</string>
+    <string name="opds.catalog.sync_progress">همگام‌سازی پیشرفت مطالعه</string>
+    <string name="opds.catalog.sync_progress.summary">از همان جایی که ماندید ادامه دهید، اینجا یا در Komga</string>
     <string name="opds.catalog.url">نشانی</string>
     <string name="opds.catalogs.empty.message">کاتالوگ سرور Calibre-Web، Komga یا هر سرور OPDS دیگری را اضافه کنید تا کتاب‌های الکترونیکی‌اش را دانلود کنید و اینجا بخوانید.</string>
     <string name="opds.catalogs.empty.title">هنوز کاتالوگی ندارید</string>

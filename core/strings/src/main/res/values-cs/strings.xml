@@ -342,6 +342,8 @@
     <string name="opds.catalog.komga_hint">Adresa vašeho serveru Komga, stejně jako v prohlížeči</string>
     <string name="opds.catalog.name">Název</string>
     <string name="opds.catalog.remove">Odebrat katalog</string>
+    <string name="opds.catalog.sync_progress">Synchronizovat postup čtení</string>
+    <string name="opds.catalog.sync_progress.summary">Pokračujte tam, kde jste přestali, tady nebo na serveru Komga</string>
     <string name="opds.catalog.url">Adresa</string>
     <string name="opds.catalogs.empty.message">Přidejte katalog svého serveru Calibre-Web, Komga nebo jiného serveru OPDS a stahujte z něj e-knihy, které si pak přečtete tady.</string>
     <string name="opds.catalogs.empty.title">Zatím žádné katalogy</string>
