@@ -1,6 +1,7 @@
 package voice.core.opds
 
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -49,6 +50,12 @@ public class OpdsClient(private val http: ServerHttpClient) {
     } catch (e: OpdsParseException) {
       Logger.w(e, "Could not read a feed")
       FeedResult.NotACatalog
+    } catch (e: CancellationException) {
+      throw e
+    } catch (e: Exception) {
+      // a broken answer must show as an error, not take the app down
+      Logger.w(e, "Could not load a feed")
+      FeedResult.Unreachable
     }
   }
 

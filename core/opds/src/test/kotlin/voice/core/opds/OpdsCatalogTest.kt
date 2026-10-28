@@ -35,4 +35,39 @@ class OpdsCatalogTest {
     assertNull(catalog.authorizationFor("https://covers.example.org/1.jpg"))
     assertNull(catalog.copy(username = null).authorizationFor("https://books.example.com/opds"))
   }
+
+  @Test
+  fun localServerWithoutSchemeTriesHttpFirst() {
+    assertEquals(
+      listOf("http://192.168.1.2:25600", "https://192.168.1.2:25600"),
+      catalogUrlCandidates("192.168.1.2:25600", CatalogType.Komga, withPassword = true),
+    )
+  }
+
+  @Test
+  fun serverWithoutCatalogPathTriesCommonPaths() {
+    assertEquals(
+      listOf(
+        "http://nas.local:8083",
+        "http://nas.local:8083/opds",
+        "http://nas.local:8083/opds/v1.2/catalog",
+        "https://nas.local:8083",
+        "https://nas.local:8083/opds",
+        "https://nas.local:8083/opds/v1.2/catalog",
+      ),
+      catalogUrlCandidates("nas.local:8083", CatalogType.Opds, withPassword = false),
+    )
+  }
+
+  @Test
+  fun passwordIsNotGuessedOntoPlainHttpOnTheInternet() {
+    assertEquals(
+      listOf("https://books.example.com/opds"),
+      catalogUrlCandidates("books.example.com/opds", CatalogType.Opds, withPassword = true),
+    )
+    assertEquals(
+      listOf("http://books.example.com/opds"),
+      catalogUrlCandidates("http://books.example.com/opds", CatalogType.Opds, withPassword = true),
+    )
+  }
 }

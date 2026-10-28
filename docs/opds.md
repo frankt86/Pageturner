@@ -77,6 +77,12 @@ Many servers are only reachable at home. Like with Audiobookshelf, Pageturner wo
 network, with VPNs like Tailscale or WireGuard, with reverse proxies in a subfolder and with self-signed certificates, once
 you install your certificate authority in the Android settings.
 
+You can leave out `http://` or `https://`. Pageturner tries both: plain `http://` first for addresses in your network, like
+`192.168.1.20:25600` or `nas.local`. For a server on the internet, it only tries `https://` when you've entered a
+password, so your password is never sent unencrypted by a guess. Type `http://` yourself if that server only speaks
+plain http. For an OPDS catalog, the address of the server is enough too: Pageturner also looks for the catalog at
+`/opds` and at Komga's path.
+
 Your password only goes to the address of the catalog, never to other sites the catalog links to.
 
 ## FAQ
