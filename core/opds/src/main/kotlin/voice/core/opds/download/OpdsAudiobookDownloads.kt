@@ -314,10 +314,10 @@ public class OpdsAudiobookDownloads internal constructor(
       http.client.fetch(downloadRequest(catalog, file.url), destination, onCall = { calls[key] = it }) { read, total ->
         val downloaded = finished + read
         val size = knownSize ?: total.takeIf { files.size == 1 && it > 0 }
+        // without the sizes of all files the share of the book isn't known, so the bytes so far show instead
         val progress = when {
           size != null -> downloaded.toFloat() / size
-          total > 0 -> (index + read.toFloat() / total) / files.size
-          files.size > 1 -> index.toFloat() / files.size
+          total > 0 && files.size == 1 -> read.toFloat() / total
           else -> null
         }
         report(key, OpdsDownloadState.Downloading(progress?.coerceIn(0F, 1F), downloaded, size ?: 0L))

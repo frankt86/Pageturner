@@ -43,6 +43,13 @@ class AudiobookParserTest {
   }
 
   @Test
+  fun `the same book linked twice is one file, not two chapters`() {
+    val audiobook = opds1.getValue("Carmilla").audiobook!!
+    assertEquals(listOf("https://books.example.com/download/carmilla/m4b"), audiobook.files.map { it.url })
+    assertEquals(250_000_000L, audiobook.size)
+  }
+
+  @Test
   fun `a generic type is recognized by the extension in the title`() {
     val audiobook = opds1.getValue("Dracula").audiobook!!
     assertEquals("M4B", audiobook.format)
