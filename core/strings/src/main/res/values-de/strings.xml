@@ -313,6 +313,11 @@
     <string name="opds.catalog.url">Adresse</string>
     <string name="opds.catalogs.empty.message">Füge den Katalog Deines Calibre-Web-, Komga- oder anderen OPDS-Servers hinzu, um seine E-Books herunterzuladen und hier zu lesen.</string>
     <string name="opds.catalogs.empty.title">Noch keine Kataloge</string>
+    <string name="opds.download_folder.error">Pageturner kann in diesem Ordner keine Bücher speichern. Probier einen anderen.</string>
+    <string name="opds.download_folder.message">Wähle einen Ordner Deiner Bibliothek für Downloads. Dort findest Du sie neben all Deinen anderen Büchern.</string>
+    <string name="opds.download_folder.new">Anderen Ordner auswählen</string>
+    <string name="opds.download_folder.none">Noch nicht ausgewählt</string>
+    <string name="opds.download_folder.title">Download-Ordner</string>
     <string name="opds.entry.download">%s herunterladen</string>
     <string name="opds.entry.download_audiobook">Hörbuch herunterladen</string>
     <string name="opds.entry.downloaded">In Deiner Bibliothek</string>

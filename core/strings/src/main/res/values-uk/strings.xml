@@ -347,6 +347,11 @@
     <string name="opds.catalog.url">Адреса</string>
     <string name="opds.catalogs.empty.message">Додайте каталог вашого сервера Calibre-Web, Komga чи іншого сервера OPDS, щоб завантажувати електронні книги й читати їх тут.</string>
     <string name="opds.catalogs.empty.title">Каталогів поки немає</string>
+    <string name="opds.download_folder.error">Pageturner не може зберігати книги в цю папку. Спробуйте іншу.</string>
+    <string name="opds.download_folder.message">Виберіть папку вашої бібліотеки для завантажень. Книги з\'являться там поруч з усіма іншими.</string>
+    <string name="opds.download_folder.new">Вибрати іншу папку</string>
+    <string name="opds.download_folder.none">Ще не вибрано</string>
+    <string name="opds.download_folder.title">Папка для завантажень</string>
     <string name="opds.entry.download">Завантажити %s</string>
     <string name="opds.entry.download_audiobook">Завантажити аудіокнигу</string>
     <string name="opds.entry.downloaded">У вашій бібліотеці</string>

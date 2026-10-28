@@ -296,6 +296,11 @@
     <string name="opds.catalog.url">地址</string>
     <string name="opds.catalogs.empty.message">添加您的 Calibre-Web、Komga 或其他 OPDS 服务器的目录，即可下载其中的电子书并在这里阅读。</string>
     <string name="opds.catalogs.empty.title">还没有目录</string>
+    <string name="opds.download_folder.error">Pageturner 无法将图书保存到此文件夹。请换一个试试。</string>
+    <string name="opds.download_folder.message">请为下载选择书库中的一个文件夹。下载的书会和您的其他书一起显示在那里。</string>
+    <string name="opds.download_folder.new">选择其他文件夹</string>
+    <string name="opds.download_folder.none">尚未选择</string>
+    <string name="opds.download_folder.title">下载文件夹</string>
     <string name="opds.entry.download">下载 %s</string>
     <string name="opds.entry.download_audiobook">下载有声书</string>
     <string name="opds.entry.downloaded">已在您的书库中</string>

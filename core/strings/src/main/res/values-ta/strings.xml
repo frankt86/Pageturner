@@ -313,6 +313,11 @@
     <string name="opds.catalog.url">முகவரி</string>
     <string name="opds.catalogs.empty.message">உங்கள் Calibre-Web, Komga அல்லது வேறு OPDS சர்வரின் கேட்டலாகைச் சேர்த்து, அதன் மின்புத்தகங்களைப் பதிவிறக்கி இங்கே படியுங்கள்.</string>
     <string name="opds.catalogs.empty.title">இன்னும் கேட்டலாக் எதுவும் இல்லை</string>
+    <string name="opds.download_folder.error">Pageturner-ஆல் இந்தக் கோப்புறையில் புத்தகங்களைச் சேமிக்க முடியவில்லை. வேறொன்றை முயலவும்.</string>
+    <string name="opds.download_folder.message">பதிவிறக்கங்களுக்கு உங்கள் நூலகத்தில் ஒரு கோப்புறையைத் தேர்ந்தெடுக்கவும். அவை அங்கே உங்கள் மற்ற எல்லாப் புத்தகங்களுடனும் தோன்றும்.</string>
+    <string name="opds.download_folder.new">வேறு கோப்புறையைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="opds.download_folder.none">இன்னும் தேர்ந்தெடுக்கவில்லை</string>
+    <string name="opds.download_folder.title">பதிவிறக்கக் கோப்புறை</string>
     <string name="opds.entry.download">%s பதிவிறக்கு</string>
     <string name="opds.entry.download_audiobook">ஆடியோபுக்கைப் பதிவிறக்கு</string>
     <string name="opds.entry.downloaded">உங்கள் நூலகத்தில் உள்ளது</string>

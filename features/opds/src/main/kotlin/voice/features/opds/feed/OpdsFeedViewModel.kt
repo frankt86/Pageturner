@@ -21,12 +21,15 @@ import voice.core.opds.OpdsCatalog
 import voice.core.opds.OpdsCatalogs
 import voice.core.opds.OpdsClient
 import voice.core.opds.download.OpdsAudiobookDownloads
+import voice.core.opds.download.OpdsDownloadFolders
 import voice.core.opds.download.OpdsDownloadState
 import voice.core.opds.download.OpdsDownloads
 import voice.core.opds.download.OpdsEntryKey
 import voice.core.opds.feed.OpdsNavigation
 import voice.core.opds.feed.OpdsPublication
 import voice.core.opds.feed.OpdsSearch
+import voice.features.opds.folder.DownloadFolderChooser
+import voice.features.opds.folder.DownloadFolderSheetState
 import voice.navigation.Destination
 import voice.navigation.Navigator
 
@@ -36,6 +39,7 @@ class OpdsFeedViewModel(
   private val client: OpdsClient,
   private val downloads: OpdsDownloads,
   private val audiobookDownloads: OpdsAudiobookDownloads,
+  downloadFolders: OpdsDownloadFolders,
   private val navigator: Navigator,
   dispatcherProvider: DispatcherProvider,
   @Assisted
@@ -43,6 +47,7 @@ class OpdsFeedViewModel(
 ) : FeedListener {
 
   private val scope = MainScope(dispatcherProvider)
+  private val folderChooser = DownloadFolderChooser(downloadFolders, scope)
   private var loadJob: Job? = null
 
   private var catalog by mutableStateOf<OpdsCatalog?>(null)
@@ -94,6 +99,7 @@ class OpdsFeedViewModel(
       loadMoreFailed = loadMoreFailed,
       selected = items.firstOrNull { it.id == selectedId },
       askForNotifications = askForNotifications,
+      downloadFolder = folderChooser.sheet(),
     )
   }
 
@@ -178,7 +184,7 @@ class OpdsFeedViewModel(
   override fun onDownload(id: String) {
     val current = catalog ?: return
     val publication = publications.firstOrNull { it.id == id } ?: return
-    downloads.download(current, publication)
+    folderChooser.beforeDownload { downloads.download(current, publication) }
   }
 
   override fun onCancelDownload(id: String) {
@@ -193,7 +199,19 @@ class OpdsFeedViewModel(
   override fun onDownloadAudiobook(id: String) {
     val current = catalog ?: return
     val publication = publications.firstOrNull { it.id == id } ?: return
-    audiobookDownloads.download(current, publication)
+    folderChooser.beforeDownload { audiobookDownloads.download(current, publication) }
+  }
+
+  override fun onDownloadFolderChoose(uri: Uri) {
+    folderChooser.onChoose(uri)
+  }
+
+  override fun onDownloadFolderPick(uri: Uri) {
+    folderChooser.onPick(uri)
+  }
+
+  override fun onDownloadFolderDismiss() {
+    folderChooser.onDismiss()
   }
 
   override fun onCancelAudiobookDownload(id: String) {
@@ -282,6 +300,8 @@ internal data class OpdsFeedViewState(
   val selected: PublicationViewState?,
   /** Whether a download of an audiobook asks for notifications first, so its progress shows. */
   val askForNotifications: Boolean = false,
+  /** Asks where downloads go, before the first one. */
+  val downloadFolder: DownloadFolderSheetState? = null,
 )
 
 internal data class PublicationViewState(

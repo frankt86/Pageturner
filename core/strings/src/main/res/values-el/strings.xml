@@ -313,6 +313,11 @@
     <string name="opds.catalog.url">Διεύθυνση</string>
     <string name="opds.catalogs.empty.message">Προσθέστε τον κατάλογο του διακομιστή σας Calibre-Web, Komga ή άλλου διακομιστή OPDS για να κατεβάζετε τα ηλεκτρονικά του βιβλία και να τα διαβάζετε εδώ.</string>
     <string name="opds.catalogs.empty.title">Δεν υπάρχουν ακόμη κατάλογοι</string>
+    <string name="opds.download_folder.error">Το Pageturner δεν μπορεί να αποθηκεύσει βιβλία σε αυτόν τον φάκελο. Δοκιμάστε κάποιον άλλο.</string>
+    <string name="opds.download_folder.message">Επιλέξτε έναν φάκελο της βιβλιοθήκης σας για τις λήψεις. Θα εμφανίζονται εκεί μαζί με όλα τα άλλα βιβλία σας.</string>
+    <string name="opds.download_folder.new">Επιλογή άλλου φακέλου</string>
+    <string name="opds.download_folder.none">Δεν έχει επιλεγεί ακόμα</string>
+    <string name="opds.download_folder.title">Φάκελος λήψεων</string>
     <string name="opds.entry.download">Λήψη %s</string>
     <string name="opds.entry.download_audiobook">Λήψη ηχητικού βιβλίου</string>
     <string name="opds.entry.downloaded">Στη βιβλιοθήκη σας</string>

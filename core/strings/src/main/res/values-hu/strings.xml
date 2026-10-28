@@ -313,6 +313,11 @@
     <string name="opds.catalog.url">Cím</string>
     <string name="opds.catalogs.empty.message">Adja hozzá Calibre-Web-, Komga- vagy más OPDS-szervere katalógusát, hogy letölthesse az e-könyveit, és itt olvashassa őket.</string>
     <string name="opds.catalogs.empty.title">Még nincsenek katalógusok</string>
+    <string name="opds.download_folder.error">A Pageturner nem tud könyveket menteni ebbe a mappába. Próbálkozzon egy másikkal.</string>
+    <string name="opds.download_folder.message">Válasszon egy mappát a könyvtárából a letöltésekhez. Ott jelennek meg a többi könyve mellett.</string>
+    <string name="opds.download_folder.new">Másik mappa kiválasztása</string>
+    <string name="opds.download_folder.none">Még nincs kiválasztva</string>
+    <string name="opds.download_folder.title">Letöltési mappa</string>
     <string name="opds.entry.download">%s letöltése</string>
     <string name="opds.entry.download_audiobook">Hangoskönyv letöltése</string>
     <string name="opds.entry.downloaded">A könyvtárában</string>

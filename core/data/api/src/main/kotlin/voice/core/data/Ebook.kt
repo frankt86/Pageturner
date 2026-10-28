@@ -33,7 +33,7 @@ public data class Ebook(
   /** The bookmarks of the new book engine, Readium Locators as JSON. */
   val readiumBookmarks: List<String> = emptyList(),
   val readiumHighlights: List<ReadiumHighlight> = emptyList(),
-  /** Set for a book downloaded from an OPDS catalog, which lives in the app's own storage. */
+  /** Set for a book downloaded from an OPDS catalog. Older downloads live in the app's own storage. */
   val opdsSource: OpdsSource? = null,
   /** Epoch milliseconds of the last move in the book here, which decides against a newer place on a server. */
   val positionModified: Long = 0,

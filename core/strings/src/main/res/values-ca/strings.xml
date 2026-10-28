@@ -330,6 +330,11 @@
     <string name="opds.catalog.url">Adreça</string>
     <string name="opds.catalogs.empty.message">Afegiu el catàleg del vostre servidor Calibre-Web, Komga o un altre servidor OPDS per baixar-ne els llibres electrònics i llegir-los aquí.</string>
     <string name="opds.catalogs.empty.title">Encara no hi ha cap catàleg</string>
+    <string name="opds.download_folder.error">Pageturner no pot desar llibres en aquesta carpeta. Proveu-ne una altra.</string>
+    <string name="opds.download_folder.message">Trieu una carpeta de la vostra biblioteca per a les baixades. Hi apareixeran amb la resta dels vostres llibres.</string>
+    <string name="opds.download_folder.new">Tria una altra carpeta</string>
+    <string name="opds.download_folder.none">Encara sense triar</string>
+    <string name="opds.download_folder.title">Carpeta de baixades</string>
     <string name="opds.entry.download">Baixa %s</string>
     <string name="opds.entry.download_audiobook">Baixa l\'audiollibre</string>
     <string name="opds.entry.downloaded">A la vostra biblioteca</string>

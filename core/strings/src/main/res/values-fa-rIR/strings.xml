@@ -313,6 +313,11 @@
     <string name="opds.catalog.url">نشانی</string>
     <string name="opds.catalogs.empty.message">کاتالوگ سرور Calibre-Web، Komga یا هر سرور OPDS دیگری را اضافه کنید تا کتاب‌های الکترونیکی‌اش را دانلود کنید و اینجا بخوانید.</string>
     <string name="opds.catalogs.empty.title">هنوز کاتالوگی ندارید</string>
+    <string name="opds.download_folder.error">Pageturner نمی‌تواند کتاب‌ها را در این پوشه ذخیره کند. پوشهٔ دیگری را امتحان کنید.</string>
+    <string name="opds.download_folder.message">پوشه‌ای از کتابخانهٔ خود را برای دانلودها انتخاب کنید. کتاب‌ها آنجا کنار بقیهٔ کتاب‌هایتان نمایش داده می‌شوند.</string>
+    <string name="opds.download_folder.new">انتخاب پوشهٔ دیگر</string>
+    <string name="opds.download_folder.none">هنوز انتخاب نشده</string>
+    <string name="opds.download_folder.title">پوشهٔ دانلودها</string>
     <string name="opds.entry.download">دانلود %s</string>
     <string name="opds.entry.download_audiobook">دانلود کتاب صوتی</string>
     <string name="opds.entry.downloaded">در کتابخانهٔ شما</string>

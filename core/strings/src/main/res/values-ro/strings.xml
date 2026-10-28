@@ -330,6 +330,11 @@
     <string name="opds.catalog.url">Adresă</string>
     <string name="opds.catalogs.empty.message">Adaugă catalogul serverului tău Calibre-Web, Komga sau al altui server OPDS ca să-i descarci cărțile electronice și să le citești aici.</string>
     <string name="opds.catalogs.empty.title">Încă nu ai cataloage</string>
+    <string name="opds.download_folder.error">Pageturner nu poate salva cărți în acest director. Încearcă altul.</string>
+    <string name="opds.download_folder.message">Alege un director din biblioteca ta pentru descărcări. Vor apărea acolo, alături de toate celelalte cărți ale tale.</string>
+    <string name="opds.download_folder.new">Alege alt director</string>
+    <string name="opds.download_folder.none">Neales încă</string>
+    <string name="opds.download_folder.title">Director pentru descărcări</string>
     <string name="opds.entry.download">Descarcă %s</string>
     <string name="opds.entry.download_audiobook">Descarcă cartea audio</string>
     <string name="opds.entry.downloaded">În biblioteca ta</string>

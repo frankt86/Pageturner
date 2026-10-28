@@ -347,6 +347,11 @@
     <string name="opds.catalog.url">Adresa</string>
     <string name="opds.catalogs.empty.message">Přidejte katalog svého serveru Calibre-Web, Komga nebo jiného serveru OPDS a stahujte z něj e-knihy, které si pak přečtete tady.</string>
     <string name="opds.catalogs.empty.title">Zatím žádné katalogy</string>
+    <string name="opds.download_folder.error">Pageturner do této složky nemůže ukládat knihy. Zkuste jinou.</string>
+    <string name="opds.download_folder.message">Vyberte složku své knihovny pro stažené knihy. Objeví se tam se všemi vašimi ostatními knihami.</string>
+    <string name="opds.download_folder.new">Vybrat jinou složku</string>
+    <string name="opds.download_folder.none">Zatím nevybrána</string>
+    <string name="opds.download_folder.title">Složka pro stahování</string>
     <string name="opds.entry.download">Stáhnout %s</string>
     <string name="opds.entry.download_audiobook">Stáhnout audioknihu</string>
     <string name="opds.entry.downloaded">Ve vaší knihovně</string>

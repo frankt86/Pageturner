@@ -75,12 +75,33 @@ keeps its chapters in one file.
 
 ## Where the books are kept
 
-Downloaded books live in Pageturner's own storage on your phone, not in one of your book folders. That way they work
-without picking a folder, and nothing gets mixed up with the files you manage yourself. Each audiobook gets a folder
-of its own there, which Pageturner adds to your library like a folder you picked as a single book.
+Downloaded books go into a folder of your library, your **download folder**. They're plain files there, like the books
+you copied yourself, so you can see them in your file manager, back them up or move them to another device.
 
-To remove an ebook, long press it in the library and tap **Remove from library**. Download it again and your place in the
-book is still there.
+The first time you download a book, Pageturner asks which folder to use. It lists the folders of your library that hold
+several books, under **Settings » Library » Book folders**. Or tap **Choose another folder** to pick a new one with
+Android's folder picker. A new folder joins your library as a folder where every folder or file is a book.
+
+To change the download folder later, open **Settings » Library » Ebook catalogs** and tap **Download folder** at the top.
+Books you already downloaded stay where they are. When the download folder leaves your library, or Pageturner can't
+reach it anymore, Pageturner asks again on the next download.
+
+In the download folder:
+
+- an ebook is a file named after its title, like `Persuasion.epub`;
+- an audiobook is a folder named after its title, with its audio files and a `cover.jpg`.
+
+When the folders in your download folder are authors, each book goes into the folder of its author, like
+`Jane Austen/Persuasion.epub`. When a book with the same name is already there, the new one gets a number, like
+`Persuasion (2).epub`. A book only shows up in the folder once it's completely downloaded.
+
+Pageturner then looks through your library, finds the new book like any other, and gives it the title, author and cover
+from the catalog. The tick in the catalog and the progress sync with Komga keep working for it.
+
+Books you downloaded before there was a download folder stay in Pageturner's own storage and keep working as before.
+
+To remove an ebook, long press it in the library and tap **Remove from library**. Its file stays in the download folder.
+Download it again and the book comes back, with your place in it.
 
 To remove an audiobook, long press it in the library and tap **Delete Book**, like any other audiobook. Its files leave your
 phone.

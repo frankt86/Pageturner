@@ -1,5 +1,6 @@
 package voice.core.scanner
 
+import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
 import dev.zacsweers.metro.Inject
@@ -34,8 +35,9 @@ internal class EbookScanner(
       .distinctBy { it.uri }
       .toList()
     store.updateData { all ->
-      // downloads from a catalog live in the app's storage, outside of every folder
-      val (downloaded, previous) = all.partition { it.opdsSource != null }
+      // older downloads from a catalog live in the app's storage, outside of every folder. Newer ones are in a folder
+      // of the library and found there.
+      val (downloaded, previous) = all.partition { it.opdsSource != null && it.uri.scheme == ContentResolver.SCHEME_FILE }
       val previousByUri = previous.associateBy { it.uri }
       val foundUris = found.mapTo(mutableSetOf()) { it.uri }
       val gone = previous.filter { it.uri !in foundUris }

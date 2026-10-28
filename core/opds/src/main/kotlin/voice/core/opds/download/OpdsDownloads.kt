@@ -1,5 +1,6 @@
 package voice.core.opds.download
 
+import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import dev.zacsweers.metro.AppScope
@@ -32,6 +33,7 @@ import voice.core.opds.OpdsCatalog
 import voice.core.opds.feed.OpdsFormat
 import voice.core.opds.feed.OpdsPublication
 import voice.core.opds.komga.komgaBookId
+import voice.core.scanner.MediaScanTrigger
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
@@ -55,15 +57,19 @@ public sealed interface OpdsDownloadState {
 }
 
 /**
- * Downloads ebooks from the catalogs into the app's own files and adds them to the library. Ebooks are small, so a
- * download runs in the app's process, without a service or a notification.
+ * Downloads ebooks from the catalogs into the download folder of the library, where the scan finds them. Ebooks are
+ * small, so a download runs in the app's process, without a service or a notification. Books downloaded before the
+ * download folder existed stay in the app's own files.
  */
 @SingleIn(AppScope::class)
 @Inject
-public class OpdsDownloads(
+public class OpdsDownloads internal constructor(
   private val http: ServerHttpClient,
   private val ebooksStore: EbooksStore,
   private val context: Context,
+  private val downloadFolders: OpdsDownloadFolders,
+  private val writer: LibraryFolderWriter,
+  private val mediaScanTrigger: MediaScanTrigger,
 ) {
 
   private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -130,26 +136,28 @@ public class OpdsDownloads(
     format: EbookFormat,
   ) {
     val acquisition = publication.preferredAcquisition ?: return
-    val folder = File(context.filesDir, "opds").apply { mkdirs() }
-    val name = Uuid.random().toString()
-    val partial = File(folder, "$name.part")
-    val file = File(folder, "$name.${format.name.lowercase()}")
-    try {
+    val folder = downloadFolders.current() ?: throw IOException("No download folder")
+    val partial = File(context.cacheDir, "opds").apply { mkdirs() }.resolve(Uuid.random().toString())
+    val uri = try {
       fetch(key, catalog, acquisition.url, partial) { progress ->
         _states.update { it + (key to OpdsDownloadState.Downloading(progress)) }
       }
-      if (!partial.renameTo(file)) throw IOException("Could not move the download")
-    } catch (e: Exception) {
+      val parent = writer.bookParent(folder, bookFolderPath(folder.type, publication.authors.firstOrNull()))
+      writer.copyFile(
+        parent = parent,
+        name = safeFileName(publication.title, fallback = "Book"),
+        extension = format.name.lowercase(),
+        file = partial,
+      )
+    } finally {
       partial.delete()
-      file.delete()
-      throw e
     }
     val cover = (publication.coverUrl ?: publication.thumbnailUrl)?.let { cover(catalog, it) }
     add(
       key,
       Ebook(
-        uri = Uri.fromFile(file),
-        name = publication.title.ifBlank { name },
+        uri = uri,
+        name = publication.title.ifBlank { "Book" },
         format = format,
         author = publication.authors.joinToString(", ").ifEmpty { null },
         cover = cover?.absolutePath,
@@ -163,6 +171,8 @@ public class OpdsDownloads(
         ),
       ),
     )
+    // the scan keeps the book with what the catalog said about it, as it's in the library under the same uri
+    mediaScanTrigger.scan(restartIfScanning = true)
   }
 
   public fun cancel(key: OpdsEntryKey) {
@@ -175,7 +185,7 @@ public class OpdsDownloads(
   /** Brings back a book that was removed from the library while its file stayed. */
   private suspend fun restore(key: OpdsEntryKey): Boolean {
     val existing = ebooksStore.data.first()
-      .firstOrNull { it.matches(key) && it.uri.path?.let(::File)?.exists() == true }
+      .firstOrNull { it.matches(key) && writer.exists(it.uri) }
       ?: return false
     if (existing.hidden || !existing.available) {
       ebooksStore.updateData { ebooks ->
@@ -192,10 +202,14 @@ public class OpdsDownloads(
     var replaced: List<Ebook> = emptyList()
     ebooksStore.updateData { ebooks ->
       replaced = ebooks.filter { it.matches(key) }
-      ebooks.filterNot { it.matches(key) } + ebook
+      // a scan may have found the file already
+      ebooks.filterNot { it.matches(key) || it.uri == ebook.uri } + ebook
     }
+    // a download from before the download folder was in the app's own files, where nothing else would remove it
     replaced.forEach { old ->
-      old.uri.path?.let(::File)?.takeIf { it.parentFile?.name == "opds" }?.delete()
+      if (old.uri.scheme == ContentResolver.SCHEME_FILE) {
+        old.uri.path?.let(::File)?.takeIf { it.parentFile?.name == "opds" }?.delete()
+      }
     }
   }
 

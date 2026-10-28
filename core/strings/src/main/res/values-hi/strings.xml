@@ -313,6 +313,11 @@
     <string name="opds.catalog.url">पता</string>
     <string name="opds.catalogs.empty.message">अपने Calibre-Web, Komga या किसी दूसरे OPDS सर्वर का कैटलॉग जोड़ें, ताकि उसकी ई-बुक डाउनलोड करके यहाँ पढ़ी जा सकें।</string>
     <string name="opds.catalogs.empty.title">अभी कोई कैटलॉग नहीं है</string>
+    <string name="opds.download_folder.error">Pageturner इस फ़ोल्डर में पुस्तकें सहेज नहीं पा रहा है। कोई दूसरा फ़ोल्डर आज़माएँ।</string>
+    <string name="opds.download_folder.message">डाउनलोड के लिए अपनी लाइब्रेरी का एक फ़ोल्डर चुनें। पुस्तकें वहाँ आपकी बाकी सभी पुस्तकों के साथ दिखेंगी।</string>
+    <string name="opds.download_folder.new">दूसरा फ़ोल्डर चुनें</string>
+    <string name="opds.download_folder.none">अभी तक नहीं चुना गया</string>
+    <string name="opds.download_folder.title">डाउनलोड फ़ोल्डर</string>
     <string name="opds.entry.download">%s डाउनलोड करें</string>
     <string name="opds.entry.download_audiobook">ऑडियोबुक डाउनलोड करें</string>
     <string name="opds.entry.downloaded">आपकी लाइब्रेरी में</string>

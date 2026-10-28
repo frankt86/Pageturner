@@ -75,8 +75,8 @@ internal constructor(
 }
 
 /**
- * The folder in the app's own storage that books downloaded from a catalog go to, one folder per book. The scan
- * treats each of them like a folder picked as a single book.
+ * The folder in the app's own storage that audiobooks downloaded from a catalog went to, one folder per book, before
+ * they went to a folder of the library. The scan treats each of them like a folder picked as a single book.
  */
 public fun downloadedAudiobooksFolder(context: Context): File = File(context.filesDir, "audiobooks")
 
