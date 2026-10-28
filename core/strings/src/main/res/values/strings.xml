@@ -542,8 +542,12 @@
     <string name="opds.catalogs.empty.title">No catalogs yet</string>
     <!-- Button that downloads a book from a catalog into the library. %s is the file format, like EPUB or PDF. -->
     <string name="opds.entry.download">Download %s</string>
+    <!-- Button that downloads the audio of a book from a catalog into the library, to listen to it. Shown next to the ebook download when a book comes as both. -->
+    <string name="opds.entry.download_audiobook">Download audiobook</string>
     <!-- Shown for a book of a catalog that is already downloaded into the library. -->
     <string name="opds.entry.downloaded">In your library</string>
+    <!-- Button that plays a downloaded audiobook of a catalog. -->
+    <string name="opds.entry.listen">Listen now</string>
     <!-- Button that opens a downloaded book of a catalog in the reader. -->
     <string name="opds.entry.read">Read now</string>
     <!-- Shown for a book of a catalog that comes only in formats Pageturner can't open. %s is one or more formats, like CBZ or MOBI. -->

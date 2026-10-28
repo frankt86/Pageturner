@@ -1,8 +1,10 @@
 package voice.features.bookOverview.deleteBook
 
 import android.app.Application
+import android.content.ContentResolver
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.net.toFile
 import androidx.documentfile.provider.DocumentFile
 import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metro.SingleIn
@@ -82,7 +84,14 @@ class DeleteBookViewModel(
       check(state.confirmButtonEnabled)
       scope.launch {
         val deleted = withContext(dispatcherProvider.io) {
-          DocumentFile.fromSingleUri(application, state.id.toUri())?.delete() == true
+          val uri = state.id.toUri()
+          // a book downloaded from a catalog is a folder in the app's own storage
+          val file = if (uri.scheme == ContentResolver.SCHEME_FILE) {
+            DocumentFile.fromFile(uri.toFile())
+          } else {
+            DocumentFile.fromSingleUri(application, uri)
+          }
+          file?.delete() == true
         }
         if (deleted) {
           // the player of a deleted book would be left without a book

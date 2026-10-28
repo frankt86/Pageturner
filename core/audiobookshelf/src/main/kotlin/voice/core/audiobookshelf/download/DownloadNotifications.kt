@@ -39,13 +39,20 @@ internal data class ActiveDownload(
   val state: BookDownloadState.Downloading,
 )
 
+/** A book that downloads, as its notification shows it. */
+public data class DownloadProgress(
+  val name: String,
+  val cover: File?,
+  val state: BookDownloadState.Downloading,
+)
+
 /**
  * The notifications of the downloads: one with the progress while books download, and one per book once it's
- * ready or failed, for listeners who left Voice in the meantime.
+ * ready or failed, for listeners who left Pageturner in the meantime. Books from catalogs download with them too.
  */
 @SingleIn(AppScope::class)
 @Inject
-internal class DownloadNotifications(
+public class DownloadNotifications internal constructor(
   private val context: Context,
   private val mainActivityIntentProvider: MainActivityIntentProvider,
 ) {
@@ -54,7 +61,10 @@ internal class DownloadNotifications(
   private val covers = LruCache<String, Bitmap>(8)
   private val percentFormat = NumberFormat.getPercentInstance()
 
-  fun createChannel() {
+  @Volatile
+  internal var appVisible: Boolean = false
+
+  public fun createChannel() {
     notificationManager.createNotificationChannel(
       NotificationChannelCompat.Builder(DOWNLOAD_CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_LOW)
         .setName(context.getString(StringsR.string.audiobookshelf_downloads_channel))
@@ -62,7 +72,18 @@ internal class DownloadNotifications(
     )
   }
 
-  fun progress(downloads: List<ActiveDownload>): Notification {
+  internal fun progress(downloads: List<ActiveDownload>): Notification {
+    return progress(
+      downloads = downloads.map { DownloadProgress(it.book.content.name, it.book.content.cover, it.state) },
+      stop = DownloadActionReceiver.stop(context, downloads.map { it.book.id }),
+    )
+  }
+
+  /** The notification while books download. [stop] is the intent of its button that stops them. */
+  public fun progress(
+    downloads: List<DownloadProgress>,
+    stop: PendingIntent,
+  ): Notification {
     val builder = NotificationCompat.Builder(context, DOWNLOAD_CHANNEL_ID)
       .setSmallIcon(android.R.drawable.stat_sys_download)
       .setCategory(NotificationCompat.CATEGORY_PROGRESS)
@@ -80,8 +101,8 @@ internal class DownloadNotifications(
     val single = downloads.singleOrNull()
     if (single != null) {
       builder
-        .setContentTitle(single.book.content.name)
-        .setLargeIcon(single.book.content.cover?.let(::cover))
+        .setContentTitle(single.name)
+        .setLargeIcon(single.cover?.let(::cover))
     } else {
       builder
         .setContentTitle(
@@ -97,7 +118,7 @@ internal class DownloadNotifications(
     val text = when {
       waitingFor != null -> waitingText(waitingFor)
       single != null -> progressText(single.state)
-      else -> downloads.joinToString { it.book.content.name }
+      else -> downloads.joinToString { it.name }
     }
     return builder
       .setContentText(text)
@@ -105,12 +126,12 @@ internal class DownloadNotifications(
       .addAction(
         0,
         context.getString(StringsR.string.audiobookshelf_download_notification_stop),
-        DownloadActionReceiver.stop(context, downloads.map { it.book.id }),
+        stop,
       )
       .build()
   }
 
-  fun progressText(state: BookDownloadState.Downloading): String {
+  internal fun progressText(state: BookDownloadState.Downloading): String {
     return if (state.totalBytes > 0) {
       context.getString(
         StringsR.string.book_download_progress,
@@ -129,14 +150,24 @@ internal class DownloadNotifications(
     },
   )
 
-  fun downloaded(book: Book) {
+  internal fun downloaded(book: Book) {
+    downloaded(book.id.value, book.content.name, book.content.cover)
+  }
+
+  /** Tells that a book is ready, unless Pageturner is open and shows it itself. [tag] tells the books apart. */
+  public fun downloaded(
+    tag: String,
+    name: String,
+    cover: File?,
+  ) {
+    if (appVisible) return
     notifyResult(
-      book.id,
+      tag,
       NotificationCompat.Builder(context, DOWNLOAD_CHANNEL_ID)
         .setSmallIcon(android.R.drawable.stat_sys_download_done)
-        .setContentTitle(book.content.name)
+        .setContentTitle(name)
         .setContentText(context.getString(StringsR.string.audiobookshelf_download_notification_done))
-        .setLargeIcon(book.content.cover?.let(::cover))
+        .setLargeIcon(cover?.let(::cover))
         .setCategory(NotificationCompat.CATEGORY_STATUS)
         .setContentIntent(openLibrary())
         .setAutoCancel(true)
@@ -145,32 +176,42 @@ internal class DownloadNotifications(
     )
   }
 
-  fun failed(book: Book) {
-    notifyResult(
-      book.id,
-      NotificationCompat.Builder(context, DOWNLOAD_CHANNEL_ID)
-        .setSmallIcon(android.R.drawable.stat_notify_error)
-        .setContentTitle(book.content.name)
-        .setContentText(context.getString(StringsR.string.book_download_failed))
-        .setLargeIcon(book.content.cover?.let(::cover))
-        .setCategory(NotificationCompat.CATEGORY_ERROR)
-        .setContentIntent(openLibrary())
-        .setAutoCancel(true)
-        .setSilent(true)
-        .addAction(
-          0,
-          context.getString(StringsR.string.audiobookshelf_download_notification_retry),
-          DownloadActionReceiver.retry(context, book.id),
-        )
-        .build(),
-    )
+  internal fun failed(book: Book) {
+    failed(book.id.value, book.content.name, book.content.cover, DownloadActionReceiver.retry(context, book.id))
   }
 
-  fun cancelResult(bookId: BookId) {
-    notificationManager.cancel(bookId.value, RESULT_NOTIFICATION_ID)
+  /** Tells that a download failed, unless Pageturner is open and shows it itself. */
+  public fun failed(
+    tag: String,
+    name: String,
+    cover: File?,
+    retry: PendingIntent?,
+  ) {
+    if (appVisible) return
+    val builder = NotificationCompat.Builder(context, DOWNLOAD_CHANNEL_ID)
+      .setSmallIcon(android.R.drawable.stat_notify_error)
+      .setContentTitle(name)
+      .setContentText(context.getString(StringsR.string.book_download_failed))
+      .setLargeIcon(cover?.let(::cover))
+      .setCategory(NotificationCompat.CATEGORY_ERROR)
+      .setContentIntent(openLibrary())
+      .setAutoCancel(true)
+      .setSilent(true)
+    if (retry != null) {
+      builder.addAction(0, context.getString(StringsR.string.audiobookshelf_download_notification_retry), retry)
+    }
+    notifyResult(tag, builder.build())
   }
 
-  fun cancelResults() {
+  internal fun cancelResult(bookId: BookId) {
+    cancelResult(bookId.value)
+  }
+
+  public fun cancelResult(tag: String) {
+    notificationManager.cancel(tag, RESULT_NOTIFICATION_ID)
+  }
+
+  internal fun cancelResults() {
     notificationManager.activeNotifications
       .filter { it.id == RESULT_NOTIFICATION_ID }
       .forEach { notificationManager.cancel(it.tag, it.id) }
@@ -178,14 +219,14 @@ internal class DownloadNotifications(
 
   @SuppressLint("MissingPermission")
   private fun notifyResult(
-    bookId: BookId,
+    tag: String,
     notification: Notification,
   ) {
     val allowed = Build.VERSION.SDK_INT < 33 ||
       ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
     if (!allowed) return
     createChannel()
-    notificationManager.notify(bookId.value, RESULT_NOTIFICATION_ID, notification)
+    notificationManager.notify(tag, RESULT_NOTIFICATION_ID, notification)
   }
 
   private fun openLibrary(): PendingIntent = PendingIntent.getActivity(

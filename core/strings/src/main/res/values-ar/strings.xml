@@ -382,7 +382,9 @@
     <string name="opds.catalogs.empty.message">يمكنك إضافة فهرس خادم Calibre-Web أو Komga أو أي خادم OPDS آخر لتنزيل كتبه الإلكترونية وقراءتها هنا.</string>
     <string name="opds.catalogs.empty.title">لا توجد فهارس بعد</string>
     <string name="opds.entry.download">تنزيل %s</string>
+    <string name="opds.entry.download_audiobook">تنزيل الكتاب الصوتي</string>
     <string name="opds.entry.downloaded">في مكتبتك</string>
+    <string name="opds.entry.listen">الاستماع الآن</string>
     <string name="opds.entry.read">القراءة الآن</string>
     <string name="opds.entry.unsupported">يقرأ Pageturner ملفات EPUB وPDF. هذا الكتاب متاح فقط بصيغة %s.</string>
     <string name="opds.feed.error">تعذّر تحميل هذه الصفحة</string>

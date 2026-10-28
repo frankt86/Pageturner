@@ -43,7 +43,10 @@ internal fun parseOpds1(
         summary = entry.summary(),
         coverUrl = entryLinks.firstOrNull { it.rel in coverRels }?.href,
         thumbnailUrl = entryLinks.firstOrNull { it.rel in thumbnailRels }?.href,
-        acquisitions = acquisitions.map { OpdsAcquisition(url = it.href!!, type = it.type) },
+        acquisitions = acquisitions.map {
+          OpdsAcquisition(url = it.href!!, type = it.type, title = it.title, length = it.length)
+        },
+        isAudiobook = entry.isAudiobook(),
       )
     } else {
       val target = entryLinks.firstOrNull { it.isFeed && it.rel != "alternate" } ?: entryLinks.firstOrNull { it.isFeed }
@@ -80,6 +83,8 @@ private class AtomLink(
   val rawHref: String?,
   val type: String?,
   private val rawType: String,
+  val title: String?,
+  val length: Long?,
 ) {
   // a link to a single entry, like the details of a book, isn't a feed
   val isFeed: Boolean get() = ("atom+xml" in rawType || "opds" in rawType) && "type=entry" !in rawType
@@ -93,7 +98,19 @@ private fun Element.toLink(base: String): AtomLink {
     rawHref = rawHref,
     type = getAttribute("type").takeIf { it.isNotEmpty() }?.mediaType(),
     rawType = getAttribute("type").lowercase(),
+    title = getAttribute("title").trim().takeIf { it.isNotEmpty() },
+    length = getAttribute("length").trim().toLongOrNull()?.takeIf { it > 0 },
   )
+}
+
+// dc:type, or a category like schema.org's additionalType
+private fun Element.isAudiobook(): Boolean {
+  val types = children("type").map { it.text() } +
+    children("category").flatMap { listOf(it.getAttribute("term"), it.getAttribute("label")) }
+  return types.any { type ->
+    val name = type.trim().substringAfterLast('/').lowercase()
+    name == "audiobook" || name == "sound"
+  }
 }
 
 private fun AtomLink.toSearch(base: String): OpdsSearch? {

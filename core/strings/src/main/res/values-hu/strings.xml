@@ -314,7 +314,9 @@
     <string name="opds.catalogs.empty.message">Adja hozzá Calibre-Web-, Komga- vagy más OPDS-szervere katalógusát, hogy letölthesse az e-könyveit, és itt olvashassa őket.</string>
     <string name="opds.catalogs.empty.title">Még nincsenek katalógusok</string>
     <string name="opds.entry.download">%s letöltése</string>
+    <string name="opds.entry.download_audiobook">Hangoskönyv letöltése</string>
     <string name="opds.entry.downloaded">A könyvtárában</string>
+    <string name="opds.entry.listen">Hallgatás most</string>
     <string name="opds.entry.read">Olvasás most</string>
     <string name="opds.entry.unsupported">A Pageturner EPUB- és PDF-fájlokat olvas. Ez a könyv csak %s formátumban érhető el.</string>
     <string name="opds.feed.error">Ez az oldal nem töltődött be</string>

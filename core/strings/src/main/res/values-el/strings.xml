@@ -314,7 +314,9 @@
     <string name="opds.catalogs.empty.message">Προσθέστε τον κατάλογο του διακομιστή σας Calibre-Web, Komga ή άλλου διακομιστή OPDS για να κατεβάζετε τα ηλεκτρονικά του βιβλία και να τα διαβάζετε εδώ.</string>
     <string name="opds.catalogs.empty.title">Δεν υπάρχουν ακόμη κατάλογοι</string>
     <string name="opds.entry.download">Λήψη %s</string>
+    <string name="opds.entry.download_audiobook">Λήψη ηχητικού βιβλίου</string>
     <string name="opds.entry.downloaded">Στη βιβλιοθήκη σας</string>
+    <string name="opds.entry.listen">Ακρόαση τώρα</string>
     <string name="opds.entry.read">Ανάγνωση τώρα</string>
     <string name="opds.entry.unsupported">Το Pageturner διαβάζει EPUB και PDF. Αυτό το βιβλίο υπάρχει μόνο ως %s.</string>
     <string name="opds.feed.error">Αυτή η σελίδα δεν φορτώθηκε</string>

@@ -2,7 +2,13 @@
 
 package voice.features.opds.feed
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -63,6 +69,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation3.runtime.NavEntry
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -74,6 +81,7 @@ import dev.zacsweers.metro.Provides
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import voice.core.common.rootGraphAs
+import voice.core.data.BookId
 import voice.core.opds.feed.OpdsNavigation
 import voice.core.ui.CenteredContent
 import voice.core.ui.ShapedIcon
@@ -127,6 +135,10 @@ interface FeedListener {
   fun onDownload(id: String)
   fun onCancelDownload(id: String)
   fun onRead(uri: Uri)
+  fun onDownloadAudiobook(id: String)
+  fun onCancelAudiobookDownload(id: String)
+  fun onListen(bookId: BookId)
+  fun onAskedForNotifications()
 }
 
 @Composable
@@ -176,6 +188,12 @@ private fun OpdsFeedScreen(
         contentPadding = contentPadding,
       )
     }
+    // the download of an audiobook shows its progress in a notification, which needs the permission since Android 13
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+      contract = ActivityResultContracts.RequestPermission(),
+      onResult = {},
+    )
+    val context = LocalContext.current
     viewState.selected?.let { selected ->
       PublicationSheet(
         publication = selected,
@@ -183,6 +201,15 @@ private fun OpdsFeedScreen(
         onDownload = { listener.onDownload(selected.id) },
         onCancelDownload = { listener.onCancelDownload(selected.id) },
         onRead = listener::onRead,
+        onDownloadAudiobook = {
+          if (viewState.askForNotifications && !context.canPostNotifications()) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            listener.onAskedForNotifications()
+          }
+          listener.onDownloadAudiobook(selected.id)
+        },
+        onCancelAudiobookDownload = { listener.onCancelAudiobookDownload(selected.id) },
+        onListen = listener::onListen,
       )
     }
   }
@@ -403,20 +430,16 @@ private fun PublicationRow(
         )
       }
     }
-    when (publication.download) {
-      is EntryDownload.Downloaded -> {
-        Spacer(Modifier.width(8.dp))
-        Icon(
-          imageVector = VoiceIcons.DownloadDone,
-          contentDescription = stringResource(StringsR.string.opds_entry_downloaded),
-          tint = colors.primary,
-        )
-      }
-      is EntryDownload.Downloading -> {
-        Spacer(Modifier.width(8.dp))
-        LoadingIndicator(Modifier.size(32.dp))
-      }
-      is EntryDownload.Available, EntryDownload.Failed, is EntryDownload.Unavailable -> Unit
+    if (publication.isDownloading) {
+      Spacer(Modifier.width(8.dp))
+      LoadingIndicator(Modifier.size(32.dp))
+    } else if (publication.isDownloaded) {
+      Spacer(Modifier.width(8.dp))
+      Icon(
+        imageVector = VoiceIcons.DownloadDone,
+        contentDescription = stringResource(StringsR.string.opds_entry_downloaded),
+        tint = colors.primary,
+      )
     }
   }
 }
@@ -497,7 +520,7 @@ private fun OpdsFeedPreview() {
             summary = null,
             thumbnail = null,
             cover = null,
-            download = EntryDownload.Downloaded(Uri.EMPTY),
+            download = EntryDownload.Downloaded,
           ),
           PublicationViewState(
             id = "2",
@@ -507,6 +530,16 @@ private fun OpdsFeedPreview() {
             thumbnail = null,
             cover = null,
             download = EntryDownload.Available("EPUB"),
+          ),
+          PublicationViewState(
+            id = "3",
+            title = "The Time Machine",
+            authors = "H. G. Wells",
+            summary = null,
+            thumbnail = null,
+            cover = null,
+            download = null,
+            audiobook = EntryDownload.Downloading(progress = 0.4F),
           ),
         ),
         canSearch = true,
@@ -556,4 +589,13 @@ private object PreviewListener : FeedListener {
   override fun onDownload(id: String) {}
   override fun onCancelDownload(id: String) {}
   override fun onRead(uri: Uri) {}
+  override fun onDownloadAudiobook(id: String) {}
+  override fun onCancelAudiobookDownload(id: String) {}
+  override fun onListen(bookId: BookId) {}
+  override fun onAskedForNotifications() {}
+}
+
+private fun Context.canPostNotifications(): Boolean {
+  return Build.VERSION.SDK_INT < 33 ||
+    ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
 }

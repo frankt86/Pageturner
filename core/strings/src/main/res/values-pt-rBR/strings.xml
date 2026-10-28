@@ -331,7 +331,9 @@
     <string name="opds.catalogs.empty.message">Adicione o catálogo do seu servidor Calibre-Web, Komga ou outro servidor OPDS para baixar os e-books e lê-los aqui.</string>
     <string name="opds.catalogs.empty.title">Nenhum catálogo ainda</string>
     <string name="opds.entry.download">Baixar %s</string>
+    <string name="opds.entry.download_audiobook">Baixar audiolivro</string>
     <string name="opds.entry.downloaded">Na sua biblioteca</string>
+    <string name="opds.entry.listen">Ouvir agora</string>
     <string name="opds.entry.read">Ler agora</string>
     <string name="opds.entry.unsupported">O Pageturner lê EPUB e PDF. Este livro só está disponível em %s.</string>
     <string name="opds.feed.error">Esta página não carregou</string>

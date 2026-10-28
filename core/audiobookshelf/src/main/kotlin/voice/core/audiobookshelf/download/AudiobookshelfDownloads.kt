@@ -146,6 +146,7 @@ public class AudiobookshelfDownloads internal constructor(
 
   internal fun onAppVisible() {
     appVisible = true
+    notifications.appVisible = true
     // downloads that were cut off go on, which may only start while Voice is visible
     scope.launch {
       initialized.first { it }
@@ -155,6 +156,7 @@ public class AudiobookshelfDownloads internal constructor(
 
   internal fun onAppHidden() {
     appVisible = false
+    notifications.appVisible = false
   }
 
   public fun state(bookId: BookId): Flow<BookDownloadState> = tracked.map { it[bookId]?.state ?: BookDownloadState.NotDownloaded }

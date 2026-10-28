@@ -297,7 +297,9 @@
     <string name="opds.catalogs.empty.message">Tambahkan katalog server Calibre-Web, Komga, atau server OPDS lain milik Anda untuk mengunduh e-book-nya dan membacanya di sini.</string>
     <string name="opds.catalogs.empty.title">Belum ada katalog</string>
     <string name="opds.entry.download">Unduh %s</string>
+    <string name="opds.entry.download_audiobook">Unduh buku audio</string>
     <string name="opds.entry.downloaded">Di perpustakaan Anda</string>
+    <string name="opds.entry.listen">Dengarkan sekarang</string>
     <string name="opds.entry.read">Baca sekarang</string>
     <string name="opds.entry.unsupported">Pageturner membaca EPUB dan PDF. Buku ini hanya tersedia sebagai %s.</string>
     <string name="opds.feed.error">Halaman ini tidak dapat dimuat</string>

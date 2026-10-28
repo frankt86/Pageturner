@@ -9,6 +9,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.longOrNull
 
 private const val ACQUISITION = "http://opds-spec.org/acquisition"
 private val acquisitionRels = setOf(ACQUISITION, "$ACQUISITION/open-access")
@@ -64,6 +65,7 @@ private class JsonLink(
   val title: String?,
   val templated: Boolean,
   val width: Int?,
+  val length: Long?,
 )
 
 private fun JsonLink.toNavigation(): OpdsNavigation? {
@@ -87,8 +89,40 @@ private fun JsonObject.toPublication(base: String): OpdsPublication? {
     summary = metadata.string("description")?.let(::htmlToText)?.takeIf { it.isNotEmpty() },
     coverUrl = images.maxByOrNull { it.width ?: 0 }?.href,
     thumbnailUrl = images.filter { it.width != null }.minByOrNull { it.width!! }?.href,
-    acquisitions = acquisitions.map { OpdsAcquisition(url = it.href!!, type = it.type) },
+    acquisitions = acquisitions.map { it.toAcquisition() },
+    isAudiobook = metadata.isAudiobook(),
   )
+}
+
+private fun JsonLink.toAcquisition(): OpdsAcquisition = OpdsAcquisition(url = href!!, type = type, title = title, length = length)
+
+private fun JsonObject.isAudiobook(): Boolean {
+  val types = listOf("@type", "conformsTo").flatMap { key ->
+    when (val value = this[key]) {
+      is JsonPrimitive -> listOfNotNull(value.contentOrNull)
+      is JsonArray -> value.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
+      else -> emptyList()
+    }
+  }
+  return types.any { "audiobook" in it.lowercase() }
+}
+
+/**
+ * The audio files of a Readium audiobook manifest, in the order they play. Links in it are resolved against [url],
+ * where it came from.
+ */
+internal fun parseAudiobookManifest(
+  json: String,
+  url: String,
+): List<OpdsAcquisition> {
+  val root = try {
+    Json.parseToJsonElement(json) as? JsonObject
+  } catch (e: SerializationException) {
+    throw OpdsParseException("Not JSON", e)
+  } ?: throw OpdsParseException("Not a JSON object")
+  return root.links("readingOrder", url)
+    .filter { it.href != null }
+    .map { it.toAcquisition() }
 }
 
 private fun JsonElement?.contributorNames(): List<String> {
@@ -119,6 +153,7 @@ private fun JsonObject.links(
       title = link.string("title"),
       templated = templated,
       width = (link["width"] as? JsonPrimitive)?.intOrNull,
+      length = ((link["length"] ?: link["size"]) as? JsonPrimitive)?.longOrNull?.takeIf { it > 0 },
     )
   }
 }

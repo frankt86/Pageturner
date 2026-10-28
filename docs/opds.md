@@ -2,7 +2,7 @@
 
 Many ebook servers share their books as a catalog in a standard format called OPDS. Calibre-Web, Komga, Kavita, the
 Calibre content server and sites like Standard Ebooks all have one. Add a catalog to Pageturner, look through it and
-download its EPUB and PDF books into your library.
+download its EPUB and PDF books and its audiobooks into your library.
 
 There is no Pageturner account and no Pageturner server in between. Pageturner only talks to the catalogs you add.
 
@@ -41,13 +41,49 @@ have, and **Read now** opens them.
 
 Comics and other formats, like CBZ, CBR or MOBI, can't be downloaded, as Pageturner reads EPUB and PDF only.
 
+## Audiobooks
+
+When a catalog offers a book as audio, its page shows **Download audiobook**, with the format and the size when the
+catalog tells it, like `M4B · 312 MB`. A book that comes both as an ebook and as an audiobook shows both buttons, so you
+can read it, listen to it, or both.
+
+Audiobooks are large, so they download in the background: a notification shows how far the download got, and **Stop**
+in the notification or **Stop download** on the book's page stops it. You can leave Pageturner in the meantime. The first
+time, Pageturner asks to show notifications, so you can see the progress.
+
+Once it's done, the audiobook is in your library next to your other audiobooks, with the title, author and cover from
+the catalog and the chapters from the file. It plays, keeps your place and takes bookmarks like any other audiobook. A
+tick in the catalog shows the books you already have, and **Listen now** plays them.
+
+Supported formats:
+
+| Format | How catalogs label it |
+|--------|-----------------------|
+| M4B, M4A, MP4 | `audio/mp4`, `audio/x-m4b`, `audio/m4b`, `audio/x-m4a`, and `video/mp4`, which some servers use for M4B |
+| MP3 | `audio/mpeg`, `audio/mp3` |
+| Ogg Vorbis, Opus | `audio/ogg`, `audio/opus` |
+| FLAC | `audio/flac` |
+| A zip of audio files | `application/audiobook+zip`, or `application/zip` when the catalog marks the book as an audiobook |
+| A Readium audiobook manifest | `application/audiobook+json` |
+
+When a catalog names no format, or only `application/octet-stream`, Pageturner goes by the file extension in the link or
+in its title.
+
+Some servers offer one file per chapter. Pageturner downloads them all as one book, in the order the catalog lists them.
+The files of a zip play in the order of their names. When a book comes as M4B and as MP3, Pageturner takes the M4B, which
+keeps its chapters in one file.
+
 ## Where the books are kept
 
 Downloaded books live in Pageturner's own storage on your phone, not in one of your book folders. That way they work
-without picking a folder, and nothing gets mixed up with the files you manage yourself.
+without picking a folder, and nothing gets mixed up with the files you manage yourself. Each audiobook gets a folder
+of its own there, which Pageturner adds to your library like a folder you picked as a single book.
 
-To remove a book, long press it in the library and tap **Remove from library**. Download it again and your place in the
+To remove an ebook, long press it in the library and tap **Remove from library**. Download it again and your place in the
 book is still there.
+
+To remove an audiobook, long press it in the library and tap **Delete Book**, like any other audiobook. Its files leave your
+phone.
 
 ## Syncing your progress with Komga
 
@@ -67,6 +103,8 @@ When you read the same book in two places, the place you read last wins.
 
 Syncing is on for every Komga server. To turn it off, tap the menu next to the catalog, tap **Edit** and turn off **Sync
 reading progress**.
+
+Audiobooks from Komga don't sync: their place stays in Pageturner.
 
 PDF books sync to the exact page. EPUB books sync to about the page: Komga counts the pages of an EPUB differently than
 Pageturner, so you might land a paragraph or two before where you stopped.

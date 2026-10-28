@@ -314,7 +314,9 @@
     <string name="opds.catalogs.empty.message">Voeg de catalogus van je Calibre-Web-, Komga- of andere OPDS-server toe om de e-books te downloaden en hier te lezen.</string>
     <string name="opds.catalogs.empty.title">Nog geen catalogi</string>
     <string name="opds.entry.download">%s downloaden</string>
+    <string name="opds.entry.download_audiobook">Luisterboek downloaden</string>
     <string name="opds.entry.downloaded">In je bibliotheek</string>
+    <string name="opds.entry.listen">Nu luisteren</string>
     <string name="opds.entry.read">Nu lezen</string>
     <string name="opds.entry.unsupported">Pageturner leest EPUB en PDF. Dit boek is er alleen als %s.</string>
     <string name="opds.feed.error">Deze pagina is niet geladen</string>

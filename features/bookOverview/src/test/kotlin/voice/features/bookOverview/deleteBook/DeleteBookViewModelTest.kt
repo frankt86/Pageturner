@@ -1,5 +1,6 @@
 package voice.features.bookOverview.deleteBook
 
+import android.app.Application
 import android.content.ContentProvider
 import android.content.ContentValues
 import android.database.Cursor
@@ -19,6 +20,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import voice.core.common.DispatcherProvider
+import voice.core.data.Book
 import voice.core.data.BookId
 import voice.core.data.repo.BookRepository
 import voice.features.bookOverview.book
@@ -26,8 +28,10 @@ import voice.features.bookOverview.bottomSheet.BottomSheetItem
 import voice.features.bookOverview.chapter
 import voice.navigation.Destination
 import voice.navigation.Navigator
+import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
@@ -39,7 +43,9 @@ class DeleteBookViewModelTest {
   }
   private val navigator = mockk<Navigator>(relaxUnitFun = true)
 
-  private val viewModel = DeleteBookViewModel(
+  private val viewModel = viewModel(book)
+
+  private fun viewModel(book: Book) = DeleteBookViewModel(
     application = ApplicationProvider.getApplicationContext(),
     mediaScanTrigger = mockk(relaxed = true),
     repo = mockk<BookRepository> {
@@ -76,8 +82,23 @@ class DeleteBookViewModelTest {
     verify(exactly = 0) { navigator.remove(any()) }
   }
 
-  private suspend fun TestScope.delete() {
-    viewModel.onItemClick(book.id, BottomSheetItem.DeleteBook)
+  @Test
+  fun `a book downloaded from a catalog is deleted with its folder`() = runTest(dispatcher) {
+    val folder = File(ApplicationProvider.getApplicationContext<Application>().filesDir, "audiobooks/Persuasion")
+    File(folder, "Persuasion.m4b").apply { parentFile!!.mkdirs() }.writeText("audio")
+    val downloaded = book.copy(content = book.content.copy(id = BookId(Uri.fromFile(folder))))
+
+    delete(viewModel(downloaded), downloaded.id)
+
+    assertFalse(folder.exists())
+    verify { navigator.remove(Destination.Playback(downloaded.id)) }
+  }
+
+  private suspend fun TestScope.delete(
+    viewModel: DeleteBookViewModel = this@DeleteBookViewModelTest.viewModel,
+    bookId: BookId = book.id,
+  ) {
+    viewModel.onItemClick(bookId, BottomSheetItem.DeleteBook)
     viewModel.onDeleteCheckBoxCheck(true)
     viewModel.onConfirmDeletion()
     advanceUntilIdle()

@@ -314,7 +314,9 @@
     <string name="opds.catalogs.empty.message">E-kitaplarını indirip burada okumak için Calibre-Web, Komga veya başka bir OPDS sunucunuzun kataloğunu ekleyin.</string>
     <string name="opds.catalogs.empty.title">Henüz katalog yok</string>
     <string name="opds.entry.download">%s indir</string>
+    <string name="opds.entry.download_audiobook">Sesli kitabı indir</string>
     <string name="opds.entry.downloaded">Kitaplığınızda</string>
+    <string name="opds.entry.listen">Şimdi dinle</string>
     <string name="opds.entry.read">Şimdi oku</string>
     <string name="opds.entry.unsupported">Pageturner EPUB ve PDF okur. Bu kitap yalnızca %s olarak mevcut.</string>
     <string name="opds.feed.error">Bu sayfa yüklenmedi</string>
