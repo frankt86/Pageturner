@@ -331,7 +331,9 @@
     <string name="opds.catalogs.empty.message">אפשר להוסיף את הקטלוג של שרת Calibre-Web, Komga או OPDS אחר כדי להוריד ממנו ספרים דיגיטליים ולקרוא אותם כאן.</string>
     <string name="opds.catalogs.empty.title">עדיין אין קטלוגים</string>
     <string name="opds.entry.download">הורדת %s</string>
+    <string name="opds.entry.download_audiobook">הורדת הקולספר</string>
     <string name="opds.entry.downloaded">בספרייה שלכם</string>
+    <string name="opds.entry.listen">האזנה עכשיו</string>
     <string name="opds.entry.read">קריאה עכשיו</string>
     <string name="opds.entry.unsupported">ב-Pageturner אפשר לקרוא EPUB ו-PDF. הספר הזה זמין רק בפורמט %s.</string>
     <string name="opds.feed.error">הדף הזה לא נטען</string>

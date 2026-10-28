@@ -1,0 +1,25 @@
+{
+  "metadata": {"title": "Audiobooks"},
+  "links": [{"rel": "self", "href": "/opds2/audiobooks", "type": "application/opds+json"}],
+  "publications": [
+    {
+      "metadata": {"@type": "http://schema.org/Audiobook", "title": "Flatland", "identifier": "urn:example:flatland", "author": "Edwin A. Abbott"},
+      "links": [
+        {"rel": "http://opds-spec.org/acquisition/open-access", "href": "/audiobooks/flatland/manifest.json", "type": "application/audiobook+json"}
+      ]
+    },
+    {
+      "metadata": {"title": "The Raven", "identifier": "urn:example:raven"},
+      "links": [
+        {"rel": "http://opds-spec.org/acquisition/open-access", "href": "/audiobooks/raven/part1.ogg", "type": "audio/ogg", "title": "Part 1", "length": 4000},
+        {"rel": "http://opds-spec.org/acquisition/open-access", "href": "/audiobooks/raven/part2.ogg", "type": "audio/ogg", "title": "Part 2"}
+      ]
+    },
+    {
+      "metadata": {"title": "Ulysses", "identifier": "urn:example:ulysses", "conformsTo": "https://readium.org/webpub-manifest/profiles/audiobook"},
+      "links": [
+        {"rel": "http://opds-spec.org/acquisition", "href": "/audiobooks/ulysses.zip", "type": "application/zip"}
+      ]
+    }
+  ]
+}

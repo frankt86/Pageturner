@@ -314,7 +314,9 @@
     <string name="opds.catalogs.empty.message">Lägg till katalogen från din Calibre-Web-, Komga- eller annan OPDS-server för att ladda ned e-böckerna och läsa dem här.</string>
     <string name="opds.catalogs.empty.title">Inga kataloger än</string>
     <string name="opds.entry.download">Ladda ned %s</string>
+    <string name="opds.entry.download_audiobook">Ladda ned ljudbok</string>
     <string name="opds.entry.downloaded">I ditt bibliotek</string>
+    <string name="opds.entry.listen">Lyssna nu</string>
     <string name="opds.entry.read">Läs nu</string>
     <string name="opds.entry.unsupported">Pageturner läser EPUB och PDF. Den här boken finns bara som %s.</string>
     <string name="opds.feed.error">Sidan kunde inte läsas in</string>

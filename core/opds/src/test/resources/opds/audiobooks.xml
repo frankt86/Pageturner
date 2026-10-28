@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:opds="http://opds-spec.org/2010/catalog">
+  <id>urn:example:audiobooks</id>
+  <title>Audiobooks</title>
+  <entry>
+    <title>Persuasion</title>
+    <id>urn:example:persuasion</id>
+    <author><name>Jane Austen</name></author>
+    <link rel="http://opds-spec.org/image" href="/covers/persuasion.jpg" type="image/jpeg"/>
+    <link rel="http://opds-spec.org/acquisition" href="/download/persuasion.epub" type="application/epub+zip"/>
+    <link rel="http://opds-spec.org/acquisition" href="/download/persuasion.m4b" length="312000000" type="audio/mp4"/>
+  </entry>
+  <entry>
+    <title>The Time Machine</title>
+    <id>urn:example:time-machine</id>
+    <link rel="http://opds-spec.org/acquisition/open-access" href="/audio/time-machine/01.mp3" title="Chapter 1" length="1000" type="audio/mpeg"/>
+    <link rel="http://opds-spec.org/acquisition/open-access" href="/audio/time-machine/02.mp3" title="Chapter 2" length="2000"/>
+    <link rel="http://opds-spec.org/acquisition/open-access" href="/audio/time-machine/03.mp3" title="Chapter 3" length="3000" type="audio/mp3"/>
+    <link rel="http://opds-spec.org/acquisition/open-access" href="/audio/time-machine/01.mp3" title="Chapter 1" type="audio/mpeg"/>
+  </entry>
+  <entry>
+    <title>Dracula</title>
+    <id>urn:example:dracula</id>
+    <link rel="http://opds-spec.org/acquisition" href="/download/77" title="Dracula.m4b" type="application/octet-stream"/>
+  </entry>
+  <entry>
+    <title>Frankenstein</title>
+    <id>urn:example:frankenstein</id>
+    <dc:type>Audiobook</dc:type>
+    <link rel="http://opds-spec.org/acquisition" href="/download/frankenstein.zip" type="application/zip"/>
+  </entry>
+  <entry>
+    <title>Watchmen</title>
+    <id>urn:example:watchmen</id>
+    <link rel="http://opds-spec.org/acquisition" href="/download/watchmen.zip" type="application/zip"/>
+  </entry>
+  <entry>
+    <title>Emma</title>
+    <id>urn:example:emma</id>
+    <category scheme="http://schema.org/additionalType" term="http://schema.org/Audiobook"/>
+    <link rel="http://opds-spec.org/acquisition" href="/download/emma" type="application/audiobook+zip"/>
+  </entry>
+  <entry>
+    <title>Middlemarch</title>
+    <id>urn:example:middlemarch</id>
+    <link rel="http://opds-spec.org/acquisition" href="/download/middlemarch" length="900" type="video/mp4"/>
+    <link rel="http://opds-spec.org/acquisition" href="/download/middlemarch-mp3/1.mp3" length="500" type="audio/mpeg"/>
+  </entry>
+</feed>

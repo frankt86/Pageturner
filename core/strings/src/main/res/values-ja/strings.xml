@@ -297,7 +297,9 @@
     <string name="opds.catalogs.empty.message">Calibre-Web や Komga などの OPDS サーバーのカタログを追加すると、電子書籍をダウンロードしてここで読めます。</string>
     <string name="opds.catalogs.empty.title">カタログはまだありません</string>
     <string name="opds.entry.download">%s をダウンロード</string>
+    <string name="opds.entry.download_audiobook">オーディオブックをダウンロード</string>
     <string name="opds.entry.downloaded">ライブラリにあります</string>
+    <string name="opds.entry.listen">今すぐ聴く</string>
     <string name="opds.entry.read">今すぐ読む</string>
     <string name="opds.entry.unsupported">Pageturner で読めるのは EPUB と PDF です。この本は %s のみです。</string>
     <string name="opds.feed.error">このページを読み込めませんでした</string>

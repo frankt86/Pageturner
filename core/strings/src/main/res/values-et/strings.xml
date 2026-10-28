@@ -314,7 +314,9 @@
     <string name="opds.catalogs.empty.message">Lisa oma Calibre-Webi, Komga või muu OPDS-serveri kataloog, et selle e-raamatud alla laadida ja neid siin lugeda.</string>
     <string name="opds.catalogs.empty.title">Veel pole ühtegi kataloogi</string>
     <string name="opds.entry.download">Laadi alla %s</string>
+    <string name="opds.entry.download_audiobook">Laadi alla heliraamat</string>
     <string name="opds.entry.downloaded">Sinu raamatukogus</string>
+    <string name="opds.entry.listen">Kuula kohe</string>
     <string name="opds.entry.read">Loe kohe</string>
     <string name="opds.entry.unsupported">Pageturner loeb EPUB- ja PDF-faile. See raamat on saadaval ainult kujul %s.</string>
     <string name="opds.feed.error">Lehte ei õnnestunud laadida</string>

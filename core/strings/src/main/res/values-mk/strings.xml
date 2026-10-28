@@ -314,7 +314,9 @@
     <string name="opds.catalogs.empty.message">Додајте го каталогот на вашиот Calibre-Web, Komga или друг OPDS сервер за да ги преземате неговите е-книги и да ги читате тука.</string>
     <string name="opds.catalogs.empty.title">Сè уште нема каталози</string>
     <string name="opds.entry.download">Преземи %s</string>
+    <string name="opds.entry.download_audiobook">Преземи аудио книга</string>
     <string name="opds.entry.downloaded">Во вашата библиотека</string>
+    <string name="opds.entry.listen">Слушај сега</string>
     <string name="opds.entry.read">Читај сега</string>
     <string name="opds.entry.unsupported">Pageturner чита EPUB и PDF. Оваа книга постои само како %s.</string>
     <string name="opds.feed.error">Оваа страница не се вчита</string>

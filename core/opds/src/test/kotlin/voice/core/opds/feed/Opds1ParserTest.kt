@@ -42,7 +42,7 @@ class Opds1ParserTest {
     assertEquals("https://books.example.com/opds/cover/12", book.coverUrl)
     assertEquals("https://books.example.com/opds/cover/12", book.thumbnailUrl)
     assertEquals(
-      OpdsAcquisition("https://books.example.com/opds/download/12/epub/", "application/epub+zip"),
+      OpdsAcquisition("https://books.example.com/opds/download/12/epub/", "application/epub+zip", "EPUB", 421337),
       book.preferredAcquisition,
     )
     assertEquals("MOBI", book.acquisitions[0].label)

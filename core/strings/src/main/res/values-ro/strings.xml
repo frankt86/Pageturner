@@ -331,7 +331,9 @@
     <string name="opds.catalogs.empty.message">Adaugă catalogul serverului tău Calibre-Web, Komga sau al altui server OPDS ca să-i descarci cărțile electronice și să le citești aici.</string>
     <string name="opds.catalogs.empty.title">Încă nu ai cataloage</string>
     <string name="opds.entry.download">Descarcă %s</string>
+    <string name="opds.entry.download_audiobook">Descarcă cartea audio</string>
     <string name="opds.entry.downloaded">În biblioteca ta</string>
+    <string name="opds.entry.listen">Ascultă acum</string>
     <string name="opds.entry.read">Citește acum</string>
     <string name="opds.entry.unsupported">Pageturner citește EPUB și PDF. Această carte există doar ca %s.</string>
     <string name="opds.feed.error">Pagina nu s-a încărcat</string>

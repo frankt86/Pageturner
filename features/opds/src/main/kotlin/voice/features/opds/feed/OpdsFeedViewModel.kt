@@ -15,10 +15,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
+import voice.core.data.BookId
 import voice.core.opds.FeedResult
 import voice.core.opds.OpdsCatalog
 import voice.core.opds.OpdsCatalogs
 import voice.core.opds.OpdsClient
+import voice.core.opds.download.OpdsAudiobookDownloads
 import voice.core.opds.download.OpdsDownloadState
 import voice.core.opds.download.OpdsDownloads
 import voice.core.opds.download.OpdsEntryKey
@@ -33,6 +35,7 @@ class OpdsFeedViewModel(
   private val catalogs: OpdsCatalogs,
   private val client: OpdsClient,
   private val downloads: OpdsDownloads,
+  private val audiobookDownloads: OpdsAudiobookDownloads,
   private val navigator: Navigator,
   dispatcherProvider: DispatcherProvider,
   @Assisted
@@ -54,20 +57,28 @@ class OpdsFeedViewModel(
   private var searching by mutableStateOf(false)
   private var searchFailed by mutableStateOf(false)
   private var selectedId by mutableStateOf<String?>(null)
+  private var askForNotifications by mutableStateOf(false)
 
   @Composable
   internal fun viewState(): OpdsFeedViewState {
     LaunchedEffect(Unit) {
       if (loadJob == null) load()
+      askForNotifications = audiobookDownloads.shouldAskForNotifications()
     }
     val downloaded = remember { downloads.downloaded(destination.catalogId) }.collectAsState(initial = emptyMap()).value
     val downloadStates = downloads.states.collectAsState().value
+    val audiobooksDownloaded = remember { audiobookDownloads.downloaded(destination.catalogId) }
+      .collectAsState(initial = emptyMap()).value
+    val audiobookStates = remember { audiobookDownloads.states }.collectAsState(initial = emptyMap()).value
     val current = catalog
     val items = publications.map { publication ->
+      val key = OpdsEntryKey(destination.catalogId, publication.id)
       publication.toViewState(
         catalog = current,
         downloaded = downloaded[publication.id],
-        state = downloadStates[OpdsEntryKey(destination.catalogId, publication.id)],
+        state = downloadStates[key],
+        audiobookDownloaded = audiobooksDownloaded[publication.id],
+        audiobookState = audiobookStates[key],
       )
     }
     return OpdsFeedViewState(
@@ -82,6 +93,7 @@ class OpdsFeedViewModel(
       loadingMore = loadingMore,
       loadMoreFailed = loadMoreFailed,
       selected = items.firstOrNull { it.id == selectedId },
+      askForNotifications = askForNotifications,
     )
   }
 
@@ -178,6 +190,28 @@ class OpdsFeedViewModel(
     navigator.goTo(Destination.Reader(uri))
   }
 
+  override fun onDownloadAudiobook(id: String) {
+    val current = catalog ?: return
+    val publication = publications.firstOrNull { it.id == id } ?: return
+    audiobookDownloads.download(current, publication)
+  }
+
+  override fun onCancelAudiobookDownload(id: String) {
+    audiobookDownloads.cancel(OpdsEntryKey(destination.catalogId, id))
+  }
+
+  override fun onListen(bookId: BookId) {
+    selectedId = null
+    navigator.goTo(Destination.Playback(bookId))
+  }
+
+  override fun onAskedForNotifications() {
+    askForNotifications = false
+    scope.launch {
+      audiobookDownloads.onAskedForNotifications()
+    }
+  }
+
   override fun onBack() {
     navigator.goBack()
   }
@@ -192,8 +226,11 @@ private fun OpdsPublication.toViewState(
   catalog: OpdsCatalog?,
   downloaded: Uri?,
   state: OpdsDownloadState?,
+  audiobookDownloaded: BookId?,
+  audiobookState: OpdsDownloadState?,
 ): PublicationViewState {
   val acquisition = preferredAcquisition
+  val audio = audiobook
   return PublicationViewState(
     id = id,
     title = title,
@@ -202,13 +239,27 @@ private fun OpdsPublication.toViewState(
     thumbnail = (thumbnailUrl ?: coverUrl)?.let { CoverImage(it, catalog?.authorizationFor(it)) },
     cover = (coverUrl ?: thumbnailUrl)?.let { CoverImage(it, catalog?.authorizationFor(it)) },
     download = when {
-      downloaded != null -> EntryDownload.Downloaded(downloaded)
-      state is OpdsDownloadState.Downloading -> EntryDownload.Downloading(state.progress)
-      state == OpdsDownloadState.Failed -> EntryDownload.Failed
+      downloaded != null -> EntryDownload.Downloaded
+      state != null -> state.toEntryDownload()
       acquisition != null -> EntryDownload.Available(acquisition.label)
+      // an audiobook is still something to download
+      audio != null -> null
       else -> EntryDownload.Unavailable(acquisitions.map { it.label }.distinct().joinToString(", "))
     },
+    readUri = downloaded,
+    audiobook = when {
+      audiobookDownloaded != null -> EntryDownload.Downloaded
+      audiobookState != null -> audiobookState.toEntryDownload()
+      audio != null -> EntryDownload.Available(audio.format, audio.size)
+      else -> null
+    },
+    audiobookId = audiobookDownloaded,
   )
+}
+
+private fun OpdsDownloadState.toEntryDownload(): EntryDownload = when (this) {
+  is OpdsDownloadState.Downloading -> EntryDownload.Downloading(progress, downloadedBytes, totalBytes)
+  OpdsDownloadState.Failed -> EntryDownload.Failed
 }
 
 internal enum class FeedStatus {
@@ -229,6 +280,8 @@ internal data class OpdsFeedViewState(
   val loadingMore: Boolean,
   val loadMoreFailed: Boolean,
   val selected: PublicationViewState?,
+  /** Whether a download of an audiobook asks for notifications first, so its progress shows. */
+  val askForNotifications: Boolean = false,
 )
 
 internal data class PublicationViewState(
@@ -238,8 +291,17 @@ internal data class PublicationViewState(
   val summary: String?,
   val thumbnail: CoverImage?,
   val cover: CoverImage?,
-  val download: EntryDownload,
-)
+  /** The ebook, or null when the book only comes as an audiobook. */
+  val download: EntryDownload?,
+  val readUri: Uri? = null,
+  val audiobook: EntryDownload? = null,
+  val audiobookId: BookId? = null,
+) {
+
+  val isDownloaded: Boolean get() = download == EntryDownload.Downloaded || audiobook == EntryDownload.Downloaded
+
+  val isDownloading: Boolean get() = download is EntryDownload.Downloading || audiobook is EntryDownload.Downloading
+}
 
 /** An image of the catalog, which may need the password to load. */
 internal data class CoverImage(
@@ -248,11 +310,21 @@ internal data class CoverImage(
 )
 
 internal sealed interface EntryDownload {
-  /** [format] is what downloads, like EPUB. */
-  data class Available(val format: String) : EntryDownload
-  data class Downloading(val progress: Float?) : EntryDownload
+  /** [format] is what downloads, like EPUB. [size] is in bytes, when the catalog tells it. */
+  data class Available(
+    val format: String,
+    val size: Long? = null,
+  ) : EntryDownload
+
+  /** [totalBytes] is 0 while the size isn't known. */
+  data class Downloading(
+    val progress: Float?,
+    val downloadedBytes: Long = 0,
+    val totalBytes: Long = 0,
+  ) : EntryDownload
+
   data object Failed : EntryDownload
-  data class Downloaded(val uri: Uri) : EntryDownload
+  data object Downloaded : EntryDownload
 
   /** Comes only in formats Pageturner can't read, like CBZ. */
   data class Unavailable(val formats: String) : EntryDownload

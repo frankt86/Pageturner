@@ -314,7 +314,9 @@
     <string name="opds.catalogs.empty.message">Agiunghe su catàlogu de su serbidore tuo Calibre-Web, Komga o de un\'àteru serbidore OPDS pro iscarrigare sos libros eletrònicos suos e los lèghere inoghe.</string>
     <string name="opds.catalogs.empty.title">Galu perunu catàlogu</string>
     <string name="opds.entry.download">Iscàrriga %s</string>
+    <string name="opds.entry.download_audiobook">Iscàrriga s\'audiolibru</string>
     <string name="opds.entry.downloaded">In sa biblioteca tua</string>
+    <string name="opds.entry.listen">Ascurta como</string>
     <string name="opds.entry.read">Leghe como</string>
     <string name="opds.entry.unsupported">Pageturner leghet EPUB e PDF. Custu libru b\'est petzi in %s.</string>
     <string name="opds.feed.error">Custa pàgina no est carrigada</string>

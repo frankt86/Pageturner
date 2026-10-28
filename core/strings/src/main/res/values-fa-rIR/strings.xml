@@ -314,7 +314,9 @@
     <string name="opds.catalogs.empty.message">کاتالوگ سرور Calibre-Web، Komga یا هر سرور OPDS دیگری را اضافه کنید تا کتاب‌های الکترونیکی‌اش را دانلود کنید و اینجا بخوانید.</string>
     <string name="opds.catalogs.empty.title">هنوز کاتالوگی ندارید</string>
     <string name="opds.entry.download">دانلود %s</string>
+    <string name="opds.entry.download_audiobook">دانلود کتاب صوتی</string>
     <string name="opds.entry.downloaded">در کتابخانهٔ شما</string>
+    <string name="opds.entry.listen">همین حالا گوش کنید</string>
     <string name="opds.entry.read">همین حالا بخوانید</string>
     <string name="opds.entry.unsupported">Pageturner فایل‌های EPUB و PDF را می‌خواند. این کتاب فقط به صورت %s موجود است.</string>
     <string name="opds.feed.error">این صفحه بارگیری نشد</string>

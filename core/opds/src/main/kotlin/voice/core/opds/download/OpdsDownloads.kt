@@ -10,8 +10,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,8 +21,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import okhttp3.Call
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import okhttp3.Request
 import voice.core.audiobookshelf.http.ServerHttpClient
 import voice.core.data.Ebook
 import voice.core.data.EbookFormat
@@ -48,14 +44,18 @@ public data class OpdsEntryKey(
 
 public sealed interface OpdsDownloadState {
 
-  /** [progress] is null while the size isn't known. */
-  public data class Downloading(val progress: Float?) : OpdsDownloadState
+  /** [progress] is null while the size isn't known. [totalBytes] is 0 then. */
+  public data class Downloading(
+    val progress: Float?,
+    val downloadedBytes: Long = 0,
+    val totalBytes: Long = 0,
+  ) : OpdsDownloadState
 
   public data object Failed : OpdsDownloadState
 }
 
 /**
- * Downloads books from the catalogs into the app's own files and adds them to the library. Ebooks are small, so a
+ * Downloads ebooks from the catalogs into the app's own files and adds them to the library. Ebooks are small, so a
  * download runs in the app's process, without a service or a notification.
  */
 @SingleIn(AppScope::class)
@@ -206,32 +206,8 @@ public class OpdsDownloads(
     target: File,
     onProgress: (Float?) -> Unit,
   ) {
-    val call = http.client.newCall(downloadRequest(catalog, url))
-    calls[key] = call
-    call.execute().use { response ->
-      if (!response.isSuccessful) throw IOException("HTTP ${response.code}")
-      val total = response.body.contentLength()
-      var read = 0L
-      var lastReported = -1
-      response.body.byteStream().use { input ->
-        target.outputStream().use { output ->
-          val buffer = ByteArray(64 * 1024)
-          while (true) {
-            currentCoroutineContext().ensureActive()
-            val count = input.read(buffer)
-            if (count < 0) break
-            output.write(buffer, 0, count)
-            read += count
-            if (total > 0) {
-              val percent = (read * 100 / total).toInt()
-              if (percent != lastReported) {
-                lastReported = percent
-                onProgress(read.toFloat() / total)
-              }
-            }
-          }
-        }
-      }
+    http.client.fetch(downloadRequest(catalog, url), target, onCall = { calls[key] = it }) { read, total ->
+      if (total > 0) onProgress(read.toFloat() / total)
     }
   }
 
@@ -260,14 +236,4 @@ public class OpdsDownloads(
 private fun Ebook.matches(key: OpdsEntryKey): Boolean {
   val source = opdsSource ?: return false
   return source.catalogId == key.catalogId && source.entryId == key.entryId
-}
-
-private fun downloadRequest(
-  catalog: OpdsCatalog,
-  url: String,
-): Request {
-  return Request.Builder()
-    .url(url.toHttpUrlOrNull() ?: throw IOException("Not a url"))
-    .apply { catalog.authorizationFor(url)?.let { header("Authorization", it) } }
-    .build()
 }

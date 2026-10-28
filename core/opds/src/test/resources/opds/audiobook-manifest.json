@@ -1,0 +1,10 @@
+{
+  "@context": "https://readium.org/webpub-manifest/context.jsonld",
+  "metadata": {"@type": "http://schema.org/Audiobook", "title": "Flatland", "duration": 10800},
+  "links": [{"rel": "self", "href": "manifest.json", "type": "application/audiobook+json"}],
+  "readingOrder": [
+    {"href": "audio/01.mp3", "type": "audio/mpeg", "title": "Part 1", "duration": 5400},
+    {"href": "https://cdn.example.com/flatland/02.mp3", "type": "audio/mpeg", "title": "Part 2", "duration": 5400}
+  ],
+  "resources": [{"href": "cover.jpg", "type": "image/jpeg"}]
+}

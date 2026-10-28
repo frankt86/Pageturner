@@ -331,7 +331,9 @@
     <string name="opds.catalogs.empty.message">Afegiu el catàleg del vostre servidor Calibre-Web, Komga o un altre servidor OPDS per baixar-ne els llibres electrònics i llegir-los aquí.</string>
     <string name="opds.catalogs.empty.title">Encara no hi ha cap catàleg</string>
     <string name="opds.entry.download">Baixa %s</string>
+    <string name="opds.entry.download_audiobook">Baixa l\'audiollibre</string>
     <string name="opds.entry.downloaded">A la vostra biblioteca</string>
+    <string name="opds.entry.listen">Escolta ara</string>
     <string name="opds.entry.read">Llegeix ara</string>
     <string name="opds.entry.unsupported">Pageturner llegeix EPUB i PDF. Aquest llibre només està disponible en %s.</string>
     <string name="opds.feed.error">Aquesta pàgina no s\'ha carregat</string>

@@ -314,7 +314,9 @@
     <string name="opds.catalogs.empty.message">உங்கள் Calibre-Web, Komga அல்லது வேறு OPDS சர்வரின் கேட்டலாகைச் சேர்த்து, அதன் மின்புத்தகங்களைப் பதிவிறக்கி இங்கே படியுங்கள்.</string>
     <string name="opds.catalogs.empty.title">இன்னும் கேட்டலாக் எதுவும் இல்லை</string>
     <string name="opds.entry.download">%s பதிவிறக்கு</string>
+    <string name="opds.entry.download_audiobook">ஆடியோபுக்கைப் பதிவிறக்கு</string>
     <string name="opds.entry.downloaded">உங்கள் நூலகத்தில் உள்ளது</string>
+    <string name="opds.entry.listen">இப்போது கேள்</string>
     <string name="opds.entry.read">இப்போது படி</string>
     <string name="opds.entry.unsupported">Pageturner EPUB, PDF கோப்புகளைப் படிக்கும். இந்தப் புத்தகம் %s வடிவில் மட்டுமே உள்ளது.</string>
     <string name="opds.feed.error">இந்தப் பக்கம் ஏற்றப்படவில்லை</string>

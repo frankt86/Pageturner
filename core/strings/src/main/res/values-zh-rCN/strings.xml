@@ -297,7 +297,9 @@
     <string name="opds.catalogs.empty.message">添加您的 Calibre-Web、Komga 或其他 OPDS 服务器的目录，即可下载其中的电子书并在这里阅读。</string>
     <string name="opds.catalogs.empty.title">还没有目录</string>
     <string name="opds.entry.download">下载 %s</string>
+    <string name="opds.entry.download_audiobook">下载有声书</string>
     <string name="opds.entry.downloaded">已在您的书库中</string>
+    <string name="opds.entry.listen">立即收听</string>
     <string name="opds.entry.read">立即阅读</string>
     <string name="opds.entry.unsupported">Pageturner 可以阅读 EPUB 和 PDF。这本书只有 %s 格式。</string>
     <string name="opds.feed.error">此页面未能加载</string>

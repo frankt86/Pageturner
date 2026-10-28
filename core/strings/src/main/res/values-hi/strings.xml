@@ -314,7 +314,9 @@
     <string name="opds.catalogs.empty.message">अपने Calibre-Web, Komga या किसी दूसरे OPDS सर्वर का कैटलॉग जोड़ें, ताकि उसकी ई-बुक डाउनलोड करके यहाँ पढ़ी जा सकें।</string>
     <string name="opds.catalogs.empty.title">अभी कोई कैटलॉग नहीं है</string>
     <string name="opds.entry.download">%s डाउनलोड करें</string>
+    <string name="opds.entry.download_audiobook">ऑडियोबुक डाउनलोड करें</string>
     <string name="opds.entry.downloaded">आपकी लाइब्रेरी में</string>
+    <string name="opds.entry.listen">अभी सुनें</string>
     <string name="opds.entry.read">अभी पढ़ें</string>
     <string name="opds.entry.unsupported">Pageturner EPUB और PDF पढ़ता है। यह पुस्तक सिर्फ़ %s में उपलब्ध है।</string>
     <string name="opds.feed.error">यह पेज लोड नहीं हुआ</string>
