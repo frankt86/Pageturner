@@ -43,7 +43,8 @@ private fun HttpUrl.withParentPaths(): List<HttpUrl> {
   }
 }
 
-internal fun isLocalHost(host: String): Boolean {
+/** Whether [host] is on the local network or a VPN, where servers often only speak http. */
+public fun isLocalHost(host: String): Boolean {
   val lower = host.lowercase().removePrefix("[").removeSuffix("]")
   if (lower == "localhost" || '.' !in lower) return true
   if (listOf(".local", ".lan", ".home", ".internal", ".home.arpa").any { lower.endsWith(it) }) return true
