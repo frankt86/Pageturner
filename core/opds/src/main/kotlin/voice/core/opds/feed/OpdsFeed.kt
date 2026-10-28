@@ -220,7 +220,7 @@ internal fun opdsAudiobook(
   if (audio.isNotEmpty()) {
     val byFormat = audio.groupBy { it.audioLabel!! }
     val format = audioPreference.firstOrNull { it in byFormat } ?: byFormat.keys.first()
-    return OpdsAudiobook(files = byFormat.getValue(format), packaging = AudiobookPackaging.Files)
+    return OpdsAudiobook(files = chapters(byFormat.getValue(format)), packaging = AudiobookPackaging.Files)
   }
   acquisitions.firstOrNull { it.type == AUDIOBOOK_MANIFEST }?.let {
     return OpdsAudiobook(files = listOf(it), packaging = AudiobookPackaging.Manifest)
@@ -235,6 +235,16 @@ internal fun opdsAudiobook(
     }
   }
   return zip?.let { OpdsAudiobook(files = listOf(it), packaging = AudiobookPackaging.Zip) }
+}
+
+/**
+ * Several links of one format are the chapters of the book only when each has a title of its own. Servers often link
+ * the same file twice, like for downloading and for streaming, and those are one book, not two chapters.
+ */
+private fun chapters(files: List<OpdsAcquisition>): List<OpdsAcquisition> {
+  if (files.size == 1) return files
+  val titles = files.map { it.title?.trim().orEmpty() }
+  return if (titles.none { it.isEmpty() } && titles.distinct().size == titles.size) files else listOf(files.first())
 }
 
 private fun String.extension(): String? {

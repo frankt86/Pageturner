@@ -46,4 +46,10 @@
     <link rel="http://opds-spec.org/acquisition" href="/download/middlemarch" length="900" type="video/mp4"/>
     <link rel="http://opds-spec.org/acquisition" href="/download/middlemarch-mp3/1.mp3" length="500" type="audio/mpeg"/>
   </entry>
+  <entry>
+    <title>Carmilla</title>
+    <id>urn:example:carmilla</id>
+    <link rel="http://opds-spec.org/acquisition" href="/download/carmilla/m4b" length="250000000" type="audio/mp4"/>
+    <link rel="http://opds-spec.org/acquisition/open-access" href="/stream/carmilla.m4b" type="audio/mp4"/>
+  </entry>
 </feed>

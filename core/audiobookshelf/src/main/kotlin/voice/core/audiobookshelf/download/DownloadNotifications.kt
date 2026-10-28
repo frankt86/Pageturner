@@ -115,6 +115,8 @@ public class DownloadNotifications internal constructor(
     }
     val waitingFor = downloads.firstNotNullOfOrNull { it.state.waitingFor }
     val progress = downloads.map { it.state.progress }.average().toFloat()
+    // a server that doesn't tell the size gets a moving bar instead of one stuck at the start
+    val sizeUnknown = downloads.all { it.state.totalBytes <= 0 && it.state.progress <= 0F }
     val text = when {
       waitingFor != null -> waitingText(waitingFor)
       single != null -> progressText(single.state)
@@ -122,7 +124,7 @@ public class DownloadNotifications internal constructor(
     }
     return builder
       .setContentText(text)
-      .setProgress(100, (progress * 100).roundToInt(), false)
+      .setProgress(100, (progress * 100).roundToInt(), sizeUnknown)
       .addAction(
         0,
         context.getString(StringsR.string.audiobookshelf_download_notification_stop),
@@ -138,6 +140,8 @@ public class DownloadNotifications internal constructor(
         Formatter.formatShortFileSize(context, state.downloadedBytes),
         Formatter.formatShortFileSize(context, state.totalBytes),
       )
+    } else if (state.progress <= 0F && state.downloadedBytes > 0) {
+      Formatter.formatShortFileSize(context, state.downloadedBytes)
     } else {
       percentFormat.format(state.progress)
     }

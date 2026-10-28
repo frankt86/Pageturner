@@ -272,6 +272,10 @@ private fun downloadingText(download: EntryDownload.Downloading): String {
       )
     }
     progress != null -> downloading + " · " + NumberFormat.getPercentInstance().format(progress.toDouble())
+    // the server didn't tell the size, so at least the download shows that it moves
+    download.downloadedBytes > 0 ->
+      downloading + " · " +
+        Formatter.formatShortFileSize(LocalContext.current, download.downloadedBytes)
     else -> downloading
   }
 }

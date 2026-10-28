@@ -26,6 +26,9 @@ internal suspend fun OkHttpClient.fetch(
   onCall(call)
   call.execute().use { response ->
     if (!response.isSuccessful) throw IOException("HTTP ${response.code}")
+    // a login page or an error message in place of the book must not end up in the library as one
+    val type = response.body.contentType()
+    if (type != null && (type.subtype == "html" || type.subtype == "json")) throw IOException("Got $type instead of a file")
     val total = response.body.contentLength().coerceAtLeast(0)
     var read = 0L
     var lastReported = -1L
