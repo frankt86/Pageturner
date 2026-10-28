@@ -296,6 +296,11 @@
     <string name="opds.catalog.url">アドレス</string>
     <string name="opds.catalogs.empty.message">Calibre-Web や Komga などの OPDS サーバーのカタログを追加すると、電子書籍をダウンロードしてここで読めます。</string>
     <string name="opds.catalogs.empty.title">カタログはまだありません</string>
+    <string name="opds.download_folder.error">Pageturner はこのフォルダーに本を保存できません。別のフォルダーをお試しください。</string>
+    <string name="opds.download_folder.message">ダウンロード先にするライブラリのフォルダーを選んでください。ほかの本と一緒にそこに表示されます。</string>
+    <string name="opds.download_folder.new">別のフォルダーを選択</string>
+    <string name="opds.download_folder.none">まだ選択されていません</string>
+    <string name="opds.download_folder.title">ダウンロード先フォルダー</string>
     <string name="opds.entry.download">%s をダウンロード</string>
     <string name="opds.entry.download_audiobook">オーディオブックをダウンロード</string>
     <string name="opds.entry.downloaded">ライブラリにあります</string>

@@ -2,6 +2,7 @@
 
 package voice.features.opds.catalogs
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -57,6 +58,8 @@ import voice.core.ui.VoiceTheme
 import voice.core.ui.icons.VoiceIcons
 import voice.core.ui.plus
 import voice.core.ui.segmentedShape
+import voice.features.opds.folder.DownloadFolderSheet
+import voice.features.opds.folder.DownloadFolderSheetState
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
 import voice.core.strings.R as StringsR
@@ -93,6 +96,12 @@ private fun OpdsCatalogsScreen() {
     onSave = viewModel::onSave,
     onRemove = viewModel::onRemove,
     onEditorDismiss = viewModel::onEditorDismiss,
+    downloadFolder = viewModel.downloadFolder(),
+    onDownloadFolderClick = viewModel::onDownloadFolderClick,
+    downloadFolderSheet = viewModel.downloadFolderSheet(),
+    onDownloadFolderChoose = viewModel::onDownloadFolderChoose,
+    onDownloadFolderPick = viewModel::onDownloadFolderPick,
+    onDownloadFolderDismiss = viewModel::onDownloadFolderDismiss,
   )
 }
 
@@ -108,6 +117,12 @@ private fun OpdsCatalogsScreen(
   onSave: () -> Unit,
   onRemove: () -> Unit,
   onEditorDismiss: () -> Unit,
+  downloadFolder: String?,
+  onDownloadFolderClick: () -> Unit,
+  downloadFolderSheet: DownloadFolderSheetState?,
+  onDownloadFolderChoose: (Uri) -> Unit,
+  onDownloadFolderPick: (Uri) -> Unit,
+  onDownloadFolderDismiss: () -> Unit,
 ) {
   val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
   Scaffold(
@@ -148,6 +163,13 @@ private fun OpdsCatalogsScreen(
           contentPadding = contentPadding + PaddingValues(start = horizontalPadding, end = horizontalPadding, top = 8.dp, bottom = 96.dp),
           verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
+          item(key = "downloadFolder") {
+            DownloadFolderRow(
+              name = downloadFolder,
+              onClick = onDownloadFolderClick,
+              modifier = Modifier.padding(bottom = 14.dp),
+            )
+          }
           itemsIndexed(catalogs, key = { _, catalog -> catalog.id }) { index, catalog ->
             CatalogRow(
               catalog = catalog,
@@ -169,6 +191,66 @@ private fun OpdsCatalogsScreen(
         onDismiss = onEditorDismiss,
       )
     }
+    if (downloadFolderSheet != null) {
+      DownloadFolderSheet(
+        state = downloadFolderSheet,
+        onChoose = onDownloadFolderChoose,
+        onPick = onDownloadFolderPick,
+        onDismiss = onDownloadFolderDismiss,
+      )
+    }
+  }
+}
+
+// where the books of every catalog download to
+@Composable
+private fun DownloadFolderRow(
+  name: String?,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  val colors = MaterialTheme.colorScheme
+  val shape = segmentedShape(0, 1)
+  val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+  Row(
+    modifier = modifier
+      .fillMaxWidth()
+      .clip(shape)
+      .background(colors.surfaceContainer, shape)
+      .clickable(onClick = onClick)
+      .heightIn(min = 72.dp)
+      .padding(horizontal = 16.dp, vertical = 12.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    ShapedIcon(
+      icon = VoiceIcons.Folder,
+      shape = MaterialShapes.Cookie6Sided,
+      containerColor = colors.primaryContainer,
+      contentColor = colors.onPrimaryContainer,
+    )
+    Spacer(Modifier.width(16.dp))
+    Column(Modifier.weight(1F)) {
+      Text(
+        text = stringResource(StringsR.string.opds_download_folder_title),
+        style = MaterialTheme.typography.titleMedium,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+      )
+      Text(
+        text = name ?: stringResource(StringsR.string.opds_download_folder_none),
+        style = MaterialTheme.typography.bodyMedium,
+        color = colors.onSurfaceVariant,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+      )
+    }
+    Spacer(Modifier.width(8.dp))
+    Icon(
+      modifier = Modifier.graphicsLayer { scaleX = if (rtl) -1F else 1F },
+      imageVector = VoiceIcons.ChevronRight,
+      contentDescription = null,
+      tint = colors.onSurfaceVariant,
+    )
   }
 }
 
@@ -296,6 +378,12 @@ private fun OpdsCatalogsPreview() {
       onSave = {},
       onRemove = {},
       onEditorDismiss = {},
+      downloadFolder = "Books",
+      onDownloadFolderClick = {},
+      downloadFolderSheet = null,
+      onDownloadFolderChoose = {},
+      onDownloadFolderPick = {},
+      onDownloadFolderDismiss = {},
     )
   }
 }
@@ -315,6 +403,12 @@ private fun OpdsCatalogsEmptyPreview() {
       onSave = {},
       onRemove = {},
       onEditorDismiss = {},
+      downloadFolder = "Books",
+      onDownloadFolderClick = {},
+      downloadFolderSheet = null,
+      onDownloadFolderChoose = {},
+      onDownloadFolderPick = {},
+      onDownloadFolderDismiss = {},
     )
   }
 }

@@ -313,6 +313,11 @@
     <string name="opds.catalog.url">Aadress</string>
     <string name="opds.catalogs.empty.message">Lisa oma Calibre-Webi, Komga või muu OPDS-serveri kataloog, et selle e-raamatud alla laadida ja neid siin lugeda.</string>
     <string name="opds.catalogs.empty.title">Veel pole ühtegi kataloogi</string>
+    <string name="opds.download_folder.error">Pageturner ei saa sellesse kausta raamatuid salvestada. Proovi mõnda teist.</string>
+    <string name="opds.download_folder.message">Vali allalaadimiste jaoks kaust oma raamatukogust. Need ilmuvad sinna koos kõigi su teiste raamatutega.</string>
+    <string name="opds.download_folder.new">Vali teine kaust</string>
+    <string name="opds.download_folder.none">Veel valimata</string>
+    <string name="opds.download_folder.title">Allalaadimiste kaust</string>
     <string name="opds.entry.download">Laadi alla %s</string>
     <string name="opds.entry.download_audiobook">Laadi alla heliraamat</string>
     <string name="opds.entry.downloaded">Sinu raamatukogus</string>

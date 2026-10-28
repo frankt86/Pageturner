@@ -313,6 +313,11 @@
     <string name="opds.catalog.url">Adres</string>
     <string name="opds.catalogs.empty.message">Voeg de catalogus van je Calibre-Web-, Komga- of andere OPDS-server toe om de e-books te downloaden en hier te lezen.</string>
     <string name="opds.catalogs.empty.title">Nog geen catalogi</string>
+    <string name="opds.download_folder.error">Pageturner kan geen boeken in deze map opslaan. Probeer een andere.</string>
+    <string name="opds.download_folder.message">Kies een map uit je bibliotheek voor downloads. Ze verschijnen daar tussen al je andere boeken.</string>
+    <string name="opds.download_folder.new">Andere map kiezen</string>
+    <string name="opds.download_folder.none">Nog niet gekozen</string>
+    <string name="opds.download_folder.title">Downloadmap</string>
     <string name="opds.entry.download">%s downloaden</string>
     <string name="opds.entry.download_audiobook">Luisterboek downloaden</string>
     <string name="opds.entry.downloaded">In je bibliotheek</string>

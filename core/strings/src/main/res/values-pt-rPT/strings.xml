@@ -330,6 +330,11 @@
     <string name="opds.catalog.url">Endereço</string>
     <string name="opds.catalogs.empty.message">Adicione o catálogo do seu servidor Calibre-Web, Komga ou de outro servidor OPDS para transferir os livros digitais e lê-los aqui.</string>
     <string name="opds.catalogs.empty.title">Ainda não há catálogos</string>
+    <string name="opds.download_folder.error">O Pageturner não consegue guardar livros nesta pasta. Experimente outra.</string>
+    <string name="opds.download_folder.message">Escolha uma pasta da sua biblioteca para as transferências. Vão aparecer lá junto com todos os seus outros livros.</string>
+    <string name="opds.download_folder.new">Escolher outra pasta</string>
+    <string name="opds.download_folder.none">Ainda não escolhida</string>
+    <string name="opds.download_folder.title">Pasta de transferências</string>
     <string name="opds.entry.download">Transferir %s</string>
     <string name="opds.entry.download_audiobook">Transferir audiolivro</string>
     <string name="opds.entry.downloaded">Na sua biblioteca</string>

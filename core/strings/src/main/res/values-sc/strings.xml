@@ -313,6 +313,11 @@
     <string name="opds.catalog.url">Indiritzu</string>
     <string name="opds.catalogs.empty.message">Agiunghe su catàlogu de su serbidore tuo Calibre-Web, Komga o de un\'àteru serbidore OPDS pro iscarrigare sos libros eletrònicos suos e los lèghere inoghe.</string>
     <string name="opds.catalogs.empty.title">Galu perunu catàlogu</string>
+    <string name="opds.download_folder.error">Pageturner non podet sarvare libros in custa cartella. Proa cun un\'àtera.</string>
+    <string name="opds.download_folder.message">Issèbera una cartella de sa biblioteca tua pro sos iscarrigamentos. Ant a apàrrere inie paris cun totu sos àteros libros tuos.</string>
+    <string name="opds.download_folder.new">Issèbera un\'àtera cartella</string>
+    <string name="opds.download_folder.none">Galu no isseberada</string>
+    <string name="opds.download_folder.title">Cartella de sos iscarrigamentos</string>
     <string name="opds.entry.download">Iscàrriga %s</string>
     <string name="opds.entry.download_audiobook">Iscàrriga s\'audiolibru</string>
     <string name="opds.entry.downloaded">In sa biblioteca tua</string>

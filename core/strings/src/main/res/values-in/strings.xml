@@ -296,6 +296,11 @@
     <string name="opds.catalog.url">Alamat</string>
     <string name="opds.catalogs.empty.message">Tambahkan katalog server Calibre-Web, Komga, atau server OPDS lain milik Anda untuk mengunduh e-book-nya dan membacanya di sini.</string>
     <string name="opds.catalogs.empty.title">Belum ada katalog</string>
+    <string name="opds.download_folder.error">Pageturner tidak dapat menyimpan buku di folder ini. Coba folder lain.</string>
+    <string name="opds.download_folder.message">Pilih folder perpustakaan Anda untuk unduhan. Buku akan muncul di sana bersama semua buku Anda yang lain.</string>
+    <string name="opds.download_folder.new">Pilih folder lain</string>
+    <string name="opds.download_folder.none">Belum dipilih</string>
+    <string name="opds.download_folder.title">Folder unduhan</string>
     <string name="opds.entry.download">Unduh %s</string>
     <string name="opds.entry.download_audiobook">Unduh buku audio</string>
     <string name="opds.entry.downloaded">Di perpustakaan Anda</string>

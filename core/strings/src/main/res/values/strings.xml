@@ -540,6 +540,16 @@
     <string name="opds.catalogs.empty.message">Add the catalog of your Calibre-Web, Komga or another OPDS server to download its ebooks and read them here.</string>
     <!-- Title shown while no catalog is added. -->
     <string name="opds.catalogs.empty.title">No catalogs yet</string>
+    <!-- Shown in the sheet that chooses the download folder of the catalogs, when the picked folder can't take downloads, for example because Pageturner may only read it, or because it is a folder of a single book. -->
+    <string name="opds.download_folder.error">Pageturner can\'t save books in this folder. Try another one.</string>
+    <!-- Text of the sheet that chooses where books downloaded from a catalog go. The download folder is one of the folders of the library, and the scan adds the downloads to the library like every other book there. -->
+    <string name="opds.download_folder.message">Choose a folder of your library for downloads. They\'ll show up there with all your other books.</string>
+    <!-- Button in the sheet that chooses the download folder of the catalogs. It opens Android's folder picker to choose a folder that isn't listed, which is then added to the library. -->
+    <string name="opds.download_folder.new">Choose another folder</string>
+    <!-- Shown under the download folder in the list of catalogs while no folder is chosen yet. -->
+    <string name="opds.download_folder.none">Not chosen yet</string>
+    <!-- Title of the setting, and of its sheet, that chooses the folder of the library that books downloaded from a catalog go into. -->
+    <string name="opds.download_folder.title">Download folder</string>
     <!-- Button that downloads a book from a catalog into the library. %s is the file format, like EPUB or PDF. -->
     <string name="opds.entry.download">Download %s</string>
     <!-- Button that downloads the audio of a book from a catalog into the library, to listen to it. Shown next to the ebook download when a book comes as both. -->

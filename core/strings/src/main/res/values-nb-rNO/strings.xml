@@ -313,6 +313,11 @@
     <string name="opds.catalog.url">Adresse</string>
     <string name="opds.catalogs.empty.message">Legg til katalogen fra Calibre-Web-, Komga- eller en annen OPDS-server for å laste ned e-bøkene og lese dem her.</string>
     <string name="opds.catalogs.empty.title">Ingen kataloger ennå</string>
+    <string name="opds.download_folder.error">Pageturner kan ikke lagre bøker i denne mappen. Prøv en annen.</string>
+    <string name="opds.download_folder.message">Velg en mappe i biblioteket ditt for nedlastinger. De dukker opp der sammen med alle de andre bøkene dine.</string>
+    <string name="opds.download_folder.new">Velg en annen mappe</string>
+    <string name="opds.download_folder.none">Ikke valgt ennå</string>
+    <string name="opds.download_folder.title">Nedlastingsmappe</string>
     <string name="opds.entry.download">Last ned %s</string>
     <string name="opds.entry.download_audiobook">Last ned lydbok</string>
     <string name="opds.entry.downloaded">I biblioteket ditt</string>

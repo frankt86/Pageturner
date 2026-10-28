@@ -90,6 +90,7 @@ import voice.core.ui.bookText
 import voice.core.ui.icons.VoiceIcons
 import voice.core.ui.plus
 import voice.core.ui.segmentedShape
+import voice.features.opds.folder.DownloadFolderSheet
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
 import voice.core.strings.R as StringsR
@@ -139,6 +140,9 @@ interface FeedListener {
   fun onCancelAudiobookDownload(id: String)
   fun onListen(bookId: BookId)
   fun onAskedForNotifications()
+  fun onDownloadFolderChoose(uri: Uri)
+  fun onDownloadFolderPick(uri: Uri)
+  fun onDownloadFolderDismiss()
 }
 
 @Composable
@@ -194,23 +198,34 @@ private fun OpdsFeedScreen(
       onResult = {},
     )
     val context = LocalContext.current
-    viewState.selected?.let { selected ->
-      PublicationSheet(
-        publication = selected,
-        onDismiss = listener::onSheetDismiss,
-        onDownload = { listener.onDownload(selected.id) },
-        onCancelDownload = { listener.onCancelDownload(selected.id) },
-        onRead = listener::onRead,
-        onDownloadAudiobook = {
-          if (viewState.askForNotifications && !context.canPostNotifications()) {
-            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            listener.onAskedForNotifications()
-          }
-          listener.onDownloadAudiobook(selected.id)
-        },
-        onCancelAudiobookDownload = { listener.onCancelAudiobookDownload(selected.id) },
-        onListen = listener::onListen,
+    val downloadFolder = viewState.downloadFolder
+    // the book's sheet comes back once the folder is chosen, with the download running
+    if (downloadFolder != null) {
+      DownloadFolderSheet(
+        state = downloadFolder,
+        onChoose = listener::onDownloadFolderChoose,
+        onPick = listener::onDownloadFolderPick,
+        onDismiss = listener::onDownloadFolderDismiss,
       )
+    } else {
+      viewState.selected?.let { selected ->
+        PublicationSheet(
+          publication = selected,
+          onDismiss = listener::onSheetDismiss,
+          onDownload = { listener.onDownload(selected.id) },
+          onCancelDownload = { listener.onCancelDownload(selected.id) },
+          onRead = listener::onRead,
+          onDownloadAudiobook = {
+            if (viewState.askForNotifications && !context.canPostNotifications()) {
+              notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+              listener.onAskedForNotifications()
+            }
+            listener.onDownloadAudiobook(selected.id)
+          },
+          onCancelAudiobookDownload = { listener.onCancelAudiobookDownload(selected.id) },
+          onListen = listener::onListen,
+        )
+      }
     }
   }
 }
@@ -593,6 +608,9 @@ private object PreviewListener : FeedListener {
   override fun onCancelAudiobookDownload(id: String) {}
   override fun onListen(bookId: BookId) {}
   override fun onAskedForNotifications() {}
+  override fun onDownloadFolderChoose(uri: Uri) {}
+  override fun onDownloadFolderPick(uri: Uri) {}
+  override fun onDownloadFolderDismiss() {}
 }
 
 private fun Context.canPostNotifications(): Boolean {

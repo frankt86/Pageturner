@@ -313,6 +313,11 @@
     <string name="opds.catalog.url">Adres</string>
     <string name="opds.catalogs.empty.message">E-kitaplarını indirip burada okumak için Calibre-Web, Komga veya başka bir OPDS sunucunuzun kataloğunu ekleyin.</string>
     <string name="opds.catalogs.empty.title">Henüz katalog yok</string>
+    <string name="opds.download_folder.error">Pageturner bu klasöre kitap kaydedemiyor. Başka bir klasör deneyin.</string>
+    <string name="opds.download_folder.message">İndirmeler için kitaplığınızdan bir klasör seçin. Kitaplar orada diğer tüm kitaplarınızla birlikte görünür.</string>
+    <string name="opds.download_folder.new">Başka klasör seç</string>
+    <string name="opds.download_folder.none">Henüz seçilmedi</string>
+    <string name="opds.download_folder.title">İndirme klasörü</string>
     <string name="opds.entry.download">%s indir</string>
     <string name="opds.entry.download_audiobook">Sesli kitabı indir</string>
     <string name="opds.entry.downloaded">Kitaplığınızda</string>

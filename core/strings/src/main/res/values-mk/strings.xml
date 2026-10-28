@@ -313,6 +313,11 @@
     <string name="opds.catalog.url">Адреса</string>
     <string name="opds.catalogs.empty.message">Додајте го каталогот на вашиот Calibre-Web, Komga или друг OPDS сервер за да ги преземате неговите е-книги и да ги читате тука.</string>
     <string name="opds.catalogs.empty.title">Сè уште нема каталози</string>
+    <string name="opds.download_folder.error">Pageturner не може да зачувува книги во овој фолдер. Обидете се со друг.</string>
+    <string name="opds.download_folder.message">Изберете фолдер од вашата библиотека за преземањата. Таму ќе се појават заедно со сите ваши други книги.</string>
+    <string name="opds.download_folder.new">Избери друг фолдер</string>
+    <string name="opds.download_folder.none">Сè уште не е избран</string>
+    <string name="opds.download_folder.title">Фолдер за преземања</string>
     <string name="opds.entry.download">Преземи %s</string>
     <string name="opds.entry.download_audiobook">Преземи аудио книга</string>
     <string name="opds.entry.downloaded">Во вашата библиотека</string>

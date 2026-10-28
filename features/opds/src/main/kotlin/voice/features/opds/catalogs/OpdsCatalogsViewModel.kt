@@ -1,5 +1,6 @@
 package voice.features.opds.catalogs
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -14,6 +15,9 @@ import voice.core.opds.CatalogType
 import voice.core.opds.FeedResult
 import voice.core.opds.OpdsCatalog
 import voice.core.opds.OpdsCatalogs
+import voice.core.opds.download.OpdsDownloadFolders
+import voice.features.opds.folder.DownloadFolderChooser
+import voice.features.opds.folder.DownloadFolderSheetState
 import voice.navigation.Destination
 import voice.navigation.Navigator
 import kotlin.uuid.Uuid
@@ -22,10 +26,12 @@ import kotlin.uuid.Uuid
 class OpdsCatalogsViewModel(
   private val catalogs: OpdsCatalogs,
   private val navigator: Navigator,
+  downloadFolders: OpdsDownloadFolders,
   dispatcherProvider: DispatcherProvider,
 ) {
 
   private val scope = MainScope(dispatcherProvider)
+  private val folderChooser = DownloadFolderChooser(downloadFolders, scope)
 
   internal var editor by mutableStateOf<CatalogEditorState?>(null)
     private set
@@ -42,6 +48,29 @@ class OpdsCatalogsViewModel(
         type = catalog.type,
       )
     }
+  }
+
+  /** The name of the folder downloads go to, or null while there's none. */
+  @Composable
+  internal fun downloadFolder(): String? = folderChooser.current()?.name
+
+  @Composable
+  internal fun downloadFolderSheet(): DownloadFolderSheetState? = folderChooser.sheet()
+
+  internal fun onDownloadFolderClick() {
+    folderChooser.show()
+  }
+
+  internal fun onDownloadFolderChoose(uri: Uri) {
+    folderChooser.onChoose(uri)
+  }
+
+  internal fun onDownloadFolderPick(uri: Uri) {
+    folderChooser.onPick(uri)
+  }
+
+  internal fun onDownloadFolderDismiss() {
+    folderChooser.onDismiss()
   }
 
   internal fun onAdd() {

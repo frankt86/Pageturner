@@ -56,7 +56,10 @@ import java.util.zip.ZipFile
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.uuid.Uuid
 
-/** A book downloaded from a catalog as audio. Its files are a folder of [downloadedAudiobooksFolder]. */
+/**
+ * A book downloaded from a catalog as audio. [uri] is its folder in the download folder of the library. Without it,
+ * the book is from before the download folder and its files are the [folder] in [downloadedAudiobooksFolder].
+ */
 @Serializable
 internal data class DownloadedAudiobook(
   val catalogId: String,
@@ -66,6 +69,7 @@ internal data class DownloadedAudiobook(
   val author: String?,
   /** Whether the book in the library got the title and author of the catalog yet. */
   val metadataApplied: Boolean = false,
+  val uri: String? = null,
 )
 
 @SingleIn(AppScope::class)
@@ -88,8 +92,8 @@ private data class AudiobookDownload(
 )
 
 /**
- * Downloads audiobooks from the catalogs. Their files go to a folder of their own in the app's storage, which the
- * scanner adds to the library like a folder picked as a single book, so the chapters come from the files. The title,
+ * Downloads audiobooks from the catalogs. Their files go to a folder of their own in the download folder of the
+ * library, where the scan finds the book like every other one there, so the chapters come from the files. The title,
  * author and cover come from the catalog. Audiobooks are large, so a foreground service keeps them downloading with a
  * notification, the same as books from Audiobookshelf.
  */
@@ -103,6 +107,8 @@ public class OpdsAudiobookDownloads internal constructor(
   private val mediaScanTrigger: MediaScanTrigger,
   private val notifications: DownloadNotifications,
   private val serverDownloads: AudiobookshelfDownloads,
+  private val downloadFolders: OpdsDownloadFolders,
+  private val writer: LibraryFolderWriter,
 ) {
 
   private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -166,9 +172,10 @@ public class OpdsAudiobookDownloads internal constructor(
     startService()
     jobs[key] = scope.launch {
       try {
-        val folder = downloadAndAdd(key, catalog, publication, audiobook)
+        downloadAndAdd(key, catalog, publication, audiobook) { cover ->
+          notifications.downloaded(key.tag, name, cover)
+        }
         downloads.update { it - key }
-        notifications.downloaded(key.tag, name, File(folder, COVER_FILE).takeIf { it.exists() })
       } catch (e: CancellationException) {
         downloads.update { it - key }
         throw e
@@ -247,16 +254,16 @@ public class OpdsAudiobookDownloads internal constructor(
     }
   }
 
-  /** @return the folder of the book */
   private suspend fun downloadAndAdd(
     key: OpdsEntryKey,
     catalog: OpdsCatalog,
     publication: OpdsPublication,
     audiobook: OpdsAudiobook,
-  ): File {
-    val root = downloadedAudiobooksFolder(context)
-    // the scanner skips folders that start with a dot, so it never sees a half downloaded book
-    val partial = File(root, ".${Uuid.random()}")
+    onAdded: (cover: File?) -> Unit,
+  ) {
+    val root = downloadFolders.current() ?: throw IOException("No download folder")
+    // the files are copied into the library once they're all there
+    val partial = File(context.cacheDir, "opdsAudiobooks/${Uuid.random()}")
     try {
       if (!partial.mkdirs()) throw IOException("Could not create the folder")
       (publication.coverUrl ?: publication.thumbnailUrl)?.let { url ->
@@ -275,27 +282,35 @@ public class OpdsAudiobookDownloads internal constructor(
           downloadFiles(key, catalog, publication.title, files, OpdsAudiobook(files, AudiobookPackaging.Files).size, partial)
         }
         AudiobookPackaging.Zip -> {
-          val zip = File(partial, ".download.zip")
-          downloadFiles(key, catalog, publication.title, audiobook.files, audiobook.size, partial, target = zip)
-          extractAudio(zip, partial)
-          zip.delete()
+          val zip = File(partial.parentFile, "${partial.name}.zip")
+          try {
+            downloadFiles(key, catalog, publication.title, audiobook.files, audiobook.size, partial, target = zip)
+            extractAudio(zip, partial)
+          } finally {
+            zip.delete()
+          }
         }
       }
-      val folder = uniqueFolder(root, publication.title)
-      if (!partial.renameTo(folder)) throw IOException("Could not move the download")
+      val parent = writer.bookParent(root, bookFolderPath(root.type, publication.authors.firstOrNull()))
+      val files = partial.listFiles().orEmpty().sortedBy { it.name }
+      val name = safeFileName(publication.title)
+      val folder = writer.copyFolder(parent, name, files)
       add(
         DownloadedAudiobook(
           catalogId = key.catalogId,
           entryId = key.entryId,
-          folder = folder.name,
+          folder = name,
           title = publication.title.takeIf { it.isNotBlank() },
           author = publication.authors.joinToString(", ").ifEmpty { null },
+          uri = folder.toString(),
         ),
       )
       mediaScanTrigger.scan(restartIfScanning = true)
-      return folder
+      onAdded(File(partial, COVER_FILE).takeIf { it.exists() })
     } finally {
-      if (partial.exists()) partial.deleteRecursively()
+      if (partial.exists()) {
+        val _ = partial.deleteRecursively()
+      }
     }
   }
 
@@ -406,12 +421,15 @@ public class OpdsAudiobookDownloads internal constructor(
       replaced = entries.filter { it.catalogId == audiobook.catalogId && it.entryId == audiobook.entryId }
       entries - replaced.toSet() + audiobook
     }
-    replaced.forEach { old ->
-      File(downloadedAudiobooksFolder(context), old.folder).takeIf { old.folder != audiobook.folder }?.deleteRecursively()
+    // a book from before the download folder is in the app's own files, where nothing else would remove it
+    replaced.filter { it.uri == null }.forEach { old ->
+      val _ = File(downloadedAudiobooksFolder(context), old.folder).deleteRecursively()
     }
   }
 
-  private fun bookId(entry: DownloadedAudiobook): BookId = BookId(Uri.fromFile(File(downloadedAudiobooksFolder(context), entry.folder)))
+  private fun bookId(entry: DownloadedAudiobook): BookId {
+    return BookId(entry.uri?.let(Uri::parse) ?: Uri.fromFile(File(downloadedAudiobooksFolder(context), entry.folder)))
+  }
 }
 
 private const val COVER_FILE = "cover.jpg"
@@ -442,27 +460,4 @@ private fun audioFileName(
   val name = (file.title ?: file.url.substringBefore('?').substringAfterLast('/'))
     .let { if (it.endsWith(".$extension", ignoreCase = true)) it.dropLast(extension.length + 1) else it }
   return "${number(index)} ${safeFileName(name)}.$extension"
-}
-
-private fun safeFileName(name: String): String {
-  return name.replace(Regex("[\\\\/:*?\"<>|\\p{Cntrl}]"), "_")
-    .trim()
-    .trimStart('.')
-    .take(80)
-    .trim()
-    .ifEmpty { "Audiobook" }
-}
-
-private fun uniqueFolder(
-  root: File,
-  title: String,
-): File {
-  val name = safeFileName(title)
-  var folder = File(root, name)
-  var number = 2
-  while (folder.exists()) {
-    folder = File(root, "$name ($number)")
-    number++
-  }
-  return folder
 }

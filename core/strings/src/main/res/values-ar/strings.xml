@@ -381,6 +381,11 @@
     <string name="opds.catalog.url">العنوان</string>
     <string name="opds.catalogs.empty.message">يمكنك إضافة فهرس خادم Calibre-Web أو Komga أو أي خادم OPDS آخر لتنزيل كتبه الإلكترونية وقراءتها هنا.</string>
     <string name="opds.catalogs.empty.title">لا توجد فهارس بعد</string>
+    <string name="opds.download_folder.error">لا يستطيع Pageturner حفظ الكتب في هذا المجلد. يمكنك تجربة مجلد آخر.</string>
+    <string name="opds.download_folder.message">يمكنك اختيار مجلد من مكتبتك للتنزيلات، وستظهر فيه مع بقية كتبك.</string>
+    <string name="opds.download_folder.new">اختيار مجلد آخر</string>
+    <string name="opds.download_folder.none">لم يتم الاختيار بعد</string>
+    <string name="opds.download_folder.title">مجلد التنزيلات</string>
     <string name="opds.entry.download">تنزيل %s</string>
     <string name="opds.entry.download_audiobook">تنزيل الكتاب الصوتي</string>
     <string name="opds.entry.downloaded">في مكتبتك</string>
