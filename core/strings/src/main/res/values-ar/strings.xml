@@ -85,10 +85,12 @@
     <string name="book.download.stop">إيقاف التنزيل</string>
     <string name="book.download.waiting_for_connection">في انتظار الاتصال</string>
     <string name="book.download.waiting_for_wifi">في انتظار شبكة Wi-Fi</string>
+    <string name="book.edit.author.label">المؤلف</string>
     <string name="book.edit.cover.file">الغلاف من ملفات الجهاز</string>
     <string name="book.edit.cover.internet">الغلاف من الإنترنت</string>
     <string name="book.edit.name.label">الاسم</string>
     <string name="book.edit.rename">إعادة التسمية</string>
+    <string name="book.edit.title.label">العنوان</string>
     <string name="book.remove_from_library">إزالة من المكتبة</string>
     <string name="book.remove_from_library.summary">يبقى الملف على جهازك</string>
     <string name="book.source.device">على هذا الجهاز</string>
@@ -689,7 +691,7 @@
     <string name="sleep_timer.dialog.action.decrement">أقصر</string>
     <string name="sleep_timer.dialog.action.increment">أطول</string>
     <string name="sleep_timer.dialog.minutes_short">دقيقة</string>
-    <string name="sleep_timer.dialog.shake_hint">يكفي هزّ هاتفك فور انتهاء المؤقت لإعادة تشغيله.</string>
+    <string name="sleep_timer.dialog.shake_hint">يكفي هزّ هاتفك أثناء خفوت الصوت، أو استئناف التشغيل فور انتهاء المؤقت، لإعادة بدء المؤقت.</string>
     <string name="sleep_timer.dialog.title">مؤقت النوم</string>
     <string name="sleep_timer.end_of_chapter">نهاية الفصل</string>
     <string name="time.relative.last_night">الليلة الماضية</string>

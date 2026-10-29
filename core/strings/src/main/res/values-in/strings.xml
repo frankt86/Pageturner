@@ -70,10 +70,12 @@
     <string name="book.download.stop">Hentikan unduhan</string>
     <string name="book.download.waiting_for_connection">Menunggu koneksi</string>
     <string name="book.download.waiting_for_wifi">Menunggu Wi-Fi</string>
+    <string name="book.edit.author.label">Penulis</string>
     <string name="book.edit.cover.file">Sampul dari penyimpanan</string>
     <string name="book.edit.cover.internet">Sampul dari Internet</string>
     <string name="book.edit.name.label">Judul buku</string>
     <string name="book.edit.rename">Ganti nama</string>
+    <string name="book.edit.title.label">Judul</string>
     <string name="book.remove_from_library">Hapus dari pustaka</string>
     <string name="book.remove_from_library.summary">Berkas tetap ada di perangkat Anda</string>
     <string name="book.source.device">Di perangkat ini</string>
@@ -589,7 +591,7 @@
     <string name="sleep_timer.dialog.action.decrement">Lebih singkat</string>
     <string name="sleep_timer.dialog.action.increment">Lebih lama</string>
     <string name="sleep_timer.dialog.minutes_short">mnt</string>
-    <string name="sleep_timer.dialog.shake_hint">Goyangkan ponsel Anda segera setelah pengatur waktu berakhir untuk memulainya lagi.</string>
+    <string name="sleep_timer.dialog.shake_hint">Goyangkan ponsel Anda saat suara memudar, atau lanjutkan pemutaran segera setelahnya, untuk memulai ulang pengatur waktu.</string>
     <string name="sleep_timer.dialog.title">Pengatur waktu tidur</string>
     <string name="sleep_timer.end_of_chapter">Akhir bab</string>
     <string name="time.relative.last_night">Tadi malam</string>

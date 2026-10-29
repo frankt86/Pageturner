@@ -24,7 +24,6 @@ import voice.core.data.Ebook
 import voice.core.data.EbookPosition
 import voice.core.data.store.EbooksStore
 import voice.core.logging.api.Logger
-import voice.features.bookOverview.editTitle.EditBookTitleState
 import voice.features.bookOverview.overview.BookOverviewCategory
 import voice.features.bookOverview.overview.BookOverviewItemViewState
 import voice.features.bookOverview.overview.category
@@ -46,7 +45,7 @@ class EbookActionsViewModel(
 
   private val scope = MainScope(dispatcherProvider)
 
-  internal var renameState by mutableStateOf<EditBookTitleState?>(null)
+  internal var renameState by mutableStateOf<RenameEbookState?>(null)
     private set
 
   /** Null until the book is loaded. */
@@ -70,7 +69,7 @@ class EbookActionsViewModel(
   }
 
   internal fun onRename(book: BookOverviewItemViewState) {
-    renameState = EditBookTitleState(title = book.name, bookId = book.id, cover = book.cover)
+    renameState = RenameEbookState(title = book.name, bookId = book.id, cover = book.cover)
   }
 
   internal fun onRenameChange(title: String) {

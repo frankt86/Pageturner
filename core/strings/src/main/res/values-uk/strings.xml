@@ -79,10 +79,12 @@
     <string name="book.download.stop">Зупинити завантаження</string>
     <string name="book.download.waiting_for_connection">Очікування підключення</string>
     <string name="book.download.waiting_for_wifi">Очікування Wi-Fi</string>
+    <string name="book.edit.author.label">Автор</string>
     <string name="book.edit.cover.file">Обкладинка з файлу</string>
     <string name="book.edit.cover.internet">Обкладинка з Інтернету</string>
     <string name="book.edit.name.label">Назва</string>
     <string name="book.edit.rename">Перейменувати</string>
+    <string name="book.edit.title.label">Назва</string>
     <string name="book.remove_from_library">Прибрати з бібліотеки</string>
     <string name="book.remove_from_library.summary">Файл залишиться на пристрої</string>
     <string name="book.source.device">На цьому пристрої</string>
@@ -649,7 +651,7 @@
     <string name="sleep_timer.dialog.action.decrement">Коротше</string>
     <string name="sleep_timer.dialog.action.increment">Довше</string>
     <string name="sleep_timer.dialog.minutes_short">хв</string>
-    <string name="sleep_timer.dialog.shake_hint">Струсніть телефон одразу після завершення таймера, щоб запустити його знову.</string>
+    <string name="sleep_timer.dialog.shake_hint">Струсніть телефон, поки звук затихає, або одразу після цього продовжте відтворення, щоб запустити таймер знову.</string>
     <string name="sleep_timer.dialog.title">Таймер сну</string>
     <string name="sleep_timer.end_of_chapter">Кінець розділу</string>
     <string name="time.relative.last_night">Минулої ночі</string>

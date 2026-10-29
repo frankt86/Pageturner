@@ -1,8 +1,8 @@
-package voice.features.bookOverview.editTitle
+package voice.features.bookOverview.ebookActions
 
 import voice.core.data.BookId
 
-internal data class EditBookTitleState(
+internal data class RenameEbookState(
   val title: String,
   val bookId: BookId,
   val cover: String?,

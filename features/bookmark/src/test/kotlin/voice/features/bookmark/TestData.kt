@@ -7,6 +7,7 @@ import voice.core.data.BookMetadata
 import voice.core.data.Bookmark
 import voice.core.data.Chapter
 import voice.core.data.ChapterId
+import voice.core.data.CustomMetadata
 import voice.core.data.ListeningEvent
 import voice.core.data.MarkData
 import voice.core.ui.formatTime
@@ -70,10 +71,9 @@ internal fun testBook(
       cover = null,
       fileLastModified = null,
     ),
-    customName = null,
-    customCover = null,
   ),
   chapters = chapters,
+  custom = CustomMetadata(BookId("echoes")),
 )
 
 internal fun testBookmark(

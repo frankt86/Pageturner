@@ -50,7 +50,7 @@ class BottomSheetViewModelTest {
 
   private val book = book(chapters = listOf(chapter(duration = 10_000), chapter(duration = 10_000)), time = 0)
   private val storedBook = MutableStateFlow<Book?>(book)
-  private val serverBook = book.let { it.copy(content = it.content.copy(id = BookId("abs://item/1"))) }
+  private val serverBook = book(time = 0, id = BookId("abs://item/1"))
   private val downloadStates = MutableStateFlow<Map<BookId, BookDownloadState>>(emptyMap())
   private val serverLibrary = mockk<ServerLibrary>(relaxUnitFun = true) {
     every { serverName } returns flowOf("audiobooks.example.com")
@@ -69,7 +69,7 @@ class BottomSheetViewModelTest {
   private val navigator = mockk<Navigator>(relaxUnitFun = true)
 
   private val itemViewModel = mockk<BottomSheetItemViewModel>(relaxUnitFun = true) {
-    coEvery { items(any()) } returns listOf(BottomSheetItem.Title)
+    coEvery { items(any()) } returns listOf(BottomSheetItem.Edit)
   }
 
   @BeforeTest
@@ -86,9 +86,9 @@ class BottomSheetViewModelTest {
   fun `shows the book with its category and items`() = runTest(dispatcher) {
     viewModel().test {
       val state = awaitLoaded()
-      assertEquals(book.content.name, state.book.name)
+      assertEquals(book.name, state.book.name)
       assertEquals(BookOverviewCategory.NOT_STARTED, state.category)
-      assertEquals(listOf(BottomSheetItem.Title), state.items)
+      assertEquals(listOf(BottomSheetItem.Edit), state.items)
     }
   }
 
@@ -137,32 +137,32 @@ class BottomSheetViewModelTest {
   fun `an item click returns once the item is handled`() = runTest(dispatcher) {
     var handledItem: BottomSheetItem? = null
     val slowItemViewModel = mockk<BottomSheetItemViewModel> {
-      coEvery { items(any()) } returns listOf(BottomSheetItem.Title)
+      coEvery { items(any()) } returns listOf(BottomSheetItem.Edit)
       coEvery { onItemClick(any(), any()) } coAnswers {
         delay(1_000)
         handledItem = secondArg()
       }
     }
 
-    bottomSheetViewModel(itemViewModels = setOf(slowItemViewModel)).onItemClick(BottomSheetItem.Title)
+    bottomSheetViewModel(itemViewModels = setOf(slowItemViewModel)).onItemClick(BottomSheetItem.Edit)
 
-    assertEquals(BottomSheetItem.Title, handledItem)
+    assertEquals(BottomSheetItem.Edit, handledItem)
   }
 
   @Test
   fun `a server book offers the download that fits its state while the sheet is open`() = runTest(dispatcher) {
     viewModel(bookId = serverBook.id).test {
-      assertEquals(listOf(BottomSheetItem.Title, BottomSheetItem.Download), awaitLoaded().items)
+      assertEquals(listOf(BottomSheetItem.Edit, BottomSheetItem.Download), awaitLoaded().items)
 
       val downloading = BookDownloadState.Downloading(progress = 0.5F, downloadedBytes = 5, totalBytes = 10, waitingFor = null)
       downloadStates.value = mapOf(serverBook.id to downloading)
       val state = awaitItem()!!
-      assertEquals(listOf(BottomSheetItem.Title, BottomSheetItem.StopDownload), state.items)
+      assertEquals(listOf(BottomSheetItem.Edit, BottomSheetItem.StopDownload), state.items)
       assertEquals(downloading, state.download)
 
       downloadStates.value = mapOf(serverBook.id to BookDownloadState.Failed)
       assertEquals(
-        listOf(BottomSheetItem.Title, BottomSheetItem.RetryDownload, BottomSheetItem.RemoveDownload),
+        listOf(BottomSheetItem.Edit, BottomSheetItem.RetryDownload, BottomSheetItem.RemoveDownload),
         awaitItem()!!.items,
       )
     }

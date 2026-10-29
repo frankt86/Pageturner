@@ -74,7 +74,7 @@ public class DownloadNotifications internal constructor(
 
   internal fun progress(downloads: List<ActiveDownload>): Notification {
     return progress(
-      downloads = downloads.map { DownloadProgress(it.book.content.name, it.book.content.cover, it.state) },
+      downloads = downloads.map { DownloadProgress(it.book.name, it.book.cover, it.state) },
       stop = DownloadActionReceiver.stop(context, downloads.map { it.book.id }),
     )
   }
@@ -155,7 +155,7 @@ public class DownloadNotifications internal constructor(
   )
 
   internal fun downloaded(book: Book) {
-    downloaded(book.id.value, book.content.name, book.content.cover)
+    downloaded(book.id.value, book.name, book.cover)
   }
 
   /** Tells that a book is ready, unless Pageturner is open and shows it itself. [tag] tells the books apart. */
@@ -181,7 +181,7 @@ public class DownloadNotifications internal constructor(
   }
 
   internal fun failed(book: Book) {
-    failed(book.id.value, book.content.name, book.content.cover, DownloadActionReceiver.retry(context, book.id))
+    failed(book.id.value, book.name, book.cover, DownloadActionReceiver.retry(context, book.id))
   }
 
   /** Tells that a download failed, unless Pageturner is open and shows it itself. */

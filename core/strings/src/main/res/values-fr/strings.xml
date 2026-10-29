@@ -76,10 +76,12 @@
     <string name="book.download.stop">Arrêter le téléchargement</string>
     <string name="book.download.waiting_for_connection">En attente de connexion</string>
     <string name="book.download.waiting_for_wifi">En attente du Wi-Fi</string>
+    <string name="book.edit.author.label">Auteur</string>
     <string name="book.edit.cover.file">Couverture depuis le système de fichiers</string>
     <string name="book.edit.cover.internet">Couverture depuis internet</string>
     <string name="book.edit.name.label">Nom</string>
     <string name="book.edit.rename">Renommer</string>
+    <string name="book.edit.title.label">Titre</string>
     <string name="book.remove_from_library">Retirer de la bibliothèque</string>
     <string name="book.remove_from_library.summary">Le fichier reste sur votre appareil</string>
     <string name="book.source.device">Sur cet appareil</string>
@@ -629,7 +631,7 @@
     <string name="sleep_timer.dialog.action.decrement">Moins long</string>
     <string name="sleep_timer.dialog.action.increment">Plus long</string>
     <string name="sleep_timer.dialog.minutes_short">min</string>
-    <string name="sleep_timer.dialog.shake_hint">Secouez votre téléphone juste après la fin de la minuterie pour la relancer.</string>
+    <string name="sleep_timer.dialog.shake_hint">Secouez votre téléphone pendant que le son s\'estompe, ou reprenez la lecture juste après, pour relancer la minuterie.</string>
     <string name="sleep_timer.dialog.title">Minuterie de mise en veille</string>
     <string name="sleep_timer.end_of_chapter">Fin du chapitre</string>
     <string name="time.relative.last_night">Hier soir</string>

@@ -6,6 +6,7 @@ import org.junit.runner.RunWith
 import voice.core.data.Book
 import voice.core.data.BookId
 import voice.core.data.Bookmark
+import voice.core.data.CustomMetadata
 import java.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -20,7 +21,8 @@ class PositionsTest {
     val inFolder = book(lastPlayedAt = 1)
     val otherFolder = book(tree = "primary:Other", lastPlayedAt = 1)
     val singleFileUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", "primary:Book.m4b")
-    val singleFile = book(lastPlayedAt = 1).let { Book(it.content.copy(id = BookId(singleFileUri.toString())), it.chapters) }
+    val singleFileId = BookId(singleFileUri.toString())
+    val singleFile = book(lastPlayedAt = 1).let { Book(it.content.copy(id = singleFileId), it.chapters, CustomMetadata(singleFileId)) }
 
     val books = listOf(inFolder, otherFolder, singleFile)
 
@@ -70,7 +72,7 @@ class PositionsTest {
 
   @Test
   fun `a file with unknown fields can be read, a broken one is skipped`() {
-    val text = """{"books":{"a":{"place":{"file":1,"position":2,"speed":1.5,"playedAt":3},"author":{}}},"other":{}}"""
+    val text = """{"books":{"a":{"place":{"file":1,"position":2,"speed":1.5,"playedAt":3},"narrator":{}}},"other":{}}"""
     val file = SyncFile(mapOf("a" to SyncedBook(place = SyncedPlace(file = 1, position = 2, speed = 1.5F, playedAt = 3))))
 
     assertEquals(file, parseSyncFile(text))

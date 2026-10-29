@@ -73,10 +73,12 @@
     <string name="book.download.stop">Download abbrechen</string>
     <string name="book.download.waiting_for_connection">Wartet auf Verbindung</string>
     <string name="book.download.waiting_for_wifi">Wartet auf WLAN</string>
+    <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Cover aus dem Dateisystem</string>
     <string name="book.edit.cover.internet">Cover aus dem Internet</string>
     <string name="book.edit.name.label">Name</string>
     <string name="book.edit.rename">Umbenennen</string>
+    <string name="book.edit.title.label">Titel</string>
     <string name="book.remove_from_library">Aus der Bibliothek entfernen</string>
     <string name="book.remove_from_library.summary">Die Datei bleibt auf Deinem Gerät</string>
     <string name="book.source.device">Auf diesem Gerät</string>
@@ -609,7 +611,7 @@
     <string name="sleep_timer.dialog.action.decrement">Kürzer</string>
     <string name="sleep_timer.dialog.action.increment">Länger</string>
     <string name="sleep_timer.dialog.minutes_short">Min.</string>
-    <string name="sleep_timer.dialog.shake_hint">Schüttle Dein Handy direkt nach Ablauf des Timers, um ihn neu zu starten.</string>
+    <string name="sleep_timer.dialog.shake_hint">Schüttle Dein Handy, während der Ton leiser wird, oder setz die Wiedergabe gleich danach fort, um den Timer neu zu starten.</string>
     <string name="sleep_timer.dialog.title">Einschlaf-Timer</string>
     <string name="sleep_timer.end_of_chapter">Kapitelende</string>
     <string name="time.relative.last_night">Letzte Nacht</string>

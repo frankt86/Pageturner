@@ -38,9 +38,10 @@ import kotlin.test.assertFalse
 class DeleteBookViewModelTest {
 
   private val dispatcher = StandardTestDispatcher()
-  private val book = book(chapters = listOf(chapter(), chapter(), chapter())).let {
-    it.copy(content = it.content.copy(id = BookId("content://$AUTHORITY/document/book")))
-  }
+  private val book = book(
+    chapters = listOf(chapter(), chapter(), chapter()),
+    id = BookId("content://$AUTHORITY/document/book"),
+  )
   private val navigator = mockk<Navigator>(relaxUnitFun = true)
 
   private val viewModel = viewModel(book)
@@ -86,7 +87,7 @@ class DeleteBookViewModelTest {
   fun `a book downloaded from a catalog is deleted with its folder`() = runTest(dispatcher) {
     val folder = File(ApplicationProvider.getApplicationContext<Application>().filesDir, "audiobooks/Persuasion")
     File(folder, "Persuasion.m4b").apply { parentFile!!.mkdirs() }.writeText("audio")
-    val downloaded = book.copy(content = book.content.copy(id = BookId(Uri.fromFile(folder))))
+    val downloaded = book(chapters = book.chapters, id = BookId(Uri.fromFile(folder)))
 
     delete(viewModel(downloaded), downloaded.id)
 

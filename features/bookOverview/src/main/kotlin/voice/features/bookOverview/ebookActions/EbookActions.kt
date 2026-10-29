@@ -29,7 +29,6 @@ import voice.core.common.rootGraphAs
 import voice.core.ui.CoverTheme
 import voice.features.bookOverview.bottomSheet.BookActionsContent
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
-import voice.features.bookOverview.editTitle.RenameBookSheet
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
 import voice.navigation.OverlayNav
@@ -53,7 +52,7 @@ object EbookActionsProvider {
 }
 
 private val EbookItems = listOf(
-  BottomSheetItem.Title,
+  BottomSheetItem.Edit,
   BottomSheetItem.InternetCover,
   BottomSheetItem.FileCover,
   BottomSheetItem.RemoveFromLibrary,
@@ -91,7 +90,7 @@ private fun EbookActions(uri: Uri) {
   val renameState = viewModel.renameState
   if (renameState != null) {
     CoverTheme(cover = renameState.cover) {
-      RenameBookSheet(
+      RenameEbookSheet(
         viewState = renameState,
         onTitleChange = viewModel::onRenameChange,
         onConfirm = {
@@ -144,7 +143,7 @@ private fun EbookActions(uri: Uri) {
           items = EbookItems,
           onItemClick = { item ->
             when (item) {
-              BottomSheetItem.Title -> hideThen { viewModel.onRename(state.book) }
+              BottomSheetItem.Edit -> hideThen { viewModel.onRename(state.book) }
               BottomSheetItem.InternetCover -> hideThen(viewModel::onInternetCover)
               BottomSheetItem.FileCover -> if (!closing) {
                 pickingCover = true

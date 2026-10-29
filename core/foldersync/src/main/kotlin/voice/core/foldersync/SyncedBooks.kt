@@ -17,7 +17,8 @@ internal fun List<Book>.toSyncedBook(
   ownFileExists: Boolean,
   now: Long,
 ): SyncedBook {
-  val content = played()
+  val played = played()
+  val files = played.content.metadata
   // the bookmarks of every copy, so playing another copy doesn't look like deleting them
   val localBookmarks = flatMap { copy ->
     copy.chapters.flatMapIndexed { file, chapter ->
@@ -26,19 +27,27 @@ internal fun List<Book>.toSyncedBook(
   }.toMap()
   val deletedNow = (own?.bookmarks.orEmpty().keys - localBookmarks.keys).associateWith { now }
   return SyncedBook(
-    place = content.place(),
-    name = content.syncedName(own?.name, ownFileExists, now),
+    place = played.content.place(),
+    name = syncedText(played.custom.name, files.name, own?.name, ownFileExists, now),
+    author = syncedText(played.custom.author, files.author, own?.author, ownFileExists, now),
     bookmarks = localBookmarks,
     deletedBookmarks = own?.deletedBookmarks.orEmpty() - localBookmarks.keys + deletedNow,
   )
 }
 
-// not a rename, but a device whose folder has another name would take it as one
-internal fun SyncedBook.withoutFilesName(copies: List<Book>): SyncedBook {
-  return if (name?.value == copies.played().metadata.name) copy(name = null) else this
+// not an edit, but a device whose folders have other names would take it as one
+internal fun SyncedBook.withoutFilesNames(copies: List<Book>): SyncedBook {
+  val files = copies.played().content.metadata
+  return copy(
+    name = name?.takeUnless { it.isFrom(files.name) },
+    author = author?.takeUnless { it.isFrom(files.author) },
+  )
 }
 
-private fun List<Book>.played(): BookContent = maxBy { it.content.lastPlayedAt }.content
+// a null value goes back to the files, which still has to reach the other devices
+private fun SyncedText.isFrom(files: String?): Boolean = value != null && value == files
+
+private fun List<Book>.played(): Book = maxBy { it.content.lastPlayedAt }
 
 private fun BookContent.place(): SyncedPlace? {
   if (lastPlayedAt == Instant.EPOCH) return null
@@ -50,16 +59,18 @@ private fun BookContent.place(): SyncedPlace? {
   )
 }
 
-private fun BookContent.syncedName(
+private fun syncedText(
+  custom: String?,
+  files: String?,
   own: SyncedText?,
   ownFileExists: Boolean,
   now: Long,
 ): SyncedText? = when {
   // the files' name can come from a folder name that differs between devices, and a name equal to it isn't kept
-  own != null -> if ((own.value ?: metadata.name) == name) own else SyncedText(customName, now)
-  customName == null -> null
+  own != null -> if ((own.value ?: files) == (custom ?: files)) own else SyncedText(custom, now)
+  custom == null -> null
   // a name given before this device synced the folder loses against one changed since
-  else -> SyncedText(customName, changedAt = if (ownFileExists) now else 0)
+  else -> SyncedText(custom, changedAt = if (ownFileExists) now else 0)
 }
 
 private fun Bookmark.synced(
@@ -91,6 +102,7 @@ internal fun SyncedBook.with(other: SyncedBook): SyncedBook {
   return SyncedBook(
     place = newer(place, other.place) { it.playedAt },
     name = newer(name, other.name) { it.changedAt },
+    author = newer(author, other.author) { it.changedAt },
     bookmarks = bookmarks - newerBookmarks + other.bookmarks.filterKeys { it in newerBookmarks },
     deletedBookmarks = deletedBookmarks - newerBookmarks + other.deletedBookmarks.filterKeys { it in newerBookmarks },
   )

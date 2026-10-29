@@ -73,10 +73,12 @@
     <string name="book.download.stop">توقف دانلود</string>
     <string name="book.download.waiting_for_connection">در انتظار اتصال</string>
     <string name="book.download.waiting_for_wifi">در انتظار Wi-Fi</string>
+    <string name="book.edit.author.label">نویسنده</string>
     <string name="book.edit.cover.file">دریافت کاور از داخل سیستم</string>
     <string name="book.edit.cover.internet">دریافت کاور از طریق اینترنت</string>
     <string name="book.edit.name.label">نام</string>
     <string name="book.edit.rename">تغییر نام</string>
+    <string name="book.edit.title.label">عنوان</string>
     <string name="book.remove_from_library">حذف از کتابخانه</string>
     <string name="book.remove_from_library.summary">فایل روی دستگاهتان می‌ماند</string>
     <string name="book.source.device">در این دستگاه</string>
@@ -609,7 +611,7 @@
     <string name="sleep_timer.dialog.action.decrement">کوتاه تر</string>
     <string name="sleep_timer.dialog.action.increment">طولانی تر</string>
     <string name="sleep_timer.dialog.minutes_short">دقیقه</string>
-    <string name="sleep_timer.dialog.shake_hint">بلافاصله پس از پایان تایمر، گوشی را تکان دهید تا دوباره شروع شود.</string>
+    <string name="sleep_timer.dialog.shake_hint">وقتی صدا کم می‌شود گوشی را تکان دهید، یا بلافاصله بعد از آن پخش را ادامه دهید تا تایمر دوباره شروع شود.</string>
     <string name="sleep_timer.dialog.title">تایمر خواب</string>
     <string name="sleep_timer.end_of_chapter">پایان فصل</string>
     <string name="time.relative.last_night">دیشب</string>

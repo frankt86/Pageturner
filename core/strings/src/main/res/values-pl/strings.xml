@@ -79,10 +79,12 @@
     <string name="book.download.stop">Zatrzymaj pobieranie</string>
     <string name="book.download.waiting_for_connection">Oczekiwanie na połączenie</string>
     <string name="book.download.waiting_for_wifi">Oczekiwanie na Wi-Fi</string>
+    <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Okładka z pamięci wewnętrznej</string>
     <string name="book.edit.cover.internet">Okładka z internetu</string>
     <string name="book.edit.name.label">Nazwa</string>
     <string name="book.edit.rename">Zmień nazwę</string>
+    <string name="book.edit.title.label">Tytuł</string>
     <string name="book.remove_from_library">Usuń z biblioteki</string>
     <string name="book.remove_from_library.summary">Plik zostanie na urządzeniu</string>
     <string name="book.source.device">Na tym urządzeniu</string>
@@ -649,7 +651,7 @@
     <string name="sleep_timer.dialog.action.decrement">Krócej</string>
     <string name="sleep_timer.dialog.action.increment">Dłużej</string>
     <string name="sleep_timer.dialog.minutes_short">min</string>
-    <string name="sleep_timer.dialog.shake_hint">Potrząśnij telefonem tuż po upływie czasu, aby ponownie uruchomić wyłącznik czasowy.</string>
+    <string name="sleep_timer.dialog.shake_hint">Potrząśnij telefonem, gdy dźwięk cichnie, albo zaraz potem wznów odtwarzanie, aby ponownie uruchomić wyłącznik czasowy.</string>
     <string name="sleep_timer.dialog.title">Wyłącznik czasowy</string>
     <string name="sleep_timer.end_of_chapter">Koniec rozdziału</string>
     <string name="time.relative.last_night">Zeszłej nocy</string>

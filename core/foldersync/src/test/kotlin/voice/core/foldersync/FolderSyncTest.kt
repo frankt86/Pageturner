@@ -205,7 +205,7 @@ class FolderSyncTest {
     ownFile(folderSync, written.single())
     folderSync.sync()
 
-    assertEquals("Other", repo.get(book.id)!!.content.customName)
+    assertEquals("Other", repo.get(book.id)!!.custom.name)
     assertEquals(listOf(SyncFile(mapOf(book.key() to SyncedBook(name = name)))), written)
   }
 
@@ -217,7 +217,7 @@ class FolderSyncTest {
 
     folderSync(repo).sync()
 
-    assertNull(repo.get(book.id)!!.content.customName)
+    assertNull(repo.get(book.id)!!.custom.name)
     assertEquals(emptyList(), written)
   }
 
@@ -254,8 +254,35 @@ class FolderSyncTest {
 
     folderSync.sync()
 
-    assertEquals("Mine", repo.get(book.id)!!.content.customName)
+    assertEquals("Mine", repo.get(book.id)!!.custom.name)
     assertEquals(SyncedText("Mine", changedAt = NOW), written.single().books[book.key()]!!.name)
+  }
+
+  @Test
+  fun `an author from another device is taken, and not sent back`() = scope.runTest {
+    val book = book(author = "Files")
+    val repo = MemoryBookRepository(book)
+    val author = SyncedText("Other", changedAt = 1000)
+    otherDevice(book, SyncedBook(author = author))
+    val folderSync = folderSync(repo)
+
+    folderSync.sync()
+    ownFile(folderSync, written.single())
+    folderSync.sync()
+
+    assertEquals("Other", repo.get(book.id)!!.custom.author)
+    assertEquals(listOf(SyncFile(mapOf(book.key() to SyncedBook(author = author)))), written)
+  }
+
+  @Test
+  fun `putting the author back to the files' one is written, also when the files have none`() = scope.runTest {
+    val book = book()
+    val folderSync = folderSync(MemoryBookRepository(book))
+    ownFile(folderSync, SyncFile(mapOf(book.key() to SyncedBook(author = SyncedText("Mine", changedAt = 1000)))))
+
+    folderSync.sync()
+
+    assertEquals(listOf(SyncFile(mapOf(book.key() to SyncedBook(author = SyncedText(value = null, changedAt = NOW))))), written)
   }
 
   @Test
@@ -277,6 +304,14 @@ class FolderSyncTest {
     folderSync(MemoryBookRepository(book)).sync()
 
     assertEquals(emptyList(), written)
+  }
+
+  @Test
+  fun `a folder the sync file can't be created in is left alone`() = scope.runTest {
+    val book = book(lastPlayedAt = 2000)
+    every { syncFiles.write(folder(), any(), any()) } throws IllegalStateException("Failed to mkdir")
+
+    folderSync(MemoryBookRepository(book)).sync()
   }
 
   @Test

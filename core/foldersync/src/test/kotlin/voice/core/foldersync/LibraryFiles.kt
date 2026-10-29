@@ -9,6 +9,7 @@ import voice.core.data.BookMetadata
 import voice.core.data.Bookmark
 import voice.core.data.Chapter
 import voice.core.data.ChapterId
+import voice.core.data.CustomMetadata
 import java.time.Instant
 import kotlin.uuid.Uuid
 
@@ -25,6 +26,8 @@ fun book(
   lastPlayedAt: Long = 0,
   playbackSpeed: Float = 1F,
   customName: String? = null,
+  author: String? = null,
+  customAuthor: String? = null,
 ): Book {
   val bookUri = DocumentsContract.buildDocumentUriUsingTree(folder(tree), "$tree/$path")
   val chapters = fileSizes.mapIndexed { index, size ->
@@ -38,9 +41,10 @@ fun book(
       markData = emptyList(),
     )
   }
+  val id = BookId(bookUri.toString())
   return Book(
     content = BookContent(
-      id = BookId(bookUri.toString()),
+      id = id,
       playbackSpeed = playbackSpeed,
       skipSilence = false,
       isActive = true,
@@ -52,7 +56,7 @@ fun book(
       gain = 0F,
       metadata = BookMetadata(
         name = path,
-        author = null,
+        author = author,
         album = null,
         title = null,
         genre = null,
@@ -62,10 +66,9 @@ fun book(
         cover = null,
         fileLastModified = null,
       ),
-      customName = customName,
-      customCover = null,
     ),
     chapters = chapters,
+    custom = CustomMetadata(id, name = customName, author = customAuthor),
   )
 }
 
