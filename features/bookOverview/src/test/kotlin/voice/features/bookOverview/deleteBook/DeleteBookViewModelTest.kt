@@ -38,9 +38,10 @@ import kotlin.test.assertFalse
 class DeleteBookViewModelTest {
 
   private val dispatcher = StandardTestDispatcher()
-  private val book = book(chapters = listOf(chapter(), chapter(), chapter())).let {
-    it.copy(content = it.content.copy(id = BookId("content://$AUTHORITY/document/book")))
-  }
+  private val book = book(
+    chapters = listOf(chapter(), chapter(), chapter()),
+    id = BookId("content://$AUTHORITY/document/book"),
+  )
   private val navigator = mockk<Navigator>(relaxUnitFun = true)
 
   private val viewModel = viewModel(book)

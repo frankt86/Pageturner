@@ -62,7 +62,7 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: '24'
+          node-version: '26'
 
       - name: Setup Firebase Access
         env:
@@ -75,7 +75,7 @@ jobs:
       - name: Upload to Firebase App Distribution
         env:
           # renovate: datasource=npm depName=firebase-tools
-          FIREBASE_TOOLS_VERSION: 15.34.1
+          FIREBASE_TOOLS_VERSION: 15.34.2
           TESTER_GROUPS: ${{ inputs.groups }}
           RELEASE_NOTES: ${{ inputs.release_notes }}
         run: |

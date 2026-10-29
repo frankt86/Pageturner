@@ -73,10 +73,12 @@
     <string name="book.download.stop">Download annuleren</string>
     <string name="book.download.waiting_for_connection">Wachten op verbinding</string>
     <string name="book.download.waiting_for_wifi">Wachten op wifi</string>
+    <string name="book.edit.author.label">Auteur</string>
     <string name="book.edit.cover.file">Omslag kiezen van bestandssysteem</string>
     <string name="book.edit.cover.internet">Omslag ophalen van internet</string>
     <string name="book.edit.name.label">Naam</string>
     <string name="book.edit.rename">Naam wijzigen</string>
+    <string name="book.edit.title.label">Titel</string>
     <string name="book.remove_from_library">Uit bibliotheek verwijderen</string>
     <string name="book.remove_from_library.summary">Het bestand blijft op je apparaat</string>
     <string name="book.source.device">Op dit apparaat</string>
@@ -609,7 +611,7 @@
     <string name="sleep_timer.dialog.action.decrement">Korter</string>
     <string name="sleep_timer.dialog.action.increment">Langer</string>
     <string name="sleep_timer.dialog.minutes_short">min</string>
-    <string name="sleep_timer.dialog.shake_hint">Schud je telefoon direct nadat de timer is afgelopen om hem opnieuw te starten.</string>
+    <string name="sleep_timer.dialog.shake_hint">Schud je telefoon terwijl het geluid wegsterft, of hervat het afspelen direct daarna, om de timer opnieuw te starten.</string>
     <string name="sleep_timer.dialog.title">Slaaptimer</string>
     <string name="sleep_timer.end_of_chapter">Einde van hoofdstuk</string>
     <string name="time.relative.last_night">Afgelopen nacht</string>

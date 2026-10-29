@@ -24,32 +24,15 @@ public data class BookContent(
   val gain: Float,
   @Embedded
   val metadata: BookMetadata,
-  val customName: String?,
-  val customCover: File?,
 ) {
 
   @Ignore
   val currentChapterIndex: Int = chapters.indexOf(currentChapter)
 
-  val name: String get() = customName ?: metadata.name
-
-  val cover: File? get() = customCover ?: metadata.cover
-
-  val coverUrl: String? get() = cover?.toURI()?.toString()
-
   init {
     require(currentChapter in chapters && positionInChapter >= 0) {
       "Invalid data: chapter $currentChapterIndex of ${chapters.size}, position $positionInChapter"
     }
-  }
-
-  public fun withCustomName(name: String?): BookContent {
-    // the name from the files isn't kept, so the book follows them when they change
-    return copy(customName = name?.takeIf { it != metadata.name })
-  }
-
-  public fun withMetadata(metadata: BookMetadata): BookContent {
-    return copy(metadata = metadata).withCustomName(customName)
   }
 }
 

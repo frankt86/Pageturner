@@ -125,11 +125,11 @@ public class FolderSync internal constructor(
         val newest = others.mapNotNull { it.books[key] }.fold(mine, SyncedBook::with)
         // before writing, so if Voice stops in between, the next sync sends back what it took, not what it replaced
         takeOver(copies, mine, newest)
-        newest.withoutFilesName(copies)
+        newest.withoutFilesNames(copies)
       }
     // books that are missing for now, like on an SD card that's out, keep their entry
     val file = SyncFile((own + synced).filterValues { it != SyncedBook() })
-    // a folder without a book that was played, renamed or bookmarked gets no .voice folder
+    // a folder without a book that was played, edited or bookmarked gets no .voice folder
     if (file != (ownFile ?: SyncFile(emptyMap()))) {
       val _ = inFolder { syncFiles.write(folder, ownFileName, file) }
     }
@@ -147,7 +147,13 @@ public class FolderSync internal constructor(
     val name = newest.name
     if (name != null && name != mine.name) {
       copies.forEach { copy ->
-        bookRepository.updateBook(copy.id) { it.withCustomName(name.value) }
+        bookRepository.updateCustomMetadata(copy.id) { it.copy(name = name.value) }
+      }
+    }
+    val author = newest.author
+    if (author != null && author != mine.author) {
+      copies.forEach { copy ->
+        bookRepository.updateCustomMetadata(copy.id) { it.copy(author = author.value) }
       }
     }
     (mine.bookmarks.keys - newest.bookmarks.keys).forEach { bookmarkRepo.deleteBookmark(Bookmark.Id(it)) }
@@ -213,6 +219,10 @@ public class FolderSync internal constructor(
     null
   } catch (e: IllegalArgumentException) {
     // how the storage provider reports a file or storage that went away since the last query
+    Logger.w(e, "Could not sync through a folder")
+    null
+  } catch (e: IllegalStateException) {
+    // how the storage provider reports a file or folder it couldn't create, like on an SD card that's read-only
     Logger.w(e, "Could not sync through a folder")
     null
   }

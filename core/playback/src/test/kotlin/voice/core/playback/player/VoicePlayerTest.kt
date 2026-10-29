@@ -62,6 +62,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.Uuid
 
 @RunWith(AndroidJUnit4::class)
@@ -97,7 +98,7 @@ class VoicePlayerTest {
     .build()
 
   private val scope = TestScope()
-  private val mediaItemProvider = MediaItemProvider(mockk(), mockk(), mockk(), mockk(), mockk(), mockk())
+  private val mediaItemProvider = MediaItemProvider(mockk(), mockk(), mockk(), mockk(), mockk())
   private val bookId = BookId(Uuid.random().toString())
   private val currentBookStore = MemoryDataStore<BookId?>(bookId)
   private lateinit var currentBook: Book
@@ -604,6 +605,44 @@ class VoicePlayerTest {
     player.pause()
 
     player.shouldHavePosition(1, 0)
+  }
+
+  @Test
+  fun `seeking back crosses into the previous chapter mark`() = scope.runTest {
+    setMediaItems(
+      listOf(
+        chapter(
+          ChapterMark(startMs = 0, endMs = 11_999, name = null),
+          ChapterMark(startMs = 12_000, endMs = 20_000, name = null),
+        ),
+      ),
+    )
+    player.seekTo(1, 3_000)
+    player.prepare()
+    awaitReady()
+
+    player.seekBackBy(10.seconds, crossMediaItems = true)
+
+    player.shouldHavePosition(0, 4_999)
+  }
+
+  @Test
+  fun `seeking back past the start of the book stops at its start`() = scope.runTest {
+    setMediaItems(
+      listOf(
+        chapter(
+          ChapterMark(startMs = 0, endMs = 11_999, name = null),
+          ChapterMark(startMs = 12_000, endMs = 20_000, name = null),
+        ),
+      ),
+    )
+    player.seekTo(1, 3_000)
+    player.prepare()
+    awaitReady()
+
+    player.seekBackBy(30.seconds, crossMediaItems = true)
+
+    player.shouldHavePosition(0, 0)
   }
 
   @Test

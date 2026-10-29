@@ -199,8 +199,10 @@ This code is embedded in the git tag by `determine_release_tag.main.kts` and use
 
 ## Pages Deployment
 
-The [website](https://frankt86.github.io/Pageturner/) uses GitHub Pages and MkDocs and deploys on every push to `main`.
-To deploy a new website, use dispatch a workflow
-manually.
+The [website](https://frankt86.github.io/Pageturner/) uses GitHub Pages and MkDocs and deploys on every push to `main`
+that touches `docs/`, and whenever a new debug APK is built (the APK is published next to the site as `pageturner.apk`).
+To deploy it by hand, dispatch the workflow manually.
 
 [👉 Dispatch Workflow](https://github.com/frankt86/Pageturner/actions/workflows/deploy_pages.yml)
+
+The `website/` folder holds upstream Voice's Astro website. Pageturner doesn't build or deploy it.

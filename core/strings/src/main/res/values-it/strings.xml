@@ -76,10 +76,12 @@
     <string name="book.download.stop">Interrompi download</string>
     <string name="book.download.waiting_for_connection">In attesa di connessione</string>
     <string name="book.download.waiting_for_wifi">In attesa del Wi-Fi</string>
+    <string name="book.edit.author.label">Autore</string>
     <string name="book.edit.cover.file">Copertina dal file system</string>
     <string name="book.edit.cover.internet">Copertina da Internet</string>
     <string name="book.edit.name.label">Nome</string>
     <string name="book.edit.rename">Rinomina</string>
+    <string name="book.edit.title.label">Titolo</string>
     <string name="book.remove_from_library">Rimuovi dalla libreria</string>
     <string name="book.remove_from_library.summary">Il file resta sul tuo dispositivo</string>
     <string name="book.source.device">Su questo dispositivo</string>
@@ -629,7 +631,7 @@
     <string name="sleep_timer.dialog.action.decrement">Più breve</string>
     <string name="sleep_timer.dialog.action.increment">Più a lungo</string>
     <string name="sleep_timer.dialog.minutes_short">min</string>
-    <string name="sleep_timer.dialog.shake_hint">Scuoti il telefono subito dopo la fine del timer per farlo ripartire.</string>
+    <string name="sleep_timer.dialog.shake_hint">Scuoti il telefono mentre il suono si affievolisce, o riprendi la riproduzione subito dopo, per far ripartire il timer.</string>
     <string name="sleep_timer.dialog.title">Timer sospensione</string>
     <string name="sleep_timer.end_of_chapter">Fine del capitolo</string>
     <string name="time.relative.last_night">Ieri sera</string>

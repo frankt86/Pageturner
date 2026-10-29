@@ -76,10 +76,12 @@
     <string name="book.download.stop">Parar download</string>
     <string name="book.download.waiting_for_connection">Aguardando conexão</string>
     <string name="book.download.waiting_for_wifi">Aguardando Wi-Fi</string>
+    <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Capa do sistema de arquivos</string>
     <string name="book.edit.cover.internet">Capa da internet</string>
     <string name="book.edit.name.label">Título</string>
     <string name="book.edit.rename">Renomear</string>
+    <string name="book.edit.title.label">Título</string>
     <string name="book.remove_from_library">Remover da biblioteca</string>
     <string name="book.remove_from_library.summary">O arquivo continua no seu dispositivo</string>
     <string name="book.source.device">Neste dispositivo</string>
@@ -629,7 +631,7 @@
     <string name="sleep_timer.dialog.action.decrement">Mais curto</string>
     <string name="sleep_timer.dialog.action.increment">Mais longo</string>
     <string name="sleep_timer.dialog.minutes_short">min</string>
-    <string name="sleep_timer.dialog.shake_hint">Agite o celular logo após o desligamento automático para reiniciá-lo.</string>
+    <string name="sleep_timer.dialog.shake_hint">Agite o celular enquanto o som diminui, ou retome a reprodução logo em seguida, para reiniciar o desligamento automático.</string>
     <string name="sleep_timer.dialog.title">Desligamento automático</string>
     <string name="sleep_timer.end_of_chapter">Fim do capítulo</string>
     <string name="time.relative.last_night">Ontem à noite</string>

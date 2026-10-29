@@ -34,8 +34,8 @@ import voice.core.audiobookshelf.download.DownloadNotifications
 import voice.core.audiobookshelf.download.DownloadProgress
 import voice.core.audiobookshelf.http.ServerHttpClient
 import voice.core.common.comparator.NaturalOrderComparator
-import voice.core.data.BookContent
 import voice.core.data.BookId
+import voice.core.data.CustomMetadata
 import voice.core.data.repo.BookRepository
 import voice.core.datastore.VoiceDataStoreFactory
 import voice.core.logging.api.Logger
@@ -149,7 +149,7 @@ public class OpdsAudiobookDownloads internal constructor(
         .distinctUntilChanged()
         .collect { found ->
           found.forEach { entry ->
-            bookRepository.updateBook(bookId(entry)) { it.withCatalogMetadata(entry) }
+            bookRepository.updateCustomMetadata(bookId(entry)) { it.withCatalogMetadata(entry) }
           }
           if (found.isNotEmpty()) {
             store.updateData { entries -> entries.map { if (it in found) it.copy(metadataApplied = true) else it } }
@@ -438,12 +438,11 @@ private val NOTIFICATION_INTERVAL = 500.milliseconds
 /** Tells the result notifications of the books apart. */
 private val OpdsEntryKey.tag: String get() = "opds:$catalogId:$entryId"
 
-private fun BookContent.withCatalogMetadata(entry: DownloadedAudiobook): BookContent {
-  return withMetadata(
-    metadata.copy(
-      name = entry.title ?: metadata.name,
-      author = entry.author ?: metadata.author,
-    ),
+// kept like a name the listener gave, so a scan of the files doesn't bring back their tags
+private fun CustomMetadata.withCatalogMetadata(entry: DownloadedAudiobook): CustomMetadata {
+  return copy(
+    name = entry.title ?: name,
+    author = entry.author ?: author,
   )
 }
 

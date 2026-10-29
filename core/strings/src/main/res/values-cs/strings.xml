@@ -79,10 +79,12 @@
     <string name="book.download.stop">Zastavit stahování</string>
     <string name="book.download.waiting_for_connection">Čeká se na připojení</string>
     <string name="book.download.waiting_for_wifi">Čeká se na Wi-Fi</string>
+    <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Obal ze souborového systému</string>
     <string name="book.edit.cover.internet">Obal z internetu</string>
     <string name="book.edit.name.label">Název</string>
     <string name="book.edit.rename">Přejmenovat</string>
+    <string name="book.edit.title.label">Název</string>
     <string name="book.remove_from_library">Odebrat z knihovny</string>
     <string name="book.remove_from_library.summary">Soubor zůstane ve vašem zařízení</string>
     <string name="book.source.device">Na tomto zařízení</string>
@@ -649,7 +651,7 @@
     <string name="sleep_timer.dialog.action.decrement">Zkrátit</string>
     <string name="sleep_timer.dialog.action.increment">Prodloužit</string>
     <string name="sleep_timer.dialog.minutes_short">min</string>
-    <string name="sleep_timer.dialog.shake_hint">Zatřeste telefonem hned po skončení časovače a znovu ho spustíte.</string>
+    <string name="sleep_timer.dialog.shake_hint">Zatřeste telefonem, když zvuk slábne, nebo hned potom obnovte přehrávání, a časovač se spustí znovu.</string>
     <string name="sleep_timer.dialog.title">Časovač spánku</string>
     <string name="sleep_timer.end_of_chapter">Konec kapitoly</string>
     <string name="time.relative.last_night">Včera v noci</string>

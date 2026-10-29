@@ -73,10 +73,12 @@
     <string name="book.download.stop">डाउनलोड रोकें</string>
     <string name="book.download.waiting_for_connection">कनेक्शन का इंतज़ार है</string>
     <string name="book.download.waiting_for_wifi">वाई-फ़ाई का इंतज़ार है</string>
+    <string name="book.edit.author.label">लेखक</string>
     <string name="book.edit.cover.file">फ़ाइल सिस्टम से कवर</string>
     <string name="book.edit.cover.internet">इंटरनेट से कवर</string>
     <string name="book.edit.name.label">नाम</string>
     <string name="book.edit.rename">नाम बदलें</string>
+    <string name="book.edit.title.label">शीर्षक</string>
     <string name="book.remove_from_library">लाइब्रेरी से हटाएँ</string>
     <string name="book.remove_from_library.summary">फ़ाइल आपके डिवाइस पर बनी रहेगी</string>
     <string name="book.source.device">इस डिवाइस पर</string>
@@ -609,7 +611,7 @@
     <string name="sleep_timer.dialog.action.decrement">समय घटाएँ</string>
     <string name="sleep_timer.dialog.action.increment">समय बढ़ाएँ</string>
     <string name="sleep_timer.dialog.minutes_short">मिनट</string>
-    <string name="sleep_timer.dialog.shake_hint">टाइमर खत्म होते ही उसे फिर से शुरू करने के लिए अपना फ़ोन हिलाएँ।</string>
+    <string name="sleep_timer.dialog.shake_hint">टाइमर फिर से शुरू करने के लिए, आवाज़ धीमी होते समय अपना फ़ोन हिलाएँ या उसके तुरंत बाद फिर से चलाएँ।</string>
     <string name="sleep_timer.dialog.title">स्लीप-टाइमर</string>
     <string name="sleep_timer.end_of_chapter">अध्याय के अंत में</string>
     <string name="time.relative.last_night">कल रात</string>

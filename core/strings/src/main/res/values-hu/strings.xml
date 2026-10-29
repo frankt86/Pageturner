@@ -73,10 +73,12 @@
     <string name="book.download.stop">Letöltés leállítása</string>
     <string name="book.download.waiting_for_connection">Várakozás internetkapcsolatra</string>
     <string name="book.download.waiting_for_wifi">Várakozás Wi-Fi-re</string>
+    <string name="book.edit.author.label">Szerző</string>
     <string name="book.edit.cover.file">Borító a fájlrendszerből</string>
     <string name="book.edit.cover.internet">Borító az internetről</string>
     <string name="book.edit.name.label">Cím</string>
     <string name="book.edit.rename">Átnevezés</string>
+    <string name="book.edit.title.label">Cím</string>
     <string name="book.remove_from_library">Eltávolítás a könyvtárból</string>
     <string name="book.remove_from_library.summary">A fájl az eszközén marad</string>
     <string name="book.source.device">Ezen az eszközön</string>
@@ -609,7 +611,7 @@
     <string name="sleep_timer.dialog.action.decrement">Rövidebb</string>
     <string name="sleep_timer.dialog.action.increment">Hosszabb</string>
     <string name="sleep_timer.dialog.minutes_short">perc</string>
-    <string name="sleep_timer.dialog.shake_hint">Közvetlenül az időzítő lejárta után rázza meg a telefont az újraindításhoz.</string>
+    <string name="sleep_timer.dialog.shake_hint">Rázza meg a telefont, amíg a hang elhalkul, vagy közvetlenül utána folytassa a lejátszást az időzítő újraindításához.</string>
     <string name="sleep_timer.dialog.title">Alvásidőzítő</string>
     <string name="sleep_timer.end_of_chapter">Fejezet vége</string>
     <string name="time.relative.last_night">Tegnap este</string>

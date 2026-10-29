@@ -73,10 +73,12 @@
     <string name="book.download.stop">Katkesta allalaadimine</string>
     <string name="book.download.waiting_for_connection">Ootab võrguühendust</string>
     <string name="book.download.waiting_for_wifi">Ootab WiFi-ühendust</string>
+    <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Kaanepilt nutiseadme failisüsteemist</string>
     <string name="book.edit.cover.internet">Kaanepilt internetist</string>
     <string name="book.edit.name.label">Nimi</string>
     <string name="book.edit.rename">Nimeta ümber</string>
+    <string name="book.edit.title.label">Pealkiri</string>
     <string name="book.remove_from_library">Eemalda raamatukogust</string>
     <string name="book.remove_from_library.summary">Fail jääb sinu seadmesse</string>
     <string name="book.source.device">Selles seadmes</string>
@@ -609,7 +611,7 @@
     <string name="sleep_timer.dialog.action.decrement">Lühem</string>
     <string name="sleep_timer.dialog.action.increment">Pikem</string>
     <string name="sleep_timer.dialog.minutes_short">min</string>
-    <string name="sleep_timer.dialog.shake_hint">Raputa telefoni kohe pärast taimeri lõppu, et see uuesti käivitada.</string>
+    <string name="sleep_timer.dialog.shake_hint">Raputa telefoni, kui heli vaibub, või jätka esitamist kohe pärast seda, et taimer uuesti käivitada.</string>
     <string name="sleep_timer.dialog.title">Unetaimer</string>
     <string name="sleep_timer.end_of_chapter">Peatüki lõpp</string>
     <string name="time.relative.last_night">Möödunud öösel</string>
