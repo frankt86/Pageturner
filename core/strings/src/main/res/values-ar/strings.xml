@@ -88,7 +88,6 @@
     <string name="book.edit.author.label">المؤلف</string>
     <string name="book.edit.cover.file">الغلاف من ملفات الجهاز</string>
     <string name="book.edit.cover.internet">الغلاف من الإنترنت</string>
-    <string name="book.edit.name.label">الاسم</string>
     <string name="book.edit.rename">إعادة التسمية</string>
     <string name="book.edit.title.label">العنوان</string>
     <string name="book.remove_from_library">إزالة من المكتبة</string>
@@ -287,6 +286,7 @@
     <string name="library.category.current.title">الحالي</string>
     <string name="library.category.not_started.title">لم يبدأ بعد</string>
     <string name="library.continue_listening">متابعة الاستماع</string>
+    <string name="library.continue_reading">متابعة القراءة</string>
     <string name="library.empty.add_first_book">هيا نضيف مجلد كتبك لنبدأ الاستماع أو القراءة!</string>
     <string name="library.empty.title">لم يُعثر على كتب</string>
     <string name="library.empty.message">يتعذّر على Pageturner العثور على أي كتب في مجلداتك. يمكنك التحقّق من أنّ الملفات ما زالت في مكانها، أو إضافة مجلد.</string>

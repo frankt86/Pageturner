@@ -82,7 +82,6 @@
     <string name="book.edit.author.label">Автор</string>
     <string name="book.edit.cover.file">Обложка с устройства</string>
     <string name="book.edit.cover.internet">Обложка из интернета</string>
-    <string name="book.edit.name.label">Название</string>
     <string name="book.edit.rename">Переименовать</string>
     <string name="book.edit.title.label">Название</string>
     <string name="book.remove_from_library">Убрать из библиотеки</string>
@@ -261,6 +260,7 @@
     <string name="library.category.current.title">Слушаю</string>
     <string name="library.category.not_started.title">Непрослушанные</string>
     <string name="library.continue_listening">Продолжить прослушивание</string>
+    <string name="library.continue_reading">Продолжить чтение</string>
     <string name="library.empty.add_first_book">Давайте выберем папку с книгами!</string>
     <string name="library.empty.title">Книги не найдены</string>
     <string name="library.empty.message">Pageturner не находит книг в ваших папках. Проверьте, на месте ли файлы, или добавьте папку.</string>

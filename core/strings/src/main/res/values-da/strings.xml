@@ -76,7 +76,6 @@
     <string name="book.edit.author.label">Forfatter</string>
     <string name="book.edit.cover.file">Cover fra filsystemet</string>
     <string name="book.edit.cover.internet">Cover fra internettet</string>
-    <string name="book.edit.name.label">Navn</string>
     <string name="book.edit.rename">Omdøb</string>
     <string name="book.edit.title.label">Titel</string>
     <string name="book.remove_from_library">Fjern fra biblioteket</string>
@@ -235,6 +234,7 @@
     <string name="library.category.current.title">Igangværende</string>
     <string name="library.category.not_started.title">Endnu ikke startet</string>
     <string name="library.continue_listening">Lyt videre</string>
+    <string name="library.continue_reading">Læs videre</string>
     <string name="library.empty.add_first_book">Lad os tilføje din bogmappe, så du kan begynde at lytte eller læse!</string>
     <string name="library.empty.title">Ingen bøger fundet</string>
     <string name="library.empty.message">Pageturner kan ikke finde nogen bøger i dine mapper. Tjek, at filerne stadig er der, eller tilføj en mappe.</string>

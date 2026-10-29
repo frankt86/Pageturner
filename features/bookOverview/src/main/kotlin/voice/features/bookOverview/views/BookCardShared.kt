@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+
 package voice.features.bookOverview.views
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -10,10 +13,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -23,8 +30,10 @@ import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import voice.core.audiobookshelf.download.WaitingFor
@@ -129,6 +138,31 @@ internal fun BookCover(
         )
       }
     }
+  }
+}
+
+/** In the place of an audiobook's play button, it opens an ebook in the reader. */
+@Composable
+internal fun ReadButton(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  size: Dp = 56.dp,
+) {
+  val shape = remember { MaterialShapes.Cookie9Sided.toShape() }
+  Box(
+    modifier = modifier
+      .size(size)
+      .clip(shape)
+      .background(MaterialTheme.colorScheme.primary)
+      .clickable(role = Role.Button, onClick = onClick),
+    contentAlignment = Alignment.Center,
+  ) {
+    Icon(
+      modifier = Modifier.fillMaxSize(0.4F),
+      imageVector = VoiceIcons.Book,
+      contentDescription = stringResource(StringsR.string.opds_entry_read),
+      tint = MaterialTheme.colorScheme.onPrimary,
+    )
   }
 }
 

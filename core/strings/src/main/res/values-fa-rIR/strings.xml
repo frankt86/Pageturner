@@ -76,7 +76,6 @@
     <string name="book.edit.author.label">نویسنده</string>
     <string name="book.edit.cover.file">دریافت کاور از داخل سیستم</string>
     <string name="book.edit.cover.internet">دریافت کاور از طریق اینترنت</string>
-    <string name="book.edit.name.label">نام</string>
     <string name="book.edit.rename">تغییر نام</string>
     <string name="book.edit.title.label">عنوان</string>
     <string name="book.remove_from_library">حذف از کتابخانه</string>
@@ -235,6 +234,7 @@
     <string name="library.category.current.title">جاری</string>
     <string name="library.category.not_started.title">هنوز شروع نشده</string>
     <string name="library.continue_listening">ادامهٔ گوش دادن</string>
+    <string name="library.continue_reading">ادامهٔ خواندن</string>
     <string name="library.empty.add_first_book">پوشه‌ی کتاب‌های خود را اضافه کنید تا بتوانید شروع به گوش دادن یا خواندن کنید!</string>
     <string name="library.empty.title">هیچ کتابی پیدا نشد</string>
     <string name="library.empty.message">در پوشه‌های شما، Pageturner هیچ کتابی پیدا نمی‌کند. مطمئن شوید فایل‌ها هنوز سر جایشان هستند، یا یک پوشه اضافه کنید.</string>

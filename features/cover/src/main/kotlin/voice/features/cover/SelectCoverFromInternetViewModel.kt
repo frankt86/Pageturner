@@ -174,9 +174,9 @@ class SelectCoverFromInternetViewModel(
         null
       }
     } ?: return false
-    val previous = ebooksStore.data.first().firstOrNull { it.uri == uri }?.cover
+    val previous = ebooksStore.data.first().firstOrNull { it.uri == uri }?.customCover
     ebooksStore.updateData { ebooks ->
-      ebooks.map { if (it.uri == uri) it.copy(cover = cover.absolutePath) else it }
+      ebooks.map { if (it.uri == uri) it.copy(customCover = cover.absolutePath) else it }
     }
     withContext(dispatcherProvider.io) {
       previous?.let(::File)?.takeIf { it.parentFile == coversDir }?.delete()
@@ -189,7 +189,7 @@ class SelectCoverFromInternetViewModel(
       is CoverTarget.ForBook -> bookQuery(target.bookId)
       is CoverTarget.ForEbook -> {
         val ebook = ebooksStore.data.first().firstOrNull { it.uri == target.uri } ?: return ""
-        listOfNotNull(ebook.title, ebook.author).joinToString(" ")
+        listOfNotNull(ebook.title, ebook.shownAuthor).joinToString(" ")
       }
     }
   }

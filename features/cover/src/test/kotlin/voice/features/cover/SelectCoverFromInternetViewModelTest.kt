@@ -116,14 +116,17 @@ class SelectCoverFromInternetViewModelTest {
   }
 
   @Test
-  fun `a cover picked for an ebook replaces its old one`() = runTest {
+  fun `a cover picked for an ebook replaces the one picked before`() = runTest {
     val api = mockk<CoverApi> {
       coEvery { token(any()) } returns "token"
       coEvery { search(any(), any(), any()) } returns SearchResponse(next = null, results = listOf(cover))
     }
     val coversDir = File(context.filesDir, "ebookCovers").apply { mkdirs() }
     val oldCover = coversDir.resolve("old").apply { writeText("old") }
-    ebooksStore.updateData { ebooks -> ebooks.map { it.copy(cover = oldCover.absolutePath) } }
+    val fileCover = coversDir.resolve("file").apply { writeText("file") }
+    ebooksStore.updateData { ebooks ->
+      ebooks.map { it.copy(cover = fileCover.absolutePath, customCover = oldCover.absolutePath) }
+    }
     val downloaded = File(context.cacheDir, "downloaded").apply { writeText("new") }
     coEvery { coverDownloader.download(any()) } returns downloaded
     val viewModel = viewModel(api, CoverTarget.ForEbook(ebook.uri))
@@ -136,17 +139,19 @@ class SelectCoverFromInternetViewModelTest {
     events.emit(Events.CoverClick(cover))
     settle()
 
-    val newCover = File(checkNotNull(ebooksStore.data.first().single().cover))
+    val stored = ebooksStore.data.first().single()
+    val newCover = File(checkNotNull(stored.customCover))
     assertEquals(coversDir, newCover.parentFile)
     assertEquals("new", newCover.readText())
     assertFalse(oldCover.exists())
+    assertEquals(fileCover.absolutePath, stored.cover)
     assertEquals(false, state.value.downloadFailed)
     verify { navigator.goBack() }
   }
 
   @Test
   fun `an ebook searches for its title and author`() = runTest {
-    ebooksStore.updateData { ebooks -> ebooks.map { it.copy(author = "Frank Herbert") } }
+    ebooksStore.updateData { ebooks -> ebooks.map { it.copy(author = "Herbert", customAuthor = "Frank Herbert") } }
     val api = mockk<CoverApi> {
       coEvery { token(any()) } returns "token"
       coEvery { search(any(), any(), any()) } returns SearchResponse(next = null, results = listOf(cover))

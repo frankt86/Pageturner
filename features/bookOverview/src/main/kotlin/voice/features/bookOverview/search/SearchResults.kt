@@ -53,6 +53,7 @@ import voice.core.ui.playButtonSharedElementModifier
 import voice.core.ui.segmentedShape
 import voice.features.bookOverview.overview.BookOverviewCategory
 import voice.features.bookOverview.views.BookCover
+import voice.features.bookOverview.views.ReadButton
 import java.text.NumberFormat
 import voice.core.strings.R as StringsR
 
@@ -171,6 +172,7 @@ private fun TopResult(
         bookId = result.id,
         cover = result.cover,
         finished = result.category == BookOverviewCategory.FINISHED,
+        ebook = result.isEbook,
         modifier = Modifier.size(96.dp),
       )
       Spacer(Modifier.width(16.dp))
@@ -207,18 +209,26 @@ private fun TopResult(
               )
             }
             Text(
-              text = stringResource(StringsR.string.playback_book_progress_remaining, result.remainingTime),
+              text = if (result.isEbook) {
+                result.remainingTime
+              } else {
+                stringResource(StringsR.string.playback_book_progress_remaining, result.remainingTime)
+              },
               style = MaterialTheme.typography.labelMedium,
               maxLines = 1,
             )
           }
           Spacer(Modifier.width(12.dp))
-          PlayButton(
-            playing = playing,
-            onClick = onPlayClick,
-            size = 56.dp,
-            modifier = Modifier.playButtonSharedElementModifier(result.id),
-          )
+          if (result.isEbook) {
+            ReadButton(onClick = onPlayClick)
+          } else {
+            PlayButton(
+              playing = playing,
+              onClick = onPlayClick,
+              size = 56.dp,
+              modifier = Modifier.playButtonSharedElementModifier(result.id),
+            )
+          }
         }
       }
     }
@@ -250,6 +260,7 @@ private fun SearchResultRow(
         bookId = result.id,
         cover = result.cover,
         finished = result.category == BookOverviewCategory.FINISHED,
+        ebook = result.isEbook,
         modifier = Modifier.size(56.dp),
       )
       Spacer(Modifier.width(16.dp))

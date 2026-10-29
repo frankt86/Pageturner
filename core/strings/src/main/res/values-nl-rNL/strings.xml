@@ -76,7 +76,6 @@
     <string name="book.edit.author.label">Auteur</string>
     <string name="book.edit.cover.file">Omslag kiezen van bestandssysteem</string>
     <string name="book.edit.cover.internet">Omslag ophalen van internet</string>
-    <string name="book.edit.name.label">Naam</string>
     <string name="book.edit.rename">Naam wijzigen</string>
     <string name="book.edit.title.label">Titel</string>
     <string name="book.remove_from_library">Uit bibliotheek verwijderen</string>
@@ -235,6 +234,7 @@
     <string name="library.category.current.title">Huidig</string>
     <string name="library.category.not_started.title">Nog niet begonnen</string>
     <string name="library.continue_listening">Verder luisteren</string>
+    <string name="library.continue_reading">Verder lezen</string>
     <string name="library.empty.add_first_book">Laten we je boekenmap toevoegen, dan kun je beginnen met luisteren of lezen!</string>
     <string name="library.empty.title">Geen boeken gevonden</string>
     <string name="library.empty.message">Pageturner kan geen boeken vinden in je mappen. Controleer of de bestanden er nog staan, of voeg een map toe.</string>

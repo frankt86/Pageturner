@@ -82,7 +82,6 @@
     <string name="book.edit.author.label">Автор</string>
     <string name="book.edit.cover.file">Обкладинка з файлу</string>
     <string name="book.edit.cover.internet">Обкладинка з Інтернету</string>
-    <string name="book.edit.name.label">Назва</string>
     <string name="book.edit.rename">Перейменувати</string>
     <string name="book.edit.title.label">Назва</string>
     <string name="book.remove_from_library">Прибрати з бібліотеки</string>
@@ -261,6 +260,7 @@
     <string name="library.category.current.title">Поточні</string>
     <string name="library.category.not_started.title">Ще не початі</string>
     <string name="library.continue_listening">Продовжити слухання</string>
+    <string name="library.continue_reading">Продовжити читання</string>
     <string name="library.empty.add_first_book">Давайте додамо папку з книгами, щоб ви могли почати слухати або читати!</string>
     <string name="library.empty.title">Книг не знайдено</string>
     <string name="library.empty.message">Pageturner не знаходить книг у ваших папках. Перевірте, чи файли досі на місці, або додайте папку.</string>

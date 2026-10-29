@@ -201,9 +201,16 @@ public class OpdsDownloads internal constructor(
   ) {
     var replaced: List<Ebook> = emptyList()
     ebooksStore.updateData { ebooks ->
-      replaced = ebooks.filter { it.matches(key) }
       // a scan may have found the file already
-      ebooks.filterNot { it.matches(key) || it.uri == ebook.uri } + ebook
+      val earlier = ebooks.filter { it.matches(key) || it.uri == ebook.uri }
+      replaced = earlier.filter { it.matches(key) }
+      // a book downloaded again keeps the title, author and cover the listener gave it
+      val added = ebook.copy(
+        customName = earlier.firstNotNullOfOrNull { it.customName },
+        customAuthor = earlier.firstNotNullOfOrNull { it.customAuthor },
+        customCover = earlier.firstNotNullOfOrNull { it.customCover },
+      )
+      ebooks.filterNot { it.matches(key) || it.uri == ebook.uri } + added
     }
     // a download from before the download folder was in the app's own files, where nothing else would remove it
     replaced.forEach { old ->

@@ -76,7 +76,6 @@
     <string name="book.edit.author.label">Yazar</string>
     <string name="book.edit.cover.file">Dosyalardan kapak</string>
     <string name="book.edit.cover.internet">İnternetten kitap kapağı</string>
-    <string name="book.edit.name.label">Ad</string>
     <string name="book.edit.rename">Yeniden adlandır</string>
     <string name="book.edit.title.label">Başlık</string>
     <string name="book.remove_from_library">Kitaplıktan kaldır</string>
@@ -235,6 +234,7 @@
     <string name="library.category.current.title">Dinleniyor</string>
     <string name="library.category.not_started.title">Henüz başlanmadı</string>
     <string name="library.continue_listening">Dinlemeye devam et</string>
+    <string name="library.continue_reading">Okumaya devam et</string>
     <string name="library.empty.add_first_book">Dinlemeye veya okumaya başlayabilmeniz için kitap klasörünüzü ekleyelim!</string>
     <string name="library.empty.title">Kitap bulunamadı</string>
     <string name="library.empty.message">Pageturner, klasörlerinizde hiç kitap bulamıyor. Dosyaların hâlâ yerinde olup olmadığını kontrol edin veya bir klasör ekleyin.</string>

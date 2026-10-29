@@ -1,18 +1,26 @@
 package voice.core.search
 
+import android.net.Uri
+import androidx.datastore.core.DataStore
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
 import voice.core.common.DispatcherProvider
 import voice.core.data.Book
 import voice.core.data.BookId
+import voice.core.data.Ebook
+import voice.core.data.EbookFormat
 import voice.core.data.repo.BookContentRepoImpl
 import voice.core.data.repo.BookRepositoryImpl
 import voice.core.data.repo.ChapterRepoImpl
 import voice.core.data.repo.CustomMetadataRepoImpl
 import voice.core.data.repo.internals.AppDb
+import voice.core.data.store.EbooksStore
 import java.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -285,6 +293,62 @@ class BookSearchTest {
     }
   }
 
+  @Test
+  fun `ebooks are found by their title, author and series`() {
+    val dune = ebook(name = "Dune", author = "Frank Herbert", series = "Dune Chronicles", seriesPart = "1")
+    val messiah = ebook(name = "Dune Messiah", author = "Frank Herbert", series = "Dune Chronicles", seriesPart = "2")
+    test(harryPotter1, ebooks = listOf(dune, messiah)) {
+      expectSearchResult("messiah", messiah)
+      expectSearchResult("herbert", dune, messiah)
+      expectSearchResult("chronicles 2", messiah)
+      expectSearchResult("stephen fry", harryPotter1)
+      assertEquals(
+        expected = setOf(BookSearchField.Series),
+        actual = search.search("chronicles 2").single().fieldsMatchingAllWords,
+      )
+    }
+  }
+
+  @Test
+  fun `a typo in an ebook title is forgiven`() {
+    val dune = ebook(name = "Children of Dune")
+    test(ebooks = listOf(dune)) {
+      expectSearchResult("chidlren", dune)
+    }
+  }
+
+  @Test
+  fun `an edited ebook is found by its own names and still by the ones from its file`() {
+    val edited = ebook(name = "scan_0042", author = "Unknown").copy(customName = "Hyperion", customAuthor = "Dan Simmons")
+    test(ebooks = listOf(edited)) {
+      expectSearchResult("hyperion", edited)
+      expectSearchResult("simmons", edited)
+      expectSearchResult("scan", edited)
+      assertEquals(
+        expected = mapOf(BookSearchField.Author to listOf(4..10)),
+        actual = search.search("simmons").single().matches,
+      )
+    }
+  }
+
+  @Test
+  fun `hidden and missing ebooks aren't found`() {
+    val hidden = ebook(name = "Dune").copy(hidden = true)
+    val missing = ebook(name = "Dune Messiah").copy(available = false)
+    test(ebooks = listOf(hidden, missing)) {
+      expectSearchResult("dune")
+    }
+  }
+
+  @Test
+  fun `ebooks being read come before audiobooks not started`() {
+    val notStarted = book(name = "Dune", time = 0)
+    val reading = ebook(name = "Dune Messiah").copy(lastOpened = 1, progress = 0.3F)
+    test(notStarted, ebooks = listOf(reading)) {
+      expectSearchResult("dune", reading, notStarted)
+    }
+  }
+
   private fun test(run: suspend TestBase.() -> Unit) = test(
     commendatore,
     watchtower,
@@ -298,6 +362,7 @@ class BookSearchTest {
 
   private fun test(
     vararg books: Book,
+    ebooks: List<Ebook> = emptyList(),
     run: suspend TestBase.() -> Unit,
   ) {
     val db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(), AppDb::class.java)
@@ -318,7 +383,11 @@ class BookSearchTest {
     }
 
     runTest {
-      val search = BookSearch(repo, DispatcherProvider(coroutineContext, coroutineContext, coroutineContext, coroutineContext))
+      val search = BookSearch(
+        repo = repo,
+        ebooksStore = EbooksStore(MemoryDataStore(ebooks)),
+        dispatcherProvider = DispatcherProvider(coroutineContext, coroutineContext, coroutineContext, coroutineContext),
+      )
       val testBase = TestBase(search)
       books.forEach { addBook(it) }
 
@@ -340,14 +409,44 @@ private class TestBase(val search: BookSearch) {
 
   suspend fun expectSearchResult(
     query: String,
-    vararg expected: Book,
+    vararg expected: Any,
   ) {
-    val result = search.search(query).map { it.book }
+    val result = search.search(query).map { result ->
+      when (result) {
+        is BookSearchResult.Audiobook -> result.book
+        is BookSearchResult.Ebook -> result.ebook
+      }
+    }
     assertEquals(expected = expected.toList(), actual = result)
   }
 
   suspend fun search(query: String) {
     @Suppress("RETURN_VALUE_NOT_USED")
     search.search(query)
+  }
+}
+
+private fun ebook(
+  name: String,
+  author: String? = null,
+  series: String? = null,
+  seriesPart: String? = null,
+): Ebook = Ebook(
+  uri = Uri.parse("content://books/${Uuid.random()}.epub"),
+  name = name,
+  format = EbookFormat.Epub,
+  author = author,
+  series = series,
+  seriesPart = seriesPart,
+)
+
+private class MemoryDataStore<T>(initial: T) : DataStore<T> {
+
+  private val value = MutableStateFlow(initial)
+
+  override val data: Flow<T> get() = value
+
+  override suspend fun updateData(transform: suspend (t: T) -> T): T {
+    return value.updateAndGet { transform(it) }
   }
 }

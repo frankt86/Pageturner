@@ -76,7 +76,6 @@
     <string name="book.edit.author.label">Autore</string>
     <string name="book.edit.cover.file">Cobertedda dae su sistema de archìvios</string>
     <string name="book.edit.cover.internet">Cobertedda dae ìnternet</string>
-    <string name="book.edit.name.label">Nùmene</string>
     <string name="book.edit.rename">Càmbia su nùmene</string>
     <string name="book.edit.title.label">Tìtulu</string>
     <string name="book.remove_from_library">Boga dae sa biblioteca</string>
@@ -235,6 +234,7 @@
     <string name="library.category.current.title">In cursu</string>
     <string name="library.category.not_started.title">Galu no incumintzadu</string>
     <string name="library.continue_listening">Sighi a ascurtare</string>
+    <string name="library.continue_reading">Sighi a lèghere</string>
     <string name="library.empty.add_first_book">Agiunghimus sa cartella de libros tua in manera chi potzas incumintzare a ascurtare o a lèghere!</string>
     <string name="library.empty.title">Perunu libru agatadu</string>
     <string name="library.empty.message">Pageturner non agatat perunu libru in sas cartellas tuas. Controlla si sos documentos bi sunt galu o agiunghe una cartella.</string>

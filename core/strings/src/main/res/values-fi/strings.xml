@@ -76,7 +76,6 @@
     <string name="book.edit.author.label">Tekijä</string>
     <string name="book.edit.cover.file">Kansi tiedostojärjestelmästä</string>
     <string name="book.edit.cover.internet">Kansi internetistä</string>
-    <string name="book.edit.name.label">Nimi</string>
     <string name="book.edit.rename">Nimeä uudelleen</string>
     <string name="book.edit.title.label">Nimi</string>
     <string name="book.remove_from_library">Poista kirjastosta</string>
@@ -235,6 +234,7 @@
     <string name="library.category.current.title">Nykyinen</string>
     <string name="library.category.not_started.title">Ei vielä aloitettu</string>
     <string name="library.continue_listening">Jatka kuuntelua</string>
+    <string name="library.continue_reading">Jatka lukemista</string>
     <string name="library.empty.add_first_book">Lisätään kirjakansiosi, jotta voit aloittaa kuuntelemisen tai lukemisen!</string>
     <string name="library.empty.title">Kirjoja ei löytynyt</string>
     <string name="library.empty.message">Pageturner ei löydä kansioistasi yhtään kirjaa. Tarkista, että tiedostot ovat yhä paikoillaan, tai lisää kansio.</string>

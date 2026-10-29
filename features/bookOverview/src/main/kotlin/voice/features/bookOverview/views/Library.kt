@@ -67,7 +67,7 @@ internal fun Library(
   val entrance = rememberEntranceState(animate = !entered)
   LaunchedEffect(Unit) { entered = true }
   val grid = viewState.layoutMode == BookOverviewLayoutMode.Grid
-  val heroId = viewState.currentBookId
+  val heroId = viewState.heroBookId
   val hero = heroId?.let { id -> viewState.books.values.firstNotNullOfOrNull { it[id] } }
   val inProgressCount = viewState.books[BookOverviewCategory.CURRENT].orEmpty().size
 
@@ -118,10 +118,15 @@ internal fun Library(
         item(key = HERO_KEY, span = { GridItemSpan(maxLineSpan) }, contentType = "hero") {
           ContinueListeningCard(
             book = hero.value,
-            playing = viewState.playButtonState == BookOverviewViewState.PlayButtonState.Playing,
+            playing = heroId == viewState.currentBookId &&
+              viewState.playButtonState == BookOverviewViewState.PlayButtonState.Playing,
             onClick = { onBookClick(hero.value.id) },
             onLongClick = { onBookLongClick(hero.value.id) },
-            onPlayClick = onPlayClick,
+            onPlayClick = if (hero.value.isEbook) {
+              { onBookClick(hero.value.id) }
+            } else {
+              onPlayClick
+            },
             modifier = cardWidth.entrance(entrance, index),
           )
         }

@@ -79,7 +79,6 @@
     <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Copertă din sistemul de fișiere</string>
     <string name="book.edit.cover.internet">Copertă de pe internet</string>
-    <string name="book.edit.name.label">Nume</string>
     <string name="book.edit.rename">Redenumește</string>
     <string name="book.edit.title.label">Titlu</string>
     <string name="book.remove_from_library">Elimină din bibliotecă</string>
@@ -248,6 +247,7 @@
     <string name="library.category.current.title">Cărți în curs</string>
     <string name="library.category.not_started.title">Cărți neîncepute încă</string>
     <string name="library.continue_listening">Continuă ascultarea</string>
+    <string name="library.continue_reading">Continuă lectura</string>
     <string name="library.empty.add_first_book">Adaugă directorul cu cărțile tale ca să începi să asculți sau să citești!</string>
     <string name="library.empty.title">Nu s-au găsit cărți</string>
     <string name="library.empty.message">Pageturner nu găsește nicio carte în directoarele tale. Verifică dacă fișierele mai sunt acolo sau adaugă un director.</string>

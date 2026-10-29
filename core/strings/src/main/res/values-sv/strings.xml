@@ -76,7 +76,6 @@
     <string name="book.edit.author.label">Författare</string>
     <string name="book.edit.cover.file">Omslag från filsystemet</string>
     <string name="book.edit.cover.internet">Omslag från internet</string>
-    <string name="book.edit.name.label">Namn</string>
     <string name="book.edit.rename">Byt namn</string>
     <string name="book.edit.title.label">Titel</string>
     <string name="book.remove_from_library">Ta bort från biblioteket</string>
@@ -235,6 +234,7 @@
     <string name="library.category.current.title">Pågående</string>
     <string name="library.category.not_started.title">Inte påbörjade</string>
     <string name="library.continue_listening">Fortsätt lyssna</string>
+    <string name="library.continue_reading">Fortsätt läsa</string>
     <string name="library.empty.add_first_book">Lägg till din bokmapp för att börja lyssna eller läsa!</string>
     <string name="library.empty.title">Inga böcker hittades</string>
     <string name="library.empty.message">Pageturner hittar inga böcker i dina mappar. Kontrollera att filerna finns kvar, eller lägg till en mapp.</string>

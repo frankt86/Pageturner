@@ -1,16 +1,20 @@
 package voice.core.search
 
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import voice.core.common.DispatcherProvider
 import voice.core.common.comparator.NaturalOrderComparator
 import voice.core.data.Book
+import voice.core.data.Ebook
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
 import java.util.concurrent.TimeUnit
 
 @Inject
 class BookSearch(
   private val repo: BookRepository,
+  private val ebooksStore: EbooksStore,
   private val dispatcherProvider: DispatcherProvider,
 ) {
 
@@ -22,12 +26,12 @@ class BookSearch(
     val terms = SearchText(query).words.map { it.text }.distinct()
     if (terms.isEmpty()) return emptyList()
     val allBooks = repo.all()
+    val allEbooks = ebooksStore.data.first().filter { it.available && !it.hidden }
     return withContext(dispatcherProvider.default) {
       val previousWords = wordsByText
       val words = HashMap<String, List<SearchText.Word>>()
-      val books = allBooks.map { book ->
-        SearchableBook(book) { text -> words.getOrPut(text) { previousWords[text] ?: SearchText(text).words } }
-      }
+      val split = { text: String -> words.getOrPut(text) { previousWords[text] ?: SearchText(text).words } }
+      val books = allBooks.map { SearchableBook.of(it, split) } + allEbooks.map { SearchableBook.of(it, split) }
       wordsByText = words
       // typos only count when nothing matches as typed, so similar words don't pile up below the right books
       books.mapNotNull { rank(it, terms, typos = false) }
@@ -59,11 +63,10 @@ class BookSearch(
       if (bestTermScore == 0 && book.fileWords.none { match(it.text, term, typos) != null }) return null
       score += bestTermScore
     }
-    return BookSearchResult(
-      book = book.book,
-      matches = matches.mapValues { (field, ranges) -> ranges.merged(book.texts.getValue(field)) },
-      fieldsMatchingAllWords = matchedTerms.filterValues { it.size == terms.size }.keys,
-      score = score,
+    return book.result(
+      matches.mapValues { (field, ranges) -> ranges.merged(book.texts.getValue(field)) },
+      matchedTerms.filterValues { it.size == terms.size }.keys,
+      score,
     )
   }
 
@@ -78,20 +81,45 @@ class BookSearch(
   }
 
   private class SearchableBook(
-    val book: Book,
-    split: (String) -> List<SearchText.Word>,
-  ) {
-    val texts = BookSearchField.entries.mapNotNull { field ->
-      field.text(book)?.let { field to it }
-    }.toMap()
-    val words = texts.mapValues { (_, text) -> split(text) }
-
-    // a book the listener edited is still found by what its files say, which isn't shown, so it ranks below
+    val texts: Map<BookSearchField, String>,
+    // a book the listener edited is still found by what its file says, which isn't shown, so it ranks below
     // visible matches
-    val fileWords = listOfNotNull(
-      book.content.metadata.name.takeIf { book.custom.name != null },
-      book.content.metadata.author?.takeIf { book.custom.author != null },
-    ).flatMap(split)
+    fileTexts: List<String>,
+    split: (String) -> List<SearchText.Word>,
+    val result: (
+      matches: Map<BookSearchField, List<IntRange>>,
+      fieldsMatchingAllWords: Set<BookSearchField>,
+      score: Int,
+    ) -> BookSearchResult,
+  ) {
+    val words = texts.mapValues { (_, text) -> split(text) }
+    val fileWords = fileTexts.flatMap(split)
+
+    companion object {
+      fun of(
+        book: Book,
+        split: (String) -> List<SearchText.Word>,
+      ) = SearchableBook(
+        texts = BookSearchField.entries.mapNotNull { field -> field.text(book)?.let { field to it } }.toMap(),
+        fileTexts = listOfNotNull(
+          book.content.metadata.name.takeIf { book.custom.name != null },
+          book.content.metadata.author?.takeIf { book.custom.author != null },
+        ),
+        split = split,
+      ) { matches, fields, score -> BookSearchResult.Audiobook(book, matches, fields, score) }
+
+      fun of(
+        ebook: Ebook,
+        split: (String) -> List<SearchText.Word>,
+      ) = SearchableBook(
+        texts = BookSearchField.entries.mapNotNull { field -> field.text(ebook)?.let { field to it } }.toMap(),
+        fileTexts = listOfNotNull(
+          ebook.name.takeIf { ebook.customName != null },
+          ebook.author?.takeIf { ebook.customAuthor != null },
+        ),
+        split = split,
+      ) { matches, fields, score -> BookSearchResult.Ebook(ebook, matches, fields, score) }
+    }
   }
 
   private class WordMatch(
@@ -108,10 +136,10 @@ class BookSearch(
     const val MIN_TYPO_LENGTH = 5
 
     val resultComparator: Comparator<BookSearchResult> = compareByDescending<BookSearchResult> { it.score }
-      .thenByDescending { it.book.isInProgress() }
-      .thenByDescending { it.book.content.lastPlayedAt }
-      .thenBy(NaturalOrderComparator.stringComparator) { it.book.content.metadata.part.orEmpty() }
-      .thenBy(NaturalOrderComparator.stringComparator) { it.book.name }
+      .thenByDescending { it.isInProgress() }
+      .thenByDescending { it.lastActiveAt() }
+      .thenBy(NaturalOrderComparator.stringComparator) { it.part().orEmpty() }
+      .thenBy(NaturalOrderComparator.stringComparator) { it.name() }
   }
 }
 
@@ -124,8 +152,25 @@ private val BookSearchField.weight: Int
     BookSearchField.Genre -> 1
   }
 
-private fun Book.isInProgress(): Boolean {
-  return position > 0 && position < duration - TimeUnit.SECONDS.toMillis(5)
+private fun BookSearchResult.isInProgress(): Boolean = when (this) {
+  is BookSearchResult.Audiobook -> book.position > 0 && book.position < book.duration - TimeUnit.SECONDS.toMillis(5)
+  is BookSearchResult.Ebook -> ebook.lastOpened != 0L && ebook.progress < 0.99F
+}
+
+// in ms since the epoch
+private fun BookSearchResult.lastActiveAt(): Long = when (this) {
+  is BookSearchResult.Audiobook -> book.content.lastPlayedAt.toEpochMilli()
+  is BookSearchResult.Ebook -> ebook.lastOpened
+}
+
+private fun BookSearchResult.part(): String? = when (this) {
+  is BookSearchResult.Audiobook -> book.content.metadata.part
+  is BookSearchResult.Ebook -> ebook.seriesPart
+}
+
+private fun BookSearchResult.name(): String = when (this) {
+  is BookSearchResult.Audiobook -> book.name
+  is BookSearchResult.Ebook -> ebook.title
 }
 
 // ranges only apart by spaces are joined too, so "stephen king" is highlighted as one

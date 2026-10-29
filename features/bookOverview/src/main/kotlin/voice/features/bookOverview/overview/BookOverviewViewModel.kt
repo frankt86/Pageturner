@@ -122,6 +122,7 @@ class BookOverviewViewModel(
     }
     // a deleted book can stay the current one
     val currentBookId = currentBook.id?.takeIf { id -> books.any { it.id == id } }
+    val heroBookId = heroBookId(books, ebooks, currentBookId)
 
     val showEmptyLibrary = !hasStoragePermissionBug && !scannerActive && books.isEmpty() && ebooks.isEmpty()
     LaunchedEffect(showEmptyLibrary) {
@@ -180,7 +181,7 @@ class BookOverviewViewModel(
         BookOverviewViewState.PlayButtonState.Paused
       }.takeIf { currentBookId != null },
       showEmptyLibrary = showEmptyLibrary,
-      showSearchIcon = books.isNotEmpty(),
+      showSearchIcon = books.isNotEmpty() || ebooks.isNotEmpty(),
       isLoading = scannerActive,
       showStoragePermissionBugCard = hasStoragePermissionBug,
       showFolderAccessBadge = hasFoldersWithoutAccess,
@@ -188,6 +189,7 @@ class BookOverviewViewModel(
         !folderPickerMovedDialogShown &&
         appInfoProvider.installTime < FolderPickerMigrationInstallTimeCutoff,
       dialog = dialog,
+      heroBookId = heroBookId,
     )
   }
 
@@ -296,6 +298,17 @@ private fun Book.itemViewState(
       }.toItemViewState(unavailable, download)
     }
   }
+}
+
+private fun heroBookId(
+  books: List<Book>,
+  ebooks: List<Ebook>,
+  currentBookId: BookId?,
+): BookId? {
+  val ebook = ebooks.filter { it.category == BookOverviewCategory.CURRENT }.maxByOrNull { it.lastOpened }
+    ?: return currentBookId
+  val playedAt = books.firstOrNull { it.id == currentBookId }?.content?.lastPlayedAt?.toEpochMilli() ?: 0L
+  return if (ebook.lastOpened > playedAt) ebook.bookId else currentBookId
 }
 
 private fun List<Ebook>.itemsByCategory(): Map<BookOverviewCategory, Map<BookId, State<BookOverviewItemViewState>>> {

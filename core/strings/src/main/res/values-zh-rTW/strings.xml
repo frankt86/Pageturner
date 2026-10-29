@@ -73,7 +73,6 @@
     <string name="book.edit.author.label">作者</string>
     <string name="book.edit.cover.file">從檔案選擇封面</string>
     <string name="book.edit.cover.internet">從網路尋找封面</string>
-    <string name="book.edit.name.label">名稱</string>
     <string name="book.edit.rename">重新命名</string>
     <string name="book.edit.title.label">書名</string>
     <string name="book.remove_from_library">從書庫中移除</string>
@@ -222,6 +221,7 @@
     <string name="library.category.current.title">收聽中</string>
     <string name="library.category.not_started.title">尚未開始</string>
     <string name="library.continue_listening">繼續收聽</string>
+    <string name="library.continue_reading">繼續閱讀</string>
     <string name="library.empty.add_first_book">先新增你的書籍資料夾，就可以開始收聽或閱讀囉！</string>
     <string name="library.empty.title">找不到書</string>
     <string name="library.empty.message">Pageturner 在你的資料夾中找不到任何書。請確認檔案還在，或新增資料夾。</string>
