@@ -87,7 +87,7 @@ class DeleteBookViewModelTest {
   fun `a book downloaded from a catalog is deleted with its folder`() = runTest(dispatcher) {
     val folder = File(ApplicationProvider.getApplicationContext<Application>().filesDir, "audiobooks/Persuasion")
     File(folder, "Persuasion.m4b").apply { parentFile!!.mkdirs() }.writeText("audio")
-    val downloaded = book.copy(content = book.content.copy(id = BookId(Uri.fromFile(folder))))
+    val downloaded = book(chapters = book.chapters, id = BookId(Uri.fromFile(folder)))
 
     delete(viewModel(downloaded), downloaded.id)
 
