@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -148,7 +147,7 @@ internal fun ReadButton(
   modifier: Modifier = Modifier,
   size: Dp = 56.dp,
 ) {
-  val shape = remember { MaterialShapes.Cookie9Sided.toShape() }
+  val shape = MaterialShapes.Cookie9Sided.toShape()
   Box(
     modifier = modifier
       .size(size)
