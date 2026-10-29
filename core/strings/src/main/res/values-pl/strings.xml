@@ -82,7 +82,6 @@
     <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Okładka z pamięci wewnętrznej</string>
     <string name="book.edit.cover.internet">Okładka z internetu</string>
-    <string name="book.edit.name.label">Nazwa</string>
     <string name="book.edit.rename">Zmień nazwę</string>
     <string name="book.edit.title.label">Tytuł</string>
     <string name="book.remove_from_library">Usuń z biblioteki</string>
@@ -261,6 +260,7 @@
     <string name="library.category.current.title">Aktualne</string>
     <string name="library.category.not_started.title">Nierozpoczęte</string>
     <string name="library.continue_listening">Słuchaj dalej</string>
+    <string name="library.continue_reading">Czytaj dalej</string>
     <string name="library.empty.add_first_book">Dodajmy twój folder z książkami, aby rozpocząć słuchanie lub czytanie!</string>
     <string name="library.empty.title">Nie znaleziono książek</string>
     <string name="library.empty.message">Pageturner nie może znaleźć żadnych książek w twoich folderach. Sprawdź, czy pliki nadal tam są, albo dodaj folder.</string>

@@ -86,7 +86,7 @@ internal fun ContinueListeningCard(
             Spacer(Modifier.width(16.dp))
             Column(Modifier.weight(1F)) {
               Text(
-                text = stringResource(R.string.library_continue_listening),
+                text = stringResource(if (book.isEbook) R.string.library_continue_reading else R.string.library_continue_listening),
                 style = MaterialTheme.typography.labelLargeEmphasized,
                 color = colors.primary,
               )
@@ -138,23 +138,30 @@ internal fun ContinueListeningCard(
                   maxLines = 1,
                   overflow = TextOverflow.Ellipsis,
                 )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                  text = stringResource(R.string.playback_book_progress_remaining, book.remainingTime),
-                  style = MaterialTheme.typography.labelLarge.copy(fontFeatureSettings = "tnum"),
-                  maxLines = 1,
-                  softWrap = false,
-                  overflow = TextOverflow.Ellipsis,
-                )
+                // an ebook has no time left, and its share read is already on the left
+                if (!book.isEbook) {
+                  Spacer(Modifier.width(8.dp))
+                  Text(
+                    text = stringResource(R.string.playback_book_progress_remaining, book.remainingTime),
+                    style = MaterialTheme.typography.labelLarge.copy(fontFeatureSettings = "tnum"),
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis,
+                  )
+                }
               }
             }
             Spacer(Modifier.width(16.dp))
-            PlayButton(
-              playing = playing,
-              onClick = onPlayClick,
-              modifier = Modifier.playButtonSharedElementModifier(book.id),
-              size = 72.dp,
-            )
+            if (book.isEbook) {
+              ReadButton(onClick = onPlayClick, size = 72.dp)
+            } else {
+              PlayButton(
+                playing = playing,
+                onClick = onPlayClick,
+                modifier = Modifier.playButtonSharedElementModifier(book.id),
+                size = 72.dp,
+              )
+            }
           }
         }
       }

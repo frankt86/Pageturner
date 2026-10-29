@@ -76,7 +76,6 @@
     <string name="book.edit.author.label">लेखक</string>
     <string name="book.edit.cover.file">फ़ाइल सिस्टम से कवर</string>
     <string name="book.edit.cover.internet">इंटरनेट से कवर</string>
-    <string name="book.edit.name.label">नाम</string>
     <string name="book.edit.rename">नाम बदलें</string>
     <string name="book.edit.title.label">शीर्षक</string>
     <string name="book.remove_from_library">लाइब्रेरी से हटाएँ</string>
@@ -235,6 +234,7 @@
     <string name="library.category.current.title">जारी</string>
     <string name="library.category.not_started.title">अभी शुरू नहीं</string>
     <string name="library.continue_listening">सुनना जारी रखें</string>
+    <string name="library.continue_reading">पढ़ना जारी रखें</string>
     <string name="library.empty.add_first_book">चलिए आपकी पुस्तकों का फ़ोल्डर जोड़ते हैं ताकि आप सुनना या पढ़ना शुरू कर सकें!</string>
     <string name="library.empty.title">कोई पुस्तक नहीं मिली</string>
     <string name="library.empty.message">Pageturner को आपके फ़ोल्डरों में कोई पुस्तक नहीं मिल रही है। देख लें कि फ़ाइलें अभी भी वहीं हैं, या कोई फ़ोल्डर जोड़ें।</string>

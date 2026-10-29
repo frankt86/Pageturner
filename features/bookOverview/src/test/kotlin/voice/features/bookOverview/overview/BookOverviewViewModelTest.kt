@@ -22,6 +22,8 @@ import voice.core.common.AppInfoProvider
 import voice.core.common.DispatcherProvider
 import voice.core.data.Book
 import voice.core.data.BookId
+import voice.core.data.Ebook
+import voice.core.data.EbookFormat
 import voice.core.data.folders.AudiobookFolders
 import voice.core.data.folders.FolderType
 import voice.core.data.repo.BookRepository
@@ -307,6 +309,41 @@ class BookOverviewViewModelTest {
   }
 
   @Test
+  fun `an ebook read after the current audiobook was played is in the Continue card`() = runTest {
+    val book = book(name = "Listened", time = 1_000).update { it.copy(lastPlayedAt = java.time.Instant.ofEpochMilli(1_000)) }
+    val ebook = ebook(lastOpened = 2_000)
+    val viewModel = viewModel(books = listOf(book), currentBookId = book.id, ebooks = listOf(ebook, ebook(lastOpened = 1_500)))
+
+    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
+      viewModel.state()
+    }.test {
+      assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
+      val state = awaitItem()
+      assertEquals(expected = ebook.bookId, actual = state.heroBookId)
+      assertEquals(expected = book.id, actual = state.currentBookId)
+      assertEquals(expected = true, actual = state.showSearchIcon)
+    }
+  }
+
+  @Test
+  fun `the current audiobook stays in the Continue card when it was played after the ebook was read`() = runTest {
+    val book = book(name = "Listened", time = 1_000).update { it.copy(lastPlayedAt = java.time.Instant.ofEpochMilli(3_000)) }
+    val viewModel = viewModel(
+      books = listOf(book),
+      currentBookId = book.id,
+      // a finished ebook isn't read anymore
+      ebooks = listOf(ebook(lastOpened = 2_000), ebook(lastOpened = 4_000, progress = 1F)),
+    )
+
+    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
+      viewModel.state()
+    }.test {
+      assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
+      assertEquals(expected = book.id, actual = awaitItem().heroBookId)
+    }
+  }
+
+  @Test
   fun `a library without books shows that no books were found`() = runTest {
     val viewModel = viewModel()
 
@@ -397,6 +434,7 @@ class BookOverviewViewModelTest {
     books: List<Book> = emptyList(),
     currentBookId: BookId? = null,
     scanning: Flow<Boolean> = MutableStateFlow(false),
+    ebooks: List<Ebook> = emptyList(),
   ): BookOverviewViewModel {
     return BookOverviewViewModel(
       repo = mockk<BookRepository> {
@@ -411,7 +449,7 @@ class BookOverviewViewModelTest {
       currentBookStoreDataStore = CurrentBookStore(MemoryDataStore(currentBookId)),
       folderPickerMovedDialogShownStore = FolderPickerMovedDialogShownStore(folderPickerMovedDialogShownStore),
       gridModeStore = GridModeStore(MemoryDataStore(GridMode.LIST)),
-      ebooksStore = EbooksStore(MemoryDataStore(emptyList())),
+      ebooksStore = EbooksStore(MemoryDataStore(ebooks)),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -429,6 +467,17 @@ class BookOverviewViewModelTest {
       emptyLibraryTracker = emptyLibraryTracker,
     )
   }
+
+  private fun ebook(
+    lastOpened: Long,
+    progress: Float = 0.3F,
+  ) = Ebook(
+    uri = mockk<Uri>(),
+    name = "Ebook",
+    format = EbookFormat.Epub,
+    progress = progress,
+    lastOpened = lastOpened,
+  )
 
   private fun appInfoProvider(installTime: Instant = Instant.parse("2026-06-16T00:00:00Z")): AppInfoProvider {
     return mockk {

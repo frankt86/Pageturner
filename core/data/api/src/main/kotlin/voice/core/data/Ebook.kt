@@ -37,9 +37,22 @@ public data class Ebook(
   val opdsSource: OpdsSource? = null,
   /** Epoch milliseconds of the last move in the book here, which decides against a newer place on a server. */
   val positionModified: Long = 0,
+  /** The author the listener gave the book, which wins over the one from the file. */
+  val customAuthor: String? = null,
+  /** The cover the listener picked, which wins over the one from the file or the catalog. */
+  val customCover: String? = null,
+  val series: String? = null,
+  /** The place of the book in its [series], like "2" or "2.5". */
+  val seriesPart: String? = null,
+  // books whose metadata was read before series were, read their file once more
+  val seriesRead: Boolean = false,
 ) {
 
   val title: String get() = customName ?: name
+
+  val shownAuthor: String? get() = customAuthor ?: author
+
+  val shownCover: String? get() = customCover ?: cover
 }
 
 @Serializable

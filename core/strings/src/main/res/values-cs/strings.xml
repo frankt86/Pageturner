@@ -82,7 +82,6 @@
     <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Obal ze souborového systému</string>
     <string name="book.edit.cover.internet">Obal z internetu</string>
-    <string name="book.edit.name.label">Název</string>
     <string name="book.edit.rename">Přejmenovat</string>
     <string name="book.edit.title.label">Název</string>
     <string name="book.remove_from_library">Odebrat z knihovny</string>
@@ -261,6 +260,7 @@
     <string name="library.category.current.title">Aktuální</string>
     <string name="library.category.not_started.title">Nezačaté</string>
     <string name="library.continue_listening">Pokračovat v poslechu</string>
+    <string name="library.continue_reading">Pokračovat ve čtení</string>
     <string name="library.empty.add_first_book">Pojďme přidat vaši složku s knihami, ať můžete začít poslouchat nebo číst!</string>
     <string name="library.empty.title">Nenašly se žádné knihy</string>
     <string name="library.empty.message">Pageturner ve vašich složkách nemůže najít žádné knihy. Zkontrolujte, jestli jsou soubory stále na svém místě, nebo přidejte složku.</string>

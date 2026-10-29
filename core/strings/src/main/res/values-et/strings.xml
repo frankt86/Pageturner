@@ -76,7 +76,6 @@
     <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Kaanepilt nutiseadme failisüsteemist</string>
     <string name="book.edit.cover.internet">Kaanepilt internetist</string>
-    <string name="book.edit.name.label">Nimi</string>
     <string name="book.edit.rename">Nimeta ümber</string>
     <string name="book.edit.title.label">Pealkiri</string>
     <string name="book.remove_from_library">Eemalda raamatukogust</string>
@@ -235,6 +234,7 @@
     <string name="library.category.current.title">Kuulamisel</string>
     <string name="library.category.not_started.title">Kuulamise ootel</string>
     <string name="library.continue_listening">Jätka kuulamist</string>
+    <string name="library.continue_reading">Jätka lugemist</string>
     <string name="library.empty.add_first_book">Lisame sinu raamatute kausta, et saaksid kuulama või lugema hakata!</string>
     <string name="library.empty.title">Raamatuid ei leitud</string>
     <string name="library.empty.message">Pageturner ei leia sinu kaustadest ühtegi raamatut. Kontrolli, kas failid on veel alles, või lisa kaust.</string>

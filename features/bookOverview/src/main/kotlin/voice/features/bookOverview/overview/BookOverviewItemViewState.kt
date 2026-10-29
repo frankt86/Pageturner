@@ -60,8 +60,8 @@ internal val Ebook.bookId: BookId get() = BookId(uri.toString())
 
 internal fun Ebook.toItemViewState() = BookOverviewItemViewState(
   name = title,
-  author = author,
-  cover = cover?.let { File(it).toURI().toString() },
+  author = shownAuthor,
+  cover = shownCover?.let { File(it).toURI().toString() },
   id = bookId,
   progress = progress,
   remainingTime = "${format.name.uppercase()} · ${NumberFormat.getPercentInstance().format(progress)}",

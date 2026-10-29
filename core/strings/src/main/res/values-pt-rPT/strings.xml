@@ -79,7 +79,6 @@
     <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Capa de um ficheiro</string>
     <string name="book.edit.cover.internet">Capa da internet</string>
-    <string name="book.edit.name.label">Título</string>
     <string name="book.edit.rename">Mudar o nome</string>
     <string name="book.edit.title.label">Título</string>
     <string name="book.remove_from_library">Remover da biblioteca</string>
@@ -248,6 +247,7 @@
     <string name="library.category.current.title">Em curso</string>
     <string name="library.category.not_started.title">Ainda não iniciado</string>
     <string name="library.continue_listening">Continuar a ouvir</string>
+    <string name="library.continue_reading">Continuar a ler</string>
     <string name="library.empty.add_first_book">Vamos adicionar uma pasta de livros para começar a ouvir ou ler!</string>
     <string name="library.empty.title">Nenhum livro encontrado</string>
     <string name="library.empty.message">O Pageturner não encontra nenhum livro nas suas pastas. Verifique se os ficheiros ainda lá estão ou adicione uma pasta.</string>

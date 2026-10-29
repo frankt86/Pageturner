@@ -17,6 +17,8 @@ data class BookOverviewViewState(
   val showFolderAccessBadge: Boolean,
   val showFolderPickerIcon: Boolean,
   val dialog: Dialog?,
+  /** The book in the Continue card: the current audiobook, or an ebook read since it was played. */
+  val heroBookId: BookId? = currentBookId,
 ) {
 
   companion object {

@@ -76,7 +76,6 @@
     <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Cover aus dem Dateisystem</string>
     <string name="book.edit.cover.internet">Cover aus dem Internet</string>
-    <string name="book.edit.name.label">Name</string>
     <string name="book.edit.rename">Umbenennen</string>
     <string name="book.edit.title.label">Titel</string>
     <string name="book.remove_from_library">Aus der Bibliothek entfernen</string>
@@ -235,6 +234,7 @@
     <string name="library.category.current.title">Aktuell</string>
     <string name="library.category.not_started.title">Neu</string>
     <string name="library.continue_listening">Weiterhören</string>
+    <string name="library.continue_reading">Weiterlesen</string>
     <string name="library.empty.add_first_book">Füge Deinen Bücherordner hinzu, damit Du mit dem Hören oder Lesen beginnen kannst!</string>
     <string name="library.empty.title">Keine Bücher gefunden</string>
     <string name="library.empty.message">Pageturner findet in Deinen Ordnern keine Bücher. Prüfe, ob die Dateien noch da sind, oder füge einen Ordner hinzu.</string>

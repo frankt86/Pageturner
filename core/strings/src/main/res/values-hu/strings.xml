@@ -76,7 +76,6 @@
     <string name="book.edit.author.label">Szerző</string>
     <string name="book.edit.cover.file">Borító a fájlrendszerből</string>
     <string name="book.edit.cover.internet">Borító az internetről</string>
-    <string name="book.edit.name.label">Cím</string>
     <string name="book.edit.rename">Átnevezés</string>
     <string name="book.edit.title.label">Cím</string>
     <string name="book.remove_from_library">Eltávolítás a könyvtárból</string>
@@ -235,6 +234,7 @@
     <string name="library.category.current.title">Aktuális</string>
     <string name="library.category.not_started.title">Még nem elkezdett</string>
     <string name="library.continue_listening">Hallgatás folytatása</string>
+    <string name="library.continue_reading">Olvasás folytatása</string>
     <string name="library.empty.add_first_book">Adja hozzá a könyveit tartalmazó mappát, hogy elkezdhesse a hallgatást vagy az olvasást!</string>
     <string name="library.empty.title">Nem található könyv</string>
     <string name="library.empty.message">A Pageturner nem talál könyvet a mappáiban. Ellenőrizze, hogy a fájlok még a helyükön vannak-e, vagy adjon hozzá egy mappát.</string>

@@ -1,5 +1,6 @@
 package voice.features.bookOverview.search
 
+import android.net.Uri
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.saveable.SaverScope
@@ -23,9 +24,12 @@ import kotlinx.coroutines.test.runTest
 import voice.core.common.DispatcherProvider
 import voice.core.data.Book
 import voice.core.data.BookId
+import voice.core.data.Ebook
+import voice.core.data.EbookFormat
 import voice.core.data.repo.BookRepository
 import voice.core.data.repo.RecentBookSearchRepo
 import voice.core.data.store.CurrentBookStore
+import voice.core.data.store.EbooksStore
 import voice.core.featureflag.MemoryFeatureFlag
 import voice.core.kioskmode.KioskModeFeatureFlag
 import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
@@ -38,6 +42,7 @@ import voice.core.search.BookSearchField
 import voice.core.search.BookSearchResult
 import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
+import voice.features.bookOverview.overview.bookId
 import voice.features.bookOverview.overview.toItemViewState
 import voice.navigation.Destination
 import voice.navigation.Navigator
@@ -65,6 +70,17 @@ class BookSearchViewModelTest {
   private val playerController = mockk<PlayerController>(relaxed = true)
   private val currentBookStore = MemoryDataStore<BookId?>(null)
   private val lastResults = LastBookSearchResults()
+  private val ebooks = MemoryDataStore(emptyList<Ebook>())
+  private val misery = Ebook(
+    uri = mockk<Uri>(),
+    name = "Misery",
+    format = EbookFormat.Epub,
+    author = "King",
+    customAuthor = "Stephen King",
+    series = "Standalones",
+    progress = 1F,
+    lastOpened = 1,
+  )
   private val search = mockk<BookSearch> {
     coEvery { search(any()) } returns emptyList()
     coEvery { search("king") } returns listOf(
@@ -302,6 +318,54 @@ class BookSearchViewModelTest {
   }
 
   @Test
+  fun `ebooks are browsed with the audiobooks`() = runTest {
+    ebooks.updateData { listOf(misery, misery.copy(uri = mockk(), hidden = true)) }
+    val viewModel = viewModel()
+
+    testState(viewModel) {
+      val browse = awaitState<BookSearchViewState.Idle> { it.browse != null }.browse!!
+      assertEquals(
+        expected = BookSearchViewState.BrowseEntry(name = "Stephen King", bookCount = 3, inProgressCount = 2, finishedCount = 1),
+        actual = browse.entries.single { it.name == "Stephen King" },
+      )
+      viewModel.onBrowseCategoryClick(BrowseCategory.Series)
+      val series = awaitState<BookSearchViewState.Idle> { it.browse?.selectedCategory == BrowseCategory.Series }.browse!!
+      assertEquals(expected = listOf("Kingkiller", "Standalones"), actual = series.entries.map { it.name })
+    }
+  }
+
+  @Test
+  fun `an ebook is a result like an audiobook`() = runTest {
+    ebooks.updateData { listOf(misery) }
+    coEvery { search.search("misery") } returns listOf(misery.result(BookSearchField.Title, BookSearchField.Series))
+    val viewModel = viewModel()
+
+    testState(viewModel) {
+      viewModel.onRecentSearchClick("misery")
+
+      val result = awaitState<BookSearchViewState.Results>().topResult
+      assertEquals(expected = misery.bookId, actual = result.id)
+      assertEquals(expected = "Stephen King", actual = result.author?.text)
+      assertEquals(expected = true, actual = result.isEbook)
+      assertEquals(expected = "Standalones", actual = result.matchTag?.text?.text)
+    }
+  }
+
+  @Test
+  fun `an ebook opens in the reader`() = runTest {
+    ebooks.updateData { listOf(misery) }
+    val viewModel = viewModel()
+
+    viewModel.onBookClick(misery.bookId)
+    viewModel.onPlayClick(misery.bookId)
+    viewModel.onBookLongClick(misery.bookId)
+
+    verify(exactly = 2) { navigator.goTo(Destination.Reader(misery.uri)) }
+    verify { navigator.goTo(Destination.EbookActions(misery.uri)) }
+    verify(exactly = 0) { playerController.play(any()) }
+  }
+
+  @Test
   fun `recent searches can be removed and cleared`() = runTest {
     val viewModel = viewModel()
 
@@ -330,6 +394,7 @@ class BookSearchViewModelTest {
         MemoryFeatureFlag(experimentalPlaybackPersistence),
       ),
       lastResults = lastResults,
+      ebooksStore = EbooksStore(ebooks),
       dispatcherProvider = dispatcherProvider,
     )
   }
@@ -344,8 +409,17 @@ class BookSearchViewModelTest {
   }
 }
 
+private fun Ebook.result(vararg fieldsMatchingAllWords: BookSearchField): BookSearchResult {
+  return BookSearchResult.Ebook(
+    ebook = this,
+    matches = fieldsMatchingAllWords.associateWith { emptyList() },
+    fieldsMatchingAllWords = fieldsMatchingAllWords.toSet(),
+    score = 0,
+  )
+}
+
 private fun Book.result(vararg fieldsMatchingAllWords: BookSearchField): BookSearchResult {
-  return BookSearchResult(
+  return BookSearchResult.Audiobook(
     book = this,
     matches = fieldsMatchingAllWords.associateWith { emptyList() },
     fieldsMatchingAllWords = fieldsMatchingAllWords.toSet(),

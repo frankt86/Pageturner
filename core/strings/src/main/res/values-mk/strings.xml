@@ -76,7 +76,6 @@
     <string name="book.edit.author.label">Автор</string>
     <string name="book.edit.cover.file">Корица од датотечен систем</string>
     <string name="book.edit.cover.internet">Корица од Интернет</string>
-    <string name="book.edit.name.label">Име</string>
     <string name="book.edit.rename">Преименувај</string>
     <string name="book.edit.title.label">Наслов</string>
     <string name="book.remove_from_library">Отстрани од библиотеката</string>
@@ -235,6 +234,7 @@
     <string name="library.category.current.title">Тековни</string>
     <string name="library.category.not_started.title">Непочнати</string>
     <string name="library.continue_listening">Продолжи со слушање</string>
+    <string name="library.continue_reading">Продолжи со читање</string>
     <string name="library.empty.add_first_book">Ајде да ги додадеме вашите книги за да почнете со слушање или читање!</string>
     <string name="library.empty.title">Не се пронајдени книги</string>
     <string name="library.empty.message">Pageturner не може да најде книги во вашите фолдери. Проверете дали датотеките сè уште се таму или додајте фолдер.</string>

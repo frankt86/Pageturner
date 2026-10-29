@@ -73,7 +73,6 @@
     <string name="book.edit.author.label">著者</string>
     <string name="book.edit.cover.file">ファイルシステムからのカバー</string>
     <string name="book.edit.cover.internet">インターネットからのカバー</string>
-    <string name="book.edit.name.label">名前</string>
     <string name="book.edit.rename">名前を変更</string>
     <string name="book.edit.title.label">タイトル</string>
     <string name="book.remove_from_library">ライブラリから削除</string>
@@ -222,6 +221,7 @@
     <string name="library.category.current.title">聴きかけ</string>
     <string name="library.category.not_started.title">未再生</string>
     <string name="library.continue_listening">続きを聴く</string>
+    <string name="library.continue_reading">続きを読む</string>
     <string name="library.empty.add_first_book">本のフォルダーを追加して、聴いたり読んだりし始めましょう！</string>
     <string name="library.empty.title">本が見つかりません</string>
     <string name="library.empty.message">追加したフォルダー内に、Pageturner で開ける本が見つかりません。ファイルが移動・削除されていないか確認するか、フォルダーを追加してください。</string>

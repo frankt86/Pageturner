@@ -24,6 +24,7 @@ import voice.core.data.Ebook
 import voice.core.data.EbookPosition
 import voice.core.data.store.EbooksStore
 import voice.core.logging.api.Logger
+import voice.features.bookOverview.editBook.EditBookState
 import voice.features.bookOverview.overview.BookOverviewCategory
 import voice.features.bookOverview.overview.BookOverviewItemViewState
 import voice.features.bookOverview.overview.category
@@ -45,7 +46,7 @@ class EbookActionsViewModel(
 
   private val scope = MainScope(dispatcherProvider)
 
-  internal var renameState by mutableStateOf<RenameEbookState?>(null)
+  internal var editState by mutableStateOf<EditBookState?>(null)
     private set
 
   /** Null until the book is loaded. */
@@ -68,24 +69,37 @@ class EbookActionsViewModel(
       .filterNotNull()
   }
 
-  internal fun onRename(book: BookOverviewItemViewState) {
-    renameState = RenameEbookState(title = book.name, bookId = book.id, cover = book.cover)
+  internal fun onEdit(book: BookOverviewItemViewState) {
+    editState = EditBookState(title = book.name, author = book.author.orEmpty(), bookId = book.id, cover = book.cover)
   }
 
-  internal fun onRenameChange(title: String) {
-    renameState = renameState?.copy(title = title)
+  internal fun onEditTitleChange(title: String) {
+    editState = editState?.copy(title = title)
   }
 
-  internal fun onRenameDismiss() {
-    renameState = null
+  internal fun onEditAuthorChange(author: String) {
+    editState = editState?.copy(author = author)
   }
 
-  internal fun onRenameConfirm() {
-    val state = renameState ?: return
-    renameState = null
+  internal fun onEditDismiss() {
+    editState = null
+  }
+
+  internal fun onEditConfirm() {
+    val state = editState ?: return
+    editState = null
     if (!state.confirmButtonEnabled) return
-    val title = state.title.trim()
-    update { ebook -> ebook.copy(customName = title.takeIf { it != ebook.name }) }
+    // only what the listener changed, so the other name keeps following the file
+    update { ebook ->
+      var edited = ebook
+      if (state.title != state.initialTitle) {
+        edited = edited.copy(customName = state.title.trim().takeIf { it != ebook.name })
+      }
+      if (state.author != state.initialAuthor) {
+        edited = edited.copy(customAuthor = state.author.trim().takeIf { it.isNotEmpty() && it != ebook.author })
+      }
+      edited
+    }
   }
 
   internal fun onStatusChange(category: BookOverviewCategory) {
@@ -124,9 +138,9 @@ class EbookActionsViewModel(
           null
         }
       } ?: return@launch
-      val previous = ebook().first().cover
+      val previous = ebook().first().customCover
       store.updateData { ebooks ->
-        ebooks.map { if (it.uri == uri) it.copy(cover = cover.absolutePath) else it }
+        ebooks.map { if (it.uri == uri) it.copy(customCover = cover.absolutePath) else it }
       }
       withContext(dispatcherProvider.io) {
         previous?.let(::File)?.takeIf { it.parentFile == coversDir }?.delete()

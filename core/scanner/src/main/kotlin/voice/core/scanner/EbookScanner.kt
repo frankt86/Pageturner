@@ -45,27 +45,17 @@ internal class EbookScanner(
         .map { it.copy(available = false, hidden = false) }
       found.map { ebook ->
         val known = previousByUri[ebook.uri]
-        // once read from the book, its own title wins over the file name
-        known?.copy(name = if (known.metadataRead) known.name else ebook.name, available = true) ?: ebook
+        // once read from the book or taken from a catalog, its own title wins over the file name
+        val keepName = known != null && (known.metadataRead || known.opdsSource != null)
+        known?.copy(name = if (keepName) known.name else ebook.name, available = true) ?: ebook
       } + gone + downloaded.map { it.copy(available = it.uri.path?.let(::File)?.exists() == true) }
     }
     store.data.first()
-      .filter { it.available && !it.hidden && !it.metadataRead }
+      .filter { it.available && !it.hidden && (!it.metadataRead || (it.format == EbookFormat.Epub && !it.seriesRead)) }
       .forEach { ebook ->
-        val metadata = readMetadata(ebook)
+        val metadata = readMetadata(ebook, withCover = !ebook.metadataRead)
         store.updateData { ebooks ->
-          ebooks.map {
-            if (it.uri == ebook.uri) {
-              it.copy(
-                name = metadata?.title ?: it.name,
-                author = metadata?.author,
-                cover = metadata?.cover,
-                metadataRead = true,
-              )
-            } else {
-              it
-            }
-          }
+          ebooks.map { if (it.uri == ebook.uri) it.withMetadata(metadata) else it }
         }
       }
   }
@@ -74,9 +64,33 @@ internal class EbookScanner(
     val title: String?,
     val author: String?,
     val cover: String?,
+    val series: String? = null,
+    val seriesPart: String? = null,
   )
 
-  private fun readMetadata(ebook: Ebook): Metadata? {
+  private fun Ebook.withMetadata(metadata: Metadata?): Ebook {
+    if (metadataRead) {
+      // a book read before series were, gets only those
+      return metadata?.let { copy(series = it.series, seriesPart = it.seriesPart, seriesRead = true) }
+        ?: copy(seriesRead = true)
+    }
+    // like a name the listener gave, what the catalog said wins over the file
+    val fromCatalog = opdsSource != null
+    return copy(
+      name = if (fromCatalog) name else metadata?.title ?: name,
+      author = if (fromCatalog && author != null) author else metadata?.author,
+      cover = metadata?.cover,
+      series = metadata?.series,
+      seriesPart = metadata?.seriesPart,
+      metadataRead = true,
+      seriesRead = true,
+    )
+  }
+
+  private fun readMetadata(
+    ebook: Ebook,
+    withCover: Boolean,
+  ): Metadata? {
     return try {
       when (ebook.format) {
         EbookFormat.Epub -> context.contentResolver.openInputStream(ebook.uri)
@@ -85,7 +99,9 @@ internal class EbookScanner(
             Metadata(
               title = epub.title,
               author = epub.author,
-              cover = epub.cover?.let { bytes -> newCoverFile().apply { writeBytes(bytes) }.absolutePath },
+              cover = epub.cover?.takeIf { withCover }?.let { bytes -> newCoverFile().apply { writeBytes(bytes) }.absolutePath },
+              series = epub.series,
+              seriesPart = epub.seriesPart,
             )
           }
         EbookFormat.Pdf -> context.contentResolver.openFileDescriptor(ebook.uri, "r")

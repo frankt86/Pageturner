@@ -131,8 +131,10 @@ internal fun BookOverview(
     },
     floatingActionButton = {
       val playButtonState = viewState.playButtonState
+      // an ebook in the Continue card has no play button for the current audiobook
+      val heroPlayButtonVisible = gridState.heroPlayButtonVisible() && viewState.heroBookId == viewState.currentBookId
       AnimatedVisibility(
-        visible = playButtonState != null && !gridState.heroPlayButtonVisible(),
+        visible = playButtonState != null && !heroPlayButtonVisible,
         enter = scaleIn() + fadeIn(),
         exit = scaleOut() + fadeOut(),
       ) {

@@ -9,13 +9,27 @@ audiobooks, or both. Pageturner finds them when it scans your library, with thei
 to your audiobooks: in **Current** while you read them, **Not started yet** before you open them, and **Completed** once you
 reach the end. A small book badge on the cover tells ebooks and audiobooks apart.
 
+When you read an ebook after you last listened to your audiobook, the **Continue reading** card at the top of the library
+shows it, with how far you are. Tap the card or its book button to read on.
+
+An EPUB book's series and its part in it come from the book itself: the series calibre writes, or the EPUB 3 collection
+of the type series. PDF books have no series.
+
 Long-press an ebook to:
 
 - mark it **Not started**, **Current** or **Finished**. For a book from Komga, this also marks it read or unread in Komga,
   see [Ebook catalogs](opds.md#syncing-your-progress-with-komga),
-- **Rename** it,
+- **Edit** its title and author. Only what you change stops following the book's file, and clearing the author brings
+  back the one from the file. Rescanning your folders or downloading the book again from a catalog keeps your title, author
+  and cover,
 - set a **Cover from the Internet** (searched by title and author) or a **Cover from the file system**,
 - **Remove from library**. The file stays on your phone.
+
+## Finding ebooks
+
+The library search finds ebooks next to your audiobooks, by their title, author and series, and forgives one typo per word
+of five or more letters. A book you edited is found by your title and author, and still by the ones from its file. **Browse**
+lists ebooks under their authors and series too. Tap a result to read the book.
 
 ## Reading
 
@@ -218,3 +232,5 @@ bold and italic text, tables, links and footnotes. It's built on [Readium](https
 - The natural voice needs a 64-bit phone, which nearly every phone from the last years is. On older phones it may pause briefly
   between sentences.
 - Reading aloud stops when you leave the book. It has no controls on the lock screen yet.
+- Your own title and author for an ebook stay on this phone. Unlike for audiobooks, they don't sync to your other devices
+  through the library folder yet.

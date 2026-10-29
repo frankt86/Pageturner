@@ -70,27 +70,56 @@ class EbookActionsViewModelTest {
   }
 
   @Test
-  fun `a renamed book keeps its name from the file`() = scope.runTest {
-    viewModel.onRename(ebook.toItemViewState())
-    viewModel.onRenameChange("  New name ")
-    viewModel.onRenameConfirm()
+  fun `an edited book keeps its title and author from the file`() = scope.runTest {
+    store.updateData { ebooks -> ebooks.map { it.copy(author = "Writer") } }
+    viewModel.onEdit(stored().toItemViewState())
+    viewModel.onEditTitleChange("  New name ")
+    viewModel.onEditAuthorChange(" Other writer ")
+    viewModel.onEditConfirm()
     testScheduler.advanceUntilIdle()
 
     val updated = stored()
     assertEquals("New name", updated.title)
     assertEquals("Book", updated.name)
-    assertNull(viewModel.renameState)
+    assertEquals("Other writer", updated.shownAuthor)
+    assertEquals("Writer", updated.author)
+    assertNull(viewModel.editState)
   }
 
   @Test
-  fun `renaming a book back to its own name drops the custom name`() = scope.runTest {
-    store.updateData { ebooks -> ebooks.map { it.copy(customName = "Other") } }
-    viewModel.onRename(stored().toItemViewState())
-    viewModel.onRenameChange("Book")
-    viewModel.onRenameConfirm()
+  fun `editing only the author keeps the title following the file`() = scope.runTest {
+    viewModel.onEdit(stored().toItemViewState())
+    viewModel.onEditAuthorChange("Writer")
+    viewModel.onEditConfirm()
+    testScheduler.advanceUntilIdle()
+
+    val updated = stored()
+    assertNull(updated.customName)
+    assertEquals("Writer", updated.customAuthor)
+  }
+
+  @Test
+  fun `editing a book back to its own names drops the custom ones`() = scope.runTest {
+    store.updateData { ebooks -> ebooks.map { it.copy(author = "Writer", customName = "Other", customAuthor = "Someone") } }
+    viewModel.onEdit(stored().toItemViewState())
+    viewModel.onEditTitleChange("Book")
+    viewModel.onEditAuthorChange("Writer")
+    viewModel.onEditConfirm()
     testScheduler.advanceUntilIdle()
 
     assertNull(stored().customName)
+    assertNull(stored().customAuthor)
+  }
+
+  @Test
+  fun `clearing the author brings back the one from the file`() = scope.runTest {
+    store.updateData { ebooks -> ebooks.map { it.copy(author = "Writer", customAuthor = "Someone") } }
+    viewModel.onEdit(stored().toItemViewState())
+    viewModel.onEditAuthorChange("")
+    viewModel.onEditConfirm()
+    testScheduler.advanceUntilIdle()
+
+    assertEquals("Writer", stored().shownAuthor)
   }
 
   @Test

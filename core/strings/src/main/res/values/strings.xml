@@ -147,8 +147,6 @@
     <string name="book.edit.cover.file">Cover from the file system</string>
     <!-- Bottom-sheet item for choosing a cover from an internet search. -->
     <string name="book.edit.cover.internet">Cover from the Internet</string>
-    <!-- Label for the name field in the sheet that renames an ebook. -->
-    <string name="book.edit.name.label">Name</string>
     <!-- Title of the sheet that renames an ebook, and the action that renames a saved theme in the reader. -->
     <string name="book.edit.rename">Rename</string>
     <!-- Label for the field with the book's title, in the sheet that edits a book. -->
@@ -388,6 +386,8 @@
     <string name="library.category.not_started.title">Not started yet</string>
     <!-- Label above the hero card on the library screen that resumes the current audiobook. -->
     <string name="library.continue_listening">Continue listening</string>
+    <!-- Label above the hero card on the library screen when it resumes an ebook, read more recently than the current audiobook was played. -->
+    <string name="library.continue_reading">Continue reading</string>
     <!-- Empty-state prompt on the book folders screen while there are no folders. Books are audiobooks and ebooks. -->
     <string name="library.empty.add_first_book">Let\'s add your book folder so you can start listening or reading!</string>
     <!-- Title of the card on the library screen when no audiobooks or ebooks were found, for example because the files were moved or deleted. -->

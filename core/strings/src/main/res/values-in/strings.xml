@@ -73,7 +73,6 @@
     <string name="book.edit.author.label">Penulis</string>
     <string name="book.edit.cover.file">Sampul dari penyimpanan</string>
     <string name="book.edit.cover.internet">Sampul dari Internet</string>
-    <string name="book.edit.name.label">Judul buku</string>
     <string name="book.edit.rename">Ganti nama</string>
     <string name="book.edit.title.label">Judul</string>
     <string name="book.remove_from_library">Hapus dari pustaka</string>
@@ -222,6 +221,7 @@
     <string name="library.category.current.title">Sedang didengarkan</string>
     <string name="library.category.not_started.title">Belum dimulai</string>
     <string name="library.continue_listening">Lanjutkan mendengarkan</string>
+    <string name="library.continue_reading">Lanjutkan membaca</string>
     <string name="library.empty.add_first_book">Mari tambahkan folder buku Anda agar Anda dapat mulai mendengarkan atau membaca!</string>
     <string name="library.empty.title">Buku tidak ditemukan</string>
     <string name="library.empty.message">Pageturner tidak dapat menemukan buku apa pun di folder Anda. Pastikan berkasnya masih ada, atau tambahkan folder.</string>

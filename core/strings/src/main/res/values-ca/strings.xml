@@ -79,7 +79,6 @@
     <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Portada del sistema de fitxers</string>
     <string name="book.edit.cover.internet">Portada d\'Internet</string>
-    <string name="book.edit.name.label">Nom</string>
     <string name="book.edit.rename">Canvia el nom</string>
     <string name="book.edit.title.label">Títol</string>
     <string name="book.remove_from_library">Treu de la biblioteca</string>
@@ -248,6 +247,7 @@
     <string name="library.category.current.title">En curs</string>
     <string name="library.category.not_started.title">No començat</string>
     <string name="library.continue_listening">Continua escoltant</string>
+    <string name="library.continue_reading">Continua llegint</string>
     <string name="library.empty.add_first_book">Afegiu la carpeta dels vostres llibres per començar a escoltar o llegir!</string>
     <string name="library.empty.title">No s\'ha trobat cap llibre</string>
     <string name="library.empty.message">Pageturner no troba cap llibre a les vostres carpetes. Comproveu que els fitxers encara hi siguin o afegiu una carpeta.</string>

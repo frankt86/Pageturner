@@ -79,7 +79,6 @@
     <string name="book.edit.author.label">מחבר</string>
     <string name="book.edit.cover.file">עטיפות מקובץ קיים</string>
     <string name="book.edit.cover.internet">עטיפות מהאינטרנט</string>
-    <string name="book.edit.name.label">שם</string>
     <string name="book.edit.rename">שינוי שם</string>
     <string name="book.edit.title.label">כותר</string>
     <string name="book.remove_from_library">הסרה מהספרייה</string>
@@ -248,6 +247,7 @@
     <string name="library.category.current.title">בהאזנה</string>
     <string name="library.category.not_started.title">טרם הותחלו</string>
     <string name="library.continue_listening">המשך האזנה</string>
+    <string name="library.continue_reading">המשך קריאה</string>
     <string name="library.empty.add_first_book">בואו נוסיף את תיקיית הספרים שלכם כדי שתוכלו להתחיל להאזין או לקרוא!</string>
     <string name="library.empty.title">לא נמצאו ספרים</string>
     <string name="library.empty.message">בתיקיות שלכם לא נמצאו ספרים. בדקו שהקבצים עדיין במקומם, או הוסיפו תיקייה.</string>

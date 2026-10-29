@@ -76,7 +76,6 @@
     <string name="book.edit.author.label">Συγγραφέας</string>
     <string name="book.edit.cover.file">Εξώφυλλο από τα αρχεία της συσκευής</string>
     <string name="book.edit.cover.internet">Εξώφυλλο από το Διαδίκτυο</string>
-    <string name="book.edit.name.label">Όνομα</string>
     <string name="book.edit.rename">Μετονομασία</string>
     <string name="book.edit.title.label">Τίτλος</string>
     <string name="book.remove_from_library">Αφαίρεση από τη βιβλιοθήκη</string>
@@ -235,6 +234,7 @@
     <string name="library.category.current.title">Τρέχοντα</string>
     <string name="library.category.not_started.title">Μη διαβασμένα</string>
     <string name="library.continue_listening">Συνέχεια ακρόασης</string>
+    <string name="library.continue_reading">Συνέχεια ανάγνωσης</string>
     <string name="library.empty.add_first_book">Ας προσθέσουμε τον φάκελο με τα βιβλία σας για να αρχίσετε την ακρόαση ή την ανάγνωση!</string>
     <string name="library.empty.title">Δεν βρέθηκαν βιβλία</string>
     <string name="library.empty.message">Το Pageturner δεν βρίσκει βιβλία στους φακέλους σας. Ελέγξτε αν τα αρχεία βρίσκονται ακόμα εκεί ή προσθέστε έναν φάκελο.</string>

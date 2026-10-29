@@ -29,6 +29,7 @@ import voice.core.common.rootGraphAs
 import voice.core.ui.CoverTheme
 import voice.features.bookOverview.bottomSheet.BookActionsContent
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
+import voice.features.bookOverview.editBook.EditBookSheet
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
 import voice.navigation.OverlayNav
@@ -68,7 +69,7 @@ private fun EbookActions(uri: Uri) {
   var showMenu by rememberSaveable { mutableStateOf(true) }
   var pickingCover by rememberSaveable { mutableStateOf(false) }
   fun closeIfDone() {
-    if (!showMenu && !pickingCover && viewModel.renameState == null) {
+    if (!showMenu && !pickingCover && viewModel.editState == null) {
       viewModel.onClose()
     }
   }
@@ -87,18 +88,19 @@ private fun EbookActions(uri: Uri) {
     },
   )
 
-  val renameState = viewModel.renameState
-  if (renameState != null) {
-    CoverTheme(cover = renameState.cover) {
-      RenameEbookSheet(
-        viewState = renameState,
-        onTitleChange = viewModel::onRenameChange,
+  val editState = viewModel.editState
+  if (editState != null) {
+    CoverTheme(cover = editState.cover) {
+      EditBookSheet(
+        viewState = editState,
+        onTitleChange = viewModel::onEditTitleChange,
+        onAuthorChange = viewModel::onEditAuthorChange,
         onConfirm = {
-          viewModel.onRenameConfirm()
+          viewModel.onEditConfirm()
           closeIfDone()
         },
         onDismiss = {
-          viewModel.onRenameDismiss()
+          viewModel.onEditDismiss()
           closeIfDone()
         },
       )
@@ -143,7 +145,7 @@ private fun EbookActions(uri: Uri) {
           items = EbookItems,
           onItemClick = { item ->
             when (item) {
-              BottomSheetItem.Edit -> hideThen { viewModel.onRename(state.book) }
+              BottomSheetItem.Edit -> hideThen { viewModel.onEdit(state.book) }
               BottomSheetItem.InternetCover -> hideThen(viewModel::onInternetCover)
               BottomSheetItem.FileCover -> if (!closing) {
                 pickingCover = true

@@ -73,7 +73,6 @@
     <string name="book.edit.author.label">作者</string>
     <string name="book.edit.cover.file">从本机寻找封面图片</string>
     <string name="book.edit.cover.internet">从互联网寻找封面图片</string>
-    <string name="book.edit.name.label">名称</string>
     <string name="book.edit.rename">重命名</string>
     <string name="book.edit.title.label">书名</string>
     <string name="book.remove_from_library">从书库中移除</string>
@@ -222,6 +221,7 @@
     <string name="library.category.current.title">在听</string>
     <string name="library.category.not_started.title">未开始</string>
     <string name="library.continue_listening">继续收听</string>
+    <string name="library.continue_reading">继续阅读</string>
     <string name="library.empty.add_first_book">首先添加书籍文件夹，然后就可以开始听书或读书啦！</string>
     <string name="library.empty.title">未找到书籍</string>
     <string name="library.empty.message">Pageturner 在您的文件夹中找不到任何书籍。请检查文件是否还在原处，或添加文件夹。</string>

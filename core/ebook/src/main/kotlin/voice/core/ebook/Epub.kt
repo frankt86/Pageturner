@@ -12,6 +12,8 @@ class EpubBook(
   val author: String?,
   val chapters: List<EpubChapter>,
   val cover: ByteArray?,
+  val series: String? = null,
+  val seriesPart: String? = null,
 )
 
 class EpubChapter(
@@ -19,7 +21,7 @@ class EpubChapter(
   val text: String,
 )
 
-/** Without [withText], only the title, author and cover are read, which is what the library needs. */
+/** Without [withText], only the metadata and cover are read, which is what the library needs. */
 fun parseEpub(
   input: InputStream,
   withText: Boolean = true,
@@ -53,6 +55,8 @@ fun parseEpub(
     author = opf.author,
     chapters = chapters,
     cover = opf.coverHref?.let { entries[resolve(it)] },
+    series = opf.series,
+    seriesPart = opf.seriesPart,
   )
 }
 
@@ -82,15 +86,17 @@ private fun readEntries(
   }
 }
 
-private class Opf(
+internal class Opf(
   val title: String?,
   val author: String?,
   val spine: List<String>,
   val coverHref: String?,
   val tocHref: String?,
+  val series: String?,
+  val seriesPart: String?,
 )
 
-private fun parseOpf(xml: String): Opf {
+internal fun parseOpf(xml: String): Opf {
   val parser = Xml.newPullParser()
   // tags are matched by their name without a prefix, so a book that forgot to declare one still opens
   parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
@@ -103,13 +109,37 @@ private fun parseOpf(xml: String): Opf {
   var ncxId: String? = null
   val hrefs = mutableMapOf<String, String>()
   val spine = mutableListOf<String>()
+  var calibreSeries: String? = null
+  var calibreSeriesIndex: String? = null
+  // EPUB 3 names a collection in one meta and tells its type and position in others that refine it by its id
+  val collections = mutableListOf<Pair<String?, String>>()
+  val refinements = mutableMapOf<String, MutableMap<String, String>>()
   while (parser.next() != XmlPullParser.END_DOCUMENT) {
     if (parser.eventType != XmlPullParser.START_TAG) continue
     when (parser.name.substringAfter(':')) {
       "title" -> if (title == null) title = parser.nextText().trim().takeIf { it.isNotEmpty() }
       "creator" -> if (author == null) author = parser.nextText().trim().takeIf { it.isNotEmpty() }
-      "meta" -> if (parser.getAttributeValue(null, "name") == "cover") {
-        coverId = parser.getAttributeValue(null, "content")
+      "meta" -> {
+        val content = parser.getAttributeValue(null, "content")?.trim()?.takeIf { it.isNotEmpty() }
+        when (parser.getAttributeValue(null, "name")) {
+          "cover" -> coverId = content
+          "calibre:series" -> calibreSeries = content
+          "calibre:series_index" -> calibreSeriesIndex = content
+        }
+        val property = parser.getAttributeValue(null, "property")
+        val refines = parser.getAttributeValue(null, "refines")?.removePrefix("#")
+        val id = parser.getAttributeValue(null, "id")
+        if (property == "belongs-to-collection" || (refines != null && property != null)) {
+          val value = parser.nextText().trim()
+          if (value.isNotEmpty()) {
+            if (property == "belongs-to-collection") {
+              collections += id to value
+            } else if (refines != null) {
+              val properties = refinements.getOrPut(refines) { mutableMapOf() }
+              if (property !in properties) properties[property] = value
+            }
+          }
+        }
       }
       "item" -> {
         val id = parser.getAttributeValue(null, "id")
@@ -123,13 +153,33 @@ private fun parseOpf(xml: String): Opf {
       "itemref" -> parser.getAttributeValue(null, "idref")?.let(spine::add)
     }
   }
+  fun refinement(
+    id: String?,
+    property: String,
+  ) = id?.let { refinements[it]?.get(property) }
+  val collection = collections.firstOrNull { (id, _) -> refinement(id, "collection-type") == "series" }
+  val series = collection?.second ?: calibreSeries
+  val seriesIndex = if (collection != null) {
+    refinement(collection.first, "group-position")
+  } else {
+    calibreSeriesIndex?.takeIf { calibreSeries != null }
+  }
   return Opf(
     title = title,
     author = author,
     spine = spine.mapNotNull(hrefs::get),
     coverHref = coverHref ?: coverId?.let(hrefs::get),
     tocHref = navHref ?: ncxId?.let(hrefs::get),
+    series = series,
+    seriesPart = seriesIndex?.let(::seriesPart),
   )
+}
+
+// calibre writes every index as a decimal, so the second book is "2.0"
+internal fun seriesPart(index: String): String? {
+  val trimmed = index.trim()
+  val number = trimmed.toBigDecimalOrNull() ?: return trimmed.takeIf { it.isNotEmpty() }
+  return number.stripTrailingZeros().toPlainString()
 }
 
 /** The chapter titles from an EPUB 3 nav document or an EPUB 2 NCX, by the file they point to. */
