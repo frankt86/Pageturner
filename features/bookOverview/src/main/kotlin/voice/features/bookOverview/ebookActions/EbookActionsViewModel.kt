@@ -70,7 +70,13 @@ class EbookActionsViewModel(
   }
 
   internal fun onEdit(book: BookOverviewItemViewState) {
-    editState = EditBookState(title = book.name, author = book.author.orEmpty(), bookId = book.id, cover = book.cover)
+    editState = EditBookState(
+      title = book.name,
+      author = book.author.orEmpty(),
+      bookId = book.id,
+      cover = book.cover,
+      seriesEditable = false,
+    )
   }
 
   internal fun onEditTitleChange(title: String) {

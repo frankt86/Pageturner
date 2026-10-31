@@ -18,6 +18,7 @@ internal data class EditBookState(
   val initialAuthor: String = author,
   val initialSeries: String = series,
   val initialPart: String = part,
+  val seriesEditable: Boolean = true,
 ) {
 
   val remote: Boolean = bookId.isRemote

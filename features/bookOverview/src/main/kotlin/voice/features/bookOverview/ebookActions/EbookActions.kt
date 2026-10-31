@@ -95,6 +95,8 @@ private fun EbookActions(uri: Uri) {
         viewState = editState,
         onTitleChange = viewModel::onEditTitleChange,
         onAuthorChange = viewModel::onEditAuthorChange,
+        onSeriesChange = {},
+        onPartChange = {},
         onConfirm = {
           viewModel.onEditConfirm()
           closeIfDone()
