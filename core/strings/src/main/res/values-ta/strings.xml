@@ -329,7 +329,7 @@
     <string name="opds.entry.downloaded">உங்கள் நூலகத்தில் உள்ளது</string>
     <string name="opds.entry.listen">இப்போது கேள்</string>
     <string name="opds.entry.read">இப்போது படி</string>
-    <string name="opds.entry.unsupported">Pageturner EPUB, PDF கோப்புகளைப் படிக்கும். இந்தப் புத்தகம் %s வடிவில் மட்டுமே உள்ளது.</string>
+    <string name="opds.entry.unsupported">Pageturner EPUB, PDF, MOBI, AZW3 கோப்புகளைப் படிக்கும். இந்தப் புத்தகம் %s வடிவில் மட்டுமே உள்ளது.</string>
     <string name="opds.feed.error">இந்தப் பக்கம் ஏற்றப்படவில்லை</string>
     <string name="opds.feed.search">இந்தக் கேட்டலாகில் தேடு</string>
     <string name="opds.title">மின்புத்தகக் கேட்டலாக்குகள்</string>
@@ -387,6 +387,7 @@
     <string name="reader.controls">கட்டுப்பாடுகள்</string>
     <string name="reader.display">காட்சி</string>
     <string name="reader.double_tap">இருமுறை தட்டல்</string>
+    <string name="reader.drm">இந்தப் புத்தகம் DRM மூலம் பாதுகாக்கப்பட்டுள்ளதால் திறக்க முடியாது.</string>
     <string name="reader.edge_margin">ஓரங்களில் தொடுதலைப் புறக்கணி</string>
     <string name="reader.failed">இந்தப் புத்தகத்தைத் திறக்க முடியவில்லை</string>
     <string name="reader.font">எழுத்துரு</string>

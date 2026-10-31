@@ -397,7 +397,7 @@
     <string name="opds.entry.downloaded">في مكتبتك</string>
     <string name="opds.entry.listen">الاستماع الآن</string>
     <string name="opds.entry.read">القراءة الآن</string>
-    <string name="opds.entry.unsupported">يقرأ Pageturner ملفات EPUB وPDF. هذا الكتاب متاح فقط بصيغة %s.</string>
+    <string name="opds.entry.unsupported">يقرأ Pageturner ملفات EPUB وPDF وMOBI وAZW3. هذا الكتاب متاح فقط بصيغة %s.</string>
     <string name="opds.feed.error">تعذّر تحميل هذه الصفحة</string>
     <string name="opds.feed.search">البحث في هذا الفهرس</string>
     <string name="opds.title">فهارس الكتب الإلكترونية</string>
@@ -455,6 +455,7 @@
     <string name="reader.controls">التحكم</string>
     <string name="reader.display">العرض</string>
     <string name="reader.double_tap">النقر المزدوج</string>
+    <string name="reader.drm">هذا الكتاب محمي بنظام DRM ولا يمكن فتحه.</string>
     <string name="reader.edge_margin">تجاهل اللمسات عند الحواف</string>
     <string name="reader.failed">تعذّر فتح هذا الكتاب</string>
     <string name="reader.font">الخط</string>

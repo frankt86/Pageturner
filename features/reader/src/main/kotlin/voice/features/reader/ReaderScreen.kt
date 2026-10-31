@@ -278,7 +278,7 @@ internal fun ReaderScreen(uri: Uri) {
       ReaderState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         LoadingIndicator(Modifier.size(64.dp))
       }
-      ReaderState.Failed -> Box(
+      ReaderState.Failed, ReaderState.DrmProtected -> Box(
         Modifier
           .fillMaxSize()
           .safeDrawingPadding()
@@ -286,7 +286,7 @@ internal fun ReaderScreen(uri: Uri) {
         contentAlignment = Alignment.Center,
       ) {
         Text(
-          text = stringResource(StringsR.string.reader_failed),
+          text = stringResource(if (state == ReaderState.DrmProtected) StringsR.string.reader_drm else StringsR.string.reader_failed),
           style = MaterialTheme.typography.bodyLarge,
           textAlign = TextAlign.Center,
         )

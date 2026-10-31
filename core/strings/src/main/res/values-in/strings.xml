@@ -312,7 +312,7 @@
     <string name="opds.entry.downloaded">Di perpustakaan Anda</string>
     <string name="opds.entry.listen">Dengarkan sekarang</string>
     <string name="opds.entry.read">Baca sekarang</string>
-    <string name="opds.entry.unsupported">Pageturner membaca EPUB dan PDF. Buku ini hanya tersedia sebagai %s.</string>
+    <string name="opds.entry.unsupported">Pageturner membaca EPUB, PDF, MOBI, dan AZW3. Buku ini hanya tersedia sebagai %s.</string>
     <string name="opds.feed.error">Halaman ini tidak dapat dimuat</string>
     <string name="opds.feed.search">Cari di katalog ini</string>
     <string name="opds.title">Katalog e-book</string>
@@ -370,6 +370,7 @@
     <string name="reader.controls">Kontrol</string>
     <string name="reader.display">Tampilan</string>
     <string name="reader.double_tap">Ketuk dua kali</string>
+    <string name="reader.drm">Buku ini dilindungi DRM dan tidak dapat dibuka.</string>
     <string name="reader.edge_margin">Abaikan sentuhan di tepi</string>
     <string name="reader.failed">Buku ini tidak dapat dibuka</string>
     <string name="reader.font">Font</string>

@@ -329,7 +329,7 @@
     <string name="opds.entry.downloaded">In je bibliotheek</string>
     <string name="opds.entry.listen">Nu luisteren</string>
     <string name="opds.entry.read">Nu lezen</string>
-    <string name="opds.entry.unsupported">Pageturner leest EPUB en PDF. Dit boek is er alleen als %s.</string>
+    <string name="opds.entry.unsupported">Pageturner leest EPUB, PDF, MOBI en AZW3. Dit boek is er alleen als %s.</string>
     <string name="opds.feed.error">Deze pagina is niet geladen</string>
     <string name="opds.feed.search">Zoeken in deze catalogus</string>
     <string name="opds.title">E-bookcatalogi</string>
@@ -387,6 +387,7 @@
     <string name="reader.controls">Bediening</string>
     <string name="reader.display">Weergave</string>
     <string name="reader.double_tap">Dubbeltikken</string>
+    <string name="reader.drm">Dit boek is beveiligd met DRM en kan niet worden geopend.</string>
     <string name="reader.edge_margin">Aanrakingen aan de randen negeren</string>
     <string name="reader.failed">Dit boek kon niet worden geopend</string>
     <string name="reader.font">Lettertype</string>

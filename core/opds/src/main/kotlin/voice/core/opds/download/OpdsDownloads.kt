@@ -101,6 +101,8 @@ public class OpdsDownloads internal constructor(
     val format = when (acquisition.format) {
       OpdsFormat.Epub -> EbookFormat.Epub
       OpdsFormat.Pdf -> EbookFormat.Pdf
+      OpdsFormat.Mobi -> EbookFormat.Mobi
+      OpdsFormat.Azw3 -> EbookFormat.Azw3
       null -> return
     }
     val key = OpdsEntryKey(catalog.id, publication.id)

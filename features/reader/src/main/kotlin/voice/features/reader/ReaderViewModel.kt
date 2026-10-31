@@ -73,6 +73,7 @@ internal sealed interface ReaderContent {
 internal sealed interface ReaderState {
   data object Loading : ReaderState
   data object Failed : ReaderState
+  data object DrmProtected : ReaderState
   data class Loaded(
     val content: ReaderContent,
     val position: EbookPosition,
@@ -133,6 +134,10 @@ class ReaderViewModel(
   private val scope = MainScope(dispatcherProvider)
   private var content by mutableStateOf<ReaderContent?>(null)
   private var failed by mutableStateOf(false)
+  private var drmProtected by mutableStateOf(false)
+
+  /** The EPUB to read, which for a Kindle book is the one converted from it. */
+  private var epubUri = uri
   private var position by mutableStateOf(EbookPosition())
   private var readAloudJob by mutableStateOf<Job?>(null)
   private var readAloud: ReadAloud? = null
@@ -208,13 +213,14 @@ class ReaderViewModel(
       } catch (e: Exception) {
         Logger.w(e, "Could not open a ${stored.format}")
         newerPlace.cancel()
+        drmProtected = e.isDrmProtection
         failed = true
         return@launch
       }
-      if (stored.format == EbookFormat.Epub) {
+      if (stored.format != EbookFormat.Pdf) {
         val _ = settingsStore.data.first { it.newBookEngine }
         val latest = store.data.first().firstOrNull { it.uri == uri } ?: stored
-        readium = withContext(dispatcherProvider.io) { openReadiumBook(application, uri, latest, remotePlace) }
+        readium = withContext(dispatcherProvider.io) { openReadiumBook(application, epubUri, latest, remotePlace) }
       }
     }
   }
@@ -243,8 +249,9 @@ class ReaderViewModel(
   private fun load(ebook: Ebook): ReaderContent {
     val contentResolver = application.contentResolver
     return when (ebook.format) {
-      EbookFormat.Epub -> {
-        val epub = contentResolver.openInputStream(uri)!!.use { parseEpub(it) }
+      EbookFormat.Epub, EbookFormat.Mobi, EbookFormat.Azw3 -> {
+        if (ebook.format.isKindle) epubUri = kindleEpubUri(application, uri)
+        val epub = contentResolver.openInputStream(epubUri)!!.use { parseEpub(it) }
         ReaderContent.Epub(
           title = ebook.customName ?: epub.title ?: ebook.name,
           chapters = epub.chapters.map { it.text },
@@ -261,7 +268,7 @@ class ReaderViewModel(
   internal fun state(): ReaderState {
     val content = content
     return when {
-      failed -> ReaderState.Failed
+      failed -> if (drmProtected) ReaderState.DrmProtected else ReaderState.Failed
       content == null -> ReaderState.Loading
       else -> ReaderState.Loaded(
         content = content,

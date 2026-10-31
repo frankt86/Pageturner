@@ -329,7 +329,7 @@
     <string name="opds.entry.downloaded">Kitaplığınızda</string>
     <string name="opds.entry.listen">Şimdi dinle</string>
     <string name="opds.entry.read">Şimdi oku</string>
-    <string name="opds.entry.unsupported">Pageturner EPUB ve PDF okur. Bu kitap yalnızca %s olarak mevcut.</string>
+    <string name="opds.entry.unsupported">Pageturner EPUB, PDF, MOBI ve AZW3 okur. Bu kitap yalnızca %s olarak mevcut.</string>
     <string name="opds.feed.error">Bu sayfa yüklenmedi</string>
     <string name="opds.feed.search">Bu katalogda ara</string>
     <string name="opds.title">E-kitap katalogları</string>
@@ -387,6 +387,7 @@
     <string name="reader.controls">Kontroller</string>
     <string name="reader.display">Görünüm</string>
     <string name="reader.double_tap">Çift dokunma</string>
+    <string name="reader.drm">Bu kitap DRM ile korunuyor ve açılamıyor.</string>
     <string name="reader.edge_margin">Kenarlardaki dokunuşları yok say</string>
     <string name="reader.failed">Bu kitap açılamadı</string>
     <string name="reader.font">Yazı tipi</string>

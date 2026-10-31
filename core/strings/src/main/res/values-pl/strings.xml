@@ -363,7 +363,7 @@
     <string name="opds.entry.downloaded">W twojej bibliotece</string>
     <string name="opds.entry.listen">Słuchaj teraz</string>
     <string name="opds.entry.read">Czytaj teraz</string>
-    <string name="opds.entry.unsupported">Pageturner czyta pliki EPUB i PDF. Ta książka jest dostępna tylko jako %s.</string>
+    <string name="opds.entry.unsupported">Pageturner czyta pliki EPUB, PDF, MOBI i AZW3. Ta książka jest dostępna tylko jako %s.</string>
     <string name="opds.feed.error">Nie udało się wczytać tej strony</string>
     <string name="opds.feed.search">Szukaj w tym katalogu</string>
     <string name="opds.title">Katalogi e-booków</string>
@@ -421,6 +421,7 @@
     <string name="reader.controls">Sterowanie</string>
     <string name="reader.display">Wyświetlanie</string>
     <string name="reader.double_tap">Podwójne dotknięcie</string>
+    <string name="reader.drm">Ta książka jest chroniona DRM i nie można jej otworzyć.</string>
     <string name="reader.edge_margin">Ignoruj dotknięcia przy krawędziach</string>
     <string name="reader.failed">Nie udało się otworzyć tej książki</string>
     <string name="reader.font">Czcionka</string>

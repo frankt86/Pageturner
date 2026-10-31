@@ -363,7 +363,7 @@
     <string name="opds.entry.downloaded">У вашій бібліотеці</string>
     <string name="opds.entry.listen">Слухати</string>
     <string name="opds.entry.read">Читати</string>
-    <string name="opds.entry.unsupported">Pageturner читає EPUB і PDF. Ця книга є лише у форматі %s.</string>
+    <string name="opds.entry.unsupported">Pageturner читає EPUB, PDF, MOBI і AZW3. Ця книга є лише у форматі %s.</string>
     <string name="opds.feed.error">Не вдалося завантажити сторінку</string>
     <string name="opds.feed.search">Шукати в каталозі</string>
     <string name="opds.title">Каталоги електронних книг</string>
@@ -421,6 +421,7 @@
     <string name="reader.controls">Керування</string>
     <string name="reader.display">Відображення</string>
     <string name="reader.double_tap">Подвійне торкання</string>
+    <string name="reader.drm">Ця книга захищена DRM, тому її не можна відкрити.</string>
     <string name="reader.edge_margin">Не реагувати на дотики біля країв</string>
     <string name="reader.failed">Не вдалося відкрити цю книгу</string>
     <string name="reader.font">Шрифт</string>

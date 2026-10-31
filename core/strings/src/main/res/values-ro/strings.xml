@@ -346,7 +346,7 @@
     <string name="opds.entry.downloaded">În biblioteca ta</string>
     <string name="opds.entry.listen">Ascultă acum</string>
     <string name="opds.entry.read">Citește acum</string>
-    <string name="opds.entry.unsupported">Pageturner citește EPUB și PDF. Această carte există doar ca %s.</string>
+    <string name="opds.entry.unsupported">Pageturner citește EPUB, PDF, MOBI și AZW3. Această carte există doar ca %s.</string>
     <string name="opds.feed.error">Pagina nu s-a încărcat</string>
     <string name="opds.feed.search">Caută în acest catalog</string>
     <string name="opds.title">Cataloage de cărți electronice</string>
@@ -404,6 +404,7 @@
     <string name="reader.controls">Comenzi</string>
     <string name="reader.display">Afișare</string>
     <string name="reader.double_tap">Atingere dublă</string>
+    <string name="reader.drm">Această carte este protejată prin DRM și nu poate fi deschisă.</string>
     <string name="reader.edge_margin">Ignoră atingerile de la margini</string>
     <string name="reader.failed">Cartea nu a putut fi deschisă</string>
     <string name="reader.font">Font</string>

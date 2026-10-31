@@ -329,7 +329,7 @@
     <string name="opds.entry.downloaded">A könyvtárában</string>
     <string name="opds.entry.listen">Hallgatás most</string>
     <string name="opds.entry.read">Olvasás most</string>
-    <string name="opds.entry.unsupported">A Pageturner EPUB- és PDF-fájlokat olvas. Ez a könyv csak %s formátumban érhető el.</string>
+    <string name="opds.entry.unsupported">A Pageturner EPUB-, PDF-, MOBI- és AZW3-fájlokat olvas. Ez a könyv csak %s formátumban érhető el.</string>
     <string name="opds.feed.error">Ez az oldal nem töltődött be</string>
     <string name="opds.feed.search">Keresés ebben a katalógusban</string>
     <string name="opds.title">E-könyv-katalógusok</string>
@@ -387,6 +387,7 @@
     <string name="reader.controls">Vezérlés</string>
     <string name="reader.display">Megjelenítés</string>
     <string name="reader.double_tap">Dupla koppintás</string>
+    <string name="reader.drm">Ez a könyv DRM-mel védett, ezért nem nyitható meg.</string>
     <string name="reader.edge_margin">Érintések figyelmen kívül hagyása a széleken</string>
     <string name="reader.failed">Ezt a könyvet nem sikerült megnyitni</string>
     <string name="reader.font">Betűtípus</string>

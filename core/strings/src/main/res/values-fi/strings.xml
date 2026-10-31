@@ -329,7 +329,7 @@
     <string name="opds.entry.downloaded">Kirjastossasi</string>
     <string name="opds.entry.listen">Kuuntele nyt</string>
     <string name="opds.entry.read">Lue nyt</string>
-    <string name="opds.entry.unsupported">Pageturner lukee EPUB- ja PDF-tiedostoja. Tämä kirja on saatavana vain muodossa %s.</string>
+    <string name="opds.entry.unsupported">Pageturner lukee EPUB-, PDF-, MOBI- ja AZW3-tiedostoja. Tämä kirja on saatavana vain muodossa %s.</string>
     <string name="opds.feed.error">Sivu ei latautunut</string>
     <string name="opds.feed.search">Hae tästä luettelosta</string>
     <string name="opds.title">E-kirjaluettelot</string>
@@ -387,6 +387,7 @@
     <string name="reader.controls">Ohjaus</string>
     <string name="reader.display">Näyttö</string>
     <string name="reader.double_tap">Kaksoisnapautus</string>
+    <string name="reader.drm">Tämä kirja on suojattu DRM:llä, eikä sitä voi avata.</string>
     <string name="reader.edge_margin">Ohita kosketukset reunoilla</string>
     <string name="reader.failed">Kirjaa ei voitu avata</string>
     <string name="reader.font">Fontti</string>
