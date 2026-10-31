@@ -204,11 +204,13 @@ public class OpdsDownloads internal constructor(
       // a scan may have found the file already
       val earlier = ebooks.filter { it.matches(key) || it.uri == ebook.uri }
       replaced = earlier.filter { it.matches(key) }
-      // a book downloaded again keeps the title, author and cover the listener gave it
+      // a book downloaded again keeps the title, author, cover and series the listener gave it
       val added = ebook.copy(
         customName = earlier.firstNotNullOfOrNull { it.customName },
         customAuthor = earlier.firstNotNullOfOrNull { it.customAuthor },
         customCover = earlier.firstNotNullOfOrNull { it.customCover },
+        customSeries = earlier.firstNotNullOfOrNull { it.customSeries },
+        customPart = earlier.firstNotNullOfOrNull { it.customPart },
       )
       ebooks.filterNot { it.matches(key) || it.uri == ebook.uri } + added
     }

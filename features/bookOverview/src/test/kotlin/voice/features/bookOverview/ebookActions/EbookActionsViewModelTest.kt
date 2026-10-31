@@ -3,6 +3,7 @@ package voice.features.bookOverview.ebookActions
 import androidx.core.net.toUri
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.first
@@ -13,11 +14,13 @@ import voice.core.common.DispatcherProvider
 import voice.core.data.Ebook
 import voice.core.data.EbookFormat
 import voice.core.data.EbookPosition
+import voice.core.data.repo.BookRepository
 import voice.core.data.store.EbooksStore
 import voice.features.bookOverview.MemoryDataStore
+import voice.features.bookOverview.book
+import voice.features.bookOverview.editBook.SeriesSuggestion
 import voice.features.bookOverview.overview.BookOverviewCategory
 import voice.features.bookOverview.overview.category
-import voice.features.bookOverview.overview.toItemViewState
 import voice.navigation.Destination
 import voice.navigation.Navigator
 import kotlin.test.Test
@@ -39,8 +42,12 @@ class EbookActionsViewModelTest {
   )
   private val store = EbooksStore(MemoryDataStore(listOf(ebook)))
   private val navigator = mockk<Navigator>(relaxUnitFun = true)
+  private val repo = mockk<BookRepository> {
+    coEvery { all() } returns emptyList()
+  }
   private val viewModel = EbookActionsViewModel(
     store = store,
+    repo = repo,
     application = ApplicationProvider.getApplicationContext(),
     navigator = navigator,
     dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
@@ -72,7 +79,7 @@ class EbookActionsViewModelTest {
   @Test
   fun `an edited book keeps its title and author from the file`() = scope.runTest {
     store.updateData { ebooks -> ebooks.map { it.copy(author = "Writer") } }
-    viewModel.onEdit(stored().toItemViewState())
+    viewModel.onEdit()
     viewModel.onEditTitleChange("  New name ")
     viewModel.onEditAuthorChange(" Other writer ")
     viewModel.onEditConfirm()
@@ -88,7 +95,7 @@ class EbookActionsViewModelTest {
 
   @Test
   fun `editing only the author keeps the title following the file`() = scope.runTest {
-    viewModel.onEdit(stored().toItemViewState())
+    viewModel.onEdit()
     viewModel.onEditAuthorChange("Writer")
     viewModel.onEditConfirm()
     testScheduler.advanceUntilIdle()
@@ -101,7 +108,7 @@ class EbookActionsViewModelTest {
   @Test
   fun `editing a book back to its own names drops the custom ones`() = scope.runTest {
     store.updateData { ebooks -> ebooks.map { it.copy(author = "Writer", customName = "Other", customAuthor = "Someone") } }
-    viewModel.onEdit(stored().toItemViewState())
+    viewModel.onEdit()
     viewModel.onEditTitleChange("Book")
     viewModel.onEditAuthorChange("Writer")
     viewModel.onEditConfirm()
@@ -114,12 +121,86 @@ class EbookActionsViewModelTest {
   @Test
   fun `clearing the author brings back the one from the file`() = scope.runTest {
     store.updateData { ebooks -> ebooks.map { it.copy(author = "Writer", customAuthor = "Someone") } }
-    viewModel.onEdit(stored().toItemViewState())
+    viewModel.onEdit()
     viewModel.onEditAuthorChange("")
     viewModel.onEditConfirm()
     testScheduler.advanceUntilIdle()
 
     assertEquals("Writer", stored().shownAuthor)
+  }
+
+  @Test
+  fun `the sheet starts with the series and part of the book`() = scope.runTest {
+    store.updateData { ebooks -> ebooks.map { it.copy(series = "Dune", seriesPart = "1", customPart = "2") } }
+    viewModel.onEdit()
+
+    assertEquals("Dune", viewModel.editState?.series)
+    assertEquals("2", viewModel.editState?.part)
+  }
+
+  @Test
+  fun `an edited series and part win over the file and keep it`() = scope.runTest {
+    store.updateData { ebooks -> ebooks.map { it.copy(series = "Dune", seriesPart = "1") } }
+    viewModel.onEdit()
+    viewModel.onEditSeriesChange(" Dune Chronicles ")
+    viewModel.onEditPartChange("2")
+    viewModel.onEditConfirm()
+    testScheduler.advanceUntilIdle()
+
+    val updated = stored()
+    assertEquals("Dune Chronicles", updated.shownSeries)
+    assertEquals("2", updated.shownPart)
+    assertEquals("Dune", updated.series)
+    assertEquals("1", updated.seriesPart)
+  }
+
+  @Test
+  fun `editing only the part keeps the series following the file`() = scope.runTest {
+    store.updateData { ebooks -> ebooks.map { it.copy(series = "Dune", seriesPart = "1") } }
+    viewModel.onEdit()
+    viewModel.onEditPartChange("2")
+    viewModel.onEditConfirm()
+    testScheduler.advanceUntilIdle()
+
+    assertNull(stored().customSeries)
+    assertEquals("2", stored().customPart)
+  }
+
+  @Test
+  fun `editing the series back to the one of the file drops the custom one`() = scope.runTest {
+    store.updateData { ebooks -> ebooks.map { it.copy(series = "Dune", seriesPart = "1", customSeries = "Other", customPart = "3") } }
+    viewModel.onEdit()
+    viewModel.onEditSeriesChange("Dune")
+    viewModel.onEditPartChange("1")
+    viewModel.onEditConfirm()
+    testScheduler.advanceUntilIdle()
+
+    assertNull(stored().customSeries)
+    assertNull(stored().customPart)
+  }
+
+  @Test
+  fun `clearing the series and part brings back the ones from the file`() = scope.runTest {
+    store.updateData { ebooks -> ebooks.map { it.copy(series = "Dune", seriesPart = "1", customSeries = "Other", customPart = "3") } }
+    viewModel.onEdit()
+    viewModel.onEditSeriesChange("")
+    viewModel.onEditPartChange(" ")
+    viewModel.onEditConfirm()
+    testScheduler.advanceUntilIdle()
+
+    assertEquals("Dune", stored().shownSeries)
+    assertEquals("1", stored().shownPart)
+  }
+
+  @Test
+  fun `the series of audiobooks and other ebooks are suggested`() = scope.runTest {
+    coEvery { repo.all() } returns listOf(book(series = "The Expanse"))
+    val other = ebook.copy(uri = "content://books/document/other.epub".toUri(), series = "the expanse", customSeries = "The Expanse")
+    store.updateData { ebooks -> ebooks.map { it.copy(series = "Dune") } + other }
+    viewModel.onEdit()
+    viewModel.onEditSeriesChange("exp")
+
+    assertEquals(listOf(SeriesSuggestion("The Expanse", bookCount = 2)), viewModel.editState?.suggestions)
   }
 
   @Test

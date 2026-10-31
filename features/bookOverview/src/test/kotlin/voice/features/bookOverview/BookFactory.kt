@@ -1,5 +1,7 @@
 package voice.features.bookOverview
 
+import android.net.Uri
+import io.mockk.mockk
 import voice.core.data.Book
 import voice.core.data.BookContent
 import voice.core.data.BookId
@@ -7,6 +9,8 @@ import voice.core.data.BookMetadata
 import voice.core.data.Chapter
 import voice.core.data.ChapterId
 import voice.core.data.CustomMetadata
+import voice.core.data.Ebook
+import voice.core.data.EbookFormat
 import java.time.Instant
 import kotlin.uuid.Uuid
 
@@ -64,5 +68,25 @@ fun chapter(
     fileLastModified = Instant.EPOCH,
     markData = emptyList(),
     fileSize = 0,
+  )
+}
+
+fun ebook(
+  name: String = Uuid.random().toString(),
+  author: String? = "Author",
+  series: String? = null,
+  part: String? = null,
+  progress: Float = 0F,
+  lastOpened: Long = 0,
+): Ebook {
+  return Ebook(
+    uri = mockk<Uri>(),
+    name = name,
+    format = EbookFormat.Epub,
+    author = author,
+    series = series,
+    seriesPart = part,
+    progress = progress,
+    lastOpened = lastOpened,
   )
 }

@@ -17,8 +17,10 @@ import voice.core.audiobookshelf.ServerLibrary
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.BookId
+import voice.core.data.Ebook
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.CurrentBookStore
+import voice.core.data.store.EbooksStore
 import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
 import voice.core.playback.LivePlaybackState
 import voice.core.playback.PlayerController
@@ -26,12 +28,11 @@ import voice.core.playback.overlay
 import voice.core.playback.playstate.PlayStateManager
 import voice.features.bookOverview.overview.BookOverviewCategory
 import voice.features.bookOverview.overview.CurrentBook
+import voice.features.bookOverview.overview.LibraryBook
 import voice.features.bookOverview.overview.badge
-import voice.features.bookOverview.overview.category
+import voice.features.bookOverview.overview.bookId
 import voice.features.bookOverview.overview.series
 import voice.features.bookOverview.overview.seriesKey
-import voice.features.bookOverview.overview.seriesName
-import voice.features.bookOverview.overview.seriesPart
 import voice.features.bookOverview.overview.toItemViewState
 import voice.navigation.Destination
 import voice.navigation.Navigator
@@ -39,6 +40,7 @@ import voice.navigation.Navigator
 @AssistedInject
 class SeriesViewModel(
   private val repo: BookRepository,
+  private val ebooksStore: EbooksStore,
   private val navigator: Navigator,
   private val playerController: PlayerController,
   private val currentBookStore: CurrentBookStore,
@@ -56,17 +58,29 @@ class SeriesViewModel(
 
   @Composable
   internal fun viewState(): SeriesViewState? {
-    val books = remember { repo.flow() }.collectAsState(initial = null).value ?: return null
+    val books = remember { repo.flow() }.collectAsState(initial = null).value
+    val ebooks = remember { ebooksStore.data.map { ebooks -> ebooks.filter { it.available && !it.hidden } } }
+      .collectAsState(initial = null).value
+    if (books == null || ebooks == null) return null
     // the button would say Continue for a moment before it says Pause
     val currentBookId = (remember { currentBookStore.data.map(::CurrentBook) }.collectAsState(initial = null).value ?: return null).id
     val playing = remember { playStateManager.playStateFlow }.collectAsState().value == PlayStateManager.PlayState.Playing
     val unavailableBooks = remember { serverLibrary.unavailableBooks }.collectAsState(initial = emptySet()).value
     val downloadStates = remember { serverDownloads.states }.collectAsState(initial = emptyMap()).value
     val livePlaybackState = livePlaybackState(currentBookId)
-    val seriesBooks = remember(books) { books.filter { book -> book.seriesName?.let(::seriesKey) == key } }
+    val seriesBooks = remember(books, ebooks) {
+      (books.map(LibraryBook::Audiobook) + ebooks.map(LibraryBook::Ebook))
+        .filter { book -> book.seriesName?.let(::seriesKey) == key }
+    }
     val series = remember(seriesBooks, livePlaybackState) {
       seriesBooks
-        .map { book -> livePlaybackState?.let(book::overlay) ?: book }
+        .map { book ->
+          if (book is LibraryBook.Audiobook && livePlaybackState != null) {
+            LibraryBook.Audiobook(book.book.overlay(livePlaybackState))
+          } else {
+            book
+          }
+        }
         .series()
         .singleOrNull()
     }
@@ -83,6 +97,7 @@ class SeriesViewModel(
         part = book.seriesPart,
         continues = book.category == BookOverviewCategory.CURRENT,
         playing = book == playingBook,
+        ebook = book is LibraryBook.Ebook,
       )
     }
     return SeriesViewState(
@@ -96,8 +111,13 @@ class SeriesViewModel(
       books = series.books.map { book ->
         SeriesViewState.Book(
           // the header names the author already
-          book = book.toItemViewState(unavailable = book.id in unavailableBooks, download = downloadStates[book.id].badge())
-            .let { if (it.author == series.author) it.copy(author = null) else it },
+          book = when (book) {
+            is LibraryBook.Audiobook -> book.book.toItemViewState(
+              unavailable = book.id in unavailableBooks,
+              download = downloadStates[book.id].badge(),
+            )
+            is LibraryBook.Ebook -> book.ebook.toItemViewState()
+          }.let { if (it.author == series.author) it.copy(author = null) else it },
           part = book.seriesPart,
           finished = book.category == BookOverviewCategory.FINISHED,
           current = book.id == currentBookId,
@@ -109,7 +129,10 @@ class SeriesViewModel(
 
   internal fun onActionClick(id: BookId) {
     scope.launch {
-      if (currentBookStore.data.first() == id) {
+      val ebook = ebook(id)
+      if (ebook != null) {
+        navigator.goTo(Destination.Reader(ebook.uri))
+      } else if (currentBookStore.data.first() == id) {
         playerController.playPause()
       } else {
         playerController.pauseIfCurrentBookDifferentFrom(id)
@@ -129,12 +152,20 @@ class SeriesViewModel(
   }
 
   internal fun onBookClick(id: BookId) {
-    navigator.goTo(Destination.Playback(id))
+    scope.launch {
+      val ebook = ebook(id)
+      navigator.goTo(if (ebook != null) Destination.Reader(ebook.uri) else Destination.Playback(id))
+    }
   }
 
   internal fun onBookLongClick(id: BookId) {
-    navigator.goTo(Destination.BookActions(id))
+    scope.launch {
+      val ebook = ebook(id)
+      navigator.goTo(if (ebook != null) Destination.EbookActions(ebook.uri) else Destination.BookActions(id))
+    }
   }
+
+  private suspend fun ebook(id: BookId): Ebook? = ebooksStore.data.first().firstOrNull { it.bookId == id }
 
   internal fun onCloseClick() {
     navigator.goBack()

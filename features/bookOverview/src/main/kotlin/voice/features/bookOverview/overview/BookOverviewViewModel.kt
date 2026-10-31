@@ -159,8 +159,8 @@ class BookOverviewViewModel(
       download = downloadStates[id].badge(),
     )
 
-    val entries = remember(books) { libraryEntries(books) }
-    val ebookItems = remember(ebooks) { ebooks.itemsByCategory() }
+    val entries = remember(books, ebooks) { libraryEntries(books, ebooks) }
+    val ebookStates = remember(ebooks) { ebooks.associate { it.bookId to mutableStateOf(it.toItemViewState()) } }
     val inProgressCount = remember(books, ebooks) {
       books.count { it.category == BookOverviewCategory.CURRENT } +
         ebooks.count { it.category == BookOverviewCategory.CURRENT }
@@ -169,24 +169,26 @@ class BookOverviewViewModel(
       layoutMode = layoutMode,
       sections = BookOverviewCategory.entries
         .associateWith { category ->
-          val audiobookItems = entries[category].orEmpty().mapNotNull { entry ->
+          entries[category].orEmpty().mapNotNull { entry ->
             when (entry) {
               // the Continue card shows it
               is LibraryEntry.Single -> if (entry.book.id == heroBookId) {
                 null
               } else {
-                LibraryItem.Book(entry.book.id, entry.book.itemState())
+                when (val book = entry.book) {
+                  is LibraryBook.Audiobook -> LibraryItem.Book(book.id, book.book.itemState())
+                  is LibraryBook.Ebook -> LibraryItem.Book(book.id, ebookStates.getValue(book.id))
+                }
               }
               is LibraryEntry.Stack -> LibraryItem.Series(entry.series.toStackViewState())
             }
           }
-          audiobookItems + ebookItems[category].orEmpty().filter { it.id != heroBookId }
         }
         .filterValues { it.isNotEmpty() },
       hero = when (heroBookId) {
         null -> null
         currentBookId -> books.find { it.id == heroBookId }?.itemState()
-        else -> ebookItems.values.firstNotNullOfOrNull { items -> items.firstOrNull { it.id == heroBookId } }?.state
+        else -> ebookStates[heroBookId]
       },
       inProgressCount = inProgressCount,
       currentBookId = currentBookId,
@@ -321,15 +323,6 @@ private fun heroBookId(
     ?: return currentBookId
   val playedAt = books.firstOrNull { it.id == currentBookId }?.content?.lastPlayedAt?.toEpochMilli() ?: 0L
   return if (ebook.lastOpened > playedAt) ebook.bookId else currentBookId
-}
-
-private fun List<Ebook>.itemsByCategory(): Map<BookOverviewCategory, List<LibraryItem.Book>> {
-  return groupBy { it.category }
-    .mapValues { (category, ebooks) ->
-      ebooks
-        .sortedWith(category.ebookComparator)
-        .map { ebook -> LibraryItem.Book(ebook.bookId, mutableStateOf(ebook.toItemViewState())) }
-    }
 }
 
 private fun DemoAudiobook.toItemViewState() = BookOverviewItemViewState(

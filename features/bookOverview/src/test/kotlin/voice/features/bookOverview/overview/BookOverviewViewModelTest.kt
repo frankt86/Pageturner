@@ -380,6 +380,43 @@ class BookOverviewViewModelTest {
   }
 
   @Test
+  fun `an ebook stacks with the audiobooks of its series and shows its series in the Continue card`() = runTest {
+    val first = book(name = "First", series = "Saga", part = "1", time = 20_000, lastPlayedAt = java.time.Instant.ofEpochSecond(1))
+    val reading = ebook(lastOpened = 2_000).copy(series = "Saga", customPart = "2")
+    val third = ebook(lastOpened = 0, progress = 0F).copy(customSeries = "saga", customPart = "3")
+    val viewModel = viewModel(books = listOf(first), ebooks = listOf(reading, third))
+
+    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
+      viewModel.state()
+    }.test {
+      assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
+      val state = awaitItem()
+      assertEquals(expected = reading.bookId, actual = state.hero?.value?.id)
+      assertEquals(expected = "Saga 2", actual = state.hero?.value?.series)
+      assertEquals(expected = listOf("series:saga"), actual = state.keys(BookOverviewCategory.CURRENT))
+      assertEquals(expected = setOf(BookOverviewCategory.CURRENT), actual = state.sections.keys)
+      val stack = (state.sections.getValue(BookOverviewCategory.CURRENT).single() as LibraryItem.Series).series
+      assertEquals(expected = 3, actual = stack.bookCount)
+      assertEquals(expected = 1, actual = stack.finishedCount)
+    }
+  }
+
+  @Test
+  fun `an ebook opens in the reader, and its actions on a long press`() = runTest {
+    val navigator = mockk<Navigator>(relaxed = true)
+    val ebook = ebook(lastOpened = 0)
+    val viewModel = viewModel(navigator = navigator, ebooks = listOf(ebook))
+
+    viewModel.onBookClick(ebook.bookId)
+    viewModel.onBookLongClick(ebook.bookId)
+
+    verify {
+      navigator.goTo(Destination.Reader(ebook.uri))
+      navigator.goTo(Destination.EbookActions(ebook.uri))
+    }
+  }
+
+  @Test
   fun `the current audiobook stays in the Continue card when it was played after the ebook was read`() = runTest {
     val book = book(name = "Listened", time = 1_000).update { it.copy(lastPlayedAt = java.time.Instant.ofEpochMilli(3_000)) }
     val viewModel = viewModel(

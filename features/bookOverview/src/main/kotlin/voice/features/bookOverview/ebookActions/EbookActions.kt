@@ -95,8 +95,8 @@ private fun EbookActions(uri: Uri) {
         viewState = editState,
         onTitleChange = viewModel::onEditTitleChange,
         onAuthorChange = viewModel::onEditAuthorChange,
-        onSeriesChange = {},
-        onPartChange = {},
+        onSeriesChange = viewModel::onEditSeriesChange,
+        onPartChange = viewModel::onEditPartChange,
         onConfirm = {
           viewModel.onEditConfirm()
           closeIfDone()
@@ -118,7 +118,7 @@ private fun EbookActions(uri: Uri) {
       )
       var pendingStatusChange by remember { mutableStateOf<Job?>(null) }
       var closing by remember { mutableStateOf(false) }
-      fun hideThen(action: () -> Unit) {
+      fun hideThen(action: suspend () -> Unit) {
         if (closing) return
         closing = true
         scope.launch {
@@ -147,7 +147,7 @@ private fun EbookActions(uri: Uri) {
           items = EbookItems,
           onItemClick = { item ->
             when (item) {
-              BottomSheetItem.Edit -> hideThen { viewModel.onEdit(state.book) }
+              BottomSheetItem.Edit -> hideThen(viewModel::onEdit)
               BottomSheetItem.InternetCover -> hideThen(viewModel::onInternetCover)
               BottomSheetItem.FileCover -> if (!closing) {
                 pickingCover = true

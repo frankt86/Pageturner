@@ -165,7 +165,7 @@ private fun BookSearchResult.lastActiveAt(): Long = when (this) {
 
 private fun BookSearchResult.part(): String? = when (this) {
   is BookSearchResult.Audiobook -> book.part
-  is BookSearchResult.Ebook -> ebook.seriesPart
+  is BookSearchResult.Ebook -> ebook.shownPart
 }
 
 private fun BookSearchResult.name(): String = when (this) {

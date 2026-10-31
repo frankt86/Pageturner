@@ -22,6 +22,7 @@ data class SeriesViewState(
     val part: String?,
     val continues: Boolean,
     val playing: Boolean,
+    val ebook: Boolean = false,
   )
 
   @Immutable

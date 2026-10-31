@@ -13,23 +13,40 @@ When you read an ebook after you last listened to your audiobook, the **Continue
 shows it, with how far you are. Tap the card or its book button to read on.
 
 An EPUB book's series and its part in it come from the book itself: the series calibre writes, or the EPUB 3 collection
-of the type series. PDF books have no series.
+of the type series. PDF books have no series of their own, but you can give them one, see below.
 
 Long-press an ebook to:
 
 - mark it **Not started**, **Current** or **Finished**. For a book from Komga, this also marks it read or unread in Komga,
   see [Ebook catalogs](opds.md#syncing-your-progress-with-komga),
-- **Edit** its title and author. Only what you change stops following the book's file, and clearing the author brings
-  back the one from the file. Rescanning your folders or downloading the book again from a catalog keeps your title, author
-  and cover,
+- **Edit** its title, author, series and part. Only what you change stops following the book's file. Clearing the author,
+  series or part, or typing the one from the file again, brings back the one from the file. While you type a series, the
+  sheet suggests series your library already has, from audiobooks and ebooks. Rescanning your folders or downloading the
+  book again from a catalog keeps your title, author, cover, series and part,
 - set a **Cover from the Internet** (searched by title and author) or a **Cover from the file system**,
 - **Remove from library**. The file stays on your phone.
+
+## Series
+
+Ebooks and audiobooks of the same series share one stack in the library, once a series has two or more books. Series names
+match regardless of case, accents and punctuation, and a series or part you gave a book wins over the one from its file.
+The stack sits in **Current**, **Not started yet** or **Completed** by the progress of the whole series, and shows how many
+books it holds and how many you finished.
+
+Tap the stack to open the series. It lists the books by their part, ebooks with the small book badge next to the
+audiobooks, and books without a part follow by their name. Tap an ebook to read it, or long-press it for its actions. The
+button at the top continues the book you're in, or starts the first one you haven't finished: an audiobook plays, an
+ebook opens in the reader.
+
+An ebook that isn't in a series, or is the only book of its series, stays in the library on its own, after the audiobooks.
+When the **Continue reading** card shows an ebook of a series, it names the series and part under the author.
 
 ## Finding ebooks
 
 The library search finds ebooks next to your audiobooks, by their title, author and series, and forgives one typo per word
-of five or more letters. A book you edited is found by your title and author, and still by the ones from its file. **Browse**
-lists ebooks under their authors and series too. Tap a result to read the book.
+of five or more letters. A book you edited is found by your title, author, series and part, and still by the title and
+author from its file. Books of a series are sorted by their part. **Browse** lists ebooks under their authors and series
+too. Tap a result to read the book.
 
 ## Reading
 
@@ -238,8 +255,8 @@ bold and italic text, tables, links and footnotes. It's built on [Readium](https
 These aren't in Pageturner yet:
 
 - Controls for reading aloud on the lock screen and in the notifications.
-- Your own title and author for an ebook syncing to your other devices through the library folder, like they do for
-  audiobooks. They stay on this phone.
+- Your own title, author, series and part for an ebook syncing to your other devices through the library folder, like
+  they do for audiobooks. They stay on this phone.
 - Changing which key does what. Keys and shortcuts are fixed.
 - Removing a font you added.
 - Changing only some of the book's styling, like the body text while keeping its headings. **Book's own style** keeps all of

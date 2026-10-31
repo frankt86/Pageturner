@@ -216,7 +216,9 @@ private fun ActionButton(
   }
   Button(
     onClick = {
-      haptics.performHapticFeedback(if (action.playing) HapticFeedbackType.ToggleOff else HapticFeedbackType.ToggleOn)
+      if (!action.ebook) {
+        haptics.performHapticFeedback(if (action.playing) HapticFeedbackType.ToggleOff else HapticFeedbackType.ToggleOn)
+      }
       onClick()
     },
     modifier = modifier
@@ -225,7 +227,11 @@ private fun ActionButton(
     contentPadding = ButtonDefaults.contentPaddingFor(ButtonDefaults.MediumContainerHeight),
   ) {
     Icon(
-      imageVector = if (action.playing) VoiceIcons.Pause else VoiceIcons.PlayArrow,
+      imageVector = when {
+        action.playing -> VoiceIcons.Pause
+        action.ebook -> VoiceIcons.Book
+        else -> VoiceIcons.PlayArrow
+      },
       contentDescription = null,
       modifier = Modifier.size(ButtonDefaults.iconSizeFor(ButtonDefaults.MediumContainerHeight)),
     )
@@ -264,7 +270,7 @@ private fun SeriesScreenPreview() {
             playing = true,
           ),
           SeriesViewState.Book(
-            book.copy(id = BookId("3"), name = "Interference", author = null, progress = 0F),
+            book.copy(id = BookId("3"), name = "Interference", author = null, progress = 0F, remainingTime = "EPUB · 0%", isEbook = true),
             "3",
             finished = false,
             current = false,

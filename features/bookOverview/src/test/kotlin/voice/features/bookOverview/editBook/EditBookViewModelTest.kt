@@ -18,9 +18,13 @@ import voice.core.audiobookshelf.ServerLibrary
 import voice.core.data.Book
 import voice.core.data.BookId
 import voice.core.data.CustomMetadata
+import voice.core.data.Ebook
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
+import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
+import voice.features.bookOverview.ebook
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -43,7 +47,8 @@ class EditBookViewModelTest {
   private val serverLibrary = mockk<ServerLibrary> {
     coEvery { updateBook(any(), any()) } returns ServerEdit.Saved
   }
-  private val viewModel = EditBookViewModel(repo, serverLibrary)
+  private val ebooks = MemoryDataStore<List<Ebook>>(emptyList())
+  private val viewModel = EditBookViewModel(repo, serverLibrary, EbooksStore(ebooks))
   private val serverBook = book(name = "Leviathan Wakes", series = "The Expanse", part = "1", id = BookId("abs://item/item"))
 
   @BeforeTest
@@ -94,6 +99,25 @@ class EditBookViewModelTest {
         SeriesSuggestion("Alien Explorers", bookCount = 1),
         SeriesSuggestion("The Expanse", bookCount = 3),
       ),
+      actual = viewModel.state.value?.suggestions,
+    )
+  }
+
+  @Test
+  fun `the series of ebooks are suggested too, but not of hidden ones`() = runTest(dispatcher) {
+    coEvery { repo.all() } returns listOf(book, book(series = "The Expanse"))
+    ebooks.updateData {
+      listOf(
+        ebook(series = "Old").copy(customSeries = "The Expanse"),
+        ebook(series = "Expeditionary Force").copy(hidden = true),
+      )
+    }
+    viewModel.onItemClick(book.id, BottomSheetItem.Edit)
+
+    viewModel.onSeriesChange("exp")
+
+    assertEquals(
+      expected = listOf(SeriesSuggestion("The Expanse", bookCount = 2)),
       actual = viewModel.state.value?.suggestions,
     )
   }
