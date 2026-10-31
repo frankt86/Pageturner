@@ -7,22 +7,23 @@ import android.system.ErrnoException
 import android.system.Os
 import android.system.OsConstants
 import java.io.File
-import java.io.IOException
+import java.io.FileNotFoundException
 
 /**
- * Opens a PDF for PdfRenderer, which needs a file it can jump around in. Some folders, like the ones of cloud drives,
- * only hand out a stream, and PdfRenderer refuses those. Such a PDF is copied into the cache and opened from there.
+ * Opens a PDF for the PDF engines, which need a file they can jump around in. Some folders, like the ones of cloud
+ * drives, only hand out a stream, and PdfRenderer refuses those. Such a PDF is copied into the cache and opened from
+ * there.
  */
-fun openSeekablePdf(
+internal fun openSeekablePdf(
   context: Context,
   uri: Uri,
 ): ParcelFileDescriptor {
   val resolver = context.contentResolver
-  val direct = resolver.openFileDescriptor(uri, "r") ?: throw IOException("No file for $uri")
+  val direct = resolver.openFileDescriptor(uri, "r") ?: throw FileNotFoundException("No file for $uri")
   if (direct.isSeekable()) return direct
   direct.close()
   val copy = File(context.cacheDir, "pdf").apply { mkdirs() }.resolve("${uri.toString().hashCode()}.pdf")
-  val input = resolver.openInputStream(uri) ?: throw IOException("No stream for $uri")
+  val input = resolver.openInputStream(uri) ?: throw FileNotFoundException("No stream for $uri")
   input.use { stream ->
     copy.outputStream().use { output ->
       val _ = stream.copyTo(output)

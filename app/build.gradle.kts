@@ -114,6 +114,12 @@ android {
       add("META-INF/atomicfu.kotlin_module")
       add("META-INF/core.kotlin_module")
     }
+    // Like the natural voice, the full PDFium ships for arm64-v8a only. Its other ABIs would add about 13 MB to the APK.
+    // On those phones, PDFs open with Android's PdfRenderer alone.
+    listOf("armeabi-v7a", "x86", "x86_64").forEach { abi ->
+      jniLibs.excludes += "**/$abi/libpdfium.so"
+      jniLibs.excludes += "**/$abi/libpdfiumandroid.so"
+    }
   }
 
   buildFeatures {

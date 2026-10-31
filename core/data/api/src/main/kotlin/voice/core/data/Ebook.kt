@@ -50,6 +50,8 @@ public data class Ebook(
   val customSeries: String? = null,
   /** The part the listener gave the book, which wins over the one from the file. */
   val customPart: String? = null,
+  /** The password that opened a locked PDF, so it opens without asking next time. */
+  val pdfPassword: String? = null,
 ) {
 
   val title: String get() = customName ?: name

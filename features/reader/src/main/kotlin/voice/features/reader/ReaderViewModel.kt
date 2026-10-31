@@ -39,7 +39,9 @@ import voice.core.data.ReaderSettings
 import voice.core.data.ReadingPace
 import voice.core.data.ReadiumHighlight
 import voice.core.data.store.EbooksStore
-import voice.core.ebook.openSeekablePdf
+import voice.core.ebook.PdfOpenException
+import voice.core.ebook.PdfProblem
+import voice.core.ebook.openPdf
 import voice.core.ebook.parseEpub
 import voice.core.logging.api.Logger
 import voice.core.opds.komga.KomgaSync
@@ -73,7 +75,10 @@ internal sealed interface ReaderContent {
 
 internal sealed interface ReaderState {
   data object Loading : ReaderState
-  data object Failed : ReaderState
+  data class Failed(val failure: ReaderFailure) : ReaderState
+
+  /** A PDF that needs a password, [wrongPassword] after the one typed in didn't open it. */
+  data class Locked(val wrongPassword: Boolean) : ReaderState
   data class Loaded(
     val content: ReaderContent,
     val position: EbookPosition,
@@ -133,7 +138,8 @@ class ReaderViewModel(
 
   private val scope = MainScope(dispatcherProvider)
   private var content by mutableStateOf<ReaderContent?>(null)
-  private var failed by mutableStateOf(false)
+  private var failure by mutableStateOf<ReaderFailure?>(null)
+  private var locked by mutableStateOf<ReaderState.Locked?>(null)
   private var position by mutableStateOf(EbookPosition())
   private var readAloudJob by mutableStateOf<Job?>(null)
   private var readAloud: ReadAloud? = null
@@ -188,36 +194,75 @@ class ReaderViewModel(
     scope.launch {
       val stored = store.data.first().firstOrNull { it.uri == uri }
       if (stored == null) {
-        failed = true
+        failure = ReaderFailure.Unknown
         return@launch
       }
-      val newerPlace = scope.async { komgaSync.newerPlace(stored) }
-      var remotePlace: RemotePlace? = null
-      try {
-        val loaded = withContext(dispatcherProvider.io) { load(stored) }
-        // without a connection the book opens where it was here, after a moment at most
-        val place = withTimeoutOrNull(REMOTE_PLACE_WAIT) { newerPlace.await() }
-        val ebook = if (place != null) takePlace(stored, place, loaded) else stored
-        remotePlace = place?.takeUnless { it.isSamePlaceAs(stored.progress) }
-        position = ebook.position
-        bookmarks = ebook.bookmarks
-        highlights = ebook.highlights
-        content = loaded
-        store.updateData { ebooks ->
-          ebooks.map { if (it.uri == uri) it.copy(lastOpened = System.currentTimeMillis()) else it }
+      open(stored, stored.pdfPassword, typed = false)
+    }
+  }
+
+  /** Opens the book, a PDF with [password] if it's locked. [typed] is set when the reader just typed it in. */
+  private suspend fun open(
+    stored: Ebook,
+    password: String?,
+    typed: Boolean,
+  ) {
+    val newerPlace = scope.async { komgaSync.newerPlace(stored) }
+    var remotePlace: RemotePlace? = null
+    try {
+      val loaded = withContext(dispatcherProvider.io) { load(stored, password) }
+      // without a connection the book opens where it was here, after a moment at most
+      val place = withTimeoutOrNull(REMOTE_PLACE_WAIT) { newerPlace.await() }
+      val ebook = if (place != null) takePlace(stored, place, loaded) else stored
+      remotePlace = place?.takeUnless { it.isSamePlaceAs(stored.progress) }
+      position = ebook.position
+      bookmarks = ebook.bookmarks
+      highlights = ebook.highlights
+      content = loaded
+      store.updateData { ebooks ->
+        ebooks.map {
+          // the password is kept, so the PDF opens without it next time
+          if (it.uri == uri) it.copy(lastOpened = System.currentTimeMillis(), pdfPassword = password) else it
         }
-      } catch (e: Exception) {
-        Logger.w(e, "Could not open a ${stored.format}")
-        newerPlace.cancel()
-        failed = true
-        return@launch
       }
-      if (stored.format == EbookFormat.Epub) {
-        val _ = settingsStore.data.first { it.newBookEngine }
-        val latest = store.data.first().firstOrNull { it.uri == uri } ?: stored
-        readium = withContext(dispatcherProvider.io) { openReadiumBook(application, uri, latest, remotePlace) }
+    } catch (e: PdfOpenException) {
+      newerPlace.cancel()
+      if (e.problem == PdfProblem.Password || e.problem == PdfProblem.WrongPassword) {
+        // a kept password that stopped working isn't one the reader just got wrong
+        locked = ReaderState.Locked(wrongPassword = typed)
+      } else {
+        Logger.w(e, "Could not open a ${stored.format}")
+        failure = readerFailure(e)
+      }
+      return
+    } catch (e: Exception) {
+      Logger.w(e, "Could not open a ${stored.format}")
+      newerPlace.cancel()
+      failure = readerFailure(e)
+      return
+    }
+    if (stored.format == EbookFormat.Epub) {
+      val _ = settingsStore.data.first { it.newBookEngine }
+      val latest = store.data.first().firstOrNull { it.uri == uri } ?: stored
+      readium = withContext(dispatcherProvider.io) { openReadiumBook(application, uri, latest, remotePlace) }
+    }
+  }
+
+  internal fun onPasswordEnter(password: String) {
+    if (locked == null) return
+    locked = null
+    scope.launch {
+      val stored = store.data.first().firstOrNull { it.uri == uri }
+      if (stored == null) {
+        failure = ReaderFailure.Unknown
+      } else {
+        open(stored, password, typed = true)
       }
     }
+  }
+
+  internal fun onPasswordCancel() {
+    navigator.goBack()
   }
 
   /** Moves to the place from the server, unless it's about where the book is already. */
@@ -241,7 +286,10 @@ class ReaderViewModel(
     return ebook.withPlace()
   }
 
-  private fun load(ebook: Ebook): ReaderContent {
+  private fun load(
+    ebook: Ebook,
+    password: String?,
+  ): ReaderContent {
     val contentResolver = application.contentResolver
     return when (ebook.format) {
       EbookFormat.Epub -> {
@@ -253,15 +301,18 @@ class ReaderViewModel(
         )
       }
       EbookFormat.Pdf -> {
-        ReaderContent.Pdf(title = ebook.title, pdf = PdfFile(openSeekablePdf(application, uri)))
+        ReaderContent.Pdf(title = ebook.title, pdf = PdfFile(openPdf(application, uri, password)))
       }
     }
   }
 
   internal fun state(): ReaderState {
     val content = content
+    val failure = failure
+    val locked = locked
     return when {
-      failed -> ReaderState.Failed
+      failure != null -> ReaderState.Failed(failure)
+      locked != null -> locked
       content == null -> ReaderState.Loading
       else -> ReaderState.Loaded(
         content = content,

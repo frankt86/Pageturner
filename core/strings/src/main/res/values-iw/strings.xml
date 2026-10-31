@@ -406,6 +406,9 @@
     <string name="reader.double_tap">הקשה כפולה</string>
     <string name="reader.edge_margin">התעלמות מנגיעות בקצוות</string>
     <string name="reader.failed">לא ניתן לפתוח את הספר הזה</string>
+    <string name="reader.failed.damaged">קובץ ה-PDF הזה פגום, ולכן אי אפשר לפתוח אותו</string>
+    <string name="reader.failed.missing">ל-Pageturner אין גישה לקובץ של הספר הזה. ייתכן שהוא הועבר או נמחק, או שצריך לבחור שוב את התיקייה שלו.</string>
+    <string name="reader.failed.unsupported">קובץ ה-PDF הזה משתמש בהגנה או בפורמט ש-Pageturner לא יכול לפתוח</string>
     <string name="reader.font">גופן</string>
     <string name="reader.font.add">הוספת גופן</string>
     <string name="reader.font.add_failed">הקובץ הזה אינו גופן ש־Pageturner יכול להשתמש בו. יש לבחור קובץ TTF או OTF.</string>
@@ -485,6 +488,10 @@
     <string name="reader.paper_texture">מרקם נייר</string>
     <string name="reader.paragraph_indent">הזחת שורה ראשונה</string>
     <string name="reader.paragraph_spacing">רווח בין פסקאות</string>
+    <string name="reader.password">קובץ ה-PDF הזה מוגן בסיסמה</string>
+    <string name="reader.password.field">סיסמה</string>
+    <string name="reader.password.open">פתיחה</string>
+    <string name="reader.password.wrong">הסיסמה שגויה</string>
     <string name="reader.progress">התקדמות</string>
     <string name="reader.progress.body_only">ספירת הטקסט הראשי בלבד</string>
     <string name="reader.progress.book">ספר</string>

@@ -389,6 +389,9 @@
     <string name="reader.double_tap">Çift dokunma</string>
     <string name="reader.edge_margin">Kenarlardaki dokunuşları yok say</string>
     <string name="reader.failed">Bu kitap açılamadı</string>
+    <string name="reader.failed.damaged">Bu PDF bozuk, bu yüzden açılamıyor</string>
+    <string name="reader.failed.missing">Pageturner bu kitabın dosyasına ulaşamıyor. Taşınmış ya da silinmiş olabilir veya klasörünü yeniden seçmeniz gerekebilir.</string>
+    <string name="reader.failed.unsupported">Bu PDF, Pageturner\'ın açamadığı bir koruma ya da biçim kullanıyor</string>
     <string name="reader.font">Yazı tipi</string>
     <string name="reader.font.add">Yazı tipi ekle</string>
     <string name="reader.font.add_failed">Bu dosya Pageturner\'ın kullanabileceği bir yazı tipi değil. Bir .ttf veya .otf dosyası seçin.</string>
@@ -467,6 +470,10 @@
     <string name="reader.paper_texture">Kâğıt dokusu</string>
     <string name="reader.paragraph_indent">İlk satır girintisi</string>
     <string name="reader.paragraph_spacing">Paragraflar arası boşluk</string>
+    <string name="reader.password">Bu PDF şifreyle korunuyor</string>
+    <string name="reader.password.field">Şifre</string>
+    <string name="reader.password.open">Aç</string>
+    <string name="reader.password.wrong">Bu şifre doğru değil</string>
     <string name="reader.progress">İlerleme</string>
     <string name="reader.progress.body_only">Yalnızca ana metni say</string>
     <string name="reader.progress.book">Kitap</string>
