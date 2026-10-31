@@ -1,10 +1,10 @@
 # Ebooks
 
-Pageturner also reads EPUB and PDF books, and can read them aloud.
+Pageturner also reads EPUB, PDF and Kindle (MOBI and AZW3) books, and can read them aloud.
 
 ## Adding ebooks
 
-Put `.epub` or `.pdf` files in any folder you added under **Settings > Book folders**. A folder can hold only ebooks, only
+Put `.epub`, `.pdf`, `.mobi`, `.azw3`, `.azw` or `.prc` files in any folder you added under **Settings > Book folders**. A folder can hold only ebooks, only
 audiobooks, or both. Pageturner finds them when it scans your library, with their cover, title and author, and puts them next
 to your audiobooks: in **Current** while you read them, **Not started yet** before you open them, and **Completed** once you
 reach the end. A small book badge on the cover tells ebooks and audiobooks apart.
@@ -13,7 +13,7 @@ When you read an ebook after you last listened to your audiobook, the **Continue
 shows it, with how far you are. Tap the card or its book button to read on.
 
 An EPUB book's series and its part in it come from the book itself: the series calibre writes, or the EPUB 3 collection
-of the type series. PDF books have no series of their own, but you can give them one, see below.
+of the type series. PDF and Kindle books have no series of their own, but you can give them one, see below.
 
 Long-press an ebook to:
 
@@ -174,10 +174,29 @@ minutes and jumps, and keeps an average of your last hour of reading across all 
   leaves out touches that start close to the left or right edge, like a palm holding the phone. **Ask before jumping over
   more than** 10, 50 or 100 pages on the page bar asks "Go to page 120?" first.
 
+### Kindle books
+
+Kindle books, MOBI and AZW3 files and the older AZW and PRC, open like EPUB books, in both engines, with search, reading
+aloud, bookmarks, highlights and series. The first time you open one, Pageturner turns it into an EPUB, which takes a
+moment, and keeps that copy in its own storage. The book in your library stays the Kindle file, so your place and
+highlights stay with it. When the file changes, the copy is made again, and once the book leaves your library, the copy is
+deleted. A file with both an older MOBI and a newer KF8 part opens from the KF8 part, which keeps more of its layout.
+
+Books bought from Amazon are usually protected with DRM. Pageturner never removes DRM, so such a book shows "This book is
+protected with DRM and can't be opened." Topaz and KFX books, Amazon's other formats, can't be opened either.
+
 ### PDF pages
 
 Pinch to zoom into a PDF page and drag to move around it. Double-tap to switch between the whole page and its full width.
 While a page is zoomed in, dragging moves the page instead of turning it.
+
+Pageturner opens PDFs with Android's own PDF reader. A PDF it refuses, like one with a damaged index or a newer kind of
+encryption, opens with a full PDFium instead, on 64-bit phones.
+
+A PDF locked with a password asks for it when you open it. Pageturner keeps the password, so the book opens without asking
+next time. If a PDF still can't be opened, the reader tells you why: the file is damaged, it uses a protection or format
+Pageturner can't open, or Pageturner can't reach the file. That happens when it was moved or deleted, or when the folder
+needs to be chosen again under **Settings > Book folders**.
 
 ### Bookmarks, highlights and notes
 
@@ -244,8 +263,10 @@ bold and italic text, tables, links and footnotes. It's built on [Readium](https
 - Without the new book engine, EPUB books show their text only. Pictures and text styling, like bold or headings, are left
   out, and so are links, print page numbers and **Count only the main text**.
 - PDF books show their pages without chapters or reading time.
-- PDF pages show exactly as they're printed. Searching or reading a PDF aloud needs Android 15 or newer, and a PDF made of
-  scanned pages has no text. Highlights work in EPUB books only.
+- PDF pages show exactly as they're printed. Searching or reading a PDF aloud needs Android 15 or newer, except for the
+  PDFs that open with PDFium, and a PDF made of scanned pages has no text. Highlights work in EPUB books only.
+- A PDF locked with a password has no cover in the library.
+- Kindle books with DRM, and Topaz and KFX books, can't be opened.
 - The natural voice needs a 64-bit phone, which nearly every phone from the last years is. On older phones it may pause briefly
   between sentences.
 - Reading aloud stops when you leave the book.

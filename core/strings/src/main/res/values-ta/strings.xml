@@ -390,6 +390,9 @@
     <string name="reader.drm">இந்தப் புத்தகம் DRM மூலம் பாதுகாக்கப்பட்டுள்ளதால் திறக்க முடியாது.</string>
     <string name="reader.edge_margin">ஓரங்களில் தொடுதலைப் புறக்கணி</string>
     <string name="reader.failed">இந்தப் புத்தகத்தைத் திறக்க முடியவில்லை</string>
+    <string name="reader.failed.damaged">இந்த PDF சேதமடைந்துள்ளதால் திறக்க முடியாது</string>
+    <string name="reader.failed.missing">இந்தப் புத்தகத்தின் கோப்பை Pageturner-ஆல் அணுக முடியவில்லை. அது நகர்த்தப்பட்டிருக்கலாம் அல்லது நீக்கப்பட்டிருக்கலாம், அல்லது அதன் கோப்புறையை நீங்கள் மீண்டும் தேர்ந்தெடுக்க வேண்டும்.</string>
+    <string name="reader.failed.unsupported">Pageturner-ஆல் திறக்க முடியாத பாதுகாப்பையோ வடிவத்தையோ இந்த PDF பயன்படுத்துகிறது</string>
     <string name="reader.font">எழுத்துரு</string>
     <string name="reader.font.add">எழுத்துருவைச் சேர்</string>
     <string name="reader.font.add_failed">இந்தக் கோப்பு Pageturner பயன்படுத்தக்கூடிய எழுத்துரு அல்ல. .ttf அல்லது .otf கோப்பைத் தேர்ந்தெடுங்கள்.</string>
@@ -468,6 +471,10 @@
     <string name="reader.paper_texture">காகித அமைப்பு</string>
     <string name="reader.paragraph_indent">முதல் வரி உள்தள்ளல்</string>
     <string name="reader.paragraph_spacing">பத்திகளுக்கு இடையிலான இடைவெளி</string>
+    <string name="reader.password">இந்த PDF கடவுச்சொல்லால் பாதுகாக்கப்பட்டுள்ளது</string>
+    <string name="reader.password.field">கடவுச்சொல்</string>
+    <string name="reader.password.open">திற</string>
+    <string name="reader.password.wrong">அந்தக் கடவுச்சொல் தவறு</string>
     <string name="reader.progress">முன்னேற்றம்</string>
     <string name="reader.progress.body_only">முதன்மை உரையை மட்டும் கணக்கிடு</string>
     <string name="reader.progress.book">புத்தகம்</string>

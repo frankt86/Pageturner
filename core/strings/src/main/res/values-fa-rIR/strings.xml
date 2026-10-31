@@ -390,6 +390,9 @@
     <string name="reader.drm">این کتاب با DRM محافظت شده است و باز نمی‌شود.</string>
     <string name="reader.edge_margin">نادیده گرفتن لمس در لبه‌ها</string>
     <string name="reader.failed">این کتاب باز نشد</string>
+    <string name="reader.failed.damaged">این PDF آسیب دیده است و باز نمی‌شود</string>
+    <string name="reader.failed.missing">فایل این کتاب در دسترس Pageturner نیست. شاید جابه‌جا یا حذف شده باشد، یا باید پوشه‌اش را دوباره انتخاب کنید.</string>
+    <string name="reader.failed.unsupported">این PDF از محافظت یا قالبی استفاده می‌کند که Pageturner نمی‌تواند باز کند</string>
     <string name="reader.font">قلم</string>
     <string name="reader.font.add">افزودن قلم</string>
     <string name="reader.font.add_failed">این فایل قلمی نیست که Pageturner بتواند از آن استفاده کند. یک فایل TTF یا OTF انتخاب کنید.</string>
@@ -468,6 +471,10 @@
     <string name="reader.paper_texture">بافت کاغذ</string>
     <string name="reader.paragraph_indent">تورفتگی سطر اول</string>
     <string name="reader.paragraph_spacing">فاصلهٔ بین بندها</string>
+    <string name="reader.password">این PDF با رمز عبور محافظت شده است</string>
+    <string name="reader.password.field">رمز عبور</string>
+    <string name="reader.password.open">باز کردن</string>
+    <string name="reader.password.wrong">این رمز عبور درست نیست</string>
     <string name="reader.progress">پیشرفت</string>
     <string name="reader.progress.body_only">فقط متن اصلی حساب شود</string>
     <string name="reader.progress.book">کتاب</string>

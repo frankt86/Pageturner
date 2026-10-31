@@ -424,6 +424,9 @@
     <string name="reader.drm">Tato kniha je chráněná DRM a nelze ji otevřít.</string>
     <string name="reader.edge_margin">Ignorovat dotyky u okrajů</string>
     <string name="reader.failed">Tuto knihu se nepodařilo otevřít</string>
+    <string name="reader.failed.damaged">Tento PDF je poškozený, a proto ho nelze otevřít</string>
+    <string name="reader.failed.missing">Pageturner se nedostane k souboru této knihy. Možná byl přesunut nebo smazán, nebo je potřeba znovu vybrat jeho složku.</string>
+    <string name="reader.failed.unsupported">Tento PDF používá ochranu nebo formát, který Pageturner neumí otevřít</string>
     <string name="reader.font">Písmo</string>
     <string name="reader.font.add">Přidat písmo</string>
     <string name="reader.font.add_failed">Tento soubor není písmo, které Pageturner umí použít. Vyberte soubor .ttf nebo .otf.</string>
@@ -504,6 +507,10 @@
     <string name="reader.paper_texture">Textura papíru</string>
     <string name="reader.paragraph_indent">Odsazení prvního řádku</string>
     <string name="reader.paragraph_spacing">Mezera mezi odstavci</string>
+    <string name="reader.password">Tento PDF je chráněný heslem</string>
+    <string name="reader.password.field">Heslo</string>
+    <string name="reader.password.open">Otevřít</string>
+    <string name="reader.password.wrong">Toto heslo není správné</string>
     <string name="reader.progress">Průběh</string>
     <string name="reader.progress.body_only">Počítat jen hlavní text</string>
     <string name="reader.progress.book">Kniha</string>

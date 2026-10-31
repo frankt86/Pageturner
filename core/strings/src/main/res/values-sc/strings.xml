@@ -390,6 +390,9 @@
     <string name="reader.drm">Custu libru est amparadu cun DRM e non si podet abèrrere.</string>
     <string name="reader.edge_margin">Ignora sos tocos in sos òrros</string>
     <string name="reader.failed">No est istadu possìbile abèrrere custu libru</string>
+    <string name="reader.failed.damaged">Custu PDF est dannigiadu, duncas non si podet abèrrere</string>
+    <string name="reader.failed.missing">Pageturner non podet lòmpere a su documentu de custu libru. Forsis est istadu tramudadu o iscantzelladu, o depes torrare a issèberare sa cartella sua.</string>
+    <string name="reader.failed.unsupported">Custu PDF impreat una protetzione o unu formadu chi Pageturner non podet abèrrere</string>
     <string name="reader.font">Caràtere</string>
     <string name="reader.font.add">Agiunghe unu caràtere</string>
     <string name="reader.font.add_failed">Custu documentu no est unu caràtere chi Pageturner podet impreare. Sèbera unu documentu .ttf o .otf.</string>
@@ -468,6 +471,10 @@
     <string name="reader.paper_texture">Testura de paperi</string>
     <string name="reader.paragraph_indent">Rientru de sa prima lìnia</string>
     <string name="reader.paragraph_spacing">Ispàtziu intre sos paràgrafos</string>
+    <string name="reader.password">Custu PDF est protetu cun una crae</string>
+    <string name="reader.password.field">Crae</string>
+    <string name="reader.password.open">Aberi</string>
+    <string name="reader.password.wrong">Sa crae no est curreta</string>
     <string name="reader.progress">Progressu</string>
     <string name="reader.progress.body_only">Conta petzi su testu printzipale</string>
     <string name="reader.progress.book">Libru</string>

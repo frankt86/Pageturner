@@ -407,6 +407,9 @@
     <string name="reader.drm">Această carte este protejată prin DRM și nu poate fi deschisă.</string>
     <string name="reader.edge_margin">Ignoră atingerile de la margini</string>
     <string name="reader.failed">Cartea nu a putut fi deschisă</string>
+    <string name="reader.failed.damaged">Acest PDF este deteriorat, așa că nu poate fi deschis</string>
+    <string name="reader.failed.missing">Pageturner nu poate ajunge la fișierul acestei cărți. Poate a fost mutat sau șters ori trebuie să-i alegi din nou directorul.</string>
+    <string name="reader.failed.unsupported">Acest PDF folosește o protecție sau un format pe care Pageturner nu îl poate deschide</string>
     <string name="reader.font">Font</string>
     <string name="reader.font.add">Adaugă un font</string>
     <string name="reader.font.add_failed">Acest fișier nu este un font pe care Pageturner îl poate folosi. Alege un fișier .ttf sau .otf.</string>
@@ -486,6 +489,10 @@
     <string name="reader.paper_texture">Textură de hârtie</string>
     <string name="reader.paragraph_indent">Indentarea primului rând</string>
     <string name="reader.paragraph_spacing">Spațiu între paragrafe</string>
+    <string name="reader.password">Acest PDF este protejat cu parolă</string>
+    <string name="reader.password.field">Parolă</string>
+    <string name="reader.password.open">Deschide</string>
+    <string name="reader.password.wrong">Parola nu este corectă</string>
     <string name="reader.progress">Progres</string>
     <string name="reader.progress.body_only">Numără doar textul principal</string>
     <string name="reader.progress.book">Carte</string>

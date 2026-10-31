@@ -22,6 +22,8 @@ readium = "3.4.0"
 
 [libraries]
 commonsCompress = "org.apache.commons:commons-compress:1.28.0"
+# a full PDFium, for the PDFs Android's PdfRenderer refuses
+pdfium = "io.legere:pdfiumandroid:2.0.3"
 androidPluginForGradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 junit = "junit:junit:4.13.2"
 materialKolor = "com.materialkolor:material-kolor:5.0.1"

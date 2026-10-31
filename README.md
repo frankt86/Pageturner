@@ -37,7 +37,8 @@ library. See [Install](docs/install.md) for the steps.
 
 ### Ebooks
 
-- EPUB and PDF books in your folders sit next to your audiobooks, with their covers and a small book badge.
+- EPUB, PDF and Kindle (MOBI and AZW3) books in your folders sit next to your audiobooks, with their covers and a small
+  book badge. Kindle books open like EPUBs; books with DRM can't be opened.
 - An EPUB's series and its part in it come from the book, and you can change them.
 - Long-press an ebook to mark it read or unread, edit its title, author, series and part, set a cover from the internet or
   from a file, or remove it.
@@ -68,8 +69,8 @@ library. See [Install](docs/install.md) for the steps.
 
 ### Catalogs and servers
 
-- Browse and search OPDS catalogs like Calibre-Web, Komga and Kavita, and download EPUB and PDF books and audiobooks into a
-  download folder of your library. See [Ebook catalogs](docs/opds.md).
+- Browse and search OPDS catalogs like Calibre-Web, Komga and Kavita, and download EPUB, PDF, AZW3 and MOBI books and
+  audiobooks into a download folder of your library. See [Ebook catalogs](docs/opds.md).
 - Your reading progress syncs both ways with Komga.
 - Stream and download audiobooks from [Audiobookshelf](docs/audiobookshelf.md), with your position and bookmarks in sync.
 

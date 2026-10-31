@@ -390,6 +390,9 @@
     <string name="reader.drm">Ez a könyv DRM-mel védett, ezért nem nyitható meg.</string>
     <string name="reader.edge_margin">Érintések figyelmen kívül hagyása a széleken</string>
     <string name="reader.failed">Ezt a könyvet nem sikerült megnyitni</string>
+    <string name="reader.failed.damaged">Ez a PDF sérült, ezért nem lehet megnyitni</string>
+    <string name="reader.failed.missing">A Pageturner nem éri el a könyv fájlját. Lehet, hogy áthelyezték vagy törölték, vagy újra ki kell választania a mappáját.</string>
+    <string name="reader.failed.unsupported">Ez a PDF olyan védelmet vagy formátumot használ, amelyet a Pageturner nem tud megnyitni</string>
     <string name="reader.font">Betűtípus</string>
     <string name="reader.font.add">Betűtípus hozzáadása</string>
     <string name="reader.font.add_failed">Ez a fájl nem olyan betűtípus, amelyet a Pageturner használni tud. Válasszon egy .ttf vagy .otf fájlt.</string>
@@ -468,6 +471,10 @@
     <string name="reader.paper_texture">Papírtextúra</string>
     <string name="reader.paragraph_indent">Első sor behúzása</string>
     <string name="reader.paragraph_spacing">Bekezdések közötti térköz</string>
+    <string name="reader.password">Ez a PDF jelszóval védett</string>
+    <string name="reader.password.field">Jelszó</string>
+    <string name="reader.password.open">Megnyitás</string>
+    <string name="reader.password.wrong">Ez a jelszó nem stimmel</string>
     <string name="reader.progress">Haladás</string>
     <string name="reader.progress.body_only">Csak a főszöveg számítása</string>
     <string name="reader.progress.book">Könyv</string>

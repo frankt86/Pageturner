@@ -407,6 +407,9 @@
     <string name="reader.drm">Este livro está protegido por DRM e não pode ser aberto.</string>
     <string name="reader.edge_margin">Ignorar toques nas margens</string>
     <string name="reader.failed">Não foi possível abrir este livro</string>
+    <string name="reader.failed.damaged">Este PDF está danificado e não pode ser aberto</string>
+    <string name="reader.failed.missing">O Pageturner não consegue aceder ao ficheiro deste livro. Pode ter sido movido ou eliminado, ou é preciso escolher novamente a pasta.</string>
+    <string name="reader.failed.unsupported">Este PDF usa uma proteção ou um formato que o Pageturner não consegue abrir</string>
     <string name="reader.font">Tipo de letra</string>
     <string name="reader.font.add">Adicionar tipo de letra</string>
     <string name="reader.font.add_failed">Este ficheiro não é um tipo de letra que o Pageturner possa usar. Escolha um ficheiro .ttf ou .otf.</string>
@@ -486,6 +489,10 @@
     <string name="reader.paper_texture">Textura de papel</string>
     <string name="reader.paragraph_indent">Avanço da primeira linha</string>
     <string name="reader.paragraph_spacing">Espaço entre parágrafos</string>
+    <string name="reader.password">Este PDF está protegido por palavra-passe</string>
+    <string name="reader.password.field">Palavra-passe</string>
+    <string name="reader.password.open">Abrir</string>
+    <string name="reader.password.wrong">A palavra-passe não está correta</string>
     <string name="reader.progress">Progresso</string>
     <string name="reader.progress.body_only">Contar apenas o texto principal</string>
     <string name="reader.progress.book">Livro</string>

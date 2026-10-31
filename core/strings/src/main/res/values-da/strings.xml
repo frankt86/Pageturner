@@ -390,6 +390,9 @@
     <string name="reader.drm">Denne bog er beskyttet med DRM og kan ikke åbnes.</string>
     <string name="reader.edge_margin">Ignorer berøringer ved kanterne</string>
     <string name="reader.failed">Bogen kunne ikke åbnes</string>
+    <string name="reader.failed.damaged">Denne PDF er beskadiget, så den kan ikke åbnes</string>
+    <string name="reader.failed.missing">Pageturner kan ikke nå bogens fil. Den er måske flyttet eller slettet, eller dens mappe skal vælges igen.</string>
+    <string name="reader.failed.unsupported">Denne PDF bruger en beskyttelse eller et format, som Pageturner ikke kan åbne</string>
     <string name="reader.font">Skrifttype</string>
     <string name="reader.font.add">Tilføj skrifttype</string>
     <string name="reader.font.add_failed">Den fil er ikke en skrifttype, Pageturner kan bruge. Vælg en .ttf- eller .otf-fil.</string>
@@ -468,6 +471,10 @@
     <string name="reader.paper_texture">Papirstruktur</string>
     <string name="reader.paragraph_indent">Indrykning af første linje</string>
     <string name="reader.paragraph_spacing">Afstand mellem afsnit</string>
+    <string name="reader.password">Denne PDF er beskyttet med en adgangskode</string>
+    <string name="reader.password.field">Adgangskode</string>
+    <string name="reader.password.open">Åbn</string>
+    <string name="reader.password.wrong">Adgangskoden er forkert</string>
     <string name="reader.progress">Fremskridt</string>
     <string name="reader.progress.body_only">Tæl kun hovedteksten</string>
     <string name="reader.progress.book">Bog</string>

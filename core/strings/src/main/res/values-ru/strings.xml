@@ -424,6 +424,9 @@
     <string name="reader.drm">Эта книга защищена DRM, поэтому её нельзя открыть.</string>
     <string name="reader.edge_margin">Не реагировать на касания у краёв</string>
     <string name="reader.failed">Не удалось открыть эту книгу</string>
+    <string name="reader.failed.damaged">Этот PDF повреждён, поэтому его не открыть</string>
+    <string name="reader.failed.missing">Pageturner не может добраться до файла этой книги. Возможно, его переместили или удалили, или нужно заново выбрать его папку.</string>
+    <string name="reader.failed.unsupported">Этот PDF использует защиту или формат, которые Pageturner не умеет открывать</string>
     <string name="reader.font">Шрифт</string>
     <string name="reader.font.add">Добавить шрифт</string>
     <string name="reader.font.add_failed">Этот файл не подходит как шрифт для Pageturner. Выберите файл .ttf или .otf.</string>
@@ -504,6 +507,10 @@
     <string name="reader.paper_texture">Текстура бумаги</string>
     <string name="reader.paragraph_indent">Отступ первой строки</string>
     <string name="reader.paragraph_spacing">Интервал между абзацами</string>
+    <string name="reader.password">Этот PDF защищён паролем</string>
+    <string name="reader.password.field">Пароль</string>
+    <string name="reader.password.open">Открыть</string>
+    <string name="reader.password.wrong">Неверный пароль</string>
     <string name="reader.progress">Прогресс</string>
     <string name="reader.progress.body_only">Учитывать только основной текст</string>
     <string name="reader.progress.book">Книга</string>

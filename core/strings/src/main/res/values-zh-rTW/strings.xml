@@ -373,6 +373,9 @@
     <string name="reader.drm">這本書受 DRM 保護，無法開啟。</string>
     <string name="reader.edge_margin">忽略邊緣的觸控</string>
     <string name="reader.failed">無法開啟這本書</string>
+    <string name="reader.failed.damaged">這個 PDF 已損毀，無法開啟</string>
+    <string name="reader.failed.missing">Pageturner 無法存取這本書的檔案。檔案可能已被移動或刪除，或需要重新選擇所在的資料夾。</string>
+    <string name="reader.failed.unsupported">這個 PDF 使用了 Pageturner 無法開啟的保護方式或格式</string>
     <string name="reader.font">字型</string>
     <string name="reader.font.add">新增字型</string>
     <string name="reader.font.add_failed">此檔案不是 Pageturner 可以使用的字型。請選擇 .ttf 或 .otf 檔案。</string>
@@ -450,6 +453,10 @@
     <string name="reader.paper_texture">紙張質感</string>
     <string name="reader.paragraph_indent">首行縮排</string>
     <string name="reader.paragraph_spacing">段落間距</string>
+    <string name="reader.password">這個 PDF 受密碼保護</string>
+    <string name="reader.password.field">密碼</string>
+    <string name="reader.password.open">開啟</string>
+    <string name="reader.password.wrong">密碼不正確</string>
     <string name="reader.progress">進度</string>
     <string name="reader.progress.body_only">只計算正文</string>
     <string name="reader.progress.book">全書</string>

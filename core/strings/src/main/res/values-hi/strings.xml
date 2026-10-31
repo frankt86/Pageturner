@@ -390,6 +390,9 @@
     <string name="reader.drm">यह पुस्तक DRM से सुरक्षित है और खोली नहीं जा सकती।</string>
     <string name="reader.edge_margin">किनारों पर छूने को अनदेखा करें</string>
     <string name="reader.failed">यह पुस्तक खुल नहीं पाई</string>
+    <string name="reader.failed.damaged">यह PDF ख़राब है, इसलिए इसे खोला नहीं जा सकता</string>
+    <string name="reader.failed.missing">Pageturner इस पुस्तक की फ़ाइल तक नहीं पहुँच पा रहा है। हो सकता है फ़ाइल हटा दी गई हो या कहीं और ले जाई गई हो, या उसका फ़ोल्डर फिर से चुनना होगा।</string>
+    <string name="reader.failed.unsupported">यह PDF ऐसी सुरक्षा या फ़ॉर्मैट का उपयोग करती है जिसे Pageturner नहीं खोल सकता</string>
     <string name="reader.font">फ़ॉन्ट</string>
     <string name="reader.font.add">फ़ॉन्ट जोड़ें</string>
     <string name="reader.font.add_failed">यह फ़ाइल ऐसा फ़ॉन्ट नहीं है जिसे Pageturner इस्तेमाल कर सके। कोई .ttf या .otf फ़ाइल चुनें।</string>
@@ -468,6 +471,10 @@
     <string name="reader.paper_texture">कागज़ जैसी बनावट</string>
     <string name="reader.paragraph_indent">पहली पंक्ति का इंडेंट</string>
     <string name="reader.paragraph_spacing">अनुच्छेदों के बीच की जगह</string>
+    <string name="reader.password">यह PDF पासवर्ड से सुरक्षित है</string>
+    <string name="reader.password.field">पासवर्ड</string>
+    <string name="reader.password.open">खोलें</string>
+    <string name="reader.password.wrong">यह पासवर्ड सही नहीं है</string>
     <string name="reader.progress">प्रगति</string>
     <string name="reader.progress.body_only">केवल मुख्य पाठ गिनें</string>
     <string name="reader.progress.book">पुस्तक</string>

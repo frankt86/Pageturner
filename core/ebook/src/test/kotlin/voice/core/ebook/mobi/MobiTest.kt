@@ -16,7 +16,8 @@ class MobiTest {
 
   @Test
   fun `palmdoc copies literals, spaces and back references`() {
-    val data = byteArrayOf(0x03, 'a'.code.toByte(), 'b'.code.toByte(), 'c'.code.toByte(), 'd'.code.toByte(), 0xE5.toByte(), 0x80.toByte(), 0x28)
+    val data =
+      byteArrayOf(0x03, 'a'.code.toByte(), 'b'.code.toByte(), 'c'.code.toByte(), 'd'.code.toByte(), 0xE5.toByte(), 0x80.toByte(), 0x28)
     assertEquals("abcd ebcd", palmDocDecompress(data).decodeToString())
   }
 
@@ -219,8 +220,10 @@ internal fun mobi6(): ByteArray {
 
 internal fun kf8(): ByteArray {
   val head = """<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml"><head><title>T</title>"""
-  val skeleton0 = head + """<link href="kindle:flow:0001?mime=text/css" rel="stylesheet" type="text/css"/></head><body aid="0"></body></html>"""
-  val fragment0 = """<p id="start">Hello <a href="kindle:pos:fid:0001:off:0000000000">next</a></p><img src="kindle:embed:0001?mime=image/jpeg"/>"""
+  val skeleton0 =
+    head + """<link href="kindle:flow:0001?mime=text/css" rel="stylesheet" type="text/css"/></head><body aid="0"></body></html>"""
+  val fragment0 = """<p id="start">Hello <a href="kindle:pos:fid:0001:off:0000000000">next</a></p>""" +
+    """<img src="kindle:embed:0001?mime=image/jpeg"/>"""
   val skeleton1 = "$head</head><body></body></html>"
   val fragment1 = """<h2 aid="5">Chapter two</h2><p>Bye</p>"""
   val css = "body { background: url(kindle:embed:0001?mime=image/jpeg) }"

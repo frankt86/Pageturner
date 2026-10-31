@@ -390,6 +390,9 @@
     <string name="reader.drm">See raamat on DRM-iga kaitstud ja seda ei saa avada.</string>
     <string name="reader.edge_margin">Eira puudutusi servades</string>
     <string name="reader.failed">Seda raamatut ei õnnestunud avada</string>
+    <string name="reader.failed.damaged">See PDF on rikutud, nii et seda ei saa avada</string>
+    <string name="reader.failed.missing">Pageturner ei pääse selle raamatu failile ligi. Võib-olla on see teisaldatud või kustutatud või tuleb selle kaust uuesti valida.</string>
+    <string name="reader.failed.unsupported">See PDF kasutab kaitset või vormingut, mida Pageturner avada ei oska</string>
     <string name="reader.font">Kirjatüüp</string>
     <string name="reader.font.add">Lisa kirjatüüp</string>
     <string name="reader.font.add_failed">See fail pole kirjatüüp, mida Pageturner kasutada saab. Vali .ttf- või .otf-fail.</string>
@@ -468,6 +471,10 @@
     <string name="reader.paper_texture">Paberi tekstuur</string>
     <string name="reader.paragraph_indent">Esirea taane</string>
     <string name="reader.paragraph_spacing">Lõikude vahe</string>
+    <string name="reader.password">See PDF on parooliga kaitstud</string>
+    <string name="reader.password.field">Parool</string>
+    <string name="reader.password.open">Ava</string>
+    <string name="reader.password.wrong">See parool on vale</string>
     <string name="reader.progress">Edenemine</string>
     <string name="reader.progress.body_only">Arvesta ainult põhiteksti</string>
     <string name="reader.progress.book">Raamat</string>
