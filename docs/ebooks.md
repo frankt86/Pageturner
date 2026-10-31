@@ -179,6 +179,14 @@ minutes and jumps, and keeps an average of your last hour of reading across all 
 Pinch to zoom into a PDF page and drag to move around it. Double-tap to switch between the whole page and its full width.
 While a page is zoomed in, dragging moves the page instead of turning it.
 
+Pageturner opens PDFs with Android's own PDF reader. A PDF it refuses, like one with a damaged index or a newer kind of
+encryption, opens with a full PDFium instead, on 64-bit phones.
+
+A PDF locked with a password asks for it when you open it. Pageturner keeps the password, so the book opens without asking
+next time. If a PDF still can't be opened, the reader tells you why: the file is damaged, it uses a protection or format
+Pageturner can't open, or Pageturner can't reach the file. That happens when it was moved or deleted, or when the folder
+needs to be chosen again under **Settings > Book folders**.
+
 ### Bookmarks, highlights and notes
 
 - Tap the bookmark button to bookmark the page.
@@ -244,8 +252,9 @@ bold and italic text, tables, links and footnotes. It's built on [Readium](https
 - Without the new book engine, EPUB books show their text only. Pictures and text styling, like bold or headings, are left
   out, and so are links, print page numbers and **Count only the main text**.
 - PDF books show their pages without chapters or reading time.
-- PDF pages show exactly as they're printed. Searching or reading a PDF aloud needs Android 15 or newer, and a PDF made of
-  scanned pages has no text. Highlights work in EPUB books only.
+- PDF pages show exactly as they're printed. Searching or reading a PDF aloud needs Android 15 or newer, except for the
+  PDFs that open with PDFium, and a PDF made of scanned pages has no text. Highlights work in EPUB books only.
+- A PDF locked with a password has no cover in the library.
 - The natural voice needs a 64-bit phone, which nearly every phone from the last years is. On older phones it may pause briefly
   between sentences.
 - Reading aloud stops when you leave the book.

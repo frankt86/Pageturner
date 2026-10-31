@@ -389,6 +389,9 @@
     <string name="reader.double_tap">Двоен допир</string>
     <string name="reader.edge_margin">Игнорирај допири на рабовите</string>
     <string name="reader.failed">Оваа книга не може да се отвори</string>
+    <string name="reader.failed.damaged">Овој PDF е оштетен, па не може да се отвори</string>
+    <string name="reader.failed.missing">Pageturner не може да пристапи до датотеката на оваа книга. Можеби е преместена или избришана, или треба повторно да го изберете нејзиниот фолдер.</string>
+    <string name="reader.failed.unsupported">Овој PDF користи заштита или формат што Pageturner не може да го отвори</string>
     <string name="reader.font">Фонт</string>
     <string name="reader.font.add">Додај фонт</string>
     <string name="reader.font.add_failed">Оваа датотека не е фонт што Pageturner може да го користи. Изберете .ttf или .otf датотека.</string>
@@ -468,6 +471,10 @@
     <string name="reader.paper_texture">Текстура на хартија</string>
     <string name="reader.paragraph_indent">Вовлекување на првиот ред</string>
     <string name="reader.paragraph_spacing">Простор меѓу пасусите</string>
+    <string name="reader.password">Овој PDF е заштитен со лозинка</string>
+    <string name="reader.password.field">Лозинка</string>
+    <string name="reader.password.open">Отвори</string>
+    <string name="reader.password.wrong">Лозинката не е точна</string>
     <string name="reader.progress">Напредок</string>
     <string name="reader.progress.body_only">Само главниот текст во напредокот</string>
     <string name="reader.progress.book">Книга</string>

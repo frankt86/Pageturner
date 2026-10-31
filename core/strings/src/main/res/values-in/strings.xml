@@ -372,6 +372,9 @@
     <string name="reader.double_tap">Ketuk dua kali</string>
     <string name="reader.edge_margin">Abaikan sentuhan di tepi</string>
     <string name="reader.failed">Buku ini tidak dapat dibuka</string>
+    <string name="reader.failed.damaged">PDF ini rusak, jadi tidak dapat dibuka</string>
+    <string name="reader.failed.missing">Pageturner tidak dapat menjangkau berkas buku ini. Mungkin berkas sudah dipindahkan atau dihapus, atau foldernya perlu dipilih lagi.</string>
+    <string name="reader.failed.unsupported">PDF ini memakai perlindungan atau format yang tidak dapat dibuka Pageturner</string>
     <string name="reader.font">Font</string>
     <string name="reader.font.add">Tambahkan font</string>
     <string name="reader.font.add_failed">File ini bukan font yang bisa dipakai Pageturner. Pilih file .ttf atau .otf.</string>
@@ -450,6 +453,10 @@
     <string name="reader.paper_texture">Tekstur kertas</string>
     <string name="reader.paragraph_indent">Inden baris pertama</string>
     <string name="reader.paragraph_spacing">Jarak antarparagraf</string>
+    <string name="reader.password">PDF ini dilindungi kata sandi</string>
+    <string name="reader.password.field">Kata sandi</string>
+    <string name="reader.password.open">Buka</string>
+    <string name="reader.password.wrong">Kata sandi itu salah</string>
     <string name="reader.progress">Progres</string>
     <string name="reader.progress.body_only">Hitung teks utama saja</string>
     <string name="reader.progress.book">Buku</string>

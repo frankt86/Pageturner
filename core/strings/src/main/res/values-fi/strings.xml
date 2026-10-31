@@ -389,6 +389,9 @@
     <string name="reader.double_tap">Kaksoisnapautus</string>
     <string name="reader.edge_margin">Ohita kosketukset reunoilla</string>
     <string name="reader.failed">Kirjaa ei voitu avata</string>
+    <string name="reader.failed.damaged">Tämä PDF on vioittunut, joten sitä ei voi avata</string>
+    <string name="reader.failed.missing">Pageturner ei pääse tämän kirjan tiedostoon. Se on ehkä siirretty tai poistettu, tai sen kansio pitää valita uudelleen.</string>
+    <string name="reader.failed.unsupported">Tämä PDF käyttää suojausta tai muotoa, jota Pageturner ei osaa avata</string>
     <string name="reader.font">Fontti</string>
     <string name="reader.font.add">Lisää fontti</string>
     <string name="reader.font.add_failed">Tämä tiedosto ei ole fontti, jota Pageturner voi käyttää. Valitse .ttf- tai .otf-tiedosto.</string>
@@ -468,6 +471,10 @@
     <string name="reader.paper_texture">Paperin pinta</string>
     <string name="reader.paragraph_indent">Ensimmäisen rivin sisennys</string>
     <string name="reader.paragraph_spacing">Kappaleiden väli</string>
+    <string name="reader.password">Tämä PDF on suojattu salasanalla</string>
+    <string name="reader.password.field">Salasana</string>
+    <string name="reader.password.open">Avaa</string>
+    <string name="reader.password.wrong">Salasana on väärin</string>
     <string name="reader.progress">Edistyminen</string>
     <string name="reader.progress.body_only">Laske vain päätekstiä</string>
     <string name="reader.progress.book">Kirja</string>

@@ -285,7 +285,12 @@ internal fun ReaderScreen(uri: Uri) {
       ReaderState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         LoadingIndicator(Modifier.size(64.dp))
       }
-      ReaderState.Failed -> Box(
+      is ReaderState.Locked -> PdfPasswordDialog(
+        wrongPassword = state.wrongPassword,
+        onOpen = viewModel::onPasswordEnter,
+        onCancel = viewModel::onPasswordCancel,
+      )
+      is ReaderState.Failed -> Box(
         Modifier
           .fillMaxSize()
           .safeDrawingPadding()
@@ -293,7 +298,14 @@ internal fun ReaderScreen(uri: Uri) {
         contentAlignment = Alignment.Center,
       ) {
         Text(
-          text = stringResource(StringsR.string.reader_failed),
+          text = stringResource(
+            when (state.failure) {
+              ReaderFailure.Damaged -> StringsR.string.reader_failed_damaged
+              ReaderFailure.Unsupported -> StringsR.string.reader_failed_unsupported
+              ReaderFailure.Missing -> StringsR.string.reader_failed_missing
+              ReaderFailure.Unknown -> StringsR.string.reader_failed
+            },
+          ),
           style = MaterialTheme.typography.bodyLarge,
           textAlign = TextAlign.Center,
         )

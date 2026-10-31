@@ -423,6 +423,9 @@
     <string name="reader.double_tap">Dvojité ťuknutie</string>
     <string name="reader.edge_margin">Ignorovať dotyky pri okrajoch</string>
     <string name="reader.failed">Túto knihu sa nepodarilo otvoriť</string>
+    <string name="reader.failed.damaged">Toto PDF je poškodené, preto sa nedá otvoriť</string>
+    <string name="reader.failed.missing">Pageturner sa nedostane k súboru tejto knihy. Možno bol presunutý alebo odstránený, alebo treba znova vybrať jeho priečinok.</string>
+    <string name="reader.failed.unsupported">Toto PDF používa ochranu alebo formát, ktorý Pageturner nevie otvoriť</string>
     <string name="reader.font">Písmo</string>
     <string name="reader.font.add">Pridať písmo</string>
     <string name="reader.font.add_failed">Tento súbor nie je písmo, ktoré Pageturner dokáže použiť. Vyberte súbor .ttf alebo .otf.</string>
@@ -504,6 +507,10 @@
     <string name="reader.paper_texture">Textúra papiera</string>
     <string name="reader.paragraph_indent">Odsadenie prvého riadka</string>
     <string name="reader.paragraph_spacing">Medzera medzi odsekmi</string>
+    <string name="reader.password">Toto PDF je chránené heslom</string>
+    <string name="reader.password.field">Heslo</string>
+    <string name="reader.password.open">Otvoriť</string>
+    <string name="reader.password.wrong">Toto heslo nie je správne</string>
     <string name="reader.progress">Priebeh</string>
     <string name="reader.progress.body_only">Počítať len hlavný text</string>
     <string name="reader.progress.book">Kniha</string>

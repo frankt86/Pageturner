@@ -423,6 +423,9 @@
     <string name="reader.double_tap">Подвійне торкання</string>
     <string name="reader.edge_margin">Не реагувати на дотики біля країв</string>
     <string name="reader.failed">Не вдалося відкрити цю книгу</string>
+    <string name="reader.failed.damaged">Цей PDF пошкоджений, тому його не вдається відкрити</string>
+    <string name="reader.failed.missing">Pageturner не може дістатися до файлу цієї книги. Можливо, його перемістили чи видалили, або треба знову вибрати його папку.</string>
+    <string name="reader.failed.unsupported">Цей PDF використовує захист або формат, який Pageturner не може відкрити</string>
     <string name="reader.font">Шрифт</string>
     <string name="reader.font.add">Додати шрифт</string>
     <string name="reader.font.add_failed">Цей файл не підходить як шрифт для Pageturner. Виберіть файл .ttf або .otf.</string>
@@ -504,6 +507,10 @@
     <string name="reader.paper_texture">Текстура паперу</string>
     <string name="reader.paragraph_indent">Відступ першого рядка</string>
     <string name="reader.paragraph_spacing">Інтервал між абзацами</string>
+    <string name="reader.password">Цей PDF захищений паролем</string>
+    <string name="reader.password.field">Пароль</string>
+    <string name="reader.password.open">Відкрити</string>
+    <string name="reader.password.wrong">Неправильний пароль</string>
     <string name="reader.progress">Прогрес</string>
     <string name="reader.progress.body_only">Враховувати лише основний текст</string>
     <string name="reader.progress.book">Книга</string>

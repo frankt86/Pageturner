@@ -406,6 +406,9 @@
     <string name="reader.double_tap">Doble toc</string>
     <string name="reader.edge_margin">Ignora els tocs a les vores</string>
     <string name="reader.failed">No s\'ha pogut obrir aquest llibre</string>
+    <string name="reader.failed.damaged">Aquest PDF està malmès i no es pot obrir</string>
+    <string name="reader.failed.missing">Pageturner no pot accedir al fitxer d\'aquest llibre. Potser s\'ha mogut o suprimit, o cal tornar a triar-ne la carpeta.</string>
+    <string name="reader.failed.unsupported">Aquest PDF fa servir una protecció o un format que Pageturner no pot obrir</string>
     <string name="reader.font">Tipus de lletra</string>
     <string name="reader.font.add">Afegeix un tipus de lletra</string>
     <string name="reader.font.add_failed">Aquest fitxer no és un tipus de lletra que Pageturner pugui fer servir. Trieu un fitxer .ttf o .otf.</string>
@@ -486,6 +489,10 @@
     <string name="reader.paper_texture">Textura de paper</string>
     <string name="reader.paragraph_indent">Sagnat de la primera línia</string>
     <string name="reader.paragraph_spacing">Espai entre paràgrafs</string>
+    <string name="reader.password">Aquest PDF està protegit amb una contrasenya</string>
+    <string name="reader.password.field">Contrasenya</string>
+    <string name="reader.password.open">Obre</string>
+    <string name="reader.password.wrong">Aquesta contrasenya no és correcta</string>
     <string name="reader.progress">Progrés</string>
     <string name="reader.progress.body_only">Compta només el text principal</string>
     <string name="reader.progress.book">Llibre</string>

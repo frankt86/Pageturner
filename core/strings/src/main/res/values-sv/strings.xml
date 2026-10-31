@@ -389,6 +389,9 @@
     <string name="reader.double_tap">Dubbeltryck</string>
     <string name="reader.edge_margin">Ignorera tryck vid kanterna</string>
     <string name="reader.failed">Boken kunde inte öppnas</string>
+    <string name="reader.failed.damaged">Den här PDF-filen är skadad och kan inte öppnas</string>
+    <string name="reader.failed.missing">Pageturner kommer inte åt bokens fil. Den kan ha flyttats eller raderats, eller så behöver mappen väljas igen.</string>
+    <string name="reader.failed.unsupported">Den här PDF-filen använder ett skydd eller format som Pageturner inte kan öppna</string>
     <string name="reader.font">Typsnitt</string>
     <string name="reader.font.add">Lägg till typsnitt</string>
     <string name="reader.font.add_failed">Filen är inte ett typsnitt som Pageturner kan använda. Välj en .ttf- eller .otf-fil.</string>
@@ -468,6 +471,10 @@
     <string name="reader.paper_texture">Papperstextur</string>
     <string name="reader.paragraph_indent">Indrag på första raden</string>
     <string name="reader.paragraph_spacing">Avstånd mellan stycken</string>
+    <string name="reader.password">Den här PDF-filen är skyddad med ett lösenord</string>
+    <string name="reader.password.field">Lösenord</string>
+    <string name="reader.password.open">Öppna</string>
+    <string name="reader.password.wrong">Lösenordet är fel</string>
     <string name="reader.progress">Framsteg</string>
     <string name="reader.progress.body_only">Räkna bara huvudtexten</string>
     <string name="reader.progress.book">Bok</string>

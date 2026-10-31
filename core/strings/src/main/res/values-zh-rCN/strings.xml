@@ -372,6 +372,9 @@
     <string name="reader.double_tap">双击</string>
     <string name="reader.edge_margin">忽略边缘的触摸</string>
     <string name="reader.failed">无法打开这本书</string>
+    <string name="reader.failed.damaged">此 PDF 已损坏，无法打开</string>
+    <string name="reader.failed.missing">Pageturner 无法访问这本书的文件。它可能已被移动或删除，或者需要重新选择它所在的文件夹。</string>
+    <string name="reader.failed.unsupported">此 PDF 使用了 Pageturner 无法打开的保护方式或格式</string>
     <string name="reader.font">字体</string>
     <string name="reader.font.add">添加字体</string>
     <string name="reader.font.add_failed">此文件不是 Pageturner 可以使用的字体。请选择 .ttf 或 .otf 文件。</string>
@@ -450,6 +453,10 @@
     <string name="reader.paper_texture">纸张质感</string>
     <string name="reader.paragraph_indent">首行缩进</string>
     <string name="reader.paragraph_spacing">段落间距</string>
+    <string name="reader.password">此 PDF 受密码保护</string>
+    <string name="reader.password.field">密码</string>
+    <string name="reader.password.open">打开</string>
+    <string name="reader.password.wrong">密码不正确</string>
     <string name="reader.progress">进度</string>
     <string name="reader.progress.body_only">只计算正文</string>
     <string name="reader.progress.book">全书</string>

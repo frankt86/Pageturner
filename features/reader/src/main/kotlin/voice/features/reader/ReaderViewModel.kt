@@ -40,6 +40,9 @@ import voice.core.data.ReaderSettings
 import voice.core.data.ReadingPace
 import voice.core.data.ReadiumHighlight
 import voice.core.data.store.EbooksStore
+import voice.core.ebook.PdfOpenException
+import voice.core.ebook.PdfProblem
+import voice.core.ebook.openPdf
 import voice.core.ebook.parseEpub
 import voice.core.logging.api.Logger
 import voice.core.opds.komga.KomgaSync
@@ -74,7 +77,10 @@ internal sealed interface ReaderContent {
 
 internal sealed interface ReaderState {
   data object Loading : ReaderState
-  data object Failed : ReaderState
+  data class Failed(val failure: ReaderFailure) : ReaderState
+
+  /** A PDF that needs a password, [wrongPassword] after the one typed in didn't open it. */
+  data class Locked(val wrongPassword: Boolean) : ReaderState
   data class Loaded(
     val content: ReaderContent,
     val position: EbookPosition,
@@ -139,7 +145,8 @@ class ReaderViewModel(
   /** Shown with the new engine while the old one's text is read. */
   private var textPending by mutableStateOf<ReaderContent.Epub?>(null)
   private var textFailed by mutableStateOf(false)
-  private var failed by mutableStateOf(false)
+  private var failure by mutableStateOf<ReaderFailure?>(null)
+  private var locked by mutableStateOf<ReaderState.Locked?>(null)
   private var position by mutableStateOf(EbookPosition())
   private var readAloudJob by mutableStateOf<Job?>(null)
   private var readAloud: ReadAloud? = null
@@ -200,16 +207,23 @@ class ReaderViewModel(
       naturalReady = withContext(dispatcherProvider.io) { neuralVoice.isDownloaded }
       naturalVoice = naturalVoiceStore.data.first()
     }
-    scope.launch { open() }
+    scope.launch {
+      val stored = store.data.first().firstOrNull { it.uri == uri }
+      if (stored == null) {
+        failure = ReaderFailure.Unknown
+        return@launch
+      }
+      open(stored, stored.pdfPassword, typed = false)
+    }
   }
 
-  private suspend fun open() {
+  /** Opens the book, a PDF with [password] if it's locked. [typed] is set when the reader just typed it in. */
+  private suspend fun open(
+    stored: Ebook,
+    password: String?,
+    typed: Boolean,
+  ) {
     val started = SystemClock.elapsedRealtime()
-    val stored = store.data.first().firstOrNull { it.uri == uri }
-    if (stored == null) {
-      failed = true
-      return
-    }
     // the book shows at the place here right away, a newer one from the server follows when it comes
     val newerPlace = scope.async { komgaSync.newerPlace(stored) }
     val epub = stored.format == EbookFormat.Epub
@@ -217,11 +231,21 @@ class ReaderViewModel(
     val book = if (newEngine) openReadium(stored) else null
     val loaded = if (book == null) {
       try {
-        withContext(dispatcherProvider.io) { load(stored) }
+        withContext(dispatcherProvider.io) { load(stored, password) }
+      } catch (e: PdfOpenException) {
+        newerPlace.cancel()
+        if (e.problem == PdfProblem.Password || e.problem == PdfProblem.WrongPassword) {
+          // a kept password that stopped working isn't one the reader just got wrong
+          locked = ReaderState.Locked(wrongPassword = typed)
+        } else {
+          Logger.w(e, "Could not open a ${stored.format}")
+          failure = readerFailure(e)
+        }
+        return
       } catch (e: Exception) {
         Logger.w(e, "Could not open a ${stored.format}")
         newerPlace.cancel()
-        failed = true
+        failure = readerFailure(e)
         return
       }
     } else {
@@ -242,7 +266,10 @@ class ReaderViewModel(
     Logger.d("Showing the ${stored.format} after ${SystemClock.elapsedRealtime() - started} ms, in the new engine: ${book != null}")
     scope.launch {
       store.updateData { ebooks ->
-        ebooks.map { if (it.uri == uri) it.copy(lastOpened = System.currentTimeMillis()) else it }
+        ebooks.map {
+          // the password is kept, so the PDF opens without it next time
+          if (it.uri == uri) it.copy(lastOpened = System.currentTimeMillis(), pdfPassword = password) else it
+        }
       }
     }
     scope.launch {
@@ -259,7 +286,7 @@ class ReaderViewModel(
     if (book != null) {
       // the new engine shows the book, the text of the old one is for the time left and when switching back
       content = try {
-        withContext(dispatcherProvider.io) { load(stored) }
+        withContext(dispatcherProvider.io) { load(stored, password) }
       } catch (e: Exception) {
         Logger.w(e, "Could not read the text of an EPUB")
         textFailed = true
@@ -317,6 +344,23 @@ class ReaderViewModel(
     }
   }
 
+  internal fun onPasswordEnter(password: String) {
+    if (locked == null) return
+    locked = null
+    scope.launch {
+      val stored = store.data.first().firstOrNull { it.uri == uri }
+      if (stored == null) {
+        failure = ReaderFailure.Unknown
+      } else {
+        open(stored, password, typed = true)
+      }
+    }
+  }
+
+  internal fun onPasswordCancel() {
+    navigator.goBack()
+  }
+
   /** Moves to the place from the server, unless it's about where the book is already. */
   private suspend fun takePlace(
     ebook: Ebook,
@@ -339,8 +383,10 @@ class ReaderViewModel(
     return ebook.withPlace()
   }
 
-  private fun load(ebook: Ebook): ReaderContent {
-    val contentResolver = application.contentResolver
+  private fun load(
+    ebook: Ebook,
+    password: String?,
+  ): ReaderContent {
     return when (ebook.format) {
       EbookFormat.Epub -> {
         val text = bookText()
@@ -351,8 +397,7 @@ class ReaderViewModel(
         )
       }
       EbookFormat.Pdf -> {
-        val fileDescriptor = contentResolver.openFileDescriptor(uri, "r")!!
-        ReaderContent.Pdf(title = ebook.title, pdf = PdfFile(fileDescriptor))
+        ReaderContent.Pdf(title = ebook.title, pdf = PdfFile(openPdf(application, uri, password)))
       }
     }
   }
@@ -385,8 +430,11 @@ class ReaderViewModel(
     // when the new engine can't open the book, the old one shows it
     val readium = readium?.takeIf { settings.newBookEngine }
     val content = content ?: textPending?.takeIf { readium != null }
+    val failure = failure ?: ReaderFailure.Unknown.takeIf { readium == null && textFailed }
+    val locked = locked
     return when {
-      failed || (readium == null && textFailed) -> ReaderState.Failed
+      failure != null -> ReaderState.Failed(failure)
+      locked != null -> locked
       content == null -> ReaderState.Loading
       else -> ReaderState.Loaded(
         content = content,

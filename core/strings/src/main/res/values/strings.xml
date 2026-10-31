@@ -690,6 +690,12 @@
     <string name="reader.edge_margin">Ignore touches at the edges</string>
     <!-- Shown in the ebook reader when an EPUB or PDF file can't be read. -->
     <string name="reader.failed">This book couldn\'t be opened</string>
+    <!-- Shown in the ebook reader instead of the book when a PDF file is broken, for example cut off while copying, and no engine could read it. -->
+    <string name="reader.failed.damaged">This PDF is damaged, so it can\'t be opened</string>
+    <!-- Shown in the ebook reader instead of the book when its file is gone or the app lost access to it, for example after the file was moved or deleted, or the folder access was taken away. Choosing the folder again gives the access back. -->
+    <string name="reader.failed.missing">Pageturner can\'t reach this book\'s file. It may have been moved or deleted, or its folder needs to be chosen again.</string>
+    <!-- Shown in the ebook reader instead of the book when a PDF uses an encryption or a format the app can't read. -->
+    <string name="reader.failed.unsupported">This PDF uses a protection or format Pageturner can\'t open</string>
     <!-- Label above the choice of fonts in the display sheet of the ebook reader. -->
     <string name="reader.font">Font</string>
     <!-- Chip after the fonts in the display sheet of the ebook reader. Opens the file picker to add a font file (.ttf or .otf) from the phone. -->
@@ -845,6 +851,14 @@
     <string name="reader.paragraph_indent">First-line indent</string>
     <!-- Label of the slider in the display sheet of the ebook reader that sets the space between paragraphs. -->
     <string name="reader.paragraph_spacing">Space between paragraphs</string>
+    <!-- Title of the dialog that asks for the password of a PDF before the ebook reader can show it. -->
+    <string name="reader.password">This PDF is protected with a password</string>
+    <!-- Label of the password field in the dialog that asks for the password of a PDF. -->
+    <string name="reader.password.field">Password</string>
+    <!-- Button in the dialog that asks for the password of a PDF, opens the PDF with the password typed in. -->
+    <string name="reader.password.open">Open</string>
+    <!-- Error under the password field when the PDF didn't open with the password typed in. -->
+    <string name="reader.password.wrong">That password isn\'t right</string>
     <!-- Section title in the display sheet of the ebook reader for how the reading progress is shown. -->
     <string name="reader.progress">Progress</string>
     <!-- Switch in the display sheet of the ebook reader. When it's on, the book's percentage and pages left leave out front and back matter like the title page, the copyright page or the index. -->

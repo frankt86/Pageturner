@@ -457,6 +457,9 @@
     <string name="reader.double_tap">النقر المزدوج</string>
     <string name="reader.edge_margin">تجاهل اللمسات عند الحواف</string>
     <string name="reader.failed">تعذّر فتح هذا الكتاب</string>
+    <string name="reader.failed.damaged">ملف PDF هذا تالف، لذا يتعذّر فتحه</string>
+    <string name="reader.failed.missing">يتعذّر على Pageturner الوصول إلى ملف هذا الكتاب. ربما نُقل أو حُذف، أو يلزم اختيار مجلده من جديد.</string>
+    <string name="reader.failed.unsupported">يستخدم ملف PDF هذا حماية أو تنسيقًا لا يمكن لـ Pageturner فتحه</string>
     <string name="reader.font">الخط</string>
     <string name="reader.font.add">إضافة خط</string>
     <string name="reader.font.add_failed">هذا الملف ليس خطًا يمكن لـ Pageturner استخدامه. يمكنك اختيار ملف بصيغة TTF أو OTF.</string>
@@ -540,6 +543,10 @@
     <string name="reader.paper_texture">ملمس الورق</string>
     <string name="reader.paragraph_indent">إزاحة السطر الأول</string>
     <string name="reader.paragraph_spacing">المسافة بين الفقرات</string>
+    <string name="reader.password">ملف PDF هذا محمي بكلمة مرور</string>
+    <string name="reader.password.field">كلمة المرور</string>
+    <string name="reader.password.open">فتح</string>
+    <string name="reader.password.wrong">كلمة المرور غير صحيحة</string>
     <string name="reader.progress">التقدّم</string>
     <string name="reader.progress.body_only">احتساب النص الرئيسي فقط</string>
     <string name="reader.progress.book">الكتاب</string>

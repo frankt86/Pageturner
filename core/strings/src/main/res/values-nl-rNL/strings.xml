@@ -389,6 +389,9 @@
     <string name="reader.double_tap">Dubbeltikken</string>
     <string name="reader.edge_margin">Aanrakingen aan de randen negeren</string>
     <string name="reader.failed">Dit boek kon niet worden geopend</string>
+    <string name="reader.failed.damaged">Deze PDF is beschadigd en kan niet worden geopend</string>
+    <string name="reader.failed.missing">Pageturner kan het bestand van dit boek niet bereiken. Misschien is het verplaatst of verwijderd, of moet je de map opnieuw kiezen.</string>
+    <string name="reader.failed.unsupported">Deze PDF gebruikt een beveiliging of indeling die Pageturner niet kan openen</string>
     <string name="reader.font">Lettertype</string>
     <string name="reader.font.add">Lettertype toevoegen</string>
     <string name="reader.font.add_failed">Dit bestand is geen lettertype die Pageturner kan gebruiken. Kies een .ttf- of .otf-bestand.</string>
@@ -468,6 +471,10 @@
     <string name="reader.paper_texture">Papierstructuur</string>
     <string name="reader.paragraph_indent">Inspringen eerste regel</string>
     <string name="reader.paragraph_spacing">Ruimte tussen alinea’s</string>
+    <string name="reader.password">Deze PDF is beveiligd met een wachtwoord</string>
+    <string name="reader.password.field">Wachtwoord</string>
+    <string name="reader.password.open">Openen</string>
+    <string name="reader.password.wrong">Dat wachtwoord klopt niet</string>
     <string name="reader.progress">Voortgang</string>
     <string name="reader.progress.body_only">Alleen de hoofdtekst tellen</string>
     <string name="reader.progress.book">Boek</string>
