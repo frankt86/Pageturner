@@ -82,7 +82,11 @@
     <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Okładka z pamięci wewnętrznej</string>
     <string name="book.edit.cover.internet">Okładka z internetu</string>
+    <string name="book.edit.part.label">Tom</string>
     <string name="book.edit.rename">Zmień nazwę</string>
+    <string name="book.edit.series.label">Seria</string>
+    <string name="book.edit.server.failed">Nie udało się zapisać na serwerze. Spróbuj ponownie.</string>
+    <string name="book.edit.server.not_allowed">Twoje konto na serwerze nie może zmieniać książek.</string>
     <string name="book.edit.title.label">Tytuł</string>
     <string name="book.remove_from_library">Usuń z biblioteki</string>
     <string name="book.remove_from_library.summary">Plik zostanie na urządzeniu</string>
@@ -600,6 +604,10 @@
     <string name="reader.voice.start">Zacznij czytać</string>
     <string name="reader.volume_keys">Przewracaj strony przyciskami głośności</string>
     <string name="reader.word_spacing">Odstępy między wyrazami</string>
+    <string name="series.continue">Kontynuuj</string>
+    <string name="series.continue_book">Kontynuuj książkę %s</string>
+    <string name="series.start">Zacznij</string>
+    <string name="series.start_book">Zacznij książkę %s</string>
     <string name="settings.about.app_version.title">Wersja aplikacji</string>
     <string name="settings.action.open">Ustawienia</string>
     <string name="settings.analytics_consent.description">Zezwól na gromadzenie anonimowych danych dotyczących użytkowania, aby pomóc ulepszyć aplikację</string>

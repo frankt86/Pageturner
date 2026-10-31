@@ -76,7 +76,11 @@
     <string name="book.edit.author.label">Szerző</string>
     <string name="book.edit.cover.file">Borító a fájlrendszerből</string>
     <string name="book.edit.cover.internet">Borító az internetről</string>
+    <string name="book.edit.part.label">Rész</string>
     <string name="book.edit.rename">Átnevezés</string>
+    <string name="book.edit.series.label">Sorozat</string>
+    <string name="book.edit.server.failed">Nem sikerült menteni a szerverre. Próbálja újra.</string>
+    <string name="book.edit.server.not_allowed">A szerveren lévő fiókja nem módosíthat könyveket.</string>
     <string name="book.edit.title.label">Cím</string>
     <string name="book.remove_from_library">Eltávolítás a könyvtárból</string>
     <string name="book.remove_from_library.summary">A fájl az eszközén marad</string>
@@ -560,6 +564,10 @@
     <string name="reader.voice.start">Felolvasás indítása</string>
     <string name="reader.volume_keys">Lapozás a hangerőgombokkal</string>
     <string name="reader.word_spacing">Szavak közötti térköz</string>
+    <string name="series.continue">Folytatás</string>
+    <string name="series.continue_book">%s. könyv folytatása</string>
+    <string name="series.start">Kezdés</string>
+    <string name="series.start_book">%s. könyv elkezdése</string>
     <string name="settings.about.app_version.title">Alkalmazásverzió</string>
     <string name="settings.action.open">Beállítások</string>
     <string name="settings.analytics_consent.description">Névtelen használati adatok gyűjtésének engedélyezése az alkalmazás fejlesztéséhez</string>

@@ -10,6 +10,7 @@ import voice.features.bookOverview.overview.BookOverviewCategory
 import voice.features.bookOverview.overview.BookOverviewItemViewState
 import voice.features.bookOverview.overview.BookOverviewLayoutMode
 import voice.features.bookOverview.overview.BookOverviewViewState
+import voice.features.bookOverview.overview.LibraryItem
 
 // rendered by CI into the screenshots of the README and the docs
 @Composable
@@ -21,6 +22,7 @@ private fun LibraryScreenshot() {
       onSettingsClick = {},
       onBookClick = {},
       onBookLongClick = {},
+      onSeriesClick = {},
       onBookFolderClick = {},
       onFolderPickerMovedDialogDismiss = {},
       onPlayButtonClick = {},
@@ -59,10 +61,12 @@ private fun screenshotState(): BookOverviewViewState {
     item("Field Guide to the Stars", "Iris Calder", 0F, "PDF · 0%", ebook = true),
   )
   return BookOverviewViewState(
-    books = mapOf(
-      BookOverviewCategory.CURRENT to current.associate { it.id to mutableStateOf(it) },
-      BookOverviewCategory.NOT_STARTED to notStarted.associate { it.id to mutableStateOf(it) },
+    sections = mapOf(
+      BookOverviewCategory.CURRENT to current.drop(1).map { LibraryItem.Book(it.id, mutableStateOf(it)) },
+      BookOverviewCategory.NOT_STARTED to notStarted.map { LibraryItem.Book(it.id, mutableStateOf(it)) },
     ),
+    hero = mutableStateOf(current.first()),
+    inProgressCount = current.size,
     currentBookId = current.first().id,
     layoutMode = BookOverviewLayoutMode.List,
     playButtonState = BookOverviewViewState.PlayButtonState.Paused,

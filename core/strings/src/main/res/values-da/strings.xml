@@ -76,7 +76,11 @@
     <string name="book.edit.author.label">Forfatter</string>
     <string name="book.edit.cover.file">Cover fra filsystemet</string>
     <string name="book.edit.cover.internet">Cover fra internettet</string>
+    <string name="book.edit.part.label">Del</string>
     <string name="book.edit.rename">Omdøb</string>
+    <string name="book.edit.series.label">Serie</string>
+    <string name="book.edit.server.failed">Kunne ikke gemme på din server. Prøv igen.</string>
+    <string name="book.edit.server.not_allowed">Din konto på serveren kan ikke ændre bøger.</string>
     <string name="book.edit.title.label">Titel</string>
     <string name="book.remove_from_library">Fjern fra biblioteket</string>
     <string name="book.remove_from_library.summary">Filen bliver på din enhed</string>
@@ -560,6 +564,10 @@
     <string name="reader.voice.start">Begynd at læse</string>
     <string name="reader.volume_keys">Bladr med lydstyrkeknapperne</string>
     <string name="reader.word_spacing">Ordafstand</string>
+    <string name="series.continue">Lyt videre</string>
+    <string name="series.continue_book">Fortsæt med bog %s</string>
+    <string name="series.start">Begynd at lytte</string>
+    <string name="series.start_book">Begynd på bog %s</string>
     <string name="settings.about.app_version.title">Appversion</string>
     <string name="settings.action.open">Indstillinger</string>
     <string name="settings.analytics_consent.description">Tillad anonym indsamling af brugsdata for at hjælpe med at gøre appen bedre</string>

@@ -76,7 +76,11 @@
     <string name="book.edit.author.label">Tekijä</string>
     <string name="book.edit.cover.file">Kansi tiedostojärjestelmästä</string>
     <string name="book.edit.cover.internet">Kansi internetistä</string>
+    <string name="book.edit.part.label">Osa</string>
     <string name="book.edit.rename">Nimeä uudelleen</string>
+    <string name="book.edit.series.label">Sarja</string>
+    <string name="book.edit.server.failed">Tallennus palvelimellesi epäonnistui. Yritä uudelleen.</string>
+    <string name="book.edit.server.not_allowed">Tililläsi ei ole palvelimella oikeutta muuttaa kirjoja.</string>
     <string name="book.edit.title.label">Nimi</string>
     <string name="book.remove_from_library">Poista kirjastosta</string>
     <string name="book.remove_from_library.summary">Tiedosto jää laitteellesi</string>
@@ -560,6 +564,10 @@
     <string name="reader.voice.start">Aloita lukeminen</string>
     <string name="reader.volume_keys">Käännä sivuja äänenvoimakkuuspainikkeilla</string>
     <string name="reader.word_spacing">Sanaväli</string>
+    <string name="series.continue">Jatka</string>
+    <string name="series.continue_book">Jatka kirjaa %s</string>
+    <string name="series.start">Aloita</string>
+    <string name="series.start_book">Aloita kirja %s</string>
     <string name="settings.about.app_version.title">Sovelluksen versio</string>
     <string name="settings.action.open">Asetukset</string>
     <string name="settings.analytics_consent.description">Salli anonyymien käyttötietojen kerääminen sovelluksen parantamiseksi</string>

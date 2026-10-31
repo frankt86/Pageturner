@@ -76,7 +76,11 @@
     <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Cover aus dem Dateisystem</string>
     <string name="book.edit.cover.internet">Cover aus dem Internet</string>
+    <string name="book.edit.part.label">Teil</string>
     <string name="book.edit.rename">Umbenennen</string>
+    <string name="book.edit.series.label">Reihe</string>
+    <string name="book.edit.server.failed">Speichern auf Deinem Server hat nicht geklappt. Versuche es noch einmal.</string>
+    <string name="book.edit.server.not_allowed">Dein Konto auf dem Server darf keine Bücher ändern.</string>
     <string name="book.edit.title.label">Titel</string>
     <string name="book.remove_from_library">Aus der Bibliothek entfernen</string>
     <string name="book.remove_from_library.summary">Die Datei bleibt auf Deinem Gerät</string>
@@ -560,6 +564,10 @@
     <string name="reader.voice.start">Vorlesen starten</string>
     <string name="reader.volume_keys">Mit den Lautstärketasten blättern</string>
     <string name="reader.word_spacing">Wortabstand</string>
+    <string name="series.continue">Weiterhören</string>
+    <string name="series.continue_book">Buch %s weiterhören</string>
+    <string name="series.start">Anhören</string>
+    <string name="series.start_book">Buch %s anhören</string>
     <string name="settings.about.app_version.title">App-Version</string>
     <string name="settings.action.open">Einstellungen</string>
     <string name="settings.analytics_consent.description">Erlaube die Freigabe anonymer Nutzungsdaten zur Verbesserung der App</string>

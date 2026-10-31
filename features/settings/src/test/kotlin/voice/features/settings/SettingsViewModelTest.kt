@@ -21,7 +21,7 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import voice.core.analytics.api.AnalyticsConsentStore
 import voice.core.audiobookshelf.AudiobookshelfFeatureFlag
-import voice.core.audiobookshelf.ServerLibrary
+import voice.core.audiobookshelf.ServerAccount
 import voice.core.common.AppInfoProvider
 import voice.core.common.DispatcherProvider
 import voice.core.data.folders.AudiobookFolders
@@ -86,7 +86,7 @@ class SettingsViewModelTest {
   private val kioskModeFeatureFlag = MemoryFeatureFlag(false)
   private val audiobookshelfFeatureFlag = MemoryFeatureFlag(false)
   private val serverName = MutableStateFlow<String?>(null)
-  private val serverLibrary = mockk<ServerLibrary>(relaxUnitFun = true) {
+  private val serverAccount = mockk<ServerAccount>(relaxUnitFun = true) {
     every { serverName } returns this@SettingsViewModelTest.serverName
   }
   private val dynamicColorAvailability = mockk<DynamicColorAvailability> {
@@ -116,7 +116,7 @@ class SettingsViewModelTest {
     dynamicColorAvailability = dynamicColorAvailability,
     audiobookFolders = audiobookFolders,
     dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
-    serverLibrary = serverLibrary,
+    serverAccount = serverAccount,
     audiobookshelfFeatureFlag = AudiobookshelfFeatureFlag(audiobookshelfFeatureFlag),
   )
 

@@ -37,7 +37,7 @@ enum class BookSearchField {
     val text = when (this) {
       Title -> book.name
       Author -> book.author
-      Series -> seriesText(book.content.metadata.series, book.content.metadata.part)
+      Series -> seriesText(book.series, book.part)
       Narrator -> book.content.metadata.narrator
       Genre -> book.content.metadata.genre
     }

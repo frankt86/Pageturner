@@ -88,7 +88,11 @@
     <string name="book.edit.author.label">المؤلف</string>
     <string name="book.edit.cover.file">الغلاف من ملفات الجهاز</string>
     <string name="book.edit.cover.internet">الغلاف من الإنترنت</string>
+    <string name="book.edit.part.label">الجزء</string>
     <string name="book.edit.rename">إعادة التسمية</string>
+    <string name="book.edit.series.label">السلسلة</string>
+    <string name="book.edit.server.failed">تعذّر الحفظ على خادمك. يمكنك المحاولة مجددًا.</string>
+    <string name="book.edit.server.not_allowed">لا يملك حسابك على الخادم صلاحية تعديل الكتب.</string>
     <string name="book.edit.title.label">العنوان</string>
     <string name="book.remove_from_library">إزالة من المكتبة</string>
     <string name="book.remove_from_library.summary">يبقى الملف على جهازك</string>
@@ -640,6 +644,10 @@
     <string name="reader.voice.start">بدء القراءة</string>
     <string name="reader.volume_keys">تقليب الصفحات بأزرار مستوى الصوت</string>
     <string name="reader.word_spacing">تباعد الكلمات</string>
+    <string name="series.continue">متابعة</string>
+    <string name="series.continue_book">متابعة الكتاب %s</string>
+    <string name="series.start">بدء</string>
+    <string name="series.start_book">بدء الكتاب %s</string>
     <string name="settings.about.app_version.title">إصدارة التطبيق</string>
     <string name="settings.action.open">الإعدادات</string>
     <string name="settings.analytics_consent.description">السماح بجمع بيانات استخدام مجهولة الهوية للمساعدة في تحسين التطبيق</string>

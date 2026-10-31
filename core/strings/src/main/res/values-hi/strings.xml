@@ -76,7 +76,11 @@
     <string name="book.edit.author.label">लेखक</string>
     <string name="book.edit.cover.file">फ़ाइल सिस्टम से कवर</string>
     <string name="book.edit.cover.internet">इंटरनेट से कवर</string>
+    <string name="book.edit.part.label">भाग</string>
     <string name="book.edit.rename">नाम बदलें</string>
+    <string name="book.edit.series.label">सीरीज़</string>
+    <string name="book.edit.server.failed">आपके सर्वर पर सहेजा नहीं जा सका। फिर से कोशिश करें।</string>
+    <string name="book.edit.server.not_allowed">सर्वर पर आपके खाते को पुस्तकें बदलने की अनुमति नहीं है।</string>
     <string name="book.edit.title.label">शीर्षक</string>
     <string name="book.remove_from_library">लाइब्रेरी से हटाएँ</string>
     <string name="book.remove_from_library.summary">फ़ाइल आपके डिवाइस पर बनी रहेगी</string>
@@ -560,6 +564,10 @@
     <string name="reader.voice.start">पढ़ना शुरू करें</string>
     <string name="reader.volume_keys">वॉल्यूम बटन से पृष्ठ पलटें</string>
     <string name="reader.word_spacing">शब्दों के बीच की दूरी</string>
+    <string name="series.continue">जारी रखें</string>
+    <string name="series.continue_book">पुस्तक %s जारी रखें</string>
+    <string name="series.start">शुरू करें</string>
+    <string name="series.start_book">पुस्तक %s शुरू करें</string>
     <string name="settings.about.app_version.title">ऐप संस्करण</string>
     <string name="settings.action.open">सेटिंग्स</string>
     <string name="settings.analytics_consent.description">ऐप को बेहतर बनाने के लिए इस्तेमाल से जुड़ा गुमनाम डेटा इकट्ठा करने दें</string>

@@ -76,7 +76,11 @@
     <string name="book.edit.author.label">Συγγραφέας</string>
     <string name="book.edit.cover.file">Εξώφυλλο από τα αρχεία της συσκευής</string>
     <string name="book.edit.cover.internet">Εξώφυλλο από το Διαδίκτυο</string>
+    <string name="book.edit.part.label">Μέρος</string>
     <string name="book.edit.rename">Μετονομασία</string>
+    <string name="book.edit.series.label">Σειρά</string>
+    <string name="book.edit.server.failed">Δεν ήταν δυνατή η αποθήκευση στον διακομιστή σας. Δοκιμάστε ξανά.</string>
+    <string name="book.edit.server.not_allowed">Ο λογαριασμός σας στον διακομιστή δεν μπορεί να αλλάζει βιβλία.</string>
     <string name="book.edit.title.label">Τίτλος</string>
     <string name="book.remove_from_library">Αφαίρεση από τη βιβλιοθήκη</string>
     <string name="book.remove_from_library.summary">Το αρχείο παραμένει στη συσκευή σας</string>
@@ -560,6 +564,10 @@
     <string name="reader.voice.start">Έναρξη ανάγνωσης</string>
     <string name="reader.volume_keys">Γύρισμα σελίδων με τα πλήκτρα έντασης</string>
     <string name="reader.word_spacing">Απόσταση λέξεων</string>
+    <string name="series.continue">Συνέχεια</string>
+    <string name="series.continue_book">Συνέχεια βιβλίου %s</string>
+    <string name="series.start">Έναρξη</string>
+    <string name="series.start_book">Έναρξη βιβλίου %s</string>
     <string name="settings.about.app_version.title">Έκδοση εφαρμογής</string>
     <string name="settings.action.open">Ρυθμίσεις</string>
     <string name="settings.analytics_consent.description">Επιτρέψτε τη συλλογή ανώνυμων δεδομένων χρήσης για τη βελτίωση της εφαρμογής</string>

@@ -73,7 +73,11 @@
     <string name="book.edit.author.label">作者</string>
     <string name="book.edit.cover.file">從檔案選擇封面</string>
     <string name="book.edit.cover.internet">從網路尋找封面</string>
+    <string name="book.edit.part.label">集</string>
     <string name="book.edit.rename">重新命名</string>
+    <string name="book.edit.series.label">系列</string>
+    <string name="book.edit.server.failed">無法儲存到你的伺服器，請再試一次。</string>
+    <string name="book.edit.server.not_allowed">你在伺服器上的帳號沒有修改書籍的權限。</string>
     <string name="book.edit.title.label">書名</string>
     <string name="book.remove_from_library">從書庫中移除</string>
     <string name="book.remove_from_library.summary">檔案仍保留在你的裝置上</string>
@@ -540,6 +544,10 @@
     <string name="reader.voice.start">開始朗讀</string>
     <string name="reader.volume_keys">用音量鍵翻頁</string>
     <string name="reader.word_spacing">詞間距</string>
+    <string name="series.continue">繼續收聽</string>
+    <string name="series.continue_book">繼續收聽第 %s 卷</string>
+    <string name="series.start">開始收聽</string>
+    <string name="series.start_book">開始收聽第 %s 卷</string>
     <string name="settings.about.app_version.title">應用程式版本</string>
     <string name="settings.action.open">設定</string>
     <string name="settings.analytics_consent.description">允許收集匿名使用資料，幫忙改善應用程式</string>

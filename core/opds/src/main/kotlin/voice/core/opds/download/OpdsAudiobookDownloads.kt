@@ -28,10 +28,10 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import okhttp3.Call
-import voice.core.audiobookshelf.download.AudiobookshelfDownloads
+import voice.core.audiobookshelf.ServerDownloads
 import voice.core.audiobookshelf.download.BookDownloadState
-import voice.core.audiobookshelf.download.DownloadNotifications
 import voice.core.audiobookshelf.download.DownloadProgress
+import voice.core.audiobookshelf.download.ServerDownloadNotifications
 import voice.core.audiobookshelf.http.ServerHttpClient
 import voice.core.common.comparator.NaturalOrderComparator
 import voice.core.data.BookId
@@ -105,8 +105,8 @@ public class OpdsAudiobookDownloads internal constructor(
   private val store: DownloadedAudiobookStore,
   private val bookRepository: BookRepository,
   private val mediaScanTrigger: MediaScanTrigger,
-  private val notifications: DownloadNotifications,
-  private val serverDownloads: AudiobookshelfDownloads,
+  private val notifications: ServerDownloadNotifications,
+  private val serverDownloads: ServerDownloads,
   private val downloadFolders: OpdsDownloadFolders,
   private val writer: LibraryFolderWriter,
 ) {

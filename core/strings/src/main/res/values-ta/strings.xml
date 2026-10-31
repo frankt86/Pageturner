@@ -76,7 +76,11 @@
     <string name="book.edit.author.label">ஆசிரியர்</string>
     <string name="book.edit.cover.file">கோப்புகளிலிருந்து அட்டைப்படம்</string>
     <string name="book.edit.cover.internet">இணையத்திலிருந்து அட்டைப்படம்</string>
+    <string name="book.edit.part.label">பாகம்</string>
     <string name="book.edit.rename">மறுபெயரிடு</string>
+    <string name="book.edit.series.label">தொடர்</string>
+    <string name="book.edit.server.failed">உங்கள் சர்வரில் சேமிக்க முடியவில்லை. மீண்டும் முயலவும்.</string>
+    <string name="book.edit.server.not_allowed">சர்வரில் உள்ள உங்கள் கணக்கால் புத்தகங்களை மாற்ற முடியாது.</string>
     <string name="book.edit.title.label">தலைப்பு</string>
     <string name="book.remove_from_library">நூலகத்திலிருந்து அகற்று</string>
     <string name="book.remove_from_library.summary">கோப்பு உங்கள் சாதனத்திலேயே இருக்கும்</string>
@@ -560,6 +564,10 @@
     <string name="reader.voice.start">வாசிக்கத் தொடங்கு</string>
     <string name="reader.volume_keys">ஒலி பொத்தான்களால் பக்கங்களைப் புரட்டு</string>
     <string name="reader.word_spacing">சொல் இடைவெளி</string>
+    <string name="series.continue">தொடர்க</string>
+    <string name="series.continue_book">புத்தகம் %s-ஐத் தொடர்க</string>
+    <string name="series.start">தொடங்கு</string>
+    <string name="series.start_book">புத்தகம் %s-ஐத் தொடங்கு</string>
     <string name="settings.about.app_version.title">பயன்பாட்டு பதிப்பு</string>
     <string name="settings.action.open">அமைப்புகள்</string>
     <string name="settings.analytics_consent.description">பயன்பாட்டை மேம்படுத்த உதவ அநாமதேய பயன்பாட்டுத் தரவு சேகரிப்பை அனுமதி</string>

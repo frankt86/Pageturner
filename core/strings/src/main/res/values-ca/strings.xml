@@ -79,7 +79,11 @@
     <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Portada del sistema de fitxers</string>
     <string name="book.edit.cover.internet">Portada d\'Internet</string>
+    <string name="book.edit.part.label">Número</string>
     <string name="book.edit.rename">Canvia el nom</string>
+    <string name="book.edit.series.label">Sèrie</string>
+    <string name="book.edit.server.failed">No s\'ha pogut desar al vostre servidor. Torneu-ho a provar.</string>
+    <string name="book.edit.server.not_allowed">El vostre compte del servidor no pot canviar llibres.</string>
     <string name="book.edit.title.label">Títol</string>
     <string name="book.remove_from_library">Treu de la biblioteca</string>
     <string name="book.remove_from_library.summary">El fitxer es queda al dispositiu</string>
@@ -580,6 +584,10 @@
     <string name="reader.voice.start">Comença a llegir</string>
     <string name="reader.volume_keys">Passa les pàgines amb els botons de volum</string>
     <string name="reader.word_spacing">Espaiat entre paraules</string>
+    <string name="series.continue">Continua</string>
+    <string name="series.continue_book">Continua el llibre %s</string>
+    <string name="series.start">Comença</string>
+    <string name="series.start_book">Comença el llibre %s</string>
     <string name="settings.about.app_version.title">Versió de l\'aplicació</string>
     <string name="settings.action.open">Configuració</string>
     <string name="settings.analytics_consent.description">Permet recollir dades d\'ús anònimes per ajudar a millorar l\'aplicació</string>
