@@ -23,8 +23,8 @@ interface PdfPages : Closeable {
 
   val pageCount: Int
 
-  /** The width of each page divided by its height. */
-  fun aspectRatios(): List<Float>
+  /** The width of the page divided by its height. */
+  fun aspectRatio(index: Int): Float
 
   /** The page as large as fits into [maxWidth] by [maxHeight], on white paper. */
   fun render(
@@ -97,8 +97,8 @@ private class AndroidPdfPages(
 
   override val pageCount: Int = renderer.pageCount
 
-  override fun aspectRatios(): List<Float> = List(pageCount) { index ->
-    renderer.openPage(index).use { page -> page.width.toFloat() / page.height.coerceAtLeast(1) }
+  override fun aspectRatio(index: Int): Float = renderer.openPage(index).use { page ->
+    page.width.toFloat() / page.height.coerceAtLeast(1)
   }
 
   override fun render(
@@ -128,9 +128,12 @@ private class PdfiumPages(private val document: PdfDocument) : PdfPages {
 
   override val pageCount: Int = document.getPageCount()
 
-  override fun aspectRatios(): List<Float> = document.getPageSizes(POINTS_PER_INCH).map { size ->
-    size.width.toFloat() / size.height.coerceAtLeast(1)
+  // PDFium tells the sizes of all pages without opening them
+  private val aspectRatios by lazy {
+    document.getPageSizes(POINTS_PER_INCH).map { size -> size.width.toFloat() / size.height.coerceAtLeast(1) }
   }
+
+  override fun aspectRatio(index: Int): Float = aspectRatios.getOrElse(index) { 1F }
 
   override fun render(
     index: Int,

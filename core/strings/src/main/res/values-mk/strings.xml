@@ -447,6 +447,7 @@
     <string name="reader.mouse_wheel.turn">Листај</string>
     <string name="reader.move_down">Помести надолу</string>
     <string name="reader.move_up">Помести нагоре</string>
+    <string name="reader.moved_to_remote_place">Преместено на вашето место од Komga</string>
     <string name="reader.new_engine">Нов мотор за книги (бета)</string>
     <string name="reader.nothing">Ништо</string>
     <string name="reader.nothing_to_read_aloud">Тука нема текст за читање на глас</string>

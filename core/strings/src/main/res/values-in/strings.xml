@@ -430,6 +430,7 @@
     <string name="reader.mouse_wheel.turn">Balik halaman</string>
     <string name="reader.move_down">Pindahkan ke bawah</string>
     <string name="reader.move_up">Pindahkan ke atas</string>
+    <string name="reader.moved_to_remote_place">Dipindahkan ke posisi Anda dari Komga</string>
     <string name="reader.new_engine">Mesin buku baru (beta)</string>
     <string name="reader.nothing">Tidak ada</string>
     <string name="reader.nothing_to_read_aloud">Tidak ada teks untuk dibacakan di sini</string>

@@ -3,6 +3,7 @@
 package voice.features.reader
 
 import android.net.Uri
+import android.os.SystemClock
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -113,6 +114,7 @@ import voice.core.data.ReaderSettings
 import voice.core.data.ReadingMode
 import voice.core.data.ScreenAwake
 import voice.core.data.TapAction
+import voice.core.logging.api.Logger
 import voice.core.ui.bookText
 import voice.core.ui.icons.VoiceIcons
 import voice.navigation.Destination
@@ -157,6 +159,7 @@ internal fun ReaderScreen(uri: Uri) {
   val unavailableMessage = stringResource(StringsR.string.reader_read_aloud_unavailable)
   val nothingToReadMessage = stringResource(StringsR.string.reader_nothing_to_read_aloud)
   val naturalVoiceUnavailableMessage = stringResource(StringsR.string.reader_voice_natural_unavailable)
+  val movedToRemotePlaceMessage = stringResource(StringsR.string.reader_moved_to_remote_place)
   LaunchedEffect(viewModel) {
     viewModel.messages.collect { message ->
       snackbarHostState.showSnackbar(
@@ -164,6 +167,7 @@ internal fun ReaderScreen(uri: Uri) {
           ReaderMessage.ReadAloudUnavailable -> unavailableMessage
           ReaderMessage.NothingToReadAloud -> nothingToReadMessage
           ReaderMessage.NaturalVoiceUnavailable -> naturalVoiceUnavailableMessage
+          ReaderMessage.MovedToRemotePlace -> movedToRemotePlaceMessage
         },
       )
     }
@@ -181,6 +185,9 @@ internal fun ReaderScreen(uri: Uri) {
   val readiumJump = { locator: Locator ->
     viewModel.onReadiumJump()
     val _ = readiumJumps.tryEmit(locator)
+  }
+  LaunchedEffect(viewModel) {
+    viewModel.readiumJumps.collect { readiumJump(it) }
   }
   var editedReadiumHighlight by remember { mutableStateOf<LocatedHighlight?>(null) }
   // each request turns a page or scrolls a screen, forward for a positive step
@@ -338,7 +345,10 @@ internal fun ReaderScreen(uri: Uri) {
               autoScrollSpeed = autoScrollSpeed,
               onAutoScrollEnd = { autoRunning = false },
               onLocatorChange = viewModel::onLocatorChange,
-              onPageTurn = { barsVisible = false },
+              onPageTurn = {
+                barsVisible = false
+                viewModel.onUserMove()
+              },
               onTap = onTap,
               onHighlightAdd = { locator, color -> val _ = viewModel.onReadiumHighlightAdd(locator, color) },
               onNoteAdd = { locator -> editedReadiumHighlight = viewModel.onReadiumHighlightAdd(locator, HighlightColor.Yellow) },
@@ -378,7 +388,10 @@ internal fun ReaderScreen(uri: Uri) {
           onTap = onTap,
           autoScrollSpeed = autoScrollSpeed,
           onScroll = viewModel::onScrolled,
-          onUserScroll = { barsVisible = false },
+          onUserScroll = {
+            barsVisible = false
+            viewModel.onUserMove()
+          },
           onAutoScrollEnd = { autoRunning = false },
           // the insets of hidden bars too, or showing them would lay out all pages anew
           modifier = Modifier
@@ -923,6 +936,7 @@ internal fun Book(
       paragraphGap = paragraphGap,
       textWidth = pageWidth - margins.side * 2,
       textHeight = maxHeight - margins.top - margins.bottom - PageNumberHeight - headerHeight,
+      section = state.position.section,
       paginateNow = paginateNow,
     )
     if (pages == null) {
@@ -984,6 +998,7 @@ private fun pages(
   paragraphGap: TextUnit,
   textWidth: Dp,
   textHeight: Dp,
+  section: Int,
   paginateNow: Boolean,
 ): List<Page>? {
   return when (content) {
@@ -998,10 +1013,22 @@ private fun pages(
           paginate(content.chapters, textMeasurer, textStyle, paragraphGap, width, height)
         }
       } else {
+        val latestSection by rememberUpdatedState(section)
         produceState<List<Page>?>(null, content, textStyle, paragraphGap, width, height, textMeasurer) {
+          val started = SystemClock.elapsedRealtime()
+          // the chapter on screen first, so the book shows while the others are measured
+          val first = latestSection.coerceIn(0, (content.chapters.size - 1).coerceAtLeast(0))
+          if (content.chapters.size > 1) {
+            val measured = withContext(Dispatchers.Default) {
+              paginateChapter(first, content.chapters[first], textMeasurer, textStyle, paragraphGap, width, height)
+            }
+            value = estimatedPages(content.chapters, first, measured)
+            Logger.d("Measured the first chapter in ${SystemClock.elapsedRealtime() - started} ms")
+          }
           value = withContext(Dispatchers.Default) {
             paginate(content.chapters, textMeasurer, textStyle, paragraphGap, width, height)
           }
+          Logger.d("Measured ${content.chapters.size} chapters in ${SystemClock.elapsedRealtime() - started} ms")
         }.value
       }
     }

@@ -447,6 +447,7 @@
     <string name="reader.mouse_wheel.turn">Keera lehti</string>
     <string name="reader.move_down">Liiguta alla</string>
     <string name="reader.move_up">Liiguta üles</string>
+    <string name="reader.moved_to_remote_place">Viidi sinu kohale Komgast</string>
     <string name="reader.new_engine">Uus raamatumootor (beeta)</string>
     <string name="reader.nothing">Mitte midagi</string>
     <string name="reader.nothing_to_read_aloud">Siin pole teksti, mida ette lugeda</string>

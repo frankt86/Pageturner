@@ -73,7 +73,8 @@ private fun readEntries(
         val entry = zip.nextEntry ?: break
         if (entry.isDirectory) continue
         val extension = entry.name.substringAfterLast('.').lowercase()
-        val wanted = extension in imageExtensions ||
+        // the images are most of a book's size, and the reader's text leaves them out, the cover too
+        val wanted = (!withText && extension in imageExtensions) ||
           extension == "opf" ||
           extension == "ncx" ||
           entry.name == "META-INF/container.xml" ||

@@ -464,6 +464,7 @@
     <string name="reader.mouse_wheel.turn">Passa pàgines</string>
     <string name="reader.move_down">Mou avall</string>
     <string name="reader.move_up">Mou amunt</string>
+    <string name="reader.moved_to_remote_place">S\'ha anat a la vostra posició de Komga</string>
     <string name="reader.new_engine">Nou motor de llibres (beta)</string>
     <string name="reader.nothing">Res</string>
     <string name="reader.nothing_to_read_aloud">Aquí no hi ha text per llegir en veu alta</string>

@@ -464,6 +464,7 @@
     <string name="reader.mouse_wheel.turn">דפדוף</string>
     <string name="reader.move_down">הזזה למטה</string>
     <string name="reader.move_up">הזזה למעלה</string>
+    <string name="reader.moved_to_remote_place">עברנו למקום שלכם מ-Komga</string>
     <string name="reader.new_engine">מנוע ספרים חדש (בטא)</string>
     <string name="reader.nothing">כלום</string>
     <string name="reader.nothing_to_read_aloud">אין כאן טקסט להקראה</string>

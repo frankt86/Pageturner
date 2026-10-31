@@ -59,11 +59,11 @@ class EpubTest {
   }
 
   @Test
-  fun `reads metadata, chapters and their titles`() {
+  fun `reads metadata, chapters and their titles without the cover`() {
     val book = parseEpub(epub().inputStream())
     assertEquals("The Quiet Orbit", book.title)
     assertEquals("Mara Quill", book.author)
-    assertContentEquals(cover, book.cover)
+    assertNull(book.cover)
     assertEquals(listOf("Launch", "Drift & Return"), book.chapters.map { it.title })
     assertEquals(listOf("First line.\n\nSecond line.", "Third line."), book.chapters.map { it.text })
   }

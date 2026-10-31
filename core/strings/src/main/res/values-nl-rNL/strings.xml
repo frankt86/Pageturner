@@ -447,6 +447,7 @@
     <string name="reader.mouse_wheel.turn">Bladeren</string>
     <string name="reader.move_down">Omlaag</string>
     <string name="reader.move_up">Omhoog</string>
+    <string name="reader.moved_to_remote_place">Naar je plek uit Komga gegaan</string>
     <string name="reader.new_engine">Nieuwe boekengine (bèta)</string>
     <string name="reader.nothing">Niets</string>
     <string name="reader.nothing_to_read_aloud">Er is hier geen tekst om voor te lezen</string>

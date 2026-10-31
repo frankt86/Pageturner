@@ -447,6 +447,7 @@
     <string name="reader.mouse_wheel.turn">Bla om</string>
     <string name="reader.move_down">Flytt ned</string>
     <string name="reader.move_up">Flytt opp</string>
+    <string name="reader.moved_to_remote_place">Flyttet til stedet ditt fra Komga</string>
     <string name="reader.new_engine">Ny bokmotor (beta)</string>
     <string name="reader.nothing">Ingenting</string>
     <string name="reader.nothing_to_read_aloud">Det er ingen tekst å lese høyt her</string>

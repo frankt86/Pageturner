@@ -447,6 +447,7 @@
     <string name="reader.mouse_wheel.turn">பக்கங்களைப் புரட்டு</string>
     <string name="reader.move_down">கீழே நகர்த்து</string>
     <string name="reader.move_up">மேலே நகர்த்து</string>
+    <string name="reader.moved_to_remote_place">Komga-வில் இருந்து உங்கள் இடத்திற்குச் சென்றது</string>
     <string name="reader.new_engine">புதிய புத்தக இன்ஜின் (பீட்டா)</string>
     <string name="reader.nothing">எதுவுமில்லை</string>
     <string name="reader.nothing_to_read_aloud">இங்கே சத்தமாகப் படிக்க உரை எதுவும் இல்லை</string>
