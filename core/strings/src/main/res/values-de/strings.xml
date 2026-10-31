@@ -446,6 +446,7 @@
     <string name="reader.mouse_wheel.turn">Blättern</string>
     <string name="reader.move_down">Nach unten</string>
     <string name="reader.move_up">Nach oben</string>
+    <string name="reader.moved_to_remote_place">Zu Deiner Stelle aus Komga gesprungen</string>
     <string name="reader.new_engine">Neue Buch-Engine (Beta)</string>
     <string name="reader.nothing">Nichts</string>
     <string name="reader.nothing_to_read_aloud">Hier gibt es keinen Text zum Vorlesen</string>

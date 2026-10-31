@@ -446,6 +446,7 @@
     <string name="reader.mouse_wheel.turn">पृष्ठ पलटें</string>
     <string name="reader.move_down">नीचे ले जाएँ</string>
     <string name="reader.move_up">ऊपर ले जाएँ</string>
+    <string name="reader.moved_to_remote_place">Komga से आपकी जगह पर ले जाया गया</string>
     <string name="reader.new_engine">नया पुस्तक इंजन (बीटा)</string>
     <string name="reader.nothing">कुछ नहीं</string>
     <string name="reader.nothing_to_read_aloud">यहाँ ज़ोर से पढ़ने के लिए कोई टेक्स्ट नहीं है</string>

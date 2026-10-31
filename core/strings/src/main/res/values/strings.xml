@@ -804,6 +804,8 @@
     <string name="reader.move_down">Move down</string>
     <!-- Button in the controls sheet of the ebook reader that moves a top bar button one place up the list. -->
     <string name="reader.move_up">Move up</string>
+    <!-- Snackbar in the ebook reader when the book was opened at the place here, and a newer place from the Komga server came in a moment later, so the reader jumps there. Komga is a product name. -->
+    <string name="reader.moved_to_remote_place">Moved to your place from Komga</string>
     <!-- Switch in the display sheet of the ebook reader, only for EPUB books. When it's on, books are shown with a new engine that keeps the book's own layout, images and links. It's still being tested, so bookmarks, highlights, search and reading aloud aren't there yet. -->
     <string name="reader.new_engine">New book engine (beta)</string>
     <!-- Choice in the ebook reader settings for a tap, double tap, page header or page footer that does or shows nothing. -->

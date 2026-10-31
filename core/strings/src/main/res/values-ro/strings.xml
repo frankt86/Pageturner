@@ -463,6 +463,7 @@
     <string name="reader.mouse_wheel.turn">Întoarce paginile</string>
     <string name="reader.move_down">Mută în jos</string>
     <string name="reader.move_up">Mută în sus</string>
+    <string name="reader.moved_to_remote_place">Mutat la locul tău din Komga</string>
     <string name="reader.new_engine">Motor nou pentru cărți (beta)</string>
     <string name="reader.nothing">Nimic</string>
     <string name="reader.nothing_to_read_aloud">Nu există text de citit cu voce tare aici</string>

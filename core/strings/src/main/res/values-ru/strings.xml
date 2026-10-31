@@ -480,6 +480,7 @@
     <string name="reader.mouse_wheel.turn">Листать</string>
     <string name="reader.move_down">Переместить вниз</string>
     <string name="reader.move_up">Переместить вверх</string>
+    <string name="reader.moved_to_remote_place">Перемещено на ваше место из Komga</string>
     <string name="reader.new_engine">Новый движок книг (бета)</string>
     <string name="reader.nothing">Ничего</string>
     <string name="reader.nothing_to_read_aloud">Здесь нет текста для чтения вслух</string>

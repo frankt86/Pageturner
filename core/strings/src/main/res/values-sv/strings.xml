@@ -446,6 +446,7 @@
     <string name="reader.mouse_wheel.turn">Bläddra</string>
     <string name="reader.move_down">Flytta ned</string>
     <string name="reader.move_up">Flytta upp</string>
+    <string name="reader.moved_to_remote_place">Gick till din plats från Komga</string>
     <string name="reader.new_engine">Ny bokmotor (beta)</string>
     <string name="reader.nothing">Ingenting</string>
     <string name="reader.nothing_to_read_aloud">Det finns ingen text att läsa upp här</string>

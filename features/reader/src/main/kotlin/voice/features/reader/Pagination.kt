@@ -32,28 +32,67 @@ internal fun paginate(
   width: Int,
   height: Int,
 ): List<Page> {
-  return chapters.flatMapIndexed { section, text ->
-    if (text.isBlank()) return@flatMapIndexed emptyList()
-    val layout = textMeasurer.measure(
-      text = AnnotatedString(text, paragraphStyles = paragraphStyles(text, paragraphGap, continued = false)),
-      style = style,
-      constraints = Constraints(maxWidth = width),
-      skipCache = true,
-    )
-    buildList {
-      var firstLine = 0
-      while (firstLine < layout.lineCount) {
-        val top = layout.getLineTop(firstLine)
-        var lastLine = firstLine
-        while (lastLine + 1 < layout.lineCount && layout.getLineBottom(lastLine + 1) - top <= height) {
-          lastLine++
-        }
-        add(Page(section, layout.getLineStart(firstLine), layout.getLineEnd(lastLine)))
-        firstLine = lastLine + 1
+  return chapters.indices.flatMap { section ->
+    paginateChapter(section, chapters[section], textMeasurer, style, paragraphGap, width, height)
+  }
+}
+
+internal fun paginateChapter(
+  section: Int,
+  text: String,
+  textMeasurer: TextMeasurer,
+  style: TextStyle,
+  paragraphGap: TextUnit,
+  width: Int,
+  height: Int,
+): List<Page> {
+  if (text.isBlank()) return emptyList()
+  val layout = textMeasurer.measure(
+    text = AnnotatedString(text, paragraphStyles = paragraphStyles(text, paragraphGap, continued = false)),
+    style = style,
+    constraints = Constraints(maxWidth = width),
+    skipCache = true,
+  )
+  return buildList {
+    var firstLine = 0
+    while (firstLine < layout.lineCount) {
+      val top = layout.getLineTop(firstLine)
+      var lastLine = firstLine
+      while (lastLine + 1 < layout.lineCount && layout.getLineBottom(lastLine + 1) - top <= height) {
+        lastLine++
+      }
+      add(Page(section, layout.getLineStart(firstLine), layout.getLineEnd(lastLine)))
+      firstLine = lastLine + 1
+    }
+  }
+}
+
+/**
+ * The pages of all [chapters] while only the chapter [section] is measured, as [measured]. The other chapters get as
+ * many characters on a page as it has, so the book shows and the page numbers are about right until the whole book is
+ * measured.
+ */
+internal fun estimatedPages(
+  chapters: List<String>,
+  section: Int,
+  measured: List<Page>,
+): List<Page> {
+  val measuredLength = measured.sumOf { it.end - it.start }
+  val perPage = if (measured.isEmpty()) ESTIMATED_PAGE_LENGTH else (measuredLength / measured.size).coerceAtLeast(1)
+  return chapters.flatMapIndexed { index, text ->
+    when {
+      index == section -> measured
+      text.isBlank() -> emptyList()
+      else -> {
+        val count = (text.length + perPage - 1) / perPage
+        List(count) { page -> Page(index, page * text.length / count, (page + 1) * text.length / count) }
       }
     }
   }
 }
+
+// about a page of a paperback
+private const val ESTIMATED_PAGE_LENGTH = 1_500
 
 /**
  * Lays out the paragraphs of [text] apart from each other, so the empty lines between them take [gap] each, and a

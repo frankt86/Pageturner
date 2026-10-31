@@ -4,6 +4,7 @@ import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import voice.core.data.EbookPosition
 import voice.core.opds.komga.RemotePlace
+import voice.core.opds.komga.isSamePlaceAs
 import kotlin.math.roundToInt
 
 /** The place [fraction] of the way through chapters of these lengths, counted like the progress of the old book engine. */
@@ -39,4 +40,29 @@ internal fun Publication.locatorAt(place: RemotePlace): Locator? {
     progression = place.progression ?: 0.0,
     totalProgression = place.totalProgression,
   )
+}
+
+/** What to do with a newer place from the server, which comes in after the book shows. */
+internal enum class RemotePlaceAction {
+  /** The reader moved on here, which is newer now. */
+  Ignore,
+
+  /** The same page, only noted as in step with the server. */
+  Note,
+
+  /** Go there, the reader hasn't turned a page yet. */
+  Jump,
+
+  /** The reader turned a page already, so the book stays and opens there the next time. */
+  KeepForNextTime,
+}
+
+internal fun remotePlaceAction(
+  place: RemotePlace,
+  progressAtOpen: Float,
+  turnedPage: Boolean,
+): RemotePlaceAction = when {
+  place.isSamePlaceAs(progressAtOpen) -> if (turnedPage) RemotePlaceAction.Ignore else RemotePlaceAction.Note
+  turnedPage -> RemotePlaceAction.KeepForNextTime
+  else -> RemotePlaceAction.Jump
 }

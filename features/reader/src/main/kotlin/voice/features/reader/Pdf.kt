@@ -15,6 +15,12 @@ internal class PdfFile(private val pages: PdfPages) {
 
   val pageCount: Int = pages.pageCount
 
+  private val aspectRatios = arrayOfNulls<Float>(pageCount)
+
+  /** The shape of the last page measured, which most pages of a PDF share, for a page not measured yet. */
+  var typicalAspectRatio = 1F
+    private set
+
   suspend fun render(
     index: Int,
     maxWidth: Int,
@@ -25,10 +31,19 @@ internal class PdfFile(private val pages: PdfPages) {
     }
   }
 
-  /** The width of each page divided by its height. */
-  suspend fun aspectRatios(): List<Float> = withContext(Dispatchers.Default) {
+  fun knownAspectRatio(index: Int): Float = aspectRatios.getOrNull(index) ?: typicalAspectRatio
+
+  /** The width of the page divided by its height. Opening every page at once takes long in a big PDF. */
+  suspend fun aspectRatio(index: Int): Float = aspectRatios[index] ?: withContext(Dispatchers.Default) {
     mutex.withLock {
-      if (closed) emptyList() else pages.aspectRatios()
+      if (closed) {
+        typicalAspectRatio
+      } else {
+        pages.aspectRatio(index).also { ratio ->
+          aspectRatios[index] = ratio
+          typicalAspectRatio = ratio
+        }
+      }
     }
   }
 

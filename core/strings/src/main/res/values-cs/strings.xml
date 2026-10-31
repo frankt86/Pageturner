@@ -480,6 +480,7 @@
     <string name="reader.mouse_wheel.turn">Otáčet stránky</string>
     <string name="reader.move_down">Posunout dolů</string>
     <string name="reader.move_up">Posunout nahoru</string>
+    <string name="reader.moved_to_remote_place">Přesunuto na vaše místo z Komga</string>
     <string name="reader.new_engine">Nové jádro pro knihy (beta)</string>
     <string name="reader.nothing">Nic</string>
     <string name="reader.nothing_to_read_aloud">Tady není žádný text k předčítání</string>
