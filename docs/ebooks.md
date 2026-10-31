@@ -225,12 +225,22 @@ bold and italic text, tables, links and footnotes. It's built on [Readium](https
 ## Good to know
 
 - Without the new book engine, EPUB books show their text only. Pictures and text styling, like bold or headings, are left
-  out, and so are print page numbers and **Count only the main text**. See the [reader plan](reader-plan.md).
+  out, and so are links, print page numbers and **Count only the main text**.
 - PDF books show their pages without chapters or reading time.
 - PDF pages show exactly as they're printed. Searching or reading a PDF aloud needs Android 15 or newer, and a PDF made of
   scanned pages has no text. Highlights work in EPUB books only.
 - The natural voice needs a 64-bit phone, which nearly every phone from the last years is. On older phones it may pause briefly
   between sentences.
-- Reading aloud stops when you leave the book. It has no controls on the lock screen yet.
-- Your own title and author for an ebook stay on this phone. Unlike for audiobooks, they don't sync to your other devices
-  through the library folder yet.
+- Reading aloud stops when you leave the book.
+
+## Not yet
+
+These aren't in Pageturner yet:
+
+- Controls for reading aloud on the lock screen and in the notifications.
+- Your own title and author for an ebook syncing to your other devices through the library folder, like they do for
+  audiobooks. They stay on this phone.
+- Changing which key does what. Keys and shortcuts are fixed.
+- Removing a font you added.
+- Changing only some of the book's styling, like the body text while keeping its headings. **Book's own style** keeps all of
+  it or none.

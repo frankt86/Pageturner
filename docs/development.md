@@ -55,7 +55,7 @@ Agents use this through the emulator skill in `.agents/skills/emulator`, which a
 
 ## Ktlint
 
-Voice uses **Ktlint** to enforce consistent code formatting.
+Pageturner uses **Ktlint** to enforce consistent code formatting.
 
 - Check for formatting issues:
 
@@ -77,6 +77,12 @@ chmod +x .git/hooks/pre-commit
 ```
 
 ## Releasing
+
+Every push to `main` builds a release APK with the debug app id and key and publishes it to the
+[debug release](https://github.com/frankt86/Pageturner/releases/tag/debug) and, as `pageturner.apk`, next to the website.
+That's the build people install. It installs next to Voice from the stores.
+
+The rest of this section is the store release process that comes from upstream Voice.
 
 To release a new version, trigger the [Release Workflow](https://github.com/frankt86/Pageturner/actions/workflows/release.yml)
 
@@ -173,7 +179,7 @@ The `artwork/package-lock.json` file is intentionally not checked in. CI and loc
 
 ## Versioning
 
-Voice uses [calendar versioning (CalVer)](https://calver.org/).
+Pageturner, like Voice, uses [calendar versioning (CalVer)](https://calver.org/).
 
 - Version name format: `YY.M.RELEASE`
   - `YY`: release year, last 2 digits (2025 → 25)

@@ -12,10 +12,10 @@ Pageturner relies on the media formats that are natively supported by the Androi
 You can review the currently supported file extensions [here](https://developer.android.com/media/media3/exoplayer/supported-formats).
 If a file that should be supported is not displayed, it is most likely either corrupted or incompatible with your Android version.
 
-### Why isn’t feature xyz available in the app?
+### Why isn't feature xyz available in the app?
 
-I add features when they make listening better for many listeners. Each one has to be maintained for years, and every new setting makes
-the app a bit harder to use. So I prefer good defaults over options and keep each screen focused on listening.
+Features are added when they make listening or reading better for many people. Each one has to be maintained for years, and
+every new setting makes the app a bit harder to use. For what the reader can't do yet, see [Ebooks](ebooks.md#not-yet).
 
 If you're missing something, [open an issue](https://github.com/frankt86/Pageturner/issues/new) and describe
 what you'd like to do.
@@ -37,8 +37,8 @@ Once the sleep timer elapses, Pageturner pauses playback (after a brief fade-out
 
 ### How do I continue a book on another device?
 
-Pageturner keeps your place, your playback speed, your bookmarks and the names you gave your books in a hidden `.voice`
-folder inside each audiobook folder you added. Sync these folders between your devices with a tool of your own, like
+Pageturner keeps your place, your playback speed, your bookmarks and the titles and authors you gave your audiobooks in a
+hidden `.voice` folder inside each audiobook folder you added. Sync these folders between your devices with a tool of your own, like
 [Syncthing](https://syncthing.net), and when you open Pageturner on the other device, it picks up where you left off.
 
 - Add the same folder on every device, and the same way, for example as "Every folder is a book" on both. Where the
@@ -48,6 +48,8 @@ folder inside each audiobook folder you added. Sync these folders between your d
 - Books you added as a single file don't sync. Add the folder they're in instead.
 - Your sync tool has to copy hidden folders.
 - A book that is playing stays where it is.
+- Ebooks don't sync this way. Books from Komga keep your place in step with Komga, see
+  [Ebook catalogs](opds.md#syncing-your-progress-with-komga).
 
 If you share a folder with your family and don't want each other's place, names and bookmarks, let your sync tool
 ignore `.voice`. In Syncthing, add `.voice` to the folder's ignore patterns.
