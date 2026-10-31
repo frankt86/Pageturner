@@ -144,11 +144,15 @@ internal fun ScrollBook(
     is ReaderContent.Epub -> remember(content) { paragraphs(content.chapters) }
     is ReaderContent.Pdf -> pages
   }
-  val aspectRatios = (content as? ReaderContent.Pdf)?.let { pdf ->
-    produceState<List<Float>?>(null, pdf) { value = pdf.pdf.aspectRatios() }.value
+  // the page that shows first tells the shape of the others until they're opened
+  val firstAspectRatio = (content as? ReaderContent.Pdf)?.let { pdf ->
+    produceState<Float?>(null, pdf) {
+      val pageCount = pdf.pdf.pageCount
+      if (pageCount > 0) value = pdf.pdf.aspectRatio(state.position.section.coerceIn(0, pageCount - 1))
+    }.value
   }
   if (items.isEmpty()) return
-  if (content is ReaderContent.Pdf && aspectRatios == null) {
+  if (content is ReaderContent.Pdf && firstAspectRatio == null) {
     Box(modifier, contentAlignment = Alignment.Center) {
       LoadingIndicator(Modifier.size(64.dp))
     }
@@ -327,7 +331,6 @@ internal fun ScrollBook(
             ScrolledPdfPage(
               pdf = content.pdf,
               index = item.section,
-              aspectRatio = aspectRatios?.getOrNull(index) ?: 1F,
               colorFilter = state.settings.imageFilter.colorFilter(paper = MaterialTheme.colorScheme.surface),
               pageCount = items.size,
             )
@@ -396,10 +399,10 @@ private fun ParagraphText(
 private fun ScrolledPdfPage(
   pdf: PdfFile,
   index: Int,
-  aspectRatio: Float,
   colorFilter: ColorFilter?,
   pageCount: Int,
 ) {
+  val aspectRatio by produceState(pdf.knownAspectRatio(index), pdf, index) { value = pdf.aspectRatio(index) }
   ZoomablePdfPage(
     pdf = pdf,
     index = index,

@@ -511,6 +511,7 @@
     <string name="reader.mouse_wheel.turn">تقليب الصفحات</string>
     <string name="reader.move_down">نقل للأسفل</string>
     <string name="reader.move_up">نقل للأعلى</string>
+    <string name="reader.moved_to_remote_place">تم الانتقال إلى موضعك من Komga</string>
     <string name="reader.new_engine">محرك الكتب الجديد (تجريبي)</string>
     <string name="reader.nothing">لا شيء</string>
     <string name="reader.nothing_to_read_aloud">لا يوجد هنا نص للقراءة بصوت عالٍ</string>

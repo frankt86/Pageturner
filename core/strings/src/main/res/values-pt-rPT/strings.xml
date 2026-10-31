@@ -460,6 +460,7 @@
     <string name="reader.mouse_wheel.turn">Virar páginas</string>
     <string name="reader.move_down">Mover para baixo</string>
     <string name="reader.move_up">Mover para cima</string>
+    <string name="reader.moved_to_remote_place">Movido para a posição do Komga</string>
     <string name="reader.new_engine">Novo motor de livros (beta)</string>
     <string name="reader.nothing">Nada</string>
     <string name="reader.nothing_to_read_aloud">Não há texto aqui para ler em voz alta</string>

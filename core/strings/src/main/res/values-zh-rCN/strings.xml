@@ -426,6 +426,7 @@
     <string name="reader.mouse_wheel.turn">翻页</string>
     <string name="reader.move_down">下移</string>
     <string name="reader.move_up">上移</string>
+    <string name="reader.moved_to_remote_place">已跳转到您在 Komga 的位置</string>
     <string name="reader.new_engine">新版图书引擎（测试版）</string>
     <string name="reader.nothing">无</string>
     <string name="reader.nothing_to_read_aloud">这里没有可朗读的文字</string>

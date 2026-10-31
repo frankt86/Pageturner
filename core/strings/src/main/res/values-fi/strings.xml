@@ -443,6 +443,7 @@
     <string name="reader.mouse_wheel.turn">Käännä sivuja</string>
     <string name="reader.move_down">Siirrä alas</string>
     <string name="reader.move_up">Siirrä ylös</string>
+    <string name="reader.moved_to_remote_place">Siirryttiin kohtaasi Komgasta</string>
     <string name="reader.new_engine">Uusi kirjamoottori (beta)</string>
     <string name="reader.nothing">Ei mitään</string>
     <string name="reader.nothing_to_read_aloud">Täällä ei ole tekstiä luettavaksi ääneen</string>

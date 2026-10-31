@@ -102,4 +102,30 @@ class PaginationTest {
     assertEquals("", pageTail("One.\n\nTwo.", 5))
     assertEquals("", pageTail("One.", 4))
   }
+
+  @Test
+  fun `the chapters not measured yet get as much text on a page as the measured one`() {
+    val chapters = listOf("a".repeat(250), "b".repeat(200), "", "c".repeat(90))
+    val measured = listOf(Page(1, 0, 100), Page(1, 100, 200))
+    assertEquals(
+      listOf(
+        Page(0, 0, 83),
+        Page(0, 83, 166),
+        Page(0, 166, 250),
+        Page(1, 0, 100),
+        Page(1, 100, 200),
+        Page(3, 0, 90),
+      ),
+      estimatedPages(chapters, section = 1, measured = measured),
+    )
+  }
+
+  @Test
+  fun `estimated pages cover every chapter to its end`() {
+    val chapters = listOf("x".repeat(10_001), "y".repeat(3))
+    val pages = estimatedPages(chapters, section = 1, measured = emptyList())
+    assertEquals(Page(0, 0, pages.first().end), pages.first())
+    assertEquals(10_001, pages.filter { it.section == 0 }.last().end)
+    assertTrue(pages.zipWithNext().all { (a, b) -> a.section != b.section || a.end == b.start })
+  }
 }

@@ -40,8 +40,6 @@ internal class ReadiumBook(
   locator: Locator?,
   bookmarks: List<Locator>,
   highlights: List<LocatedHighlight>,
-  /** The pages of the printed book, in reading order. */
-  private val printPages: List<PrintPage> = emptyList(),
 ) {
   val navigatorFactory = EpubNavigatorFactory(publication)
 
@@ -58,6 +56,9 @@ internal class ReadiumBook(
 
   /** What's read aloud right now. */
   var readingAloud by mutableStateOf<Locator?>(null)
+
+  /** The pages of the printed book, in reading order, found after the book shows as they take reading all of it. */
+  var printPages by mutableStateOf(emptyList<PrintPage>())
 
   /** The table of contents with the depth of each entry, or the chapters when the book has none. */
   val tableOfContents: List<Pair<Int, Link>> = publication.tableOfContents
@@ -171,7 +172,7 @@ internal class PrintPage(
  * Finds where the book's page list puts each printed page. Where a page starts within a file is told by where its
  * anchor is in the file's text, which is about where it is on screen.
  */
-private suspend fun Publication.printPages(): List<PrintPage> {
+internal suspend fun Publication.printPages(): List<PrintPage> {
   if (pageList.isEmpty()) return emptyList()
   val files = readingOrder.map { it.url().removeFragment() }
   val texts = mutableMapOf<Int, String?>()
@@ -245,7 +246,6 @@ internal suspend fun openReadiumBook(
     highlights = ebook.readiumHighlights.mapNotNull { highlight ->
       highlight.locator.toLocator()?.let { LocatedHighlight(it, highlight.color, highlight.note) }
     },
-    printPages = publication.printPages(),
   )
 }
 

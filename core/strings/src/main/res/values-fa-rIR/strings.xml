@@ -443,6 +443,7 @@
     <string name="reader.mouse_wheel.turn">ورق زدن</string>
     <string name="reader.move_down">انتقال به پایین</string>
     <string name="reader.move_up">انتقال به بالا</string>
+    <string name="reader.moved_to_remote_place">به جایتان در Komga رفت</string>
     <string name="reader.new_engine">موتور جدید کتاب (آزمایشی)</string>
     <string name="reader.nothing">هیچ</string>
     <string name="reader.nothing_to_read_aloud">اینجا متنی برای خواندن با صدای بلند نیست</string>

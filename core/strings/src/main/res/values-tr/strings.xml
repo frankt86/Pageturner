@@ -443,6 +443,7 @@
     <string name="reader.mouse_wheel.turn">Sayfa çevir</string>
     <string name="reader.move_down">Aşağı taşı</string>
     <string name="reader.move_up">Yukarı taşı</string>
+    <string name="reader.moved_to_remote_place">Komga\'daki yerinize gidildi</string>
     <string name="reader.new_engine">Yeni kitap motoru (beta)</string>
     <string name="reader.nothing">Hiçbiri</string>
     <string name="reader.nothing_to_read_aloud">Burada sesli okunacak metin yok</string>

@@ -28,6 +28,7 @@ internal class PdfFile(private val fileDescriptor: ParcelFileDescriptor) {
     mutex.withLock {
       if (closed) return@withContext null
       renderer.openPage(index).use { page ->
+        val _ = keepAspectRatio(index, page)
         val scale = minOf(maxWidth.toFloat() / page.width, maxHeight.toFloat() / page.height)
         val width = (page.width * scale).toInt().coerceAtLeast(1)
         val height = (page.height * scale).toInt().coerceAtLeast(1)
@@ -40,17 +41,33 @@ internal class PdfFile(private val fileDescriptor: ParcelFileDescriptor) {
     }
   }
 
-  /** The width of each page divided by its height. */
-  suspend fun aspectRatios(): List<Float> = withContext(Dispatchers.Default) {
+  private val aspectRatios = arrayOfNulls<Float>(renderer.pageCount)
+
+  /** The shape of the last page opened, which most pages of a PDF share, for a page not opened yet. */
+  var typicalAspectRatio = 1F
+    private set
+
+  fun knownAspectRatio(index: Int): Float = aspectRatios.getOrNull(index) ?: typicalAspectRatio
+
+  /** The width of the page divided by its height. Opening every page at once takes long in a big PDF. */
+  suspend fun aspectRatio(index: Int): Float = aspectRatios[index] ?: withContext(Dispatchers.Default) {
     mutex.withLock {
       if (closed) {
-        emptyList()
+        typicalAspectRatio
       } else {
-        List(pageCount) { index ->
-          renderer.openPage(index).use { page -> page.width.toFloat() / page.height.coerceAtLeast(1) }
-        }
+        renderer.openPage(index).use { page -> keepAspectRatio(index, page) }
       }
     }
+  }
+
+  private fun keepAspectRatio(
+    index: Int,
+    page: PdfRenderer.Page,
+  ): Float {
+    val ratio = page.width.toFloat() / page.height.coerceAtLeast(1)
+    aspectRatios[index] = ratio
+    typicalAspectRatio = ratio
+    return ratio
   }
 
   suspend fun text(index: Int): String {

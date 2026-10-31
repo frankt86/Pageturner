@@ -477,6 +477,7 @@
     <string name="reader.mouse_wheel.turn">Przewracaj strony</string>
     <string name="reader.move_down">Przesuń w dół</string>
     <string name="reader.move_up">Przesuń w górę</string>
+    <string name="reader.moved_to_remote_place">Przeniesiono do Twojego miejsca z Komga</string>
     <string name="reader.new_engine">Nowy silnik książek (beta)</string>
     <string name="reader.nothing">Nic</string>
     <string name="reader.nothing_to_read_aloud">Nie ma tu tekstu do czytania na głos</string>

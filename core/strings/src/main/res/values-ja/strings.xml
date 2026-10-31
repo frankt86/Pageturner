@@ -426,6 +426,7 @@
     <string name="reader.mouse_wheel.turn">ページをめくる</string>
     <string name="reader.move_down">下に移動</string>
     <string name="reader.move_up">上に移動</string>
+    <string name="reader.moved_to_remote_place">Komga の位置に移動しました</string>
     <string name="reader.new_engine">新しい本のエンジン（ベータ版）</string>
     <string name="reader.nothing">なし</string>
     <string name="reader.nothing_to_read_aloud">読み上げるテキストがありません</string>

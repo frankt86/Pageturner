@@ -443,6 +443,7 @@
     <string name="reader.mouse_wheel.turn">Bladr</string>
     <string name="reader.move_down">Flyt ned</string>
     <string name="reader.move_up">Flyt op</string>
+    <string name="reader.moved_to_remote_place">Flyttet til dit sted fra Komga</string>
     <string name="reader.new_engine">Ny bogmotor (beta)</string>
     <string name="reader.nothing">Intet</string>
     <string name="reader.nothing_to_read_aloud">Der er ingen tekst at læse højt her</string>

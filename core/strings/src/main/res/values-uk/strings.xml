@@ -477,6 +477,7 @@
     <string name="reader.mouse_wheel.turn">Гортати</string>
     <string name="reader.move_down">Перемістити вниз</string>
     <string name="reader.move_up">Перемістити вгору</string>
+    <string name="reader.moved_to_remote_place">Переміщено до вашого місця з Komga</string>
     <string name="reader.new_engine">Новий рушій книг (бета)</string>
     <string name="reader.nothing">Нічого</string>
     <string name="reader.nothing_to_read_aloud">Тут немає тексту для читання вголос</string>
