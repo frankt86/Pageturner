@@ -73,7 +73,11 @@
     <string name="book.edit.author.label">著者</string>
     <string name="book.edit.cover.file">ファイルシステムからのカバー</string>
     <string name="book.edit.cover.internet">インターネットからのカバー</string>
+    <string name="book.edit.part.label">巻</string>
     <string name="book.edit.rename">名前を変更</string>
+    <string name="book.edit.series.label">シリーズ</string>
+    <string name="book.edit.server.failed">サーバーに保存できませんでした。もう一度お試しください。</string>
+    <string name="book.edit.server.not_allowed">このアカウントには、サーバー上の本を変更する権限がありません。</string>
     <string name="book.edit.title.label">タイトル</string>
     <string name="book.remove_from_library">ライブラリから削除</string>
     <string name="book.remove_from_library.summary">ファイルはデバイスに残ります</string>
@@ -540,6 +544,10 @@
     <string name="reader.voice.start">読み上げを開始</string>
     <string name="reader.volume_keys">音量ボタンでページをめくる</string>
     <string name="reader.word_spacing">単語の間隔</string>
+    <string name="series.continue">続きを聴く</string>
+    <string name="series.continue_book">第%s巻の続きを聴く</string>
+    <string name="series.start">聴き始める</string>
+    <string name="series.start_book">第%s巻を聴き始める</string>
     <string name="settings.about.app_version.title">アプリのバージョン</string>
     <string name="settings.action.open">設定</string>
     <string name="settings.analytics_consent.description">アプリ改善のため、匿名の利用状況データの収集を許可する</string>

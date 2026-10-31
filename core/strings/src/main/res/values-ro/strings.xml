@@ -79,7 +79,11 @@
     <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Copertă din sistemul de fișiere</string>
     <string name="book.edit.cover.internet">Copertă de pe internet</string>
+    <string name="book.edit.part.label">Volum</string>
     <string name="book.edit.rename">Redenumește</string>
+    <string name="book.edit.series.label">Serie</string>
+    <string name="book.edit.server.failed">Nu s-a putut salva pe serverul tău. Încearcă din nou.</string>
+    <string name="book.edit.server.not_allowed">Contul tău de pe server nu poate modifica cărți.</string>
     <string name="book.edit.title.label">Titlu</string>
     <string name="book.remove_from_library">Elimină din bibliotecă</string>
     <string name="book.remove_from_library.summary">Fișierul rămâne pe dispozitiv</string>
@@ -580,6 +584,10 @@
     <string name="reader.voice.start">Începe să citești</string>
     <string name="reader.volume_keys">Întoarce paginile cu butoanele de volum</string>
     <string name="reader.word_spacing">Spațiere între cuvinte</string>
+    <string name="series.continue">Continuă</string>
+    <string name="series.continue_book">Continuă cartea %s</string>
+    <string name="series.start">Începe</string>
+    <string name="series.start_book">Începe cartea %s</string>
     <string name="settings.about.app_version.title">Versiune aplicație</string>
     <string name="settings.action.open">Setări</string>
     <string name="settings.analytics_consent.description">Permite colectarea de date anonime de utilizare pentru a îmbunătăți aplicația</string>

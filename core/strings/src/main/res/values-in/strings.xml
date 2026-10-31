@@ -73,7 +73,11 @@
     <string name="book.edit.author.label">Penulis</string>
     <string name="book.edit.cover.file">Sampul dari penyimpanan</string>
     <string name="book.edit.cover.internet">Sampul dari Internet</string>
+    <string name="book.edit.part.label">Bagian</string>
     <string name="book.edit.rename">Ganti nama</string>
+    <string name="book.edit.series.label">Seri</string>
+    <string name="book.edit.server.failed">Tidak dapat menyimpan ke server Anda. Coba lagi.</string>
+    <string name="book.edit.server.not_allowed">Akun Anda di server tidak dapat mengubah buku.</string>
     <string name="book.edit.title.label">Judul</string>
     <string name="book.remove_from_library">Hapus dari pustaka</string>
     <string name="book.remove_from_library.summary">Berkas tetap ada di perangkat Anda</string>
@@ -540,6 +544,10 @@
     <string name="reader.voice.start">Mulai membaca</string>
     <string name="reader.volume_keys">Balik halaman dengan tombol volume</string>
     <string name="reader.word_spacing">Spasi kata</string>
+    <string name="series.continue">Lanjutkan</string>
+    <string name="series.continue_book">Lanjutkan buku %s</string>
+    <string name="series.start">Mulai</string>
+    <string name="series.start_book">Mulai buku %s</string>
     <string name="settings.about.app_version.title">Versi aplikasi</string>
     <string name="settings.action.open">Setelan</string>
     <string name="settings.analytics_consent.description">Izinkan pengumpulan data penggunaan anonim untuk membantu meningkatkan aplikasi</string>

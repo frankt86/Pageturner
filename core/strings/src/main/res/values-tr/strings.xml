@@ -76,7 +76,11 @@
     <string name="book.edit.author.label">Yazar</string>
     <string name="book.edit.cover.file">Dosyalardan kapak</string>
     <string name="book.edit.cover.internet">İnternetten kitap kapağı</string>
+    <string name="book.edit.part.label">Cilt</string>
     <string name="book.edit.rename">Yeniden adlandır</string>
+    <string name="book.edit.series.label">Seri</string>
+    <string name="book.edit.server.failed">Sunucunuza kaydedilemedi. Tekrar deneyin.</string>
+    <string name="book.edit.server.not_allowed">Sunucudaki hesabınız kitapları değiştiremez.</string>
     <string name="book.edit.title.label">Başlık</string>
     <string name="book.remove_from_library">Kitaplıktan kaldır</string>
     <string name="book.remove_from_library.summary">Dosya cihazınızda kalır</string>
@@ -560,6 +564,10 @@
     <string name="reader.voice.start">Okumaya başla</string>
     <string name="reader.volume_keys">Sayfaları ses tuşlarıyla çevir</string>
     <string name="reader.word_spacing">Sözcük aralığı</string>
+    <string name="series.continue">Devam et</string>
+    <string name="series.continue_book">Kitap %s ile devam et</string>
+    <string name="series.start">Başla</string>
+    <string name="series.start_book">Kitap %s ile başla</string>
     <string name="settings.about.app_version.title">Uygulama sürümü</string>
     <string name="settings.action.open">Ayarlar</string>
     <string name="settings.analytics_consent.description">Uygulamayı iyileştirmeye katkı sağlaması için anonim kullanım verileri toplanmasına izin ver</string>

@@ -73,7 +73,11 @@
     <string name="book.edit.author.label">作者</string>
     <string name="book.edit.cover.file">从本机寻找封面图片</string>
     <string name="book.edit.cover.internet">从互联网寻找封面图片</string>
+    <string name="book.edit.part.label">卷</string>
     <string name="book.edit.rename">重命名</string>
+    <string name="book.edit.series.label">系列</string>
+    <string name="book.edit.server.failed">无法保存到您的服务器。请重试。</string>
+    <string name="book.edit.server.not_allowed">您在服务器上的账号无权修改书籍。</string>
     <string name="book.edit.title.label">书名</string>
     <string name="book.remove_from_library">从书库中移除</string>
     <string name="book.remove_from_library.summary">文件仍保留在您的设备上</string>
@@ -540,6 +544,10 @@
     <string name="reader.voice.start">开始朗读</string>
     <string name="reader.volume_keys">用音量键翻页</string>
     <string name="reader.word_spacing">词间距</string>
+    <string name="series.continue">继续收听</string>
+    <string name="series.continue_book">继续收听第 %s 卷</string>
+    <string name="series.start">开始收听</string>
+    <string name="series.start_book">开始收听第 %s 卷</string>
     <string name="settings.about.app_version.title">软件版本</string>
     <string name="settings.action.open">设置</string>
     <string name="settings.analytics_consent.description">允许收集匿名使用数据，以帮助改进应用</string>

@@ -82,7 +82,11 @@
     <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Obal ze souborového systému</string>
     <string name="book.edit.cover.internet">Obal z internetu</string>
+    <string name="book.edit.part.label">Díl</string>
     <string name="book.edit.rename">Přejmenovat</string>
+    <string name="book.edit.series.label">Série</string>
+    <string name="book.edit.server.failed">Uložení na váš server se nepodařilo. Zkuste to znovu.</string>
+    <string name="book.edit.server.not_allowed">Váš účet na serveru nemůže měnit knihy.</string>
     <string name="book.edit.title.label">Název</string>
     <string name="book.remove_from_library">Odebrat z knihovny</string>
     <string name="book.remove_from_library.summary">Soubor zůstane ve vašem zařízení</string>
@@ -600,6 +604,10 @@
     <string name="reader.voice.start">Začít číst</string>
     <string name="reader.volume_keys">Otáčet stránky tlačítky hlasitosti</string>
     <string name="reader.word_spacing">Mezery mezi slovy</string>
+    <string name="series.continue">Pokračovat</string>
+    <string name="series.continue_book">Pokračovat v knize %s</string>
+    <string name="series.start">Začít</string>
+    <string name="series.start_book">Začít knihu %s</string>
     <string name="settings.about.app_version.title">Verze aplikace</string>
     <string name="settings.action.open">Nastavení</string>
     <string name="settings.analytics_consent.description">Povolit shromažďování anonymních údajů o používání pro zlepšení aplikace</string>

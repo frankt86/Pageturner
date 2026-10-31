@@ -76,7 +76,11 @@
     <string name="book.edit.author.label">Autore</string>
     <string name="book.edit.cover.file">Cobertedda dae su sistema de archìvios</string>
     <string name="book.edit.cover.internet">Cobertedda dae ìnternet</string>
+    <string name="book.edit.part.label">Parte</string>
     <string name="book.edit.rename">Càmbia su nùmene</string>
+    <string name="book.edit.series.label">Sèrie</string>
+    <string name="book.edit.server.failed">No est istadu possìbile sarvare in su serbidore tuo. Torra a proare.</string>
+    <string name="book.edit.server.not_allowed">Su contu tuo in su serbidore non podet cambiare libros.</string>
     <string name="book.edit.title.label">Tìtulu</string>
     <string name="book.remove_from_library">Boga dae sa biblioteca</string>
     <string name="book.remove_from_library.summary">Su documentu abarrat in su dispositivu tuo</string>
@@ -560,6 +564,10 @@
     <string name="reader.voice.start">Cumintza a lèghere</string>
     <string name="reader.volume_keys">Gira sas pàginas cun sos butones de su volùmene</string>
     <string name="reader.word_spacing">Ispàtziu intre sas paràulas</string>
+    <string name="series.continue">Sighi</string>
+    <string name="series.continue_book">Sighi su libru %s</string>
+    <string name="series.start">Incumintza</string>
+    <string name="series.start_book">Incumintza su libru %s</string>
     <string name="settings.about.app_version.title">Versione de s\'aplicatzione</string>
     <string name="settings.action.open">Impostatziones</string>
     <string name="settings.analytics_consent.description">Permite sa regorta de datos anònimos de impreu pro agiudare a megiorare s\'aplicatzione</string>

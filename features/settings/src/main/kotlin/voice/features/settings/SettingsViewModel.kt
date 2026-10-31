@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import voice.core.analytics.api.AnalyticsConsentStore
 import voice.core.audiobookshelf.AudiobookshelfFeatureFlag
-import voice.core.audiobookshelf.ServerLibrary
+import voice.core.audiobookshelf.ServerAccount
 import voice.core.common.AppInfoProvider
 import voice.core.common.DispatcherProvider
 import voice.core.common.FeedbackLinks
@@ -61,7 +61,7 @@ class SettingsViewModel(
   private val dynamicColorAvailability: DynamicColorAvailability,
   private val audiobookFolders: AudiobookFolders,
   private val dispatcherProvider: DispatcherProvider,
-  private val serverLibrary: ServerLibrary,
+  private val serverAccount: ServerAccount,
   private val audiobookshelfFeatureFlag: AudiobookshelfFeatureFlag,
 ) : SettingsListener {
 
@@ -91,7 +91,7 @@ class SettingsViewModel(
     val foldersWithoutAccess = remember { foldersWithoutAccess() }.collectAsState(initial = null, context = dispatcherProvider.io).value
     val showDeveloperMenu = remember { developerMenuUnlockedStore.data }.collectAsState(initial = null).value
     val audiobookshelfServer = remember {
-      serverLibrary.serverName.map(::AudiobookshelfServerName)
+      serverAccount.serverName.map(::AudiobookshelfServerName)
     }.collectAsState(initial = null).value
     val audiobookshelfEnabled = remember { audiobookshelfFeatureFlag.flow.map { it.value } }
       .collectAsState(initial = null).value
@@ -259,7 +259,7 @@ class SettingsViewModel(
   override fun openAudiobookshelf() {
     mainScope.launch {
       navigator.goTo(
-        if (serverLibrary.isConnected()) {
+        if (serverAccount.isConnected()) {
           Destination.AudiobookshelfSettings
         } else {
           Destination.AudiobookshelfLogin(Origin.Default)

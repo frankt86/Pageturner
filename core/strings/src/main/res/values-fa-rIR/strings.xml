@@ -76,7 +76,11 @@
     <string name="book.edit.author.label">نویسنده</string>
     <string name="book.edit.cover.file">دریافت کاور از داخل سیستم</string>
     <string name="book.edit.cover.internet">دریافت کاور از طریق اینترنت</string>
+    <string name="book.edit.part.label">جلد</string>
     <string name="book.edit.rename">تغییر نام</string>
+    <string name="book.edit.series.label">مجموعه</string>
+    <string name="book.edit.server.failed">ذخیره در سرورتان انجام نشد. دوباره امتحان کنید.</string>
+    <string name="book.edit.server.not_allowed">حساب شما در سرور اجازهٔ تغییر کتاب‌ها را ندارد.</string>
     <string name="book.edit.title.label">عنوان</string>
     <string name="book.remove_from_library">حذف از کتابخانه</string>
     <string name="book.remove_from_library.summary">فایل روی دستگاهتان می‌ماند</string>
@@ -560,6 +564,10 @@
     <string name="reader.voice.start">شروع خواندن</string>
     <string name="reader.volume_keys">ورق زدن با دکمه‌های صدا</string>
     <string name="reader.word_spacing">فاصلهٔ کلمات</string>
+    <string name="series.continue">ادامه</string>
+    <string name="series.continue_book">ادامهٔ کتاب %s</string>
+    <string name="series.start">شروع</string>
+    <string name="series.start_book">شروع کتاب %s</string>
     <string name="settings.about.app_version.title">ورژن اپلیکیشن</string>
     <string name="settings.action.open">تنظیمات</string>
     <string name="settings.analytics_consent.description">اجازه بدهید برای بهبود دادن برنامه اطلاعات استفاده شما به شکل ناشناس گردآوری شود</string>

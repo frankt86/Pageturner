@@ -106,6 +106,15 @@ internal fun ContinueListeningCard(
                   overflow = TextOverflow.Ellipsis,
                 )
               }
+              if (book.series != null) {
+                Text(
+                  text = book.series,
+                  style = MaterialTheme.typography.bodyMedium.bookText(),
+                  color = colors.onSurfaceVariant,
+                  maxLines = 1,
+                  overflow = TextOverflow.Ellipsis,
+                )
+              }
             }
           }
           Spacer(Modifier.height(16.dp))
