@@ -18,7 +18,7 @@ class KindleEpubTest {
     val book = parseEpub(epub.inputStream())
     assertEquals("The Quiet Orbit", book.title)
     assertEquals("Mara Quill", book.author)
-    assertContentEquals(jpeg, book.cover)
+    assertContentEquals(jpeg, parseEpub(epub.inputStream(), withText = false).cover)
     assertEquals(listOf("Launch", "Drift"), book.chapters.map { it.title })
     val (first, second) = book.chapters.map { it.text }
     assertTrue(first.startsWith("Launch\n\nFirst line with a link"))
@@ -30,7 +30,7 @@ class KindleEpubTest {
     val epub = ByteArrayOutputStream().also { convertKindleToEpub(kf8(), it) }.toByteArray()
     val book = parseEpub(epub.inputStream())
     assertEquals("Kindle Eight", book.title)
-    assertContentEquals(jpeg, book.cover)
+    assertContentEquals(jpeg, parseEpub(epub.inputStream(), withText = false).cover)
     assertEquals(listOf("Chapter one", "Chapter two"), book.chapters.map { it.title })
     assertEquals(listOf("Hello next", "Chapter two\n\nBye"), book.chapters.map { it.text.trim() })
   }
