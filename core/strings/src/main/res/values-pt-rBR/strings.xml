@@ -406,6 +406,9 @@
     <string name="reader.double_tap">Toque duplo</string>
     <string name="reader.edge_margin">Ignorar toques nas bordas</string>
     <string name="reader.failed">Não foi possível abrir este livro</string>
+    <string name="reader.failed.damaged">Este PDF está danificado e não pode ser aberto</string>
+    <string name="reader.failed.missing">O Pageturner não consegue acessar o arquivo deste livro. Talvez ele tenha sido movido ou excluído, ou você precise escolher a pasta dele de novo.</string>
+    <string name="reader.failed.unsupported">Este PDF usa uma proteção ou um formato que o Pageturner não consegue abrir</string>
     <string name="reader.font">Fonte</string>
     <string name="reader.font.add">Adicionar fonte</string>
     <string name="reader.font.add_failed">Este arquivo não é uma fonte que o Pageturner possa usar. Escolha um arquivo .ttf ou .otf.</string>
@@ -485,6 +488,10 @@
     <string name="reader.paper_texture">Textura de papel</string>
     <string name="reader.paragraph_indent">Recuo da primeira linha</string>
     <string name="reader.paragraph_spacing">Espaço entre parágrafos</string>
+    <string name="reader.password">Este PDF está protegido por senha</string>
+    <string name="reader.password.field">Senha</string>
+    <string name="reader.password.open">Abrir</string>
+    <string name="reader.password.wrong">Essa senha não está correta</string>
     <string name="reader.progress">Progresso</string>
     <string name="reader.progress.body_only">Contar só o texto principal</string>
     <string name="reader.progress.book">Livro</string>

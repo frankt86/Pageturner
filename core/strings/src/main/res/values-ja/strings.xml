@@ -372,6 +372,9 @@
     <string name="reader.double_tap">ダブルタップ</string>
     <string name="reader.edge_margin">端のタッチを無視</string>
     <string name="reader.failed">この本を開けませんでした</string>
+    <string name="reader.failed.damaged">この PDF は壊れているため開けません</string>
+    <string name="reader.failed.missing">Pageturner がこの本のファイルにアクセスできません。移動または削除されたか、フォルダをもう一度選ぶ必要があります。</string>
+    <string name="reader.failed.unsupported">この PDF は Pageturner が開けない保護または形式を使っています</string>
     <string name="reader.font">フォント</string>
     <string name="reader.font.add">フォントを追加</string>
     <string name="reader.font.add_failed">このファイルは Pageturner で使えるフォントではありません。.ttf か .otf のファイルを選んでください。</string>
@@ -449,6 +452,10 @@
     <string name="reader.paper_texture">紙の質感</string>
     <string name="reader.paragraph_indent">字下げ</string>
     <string name="reader.paragraph_spacing">段落の間隔</string>
+    <string name="reader.password">この PDF はパスワードで保護されています</string>
+    <string name="reader.password.field">パスワード</string>
+    <string name="reader.password.open">開く</string>
+    <string name="reader.password.wrong">パスワードが正しくありません</string>
     <string name="reader.progress">進捗</string>
     <string name="reader.progress.body_only">本文だけで数える</string>
     <string name="reader.progress.book">本</string>

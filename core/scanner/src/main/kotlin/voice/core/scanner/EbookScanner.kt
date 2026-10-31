@@ -104,8 +104,7 @@ internal class EbookScanner(
               seriesPart = epub.seriesPart,
             )
           }
-        EbookFormat.Pdf -> context.contentResolver.openFileDescriptor(ebook.uri, "r")
-          ?.let { renderPdfCover(it, width = 600) }
+        EbookFormat.Pdf -> renderPdfCover(context, ebook.uri, width = 600)
           ?.let { bitmap ->
             val file = newCoverFile()
             file.outputStream().use { bitmap.compress(Bitmap.CompressFormat.JPEG, 85, it) }
