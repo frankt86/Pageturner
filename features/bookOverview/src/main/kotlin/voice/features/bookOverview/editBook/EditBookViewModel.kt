@@ -9,9 +9,9 @@ import kotlinx.coroutines.launch
 import voice.core.audiobookshelf.ServerBookEdit
 import voice.core.audiobookshelf.ServerEdit
 import voice.core.audiobookshelf.ServerLibrary
-import voice.core.common.comparator.NaturalOrderComparator
 import voice.core.data.BookId
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
 import voice.features.bookOverview.bottomSheet.BottomSheetItemViewModel
 import voice.features.bookOverview.di.BookActionsScope
@@ -21,6 +21,7 @@ import voice.features.bookOverview.di.BookActionsScope
 class EditBookViewModel(
   private val repo: BookRepository,
   private val serverLibrary: ServerLibrary,
+  private val ebooksStore: EbooksStore,
 ) : BottomSheetItemViewModel {
 
   private val scope = MainScope()
@@ -43,22 +44,8 @@ class EditBookViewModel(
       cover = book.coverUrl,
       series = book.series.orEmpty(),
       part = book.part.orEmpty(),
-      allSeries = seriesOfOtherBooks(bookId),
+      allSeries = seriesOfOtherBooks(repo, ebooksStore, bookId),
     )
-  }
-
-  private suspend fun seriesOfOtherBooks(bookId: BookId): List<SeriesSuggestion> {
-    return repo.all()
-      .filter { it.id != bookId }
-      .mapNotNull { book -> book.series?.trim()?.takeIf { it.isNotEmpty() } }
-      .groupBy { it.lowercase() }
-      .map { (_, names) ->
-        SeriesSuggestion(
-          name = names.groupingBy { it }.eachCount().maxBy { it.value }.key,
-          bookCount = names.size,
-        )
-      }
-      .sortedWith(compareBy(NaturalOrderComparator.stringComparator) { it.name.lowercase() })
   }
 
   internal fun onDismiss() {

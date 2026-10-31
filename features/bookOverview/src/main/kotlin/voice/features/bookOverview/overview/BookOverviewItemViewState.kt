@@ -67,6 +67,7 @@ internal fun Ebook.toItemViewState() = BookOverviewItemViewState(
   id = bookId,
   progress = progress,
   remainingTime = "${format.name.uppercase()} · ${NumberFormat.getPercentInstance().format(progress)}",
+  series = seriesLine,
   isEbook = true,
 )
 

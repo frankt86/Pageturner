@@ -22,9 +22,11 @@ import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.Ebook
 import voice.core.data.EbookPosition
+import voice.core.data.repo.BookRepository
 import voice.core.data.store.EbooksStore
 import voice.core.logging.api.Logger
 import voice.features.bookOverview.editBook.EditBookState
+import voice.features.bookOverview.editBook.seriesOfOtherBooks
 import voice.features.bookOverview.overview.BookOverviewCategory
 import voice.features.bookOverview.overview.BookOverviewItemViewState
 import voice.features.bookOverview.overview.category
@@ -37,6 +39,7 @@ import kotlin.uuid.Uuid
 @AssistedInject
 class EbookActionsViewModel(
   private val store: EbooksStore,
+  private val repo: BookRepository,
   private val application: Application,
   private val navigator: Navigator,
   private val dispatcherProvider: DispatcherProvider,
@@ -69,13 +72,17 @@ class EbookActionsViewModel(
       .filterNotNull()
   }
 
-  internal fun onEdit(book: BookOverviewItemViewState) {
+  internal suspend fun onEdit() {
+    val ebook = ebook().first()
+    val book = ebook.toItemViewState()
     editState = EditBookState(
       title = book.name,
       author = book.author.orEmpty(),
       bookId = book.id,
       cover = book.cover,
-      seriesEditable = false,
+      series = ebook.shownSeries.orEmpty(),
+      part = ebook.shownPart.orEmpty(),
+      allSeries = seriesOfOtherBooks(repo, store, book.id),
     )
   }
 
@@ -85,6 +92,14 @@ class EbookActionsViewModel(
 
   internal fun onEditAuthorChange(author: String) {
     editState = editState?.copy(author = author)
+  }
+
+  internal fun onEditSeriesChange(series: String) {
+    editState = editState?.copy(series = series)
+  }
+
+  internal fun onEditPartChange(part: String) {
+    editState = editState?.copy(part = part)
   }
 
   internal fun onEditDismiss() {
@@ -103,6 +118,12 @@ class EbookActionsViewModel(
       }
       if (state.author != state.initialAuthor) {
         edited = edited.copy(customAuthor = state.author.trim().takeIf { it.isNotEmpty() && it != ebook.author })
+      }
+      if (state.series != state.initialSeries) {
+        edited = edited.copy(customSeries = state.series.trim().takeIf { it.isNotEmpty() && it != ebook.series })
+      }
+      if (state.part != state.initialPart) {
+        edited = edited.copy(customPart = state.part.trim().takeIf { it.isNotEmpty() && it != ebook.seriesPart })
       }
       edited
     }

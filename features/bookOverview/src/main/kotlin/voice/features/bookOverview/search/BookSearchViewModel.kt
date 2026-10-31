@@ -371,7 +371,7 @@ private fun BrowseCategory.value(book: Book): String? {
 private fun BrowseCategory.value(ebook: Ebook): String? {
   val value = when (this) {
     BrowseCategory.Authors -> ebook.shownAuthor
-    BrowseCategory.Series -> ebook.series
+    BrowseCategory.Series -> ebook.shownSeries
     BrowseCategory.Narrators, BrowseCategory.Genres -> null
   }
   return value?.trim()?.takeIf { it.isNotEmpty() }

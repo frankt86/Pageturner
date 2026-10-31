@@ -18,8 +18,10 @@ import voice.core.audiobookshelf.download.BookDownloadState
 import voice.core.common.DispatcherProvider
 import voice.core.data.Book
 import voice.core.data.BookId
+import voice.core.data.Ebook
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.CurrentBookStore
+import voice.core.data.store.EbooksStore
 import voice.core.featureflag.MemoryFeatureFlag
 import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
 import voice.core.playback.LivePlaybackState
@@ -28,7 +30,9 @@ import voice.core.playback.overlay
 import voice.core.playback.playstate.PlayStateManager
 import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
+import voice.features.bookOverview.ebook
 import voice.features.bookOverview.overview.DownloadBadge
+import voice.features.bookOverview.overview.bookId
 import voice.features.bookOverview.overview.toItemViewState
 import voice.navigation.Destination
 import voice.navigation.Navigator
@@ -47,6 +51,7 @@ class SeriesViewModelTest {
   private val playStateManager = PlayStateManager()
   private val unavailable = MutableStateFlow<Set<BookId>>(emptySet())
   private val downloads = MutableStateFlow<Map<BookId, BookDownloadState>>(emptyMap())
+  private val ebooks = MemoryDataStore<List<Ebook>>(emptyList())
 
   @Test
   fun `the books are in order and the header names their author once`() = runTest {
@@ -218,6 +223,63 @@ class SeriesViewModelTest {
     verify { navigator.remove(Destination.Series("Saga")) }
   }
 
+  @Test
+  fun `the ebooks of the series are listed with the audiobooks, by part`() = runTest {
+    val first = book(name = "First", series = "Saga", part = "1", author = "Author", time = 0)
+    val second = ebook(name = "Second", series = "saga", part = "2")
+    val third = book(name = "Third", series = "Saga", part = "3", author = "Author", time = 0)
+    val hidden = ebook(series = "Saga").copy(hidden = true)
+    books.value = listOf(third, first)
+    ebooks.updateData { listOf(hidden, second) }
+
+    testState {
+      val state = awaitItem()!!
+      assertEquals(expected = 3, actual = state.bookCount)
+      assertEquals(expected = listOf(first.id, second.bookId, third.id), actual = state.books.map { it.book.id })
+      assertEquals(expected = listOf(false, true, false), actual = state.books.map { it.book.isEbook })
+      assertEquals(expected = listOf("1", "2", "3"), actual = state.books.map { it.part })
+    }
+  }
+
+  @Test
+  fun `the button continues an ebook read last`() = runTest {
+    val first = book(series = "Saga", part = "1", time = 1_000, lastPlayedAt = Instant.ofEpochSecond(1))
+    val second = ebook(series = "Saga", part = "2", progress = 0.3F, lastOpened = 2_000)
+    books.value = listOf(first)
+    ebooks.updateData { listOf(second) }
+
+    testState {
+      assertEquals(
+        expected = SeriesViewState.Action(bookId = second.bookId, part = "2", continues = true, playing = false, ebook = true),
+        actual = awaitItem()!!.action,
+      )
+    }
+  }
+
+  @Test
+  fun `an ebook opens in the reader, and its actions on a long press`() = runTest {
+    val ebook = ebook(series = "Saga")
+    ebooks.updateData { listOf(ebook) }
+    val viewModel = viewModel()
+
+    viewModel.onBookClick(ebook.bookId)
+    viewModel.onActionClick(ebook.bookId)
+    viewModel.onBookLongClick(ebook.bookId)
+
+    verify(exactly = 2) { navigator.goTo(Destination.Reader(ebook.uri)) }
+    verify { navigator.goTo(Destination.EbookActions(ebook.uri)) }
+    verify(exactly = 0) { playerController.play(any()) }
+  }
+
+  @Test
+  fun `an audiobook opens in the player`() = runTest {
+    val book = book(series = "Saga")
+
+    viewModel().onBookClick(book.id)
+
+    verify { navigator.goTo(Destination.Playback(book.id)) }
+  }
+
   private fun Book.toItemViewStateWithoutAuthor() = toItemViewState().copy(author = null)
 
   private fun viewModel(experimentalPlaybackPersistence: Boolean = false): SeriesViewModel {
@@ -225,6 +287,7 @@ class SeriesViewModelTest {
       repo = mockk<BookRepository> {
         every { flow() } returns books
       },
+      ebooksStore = EbooksStore(ebooks),
       navigator = navigator,
       playerController = playerController,
       currentBookStore = CurrentBookStore(currentBookStore),

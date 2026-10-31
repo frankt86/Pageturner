@@ -46,6 +46,10 @@ public data class Ebook(
   val seriesPart: String? = null,
   // books whose metadata was read before series were, read their file once more
   val seriesRead: Boolean = false,
+  /** The series the listener gave the book, which wins over the one from the file. */
+  val customSeries: String? = null,
+  /** The part the listener gave the book, which wins over the one from the file. */
+  val customPart: String? = null,
 ) {
 
   val title: String get() = customName ?: name
@@ -53,6 +57,10 @@ public data class Ebook(
   val shownAuthor: String? get() = customAuthor ?: author
 
   val shownCover: String? get() = customCover ?: cover
+
+  val shownSeries: String? get() = customSeries ?: series
+
+  val shownPart: String? get() = customPart ?: seriesPart
 }
 
 @Serializable

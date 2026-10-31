@@ -343,6 +343,16 @@ class BookSearchTest {
   }
 
   @Test
+  fun `ebooks are found and sorted by the series and part given to them`() {
+    val second = ebook(name = "Alpha", series = "Old", seriesPart = "1").copy(customSeries = "Saga", customPart = "2")
+    val first = ebook(name = "Beta").copy(customSeries = "Saga", customPart = "1")
+    test(ebooks = listOf(second, first)) {
+      expectSearchResult("saga", first, second)
+      expectSearchResult("saga 2", second)
+    }
+  }
+
+  @Test
   fun `hidden and missing ebooks aren't found`() {
     val hidden = ebook(name = "Dune").copy(hidden = true)
     val missing = ebook(name = "Dune Messiah").copy(available = false)

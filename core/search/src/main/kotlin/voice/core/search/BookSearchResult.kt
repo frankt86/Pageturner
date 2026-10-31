@@ -48,7 +48,7 @@ enum class BookSearchField {
     val text = when (this) {
       Title -> ebook.title
       Author -> ebook.shownAuthor
-      Series -> seriesText(ebook.series, ebook.seriesPart)
+      Series -> seriesText(ebook.shownSeries, ebook.shownPart)
       Narrator, Genre -> null
     }
     return text?.takeIf { it.isNotBlank() }

@@ -248,83 +248,79 @@ private fun EditBookContent(
       shape = RoundedCornerShape(16.dp),
       keyboardOptions = KeyboardOptions(
         capitalization = KeyboardCapitalization.Words,
-        imeAction = if (viewState.seriesEditable) ImeAction.Next else ImeAction.Done,
+        imeAction = ImeAction.Next,
       ),
-      keyboardActions = onDone,
     )
-    // ebooks have no series to edit yet
-    if (viewState.seriesEditable) {
-      val partFocusRequester = remember { FocusRequester() }
-      var seriesFocused by remember { mutableStateOf(false) }
-      // grows with the text, so its label stays on one line at large font sizes
-      val partField = @Composable {
+    val partFocusRequester = remember { FocusRequester() }
+    var seriesFocused by remember { mutableStateOf(false) }
+    // grows with the text, so its label stays on one line at large font sizes
+    val partField = @Composable {
+      OutlinedTextField(
+        value = part,
+        onValueChange = {
+          part = it
+          onPartChange(it.text)
+        },
+        modifier = Modifier
+          .width(96.dp * LocalDensity.current.fontScale)
+          .focusRequester(partFocusRequester),
+        label = { Text(stringResource(StringsR.string.book_edit_part_label)) },
+        singleLine = true,
+        readOnly = readOnly,
+        shape = RoundedCornerShape(16.dp),
+        keyboardOptions = KeyboardOptions(
+          keyboardType = KeyboardType.Decimal,
+          imeAction = ImeAction.Done,
+        ),
+        keyboardActions = onDone,
+      )
+    }
+    // at large font sizes, the part goes below the series, so the series stays wide enough to read
+    val partBelow = LocalDensity.current.fontScale >= 1.5F
+    Spacer(Modifier.height(16.dp))
+    Row {
+      Column(
+        modifier = Modifier
+          .weight(1F)
+          .animateContentSize()
+          .onFocusChanged { seriesFocused = it.hasFocus },
+      ) {
         OutlinedTextField(
-          value = part,
+          value = series,
           onValueChange = {
-            part = it
-            onPartChange(it.text)
+            series = it
+            onSeriesChange(it.text)
           },
-          modifier = Modifier
-            .width(96.dp * LocalDensity.current.fontScale)
-            .focusRequester(partFocusRequester),
-          label = { Text(stringResource(StringsR.string.book_edit_part_label)) },
+          modifier = Modifier.fillMaxWidth(),
+          label = { Text(stringResource(StringsR.string.book_edit_series_label)) },
           singleLine = true,
           readOnly = readOnly,
           shape = RoundedCornerShape(16.dp),
           keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Decimal,
-            imeAction = ImeAction.Done,
+            capitalization = KeyboardCapitalization.Words,
+            imeAction = ImeAction.Next,
           ),
-          keyboardActions = onDone,
         )
-      }
-      // at large font sizes, the part goes below the series, so the series stays wide enough to read
-      val partBelow = LocalDensity.current.fontScale >= 1.5F
-      Spacer(Modifier.height(16.dp))
-      Row {
-        Column(
-          modifier = Modifier
-            .weight(1F)
-            .animateContentSize()
-            .onFocusChanged { seriesFocused = it.hasFocus },
-        ) {
-          OutlinedTextField(
-            value = series,
-            onValueChange = {
-              series = it
-              onSeriesChange(it.text)
+        if (seriesFocused && !readOnly && viewState.suggestions.isNotEmpty()) {
+          Spacer(Modifier.height(8.dp))
+          SeriesSuggestions(
+            suggestions = viewState.suggestions,
+            onClick = { name ->
+              series = TextFieldValue(name, selection = TextRange(name.length))
+              onSeriesChange(name)
+              partFocusRequester.requestFocus()
             },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text(stringResource(StringsR.string.book_edit_series_label)) },
-            singleLine = true,
-            readOnly = readOnly,
-            shape = RoundedCornerShape(16.dp),
-            keyboardOptions = KeyboardOptions(
-              capitalization = KeyboardCapitalization.Words,
-              imeAction = ImeAction.Next,
-            ),
           )
-          if (seriesFocused && !readOnly && viewState.suggestions.isNotEmpty()) {
-            Spacer(Modifier.height(8.dp))
-            SeriesSuggestions(
-              suggestions = viewState.suggestions,
-              onClick = { name ->
-                series = TextFieldValue(name, selection = TextRange(name.length))
-                onSeriesChange(name)
-                partFocusRequester.requestFocus()
-              },
-            )
-          }
-        }
-        if (!partBelow) {
-          Spacer(Modifier.width(12.dp))
-          partField()
         }
       }
-      if (partBelow) {
-        Spacer(Modifier.height(16.dp))
+      if (!partBelow) {
+        Spacer(Modifier.width(12.dp))
         partField()
       }
+    }
+    if (partBelow) {
+      Spacer(Modifier.height(16.dp))
+      partField()
     }
     val error = when (viewState.serverResult) {
       ServerEdit.NotAllowed -> StringsR.string.book_edit_server_not_allowed

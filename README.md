@@ -29,15 +29,18 @@ library. See [Install](docs/install.md) for the steps.
 - Resume where you stopped, chapters, bookmarks, a sleep timer with fade-out, playback speed, silence skipping, volume boost
   and auto-rewind after pauses.
 - Android Auto and widgets.
-- Your place, speed, bookmarks and book names travel to your other devices with the library folder, using a sync tool of your
+- Books of a series share one stack in the library, audiobooks and ebooks together, and each series has its own screen
+  with its books by part. Edit a book's series and part, with suggestions of the series you already have. See
+  [Series](docs/ebooks.md#series).
+- Your place, speed, bookmarks, book names and series travel to your other devices with the library folder, using a sync tool of your
   own. See the [FAQ](docs/faq.md#how-do-i-continue-a-book-on-another-device).
 
 ### Ebooks
 
 - EPUB and PDF books in your folders sit next to your audiobooks, with their covers and a small book badge.
-- An EPUB's series and its part in it come from the book.
-- Long-press an ebook to mark it read or unread, edit its title and author, set a cover from the internet or from a file, or
-  remove it.
+- An EPUB's series and its part in it come from the book, and you can change them.
+- Long-press an ebook to mark it read or unread, edit its title, author, series and part, set a cover from the internet or
+  from a file, or remove it.
 - The library search finds ebooks too, forgives typos, and browses them by author and series.
 - A **Continue reading** card takes you back to the book you read last.
 

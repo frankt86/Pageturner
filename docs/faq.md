@@ -37,8 +37,9 @@ Once the sleep timer elapses, Pageturner pauses playback (after a brief fade-out
 
 ### How do I continue a book on another device?
 
-Pageturner keeps your place, your playback speed, your bookmarks and the titles and authors you gave your audiobooks in a
-hidden `.voice` folder inside each audiobook folder you added. Sync these folders between your devices with a tool of your own, like
+Pageturner keeps your place, your playback speed, your bookmarks and the titles, authors, series and parts you gave your
+audiobooks in a hidden `.voice` folder inside each audiobook folder you added. Sync these folders between your devices with
+a tool of your own, like
 [Syncthing](https://syncthing.net), and when you open Pageturner on the other device, it picks up where you left off.
 
 - Add the same folder on every device, and the same way, for example as "Every folder is a book" on both. Where the
