@@ -8,8 +8,8 @@ hide:
 A clean audiobook player and ebook reader for Android, based on [Voice](https://github.com/PaulWoitaschek/Voice).
 
 Pageturner turns your own audiobook files into a calm listening library with resume positions, bookmarks, sleep timer, playback speed, silence
-skipping, and Android Auto support. It also reads your EPUB and PDF books, two pages side by side on an unfolded foldable, and
-can read them aloud.
+skipping, and Android Auto support. It also reads your EPUB and PDF books, two pages side by side on an unfolded foldable,
+reads them aloud in a natural voice, and downloads books from OPDS catalogs, Komga and Audiobookshelf.
 
 [:material-download: &nbsp;Download Pageturner](https://frankt86.github.io/Pageturner/pageturner.apk){ .md-button .md-button--primary }
 
@@ -49,18 +49,24 @@ New to installing apps from outside Google Play? See [Install](install.md).
 
   ---
 
-  EPUB and PDF books from your folders with a real page curl, themes, bookmarks, highlights, search and a natural read-aloud voice. One page folded, two pages unfolded. See [Ebooks](ebooks.md), and [Ebook catalogs](opds.md) to download books from Calibre-Web, Komga and other OPDS servers.
+  EPUB and PDF books from your folders with a real page curl, themes, fonts, bookmarks, highlights, search and a natural read-aloud voice that works offline. One page folded, two pages unfolded. See [Ebooks](ebooks.md).
 
-- :material-update:{ .lg .middle } **Actively maintained**
+- :material-bookshelf:{ .lg .middle } **Your servers**
 
   ---
 
-  Regular updates, community-driven, and responsive to feedback.
+  Download ebooks and audiobooks from Calibre-Web, Komga and other [OPDS catalogs](opds.md), with your reading progress in step with Komga. Stream and download from [Audiobookshelf](audiobookshelf.md).
+
+- :material-update:{ .lg .middle } **Kept up to date**
+
+  ---
+
+  Pageturner keeps merging the updates of [Voice](https://github.com/PaulWoitaschek/Voice), the audiobook player it's built on.
 
 </div>
 
 ## Learn more
 
 Read [Organizing Audiobooks](organizing.md) for setting up your library,
-[Ebooks](ebooks.md) for reading EPUB and PDF books, [Ebook catalogs](opds.md) for downloading them from your server, or
-the [FAQ](faq.md) for common questions. Want to contribute? See [Development](development.md) and [Architecture](architecture.md).
+[Ebooks](ebooks.md) for reading EPUB and PDF books, [Ebook catalogs](opds.md) for downloading them from your server,
+[Audiobookshelf](audiobookshelf.md) for your audiobook server, or the [FAQ](faq.md) for common questions. Want to contribute? See [Development](development.md) and [Architecture](architecture.md).

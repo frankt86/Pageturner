@@ -10,9 +10,8 @@ nav:
   - Home: index.md
   - Install: install.md
   - Organizing Audiobooks: organizing.md
-  - Ebooks: ebooks.md
+  - Ebooks and the Reader: ebooks.md
   - Ebook Catalogs: opds.md
-  - Reader Plan: reader-plan.md
   - Audiobookshelf: audiobookshelf.md
   - FAQ: faq.md
   - Development: development.md

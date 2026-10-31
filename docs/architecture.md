@@ -2,7 +2,7 @@
 
 ## Overview
 
-Voice is built on a **modular, layered architecture**. The design separates infrastructure, shared domain logic, and user-facing features.
+Pageturner, like [Voice](https://github.com/PaulWoitaschek/Voice), is built on a **modular, layered architecture**. The design separates infrastructure, shared domain logic, and user-facing features.
 This modularization improves build times, testability, and maintainability, while keeping feature ownership clear.
 
 At a high level:
@@ -14,19 +14,21 @@ At a high level:
 
 ### Infrastructure
 
-* `:app` – Application entry point, dependency injection graph, and product flavor wiring (`free` / `play`)
-* `:navigation` – Navigation abstractions and route definitions
-* `plugins/` – Included Gradle build with convention plugins
-* `scripts/` – Build and utility scripts
+* `:app`: Application entry point, dependency injection graph, and product flavor wiring (`free` / `play`)
+* `:navigation`: Navigation abstractions and route definitions
+* `plugins/`: Included Gradle build with convention plugins
+* `scripts/`: Build and utility scripts
 
 ### Core (Shared Logic)
 
 `:core:*` modules hold reusable services and abstractions: data and storage, playback, scanning, search, logging, analytics, remote config,
-feature flags, localized strings, and shared Compose UI and theming.
+feature flags, localized strings, and shared Compose UI and theming. Pageturner adds `:core:ebook`, which reads EPUB and PDF
+files, and `:core:opds`, which talks to OPDS catalogs and Komga.
 
 ### Features
 
-`:features:*` modules are screen- or flow-based. Each owns its UI (Compose) and presentation logic and delegates to `:core` modules for data
+`:features:*` modules are screen- or flow-based. Pageturner adds `:features:reader`, the ebook reader with reading aloud, and
+`:features:opds`, the catalog screens. Each owns its UI (Compose) and presentation logic and delegates to `:core` modules for data
 and services.
 
 ### API / Implementation Splits
@@ -77,16 +79,18 @@ flowchart LR
 
 ## Tech Decisions
 
-* **Compose (UI)** – Declarative UI with Material 3 for consistency and accessibility
-* **Metro (DI)** – Lightweight dependency injection across modules
-* **Navigation3** – Type-safe, modular navigation
-* **ExoPlayer (Media3)** – Robust audio playback engine
-* **Room** – Persistent storage
-* **Kotlin Serialization** – JSON parsing and object serialization
-* **Coil** – Efficient image loading
+* **Compose (UI)**: Declarative UI with Material 3 for consistency and accessibility
+* **Metro (DI)**: Lightweight dependency injection across modules
+* **Navigation3**: Type-safe, modular navigation
+* **ExoPlayer (Media3)**: Robust audio playback engine
+* **Room**: Persistent storage
+* **Kotlin Serialization**: JSON parsing and object serialization
+* **Coil**: Efficient image loading
+* **Readium**: The new book engine for EPUB books in the reader
+* **Sherpa-ONNX with Kokoro**: The offline natural voice for reading aloud
 
 ## Module Lifecycle
 
 1. **Add new functionality as a feature module.**
 2. **Extract reusable logic into `:core` modules** once multiple features need it.
-3. **Keep infrastructure minimal** — mainly for wiring and build configuration.
+3. **Keep infrastructure minimal**: mainly for wiring and build configuration.
