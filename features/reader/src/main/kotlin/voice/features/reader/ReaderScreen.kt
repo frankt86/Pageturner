@@ -304,6 +304,7 @@ internal fun ReaderScreen(uri: Uri) {
               ReaderFailure.Unsupported -> StringsR.string.reader_failed_unsupported
               ReaderFailure.Missing -> StringsR.string.reader_failed_missing
               ReaderFailure.Unknown -> StringsR.string.reader_failed
+              ReaderFailure.Drm -> StringsR.string.reader_drm
             },
           ),
           style = MaterialTheme.typography.bodyLarge,

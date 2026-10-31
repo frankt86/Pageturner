@@ -346,7 +346,7 @@
     <string name="opds.entry.downloaded">A la vostra biblioteca</string>
     <string name="opds.entry.listen">Escolta ara</string>
     <string name="opds.entry.read">Llegeix ara</string>
-    <string name="opds.entry.unsupported">Pageturner llegeix EPUB i PDF. Aquest llibre només està disponible en %s.</string>
+    <string name="opds.entry.unsupported">Pageturner llegeix EPUB, PDF, MOBI i AZW3. Aquest llibre només està disponible en %s.</string>
     <string name="opds.feed.error">Aquesta pàgina no s\'ha carregat</string>
     <string name="opds.feed.search">Cerca en aquest catàleg</string>
     <string name="opds.title">Catàlegs de llibres electrònics</string>
@@ -404,6 +404,7 @@
     <string name="reader.controls">Controls</string>
     <string name="reader.display">Visualització</string>
     <string name="reader.double_tap">Doble toc</string>
+    <string name="reader.drm">Aquest llibre està protegit amb DRM i no es pot obrir.</string>
     <string name="reader.edge_margin">Ignora els tocs a les vores</string>
     <string name="reader.failed">No s\'ha pogut obrir aquest llibre</string>
     <string name="reader.failed.damaged">Aquest PDF està malmès i no es pot obrir</string>

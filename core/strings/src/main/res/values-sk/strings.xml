@@ -363,7 +363,7 @@
     <string name="opds.entry.downloaded">Vo vašej knižnici</string>
     <string name="opds.entry.listen">Počúvať</string>
     <string name="opds.entry.read">Čítať</string>
-    <string name="opds.entry.unsupported">Pageturner číta EPUB a PDF. Táto kniha je dostupná len ako %s.</string>
+    <string name="opds.entry.unsupported">Pageturner číta EPUB, PDF, MOBI a AZW3. Táto kniha je dostupná len ako %s.</string>
     <string name="opds.feed.error">Túto stránku sa nepodarilo načítať</string>
     <string name="opds.feed.search">Hľadať v tomto katalógu</string>
     <string name="opds.title">Katalógy e-kníh</string>
@@ -421,6 +421,7 @@
     <string name="reader.controls">Ovládanie</string>
     <string name="reader.display">Zobrazenie</string>
     <string name="reader.double_tap">Dvojité ťuknutie</string>
+    <string name="reader.drm">Táto kniha je chránená DRM a nedá sa otvoriť.</string>
     <string name="reader.edge_margin">Ignorovať dotyky pri okrajoch</string>
     <string name="reader.failed">Túto knihu sa nepodarilo otvoriť</string>
     <string name="reader.failed.damaged">Toto PDF je poškodené, preto sa nedá otvoriť</string>

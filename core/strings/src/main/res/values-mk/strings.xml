@@ -329,7 +329,7 @@
     <string name="opds.entry.downloaded">Во вашата библиотека</string>
     <string name="opds.entry.listen">Слушај сега</string>
     <string name="opds.entry.read">Читај сега</string>
-    <string name="opds.entry.unsupported">Pageturner чита EPUB и PDF. Оваа книга постои само како %s.</string>
+    <string name="opds.entry.unsupported">Pageturner чита EPUB, PDF, MOBI и AZW3. Оваа книга постои само како %s.</string>
     <string name="opds.feed.error">Оваа страница не се вчита</string>
     <string name="opds.feed.search">Пребарај во овој каталог</string>
     <string name="opds.title">Каталози со е-книги</string>
@@ -387,6 +387,7 @@
     <string name="reader.controls">Контроли</string>
     <string name="reader.display">Приказ</string>
     <string name="reader.double_tap">Двоен допир</string>
+    <string name="reader.drm">Оваа книга е заштитена со DRM и не може да се отвори.</string>
     <string name="reader.edge_margin">Игнорирај допири на рабовите</string>
     <string name="reader.failed">Оваа книга не може да се отвори</string>
     <string name="reader.failed.damaged">Овој PDF е оштетен, па не може да се отвори</string>

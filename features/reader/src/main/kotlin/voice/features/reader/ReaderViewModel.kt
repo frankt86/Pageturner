@@ -147,6 +147,9 @@ class ReaderViewModel(
   private var textFailed by mutableStateOf(false)
   private var failure by mutableStateOf<ReaderFailure?>(null)
   private var locked by mutableStateOf<ReaderState.Locked?>(null)
+
+  /** The EPUB to read, which for a Kindle book is the one converted from it. */
+  private var epubUri = uri
   private var position by mutableStateOf(EbookPosition())
   private var readAloudJob by mutableStateOf<Job?>(null)
   private var readAloud: ReadAloud? = null
@@ -226,7 +229,18 @@ class ReaderViewModel(
     val started = SystemClock.elapsedRealtime()
     // the book shows at the place here right away, a newer one from the server follows when it comes
     val newerPlace = scope.async { komgaSync.newerPlace(stored) }
-    val epub = stored.format == EbookFormat.Epub
+    val epub = stored.format != EbookFormat.Pdf
+    if (stored.format.isKindle) {
+      // both engines read the EPUB converted from it, made once and kept
+      epubUri = try {
+        withContext(dispatcherProvider.io) { kindleEpubUri(application, uri) }
+      } catch (e: Exception) {
+        Logger.w(e, "Could not convert a ${stored.format}")
+        newerPlace.cancel()
+        failure = readerFailure(e)
+        return
+      }
+    }
     val newEngine = epub && settingsStore.data.first().newBookEngine
     val book = if (newEngine) openReadium(stored) else null
     val loaded = if (book == null) {
@@ -305,7 +319,7 @@ class ReaderViewModel(
     place: RemotePlace? = null,
   ): ReadiumBook? {
     val started = SystemClock.elapsedRealtime()
-    val book = withContext(dispatcherProvider.io) { openReadiumBook(application, uri, ebook, place) }
+    val book = withContext(dispatcherProvider.io) { openReadiumBook(application, epubUri, ebook, place) }
     Logger.d("The new engine took ${SystemClock.elapsedRealtime() - started} ms to open the book, opened: ${book != null}")
     if (book != null) {
       scope.launch {
@@ -388,7 +402,7 @@ class ReaderViewModel(
     password: String?,
   ): ReaderContent {
     return when (ebook.format) {
-      EbookFormat.Epub -> {
+      EbookFormat.Epub, EbookFormat.Mobi, EbookFormat.Azw3 -> {
         val text = bookText()
         ReaderContent.Epub(
           title = ebook.customName ?: text.title ?: ebook.name,
@@ -412,7 +426,8 @@ class ReaderViewModel(
       Logger.d("Read the text of ${cached.chapters.size} chapters from the cache in ${SystemClock.elapsedRealtime() - started} ms")
       return cached
     }
-    val epub = application.contentResolver.openInputStream(uri)!!.use { parseEpub(it) }
+    // keyed by the book's own file, which also decides when a Kindle book is converted again
+    val epub = application.contentResolver.openInputStream(epubUri)!!.use { parseEpub(it) }
     val text = BookText(epub.title, epub.chapters.map { it.text }, epub.chapters.map { it.title })
     Logger.d("Read the text of ${text.chapters.size} chapters from the book in ${SystemClock.elapsedRealtime() - started} ms")
     if (key != null) {

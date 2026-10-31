@@ -382,7 +382,7 @@
     <string name="history.source.widget">Widget</string>
     <!-- Read out by screen readers for the progress ring on the cover of a server book that downloads. -->
     <string name="library.book.downloading">Downloading</string>
-    <!-- Read out by screen readers for the small book badge on the cover of an ebook in the library, which tells ebooks (EPUB and PDF) apart from audiobooks. -->
+    <!-- Read out by screen readers for the small book badge on the cover of an ebook in the library, which tells ebooks (EPUB, PDF, MOBI and AZW3) apart from audiobooks. -->
     <string name="library.book.ebook">Ebook</string>
     <!-- Shown for a server book that isn't downloaded while the server can't be reached: on the icon on its cover, and as a small label in the player. Keep it short. -->
     <string name="library.book.offline">Not available offline</string>
@@ -572,8 +572,8 @@
     <string name="opds.entry.listen">Listen now</string>
     <!-- Button that opens a downloaded book of a catalog in the reader. -->
     <string name="opds.entry.read">Read now</string>
-    <!-- Shown for a book of a catalog that comes only in formats Pageturner can't open. %s is one or more formats, like CBZ or MOBI. -->
-    <string name="opds.entry.unsupported">Pageturner reads EPUB and PDF. This book only comes as %s.</string>
+    <!-- Shown for a book of a catalog that comes only in formats Pageturner can't open. %s is one or more formats, like CBZ or FB2. MOBI and AZW3 are Kindle ebook formats. -->
+    <string name="opds.entry.unsupported">Pageturner reads EPUB, PDF, MOBI and AZW3. This book only comes as %s.</string>
     <!-- Shown when a page of a catalog, or a search in it, didn't load. -->
     <string name="opds.feed.error">This page didn\'t load</string>
     <!-- Placeholder of the field that searches the books of a catalog. -->
@@ -686,9 +686,11 @@
     <string name="reader.display">Display</string>
     <!-- Label in the controls sheet of the ebook reader for what tapping the page twice quickly does. -->
     <string name="reader.double_tap">Double tap</string>
+    <!-- Shown in the ebook reader in place of the book when a Kindle book (MOBI or AZW3) is encrypted with DRM, which Pageturner never removes. -->
+    <string name="reader.drm">This book is protected with DRM and can\'t be opened.</string>
     <!-- Slider in the controls sheet of the ebook reader: touches that start this close to the left or right edge do nothing, e.g. a palm resting on the screen. -->
     <string name="reader.edge_margin">Ignore touches at the edges</string>
-    <!-- Shown in the ebook reader when an EPUB or PDF file can't be read. -->
+    <!-- Shown in the ebook reader when an EPUB, PDF, MOBI or AZW3 file can't be read. -->
     <string name="reader.failed">This book couldn\'t be opened</string>
     <!-- Shown in the ebook reader instead of the book when a PDF file is broken, for example cut off while copying, and no engine could read it. -->
     <string name="reader.failed.damaged">This PDF is damaged, so it can\'t be opened</string>

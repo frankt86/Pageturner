@@ -2,7 +2,7 @@
 
 Many ebook servers share their books as a catalog in a standard format called OPDS. Calibre-Web, Komga, Kavita, the
 Calibre content server and sites like Standard Ebooks all have one. Add a catalog to Pageturner, look through it and
-download its EPUB and PDF books and its audiobooks into your library.
+download its EPUB, PDF and Kindle (MOBI and AZW3) books and its audiobooks into your library.
 
 There is no Pageturner account and no Pageturner server in between. Pageturner only talks to the catalogs you add.
 
@@ -32,14 +32,16 @@ Tap a book to see its cover, author and description.
 
 ## Downloading
 
-Tap **Download EPUB** or **Download PDF**. When a book comes in both, Pageturner takes the EPUB. You see how far the download
+Tap **Download EPUB**, **Download PDF**, **Download AZW3** or **Download MOBI**. When a book comes in several of these,
+Pageturner takes the EPUB, then the PDF, then the AZW3 and the MOBI last. You see how far the download
 got, and **Stop download** stops it.
 
 Once it's done, the book is in your library next to your other books, with the cover, title and author from the catalog.
 It reads, bookmarks, highlights and reads aloud like any other ebook. A tick in the catalog shows the books you already
 have, and **Read now** opens them.
 
-Comics and other formats, like CBZ, CBR or MOBI, can't be downloaded, as Pageturner reads EPUB and PDF only.
+Comics and other formats, like CBZ, CBR or FB2, can't be downloaded, as Pageturner reads EPUB, PDF, MOBI and AZW3 only.
+A Kindle book with DRM downloads, but can't be opened, see [Kindle books](ebooks.md#kindle-books).
 
 ## Audiobooks
 
@@ -129,6 +131,9 @@ Audiobooks from Komga don't sync: their place stays in Pageturner.
 
 PDF books sync to the exact page. EPUB books sync to about the page: Komga counts the pages of an EPUB differently than
 Pageturner, so you might land a paragraph or two before where you stopped.
+
+Kindle books don't sync: Komga doesn't serve them, and its pages wouldn't match the EPUB Pageturner makes from one, so
+their place stays in Pageturner.
 
 ## Home servers, VPNs and certificates
 

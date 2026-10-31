@@ -312,7 +312,7 @@
     <string name="opds.entry.downloaded">已在你的書庫中</string>
     <string name="opds.entry.listen">立即收聽</string>
     <string name="opds.entry.read">立即閱讀</string>
-    <string name="opds.entry.unsupported">Pageturner 可以閱讀 EPUB 和 PDF。這本書只有 %s 格式。</string>
+    <string name="opds.entry.unsupported">Pageturner 可以閱讀 EPUB、PDF、MOBI 和 AZW3。這本書只有 %s 格式。</string>
     <string name="opds.feed.error">此頁面未能載入</string>
     <string name="opds.feed.search">搜尋此目錄</string>
     <string name="opds.title">電子書目錄</string>
@@ -370,6 +370,7 @@
     <string name="reader.controls">操作</string>
     <string name="reader.display">顯示</string>
     <string name="reader.double_tap">輕觸兩下</string>
+    <string name="reader.drm">這本書受 DRM 保護，無法開啟。</string>
     <string name="reader.edge_margin">忽略邊緣的觸控</string>
     <string name="reader.failed">無法開啟這本書</string>
     <string name="reader.failed.damaged">這個 PDF 已損毀，無法開啟</string>

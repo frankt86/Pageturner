@@ -114,6 +114,13 @@ public enum class HighlightColor {
 public enum class EbookFormat {
   Epub,
   Pdf,
+
+  // also .azw and .prc files. Kindle books are read as an EPUB converted from them.
+  Mobi,
+  Azw3,
+  ;
+
+  public val isKindle: Boolean get() = this == Mobi || this == Azw3
 }
 
 public fun CachedDocumentFile.ebookFormat(): EbookFormat? {
@@ -121,6 +128,8 @@ public fun CachedDocumentFile.ebookFormat(): EbookFormat? {
   return when (name?.substringAfterLast(".")?.lowercase()) {
     "epub" -> EbookFormat.Epub
     "pdf" -> EbookFormat.Pdf
+    "mobi", "azw", "prc" -> EbookFormat.Mobi
+    "azw3" -> EbookFormat.Azw3
     else -> null
   }
 }

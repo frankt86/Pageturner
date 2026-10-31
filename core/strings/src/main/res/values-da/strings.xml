@@ -329,7 +329,7 @@
     <string name="opds.entry.downloaded">I dit bibliotek</string>
     <string name="opds.entry.listen">Lyt nu</string>
     <string name="opds.entry.read">Læs nu</string>
-    <string name="opds.entry.unsupported">Pageturner læser EPUB og PDF. Denne bog findes kun som %s.</string>
+    <string name="opds.entry.unsupported">Pageturner læser EPUB, PDF, MOBI og AZW3. Denne bog findes kun som %s.</string>
     <string name="opds.feed.error">Siden blev ikke indlæst</string>
     <string name="opds.feed.search">Søg i dette katalog</string>
     <string name="opds.title">E-bogskataloger</string>
@@ -387,6 +387,7 @@
     <string name="reader.controls">Betjening</string>
     <string name="reader.display">Visning</string>
     <string name="reader.double_tap">Dobbelttryk</string>
+    <string name="reader.drm">Denne bog er beskyttet med DRM og kan ikke åbnes.</string>
     <string name="reader.edge_margin">Ignorer berøringer ved kanterne</string>
     <string name="reader.failed">Bogen kunne ikke åbnes</string>
     <string name="reader.failed.damaged">Denne PDF er beskadiget, så den kan ikke åbnes</string>

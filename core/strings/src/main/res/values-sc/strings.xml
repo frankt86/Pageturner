@@ -329,7 +329,7 @@
     <string name="opds.entry.downloaded">In sa biblioteca tua</string>
     <string name="opds.entry.listen">Ascurta como</string>
     <string name="opds.entry.read">Leghe como</string>
-    <string name="opds.entry.unsupported">Pageturner leghet EPUB e PDF. Custu libru b\'est petzi in %s.</string>
+    <string name="opds.entry.unsupported">Pageturner leghet EPUB, PDF, MOBI e AZW3. Custu libru b\'est petzi in %s.</string>
     <string name="opds.feed.error">Custa pàgina no est carrigada</string>
     <string name="opds.feed.search">Chirca in custu catàlogu</string>
     <string name="opds.title">Catàlogos de libros eletrònicos</string>
@@ -387,6 +387,7 @@
     <string name="reader.controls">Comandos</string>
     <string name="reader.display">Visualizatzione</string>
     <string name="reader.double_tap">Tocu dòpiu</string>
+    <string name="reader.drm">Custu libru est amparadu cun DRM e non si podet abèrrere.</string>
     <string name="reader.edge_margin">Ignora sos tocos in sos òrros</string>
     <string name="reader.failed">No est istadu possìbile abèrrere custu libru</string>
     <string name="reader.failed.damaged">Custu PDF est dannigiadu, duncas non si podet abèrrere</string>

@@ -346,7 +346,7 @@
     <string name="opds.entry.downloaded">Nella tua libreria</string>
     <string name="opds.entry.listen">Ascolta ora</string>
     <string name="opds.entry.read">Leggi ora</string>
-    <string name="opds.entry.unsupported">Pageturner legge EPUB e PDF. Questo libro è disponibile solo come %s.</string>
+    <string name="opds.entry.unsupported">Pageturner legge EPUB, PDF, MOBI e AZW3. Questo libro è disponibile solo come %s.</string>
     <string name="opds.feed.error">Impossibile caricare questa pagina</string>
     <string name="opds.feed.search">Cerca in questo catalogo</string>
     <string name="opds.title">Cataloghi di ebook</string>
@@ -404,6 +404,7 @@
     <string name="reader.controls">Comandi</string>
     <string name="reader.display">Visualizzazione</string>
     <string name="reader.double_tap">Doppio tocco</string>
+    <string name="reader.drm">Questo libro è protetto da DRM e non può essere aperto.</string>
     <string name="reader.edge_margin">Ignora i tocchi sui bordi</string>
     <string name="reader.failed">Non è stato possibile aprire questo libro</string>
     <string name="reader.failed.damaged">Questo PDF è danneggiato, quindi non si può aprire</string>

@@ -195,7 +195,8 @@ private val Ebook.unsent: Boolean get() = positionModified > syncedPosition
 
 private fun Ebook.target(catalogs: List<OpdsCatalog>): Pair<OpdsCatalog, String>? {
   val source = opdsSource ?: return null
-  if (hidden || !available) return null
+  // Komga serves no Kindle books, and its pages of one would mean nothing in the EPUB converted from it
+  if (hidden || !available || format.isKindle) return null
   val catalog = catalogs.firstOrNull { it.id == source.catalogId && it.type == CatalogType.Komga && it.syncProgress }
     ?: return null
   val bookId = source.komgaBookId ?: komgaBookId(source.acquisitionUrl, source.entryId) ?: return null

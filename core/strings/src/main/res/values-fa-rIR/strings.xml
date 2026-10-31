@@ -329,7 +329,7 @@
     <string name="opds.entry.downloaded">در کتابخانهٔ شما</string>
     <string name="opds.entry.listen">همین حالا گوش کنید</string>
     <string name="opds.entry.read">همین حالا بخوانید</string>
-    <string name="opds.entry.unsupported">Pageturner فایل‌های EPUB و PDF را می‌خواند. این کتاب فقط به صورت %s موجود است.</string>
+    <string name="opds.entry.unsupported">Pageturner فایل‌های EPUB، PDF، MOBI و AZW3 را می‌خواند. این کتاب فقط به صورت %s موجود است.</string>
     <string name="opds.feed.error">این صفحه بارگیری نشد</string>
     <string name="opds.feed.search">جستجو در این کاتالوگ</string>
     <string name="opds.title">کاتالوگ‌های کتاب الکترونیکی</string>
@@ -387,6 +387,7 @@
     <string name="reader.controls">کنترل‌ها</string>
     <string name="reader.display">نمایش</string>
     <string name="reader.double_tap">دو ضربه</string>
+    <string name="reader.drm">این کتاب با DRM محافظت شده است و باز نمی‌شود.</string>
     <string name="reader.edge_margin">نادیده گرفتن لمس در لبه‌ها</string>
     <string name="reader.failed">این کتاب باز نشد</string>
     <string name="reader.failed.damaged">این PDF آسیب دیده است و باز نمی‌شود</string>

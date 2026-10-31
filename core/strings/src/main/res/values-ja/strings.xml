@@ -312,7 +312,7 @@
     <string name="opds.entry.downloaded">ライブラリにあります</string>
     <string name="opds.entry.listen">今すぐ聴く</string>
     <string name="opds.entry.read">今すぐ読む</string>
-    <string name="opds.entry.unsupported">Pageturner で読めるのは EPUB と PDF です。この本は %s のみです。</string>
+    <string name="opds.entry.unsupported">Pageturner で読めるのは EPUB、PDF、MOBI、AZW3 です。この本は %s のみです。</string>
     <string name="opds.feed.error">このページを読み込めませんでした</string>
     <string name="opds.feed.search">このカタログを検索</string>
     <string name="opds.title">電子書籍カタログ</string>
@@ -370,6 +370,7 @@
     <string name="reader.controls">操作</string>
     <string name="reader.display">表示</string>
     <string name="reader.double_tap">ダブルタップ</string>
+    <string name="reader.drm">この本は DRM で保護されているため、開けません。</string>
     <string name="reader.edge_margin">端のタッチを無視</string>
     <string name="reader.failed">この本を開けませんでした</string>
     <string name="reader.failed.damaged">この PDF は壊れているため開けません</string>

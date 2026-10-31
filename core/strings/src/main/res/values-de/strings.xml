@@ -329,7 +329,7 @@
     <string name="opds.entry.downloaded">In Deiner Bibliothek</string>
     <string name="opds.entry.listen">Jetzt hören</string>
     <string name="opds.entry.read">Jetzt lesen</string>
-    <string name="opds.entry.unsupported">Pageturner liest EPUB und PDF. Dieses Buch gibt es nur als %s.</string>
+    <string name="opds.entry.unsupported">Pageturner liest EPUB, PDF, MOBI und AZW3. Dieses Buch gibt es nur als %s.</string>
     <string name="opds.feed.error">Diese Seite ließ sich nicht laden</string>
     <string name="opds.feed.search">Diesen Katalog durchsuchen</string>
     <string name="opds.title">E-Book-Kataloge</string>
@@ -387,6 +387,7 @@
     <string name="reader.controls">Bedienung</string>
     <string name="reader.display">Anzeige</string>
     <string name="reader.double_tap">Doppeltippen</string>
+    <string name="reader.drm">Dieses Buch ist mit DRM geschützt und kann nicht geöffnet werden.</string>
     <string name="reader.edge_margin">Berührungen am Rand ignorieren</string>
     <string name="reader.failed">Dieses Buch konnte nicht geöffnet werden</string>
     <string name="reader.failed.damaged">Diese PDF ist beschädigt und lässt sich nicht öffnen</string>

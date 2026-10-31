@@ -329,7 +329,7 @@
     <string name="opds.entry.downloaded">आपकी लाइब्रेरी में</string>
     <string name="opds.entry.listen">अभी सुनें</string>
     <string name="opds.entry.read">अभी पढ़ें</string>
-    <string name="opds.entry.unsupported">Pageturner EPUB और PDF पढ़ता है। यह पुस्तक सिर्फ़ %s में उपलब्ध है।</string>
+    <string name="opds.entry.unsupported">Pageturner EPUB, PDF, MOBI और AZW3 पढ़ता है। यह पुस्तक सिर्फ़ %s में उपलब्ध है।</string>
     <string name="opds.feed.error">यह पेज लोड नहीं हुआ</string>
     <string name="opds.feed.search">इस कैटलॉग में खोजें</string>
     <string name="opds.title">ई-बुक कैटलॉग</string>
@@ -387,6 +387,7 @@
     <string name="reader.controls">नियंत्रण</string>
     <string name="reader.display">डिस्प्ले</string>
     <string name="reader.double_tap">डबल टैप</string>
+    <string name="reader.drm">यह पुस्तक DRM से सुरक्षित है और खोली नहीं जा सकती।</string>
     <string name="reader.edge_margin">किनारों पर छूने को अनदेखा करें</string>
     <string name="reader.failed">यह पुस्तक खुल नहीं पाई</string>
     <string name="reader.failed.damaged">यह PDF ख़राब है, इसलिए इसे खोला नहीं जा सकता</string>

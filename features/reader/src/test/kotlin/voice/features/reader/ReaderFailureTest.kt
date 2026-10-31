@@ -2,6 +2,8 @@ package voice.features.reader
 
 import voice.core.ebook.PdfOpenException
 import voice.core.ebook.PdfProblem
+import voice.core.ebook.mobi.KindleDrmException
+import voice.core.ebook.mobi.KindleFormatException
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.zip.ZipException
@@ -24,6 +26,12 @@ class ReaderFailureTest {
   fun `a book whose file is gone or out of reach is missing`() {
     assertEquals(ReaderFailure.Missing, readerFailure(FileNotFoundException()))
     assertEquals(ReaderFailure.Missing, readerFailure(SecurityException("Permission Denial")))
+  }
+
+  @Test
+  fun `a kindle book with DRM says so`() {
+    assertEquals(ReaderFailure.Drm, readerFailure(KindleDrmException()))
+    assertEquals(ReaderFailure.Unknown, readerFailure(KindleFormatException("Topaz")))
   }
 
   @Test

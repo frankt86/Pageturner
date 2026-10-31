@@ -28,10 +28,9 @@ public data class OpdsPublication(
   val isAudiobook: Boolean = false,
 ) {
 
-  /** The file Pageturner can read, an EPUB before a PDF. */
+  /** The file Pageturner can read, an EPUB before a PDF, and a Kindle book only when there's neither. */
   val preferredAcquisition: OpdsAcquisition?
-    get() = acquisitions.firstOrNull { it.format == OpdsFormat.Epub }
-      ?: acquisitions.firstOrNull { it.format == OpdsFormat.Pdf }
+    get() = OpdsFormat.entries.firstNotNullOfOrNull { format -> acquisitions.firstOrNull { it.format == format } }
 
   /** The audio Pageturner can play, or null when the entry has none. */
   val audiobook: OpdsAudiobook? get() = opdsAudiobook(acquisitions, isAudiobook)
@@ -88,9 +87,12 @@ public enum class AudiobookPackaging {
   Manifest,
 }
 
+/** In the order Pageturner prefers them. */
 public enum class OpdsFormat {
   Epub,
   Pdf,
+  Azw3,
+  Mobi,
 }
 
 public sealed interface OpdsSearch {
@@ -109,9 +111,14 @@ internal fun opdsFormat(
   return when (type) {
     "application/epub+zip" -> OpdsFormat.Epub
     "application/pdf" -> OpdsFormat.Pdf
+    "application/x-mobipocket-ebook" -> OpdsFormat.Mobi
+    "application/x-mobi8-ebook", "application/azw3" -> OpdsFormat.Azw3
+    "application/vnd.amazon.ebook" -> if (url.extension() == "azw3") OpdsFormat.Azw3 else OpdsFormat.Mobi
     null, "application/octet-stream" -> when (url.extension()) {
       "epub" -> OpdsFormat.Epub
       "pdf" -> OpdsFormat.Pdf
+      "azw3" -> OpdsFormat.Azw3
+      "mobi", "azw", "prc" -> OpdsFormat.Mobi
       else -> null
     }
     else -> null
@@ -127,7 +134,8 @@ private fun formatLabel(
     "application/pdf" -> "PDF"
     "application/kepub+zip" -> "KEPUB"
     "application/x-mobipocket-ebook" -> "MOBI"
-    "application/vnd.amazon.ebook", "application/x-mobi8-ebook", "application/azw3" -> "AZW3"
+    "application/vnd.amazon.ebook" -> if (url.extension() == "azw3") "AZW3" else "AZW"
+    "application/x-mobi8-ebook", "application/azw3" -> "AZW3"
     "application/x-cbz", "application/vnd.comicbook+zip", "application/zip" -> "CBZ"
     "application/x-cbr", "application/vnd.comicbook-rar", "application/x-rar-compressed", "application/vnd.rar" -> "CBR"
     "application/x-fictionbook+xml", "text/fb2+xml" -> "FB2"

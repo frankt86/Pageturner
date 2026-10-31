@@ -329,7 +329,7 @@
     <string name="opds.entry.downloaded">Sinu raamatukogus</string>
     <string name="opds.entry.listen">Kuula kohe</string>
     <string name="opds.entry.read">Loe kohe</string>
-    <string name="opds.entry.unsupported">Pageturner loeb EPUB- ja PDF-faile. See raamat on saadaval ainult kujul %s.</string>
+    <string name="opds.entry.unsupported">Pageturner loeb EPUB-, PDF-, MOBI- ja AZW3-faile. See raamat on saadaval ainult kujul %s.</string>
     <string name="opds.feed.error">Lehte ei õnnestunud laadida</string>
     <string name="opds.feed.search">Otsi sellest kataloogist</string>
     <string name="opds.title">E-raamatute kataloogid</string>
@@ -387,6 +387,7 @@
     <string name="reader.controls">Juhtimine</string>
     <string name="reader.display">Kuva</string>
     <string name="reader.double_tap">Topeltpuudutus</string>
+    <string name="reader.drm">See raamat on DRM-iga kaitstud ja seda ei saa avada.</string>
     <string name="reader.edge_margin">Eira puudutusi servades</string>
     <string name="reader.failed">Seda raamatut ei õnnestunud avada</string>
     <string name="reader.failed.damaged">See PDF on rikutud, nii et seda ei saa avada</string>

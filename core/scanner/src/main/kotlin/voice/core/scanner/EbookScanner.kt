@@ -12,6 +12,8 @@ import voice.core.data.store.EbooksStore
 import voice.core.documentfile.CachedDocumentFile
 import voice.core.documentfile.nameWithoutExtension
 import voice.core.documentfile.walk
+import voice.core.ebook.mobi.deleteStaleKindleEpubs
+import voice.core.ebook.mobi.readKindleMetadata
 import voice.core.ebook.parseEpub
 import voice.core.ebook.renderPdfCover
 import voice.core.logging.api.Logger
@@ -58,6 +60,8 @@ internal class EbookScanner(
           ebooks.map { if (it.uri == ebook.uri) it.withMetadata(metadata) else it }
         }
       }
+    val kindleBooks = store.data.first().filter { it.format.isKindle && it.available && !it.hidden }.map { it.uri }
+    deleteStaleKindleEpubs(context, keep = kindleBooks)
   }
 
   private class Metadata(
@@ -109,6 +113,15 @@ internal class EbookScanner(
             val file = newCoverFile()
             file.outputStream().use { bitmap.compress(Bitmap.CompressFormat.JPEG, 85, it) }
             Metadata(title = null, author = null, cover = file.absolutePath)
+          }
+        EbookFormat.Mobi, EbookFormat.Azw3 -> context.contentResolver.openInputStream(ebook.uri)
+          ?.use { readKindleMetadata(it, withCover) }
+          ?.let { kindle ->
+            Metadata(
+              title = kindle.title,
+              author = kindle.author,
+              cover = kindle.cover?.let { bytes -> newCoverFile().apply { writeBytes(bytes) }.absolutePath },
+            )
           }
       }
     } catch (e: Exception) {
