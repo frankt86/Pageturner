@@ -39,6 +39,7 @@ import voice.core.data.ReaderSettings
 import voice.core.data.ReadingPace
 import voice.core.data.ReadiumHighlight
 import voice.core.data.store.EbooksStore
+import voice.core.ebook.openSeekablePdf
 import voice.core.ebook.parseEpub
 import voice.core.logging.api.Logger
 import voice.core.opds.komga.KomgaSync
@@ -252,8 +253,7 @@ class ReaderViewModel(
         )
       }
       EbookFormat.Pdf -> {
-        val fileDescriptor = contentResolver.openFileDescriptor(uri, "r")!!
-        ReaderContent.Pdf(title = ebook.title, pdf = PdfFile(fileDescriptor))
+        ReaderContent.Pdf(title = ebook.title, pdf = PdfFile(openSeekablePdf(application, uri)))
       }
     }
   }

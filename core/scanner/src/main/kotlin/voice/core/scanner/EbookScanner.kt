@@ -12,6 +12,7 @@ import voice.core.data.store.EbooksStore
 import voice.core.documentfile.CachedDocumentFile
 import voice.core.documentfile.nameWithoutExtension
 import voice.core.documentfile.walk
+import voice.core.ebook.openSeekablePdf
 import voice.core.ebook.parseEpub
 import voice.core.ebook.renderPdfCover
 import voice.core.logging.api.Logger
@@ -104,8 +105,7 @@ internal class EbookScanner(
               seriesPart = epub.seriesPart,
             )
           }
-        EbookFormat.Pdf -> context.contentResolver.openFileDescriptor(ebook.uri, "r")
-          ?.let { renderPdfCover(it, width = 600) }
+        EbookFormat.Pdf -> renderPdfCover(openSeekablePdf(context, ebook.uri), width = 600)
           ?.let { bitmap ->
             val file = newCoverFile()
             file.outputStream().use { bitmap.compress(Bitmap.CompressFormat.JPEG, 85, it) }
