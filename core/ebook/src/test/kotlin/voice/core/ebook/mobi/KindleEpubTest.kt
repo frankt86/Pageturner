@@ -19,9 +19,7 @@ class KindleEpubTest {
     assertEquals("The Quiet Orbit", book.title)
     assertEquals("Mara Quill", book.author)
     assertContentEquals(jpeg, book.cover)
-    val (first, second) = book.chapters.map { it.text }
-    assertTrue(first.startsWith("Launch\n\nFirst line with a link"))
-    assertTrue(second.startsWith("Drift\n\nSecond"))
+    assertEquals(listOf("Launch", "Drift"), book.chapters.map { it.title })
     val (first, second) = book.chapters.map { it.text }
     assertTrue(first.startsWith("Launch\n\nFirst line with a link"))
     assertTrue(second.startsWith("Drift\n\nSecond"))
