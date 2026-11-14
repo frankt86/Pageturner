@@ -40,6 +40,7 @@ import voice.core.playback.session.search.BookSearchHandler
 import voice.core.playback.session.search.BookSearchParser
 import voice.core.playback.withDefaultSpeed
 import voice.core.search.BookSearch
+import voice.core.search.BookSearchResult
 
 @Inject
 class LibrarySessionCallback(
@@ -193,7 +194,10 @@ class LibrarySessionCallback(
   }
 
   private suspend fun search(query: String): List<MediaItem> {
-    return bookSearch.search(query).map { mediaItemProvider.mediaItem(it.book) }
+    // Android Auto only plays audiobooks
+    return bookSearch.search(query).filterIsInstance<BookSearchResult.Audiobook>().map {
+      mediaItemProvider.mediaItem(it.book)
+    }
   }
 
   override fun onPlaybackResumption(
