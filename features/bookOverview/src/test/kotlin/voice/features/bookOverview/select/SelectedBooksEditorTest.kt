@@ -60,14 +60,14 @@ class SelectedBooksEditorTest {
     assertEquals(expected = 1, actual = series.count)
     assertEquals(expected = "Saga", actual = store.data.first().single().shownSeries)
 
-    editor.undo(series)
+    val _ = editor.undo(series)
     assertEquals(expected = null, actual = store.data.first().single().customSeries)
 
     val author = editor.set(BookField.Author, listOf(ebook.bookId), "Author")
     // the author of the file, so the book follows the file again
     assertEquals(expected = null, actual = store.data.first().single().customAuthor)
 
-    editor.undo(author)
+    val _ = editor.undo(author)
     assertEquals(expected = "Mine", actual = store.data.first().single().customAuthor)
   }
 
