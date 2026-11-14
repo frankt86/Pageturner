@@ -28,6 +28,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -386,7 +387,7 @@ private fun SearchField(
 @Composable
 private fun NavigationRow(
   item: OpdsNavigation,
-  shape: RoundedCornerShape,
+  shape: CornerBasedShape,
   onClick: () -> Unit,
 ) {
   val colors = MaterialTheme.colorScheme
@@ -439,7 +440,7 @@ private fun NavigationRow(
 @Composable
 private fun PublicationRow(
   publication: PublicationViewState,
-  shape: RoundedCornerShape,
+  shape: CornerBasedShape,
   onClick: () -> Unit,
 ) {
   val colors = MaterialTheme.colorScheme

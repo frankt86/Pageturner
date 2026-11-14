@@ -163,7 +163,7 @@ internal fun Library(
         val headerIndex = entranceIndex()
         item(key = category, span = { GridItemSpan(maxLineSpan) }, contentType = "header") {
           Header(
-            title = stringResource(category.nameRes),
+            category = category,
             count = items.size,
             modifier =
               Modifier.entrance(entrance, headerIndex)
