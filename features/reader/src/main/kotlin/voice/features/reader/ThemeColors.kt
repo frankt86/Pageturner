@@ -17,10 +17,10 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.core.graphics.createBitmap
-import voice.core.data.HighlightColor
-import voice.core.data.ReaderImageFilter
 import java.util.Locale
 import kotlin.random.Random
+import voice.core.data.HighlightColor
+import voice.core.data.ReaderImageFilter
 import voice.core.strings.R as StringsR
 
 /** Reads `#RRGGBB` or `RRGGBB`. */
@@ -53,14 +53,15 @@ internal fun highlightColorName(
 ): String = names[color]?.takeIf { it.isNotBlank() } ?: highlightColorDefaultName(color)
 
 @Composable
-internal fun highlightColorDefaultName(color: HighlightColor): String = stringResource(
-  when (color) {
-    HighlightColor.Yellow -> StringsR.string.reader_highlight_yellow
-    HighlightColor.Green -> StringsR.string.reader_highlight_green
-    HighlightColor.Blue -> StringsR.string.reader_highlight_blue
-    HighlightColor.Pink -> StringsR.string.reader_highlight_pink
-  },
-)
+internal fun highlightColorDefaultName(color: HighlightColor): String =
+  stringResource(
+    when (color) {
+      HighlightColor.Yellow -> StringsR.string.reader_highlight_yellow
+      HighlightColor.Green -> StringsR.string.reader_highlight_green
+      HighlightColor.Blue -> StringsR.string.reader_highlight_blue
+      HighlightColor.Pink -> StringsR.string.reader_highlight_pink
+    },
+  )
 
 // see-through, so the text stays readable on light and dark pages
 internal fun HighlightColor.background(opacity: Float): Color = ink().copy(alpha = opacity)
@@ -70,13 +71,15 @@ internal fun ReaderImageFilter.colorFilter(paper: Color): ColorFilter? {
   if (paper.luminance() >= 0.5F) return null
   return when (this) {
     ReaderImageFilter.Original -> null
-    ReaderImageFilter.Dimmed -> ColorFilter.colorMatrix(ColorMatrix().apply { setToScale(0.7F, 0.7F, 0.7F, 1F) })
-    ReaderImageFilter.Inverted -> ColorFilter.colorMatrix(
-      ColorMatrix().apply {
-        setToScale(-1F, -1F, -1F, 1F)
-        for (row in 0..2) this[row, 4] = 255F
-      },
-    )
+    ReaderImageFilter.Dimmed ->
+      ColorFilter.colorMatrix(ColorMatrix().apply { setToScale(0.7F, 0.7F, 0.7F, 1F) })
+    ReaderImageFilter.Inverted ->
+      ColorFilter.colorMatrix(
+        ColorMatrix().apply {
+          setToScale(-1F, -1F, -1F, 1F)
+          for (row in 0..2) this[row, 4] = 255F
+        },
+      )
   }
 }
 
@@ -97,6 +100,10 @@ internal fun PaperTexture(
   if (intensity <= 0F) return
   val brush = remember { ShaderBrush(ImageShader(noise, TileMode.Repeated, TileMode.Repeated)) }
   Canvas(modifier) {
-    drawRect(brush = brush, alpha = intensity * 0.18F, colorFilter = ColorFilter.tint(color, BlendMode.SrcIn))
+    drawRect(
+      brush = brush,
+      alpha = intensity * 0.18F,
+      colorFilter = ColorFilter.tint(color, BlendMode.SrcIn),
+    )
   }
 }

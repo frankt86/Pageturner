@@ -2,6 +2,7 @@
 
 package voice.features.playbackScreen
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.Spring
@@ -30,7 +31,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
@@ -58,7 +58,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -68,10 +68,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.RoundedPolygon
-import kotlinx.coroutines.delay
-import voice.core.ui.icons.VoiceIcons
 import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.delay
 import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
 
 private val PRESETS = listOf(5, 15, 30, 60)
 
@@ -88,16 +88,14 @@ internal fun SleepTimerDialog(
   ModalBottomSheet(
     modifier = modifier,
     onDismissRequest = onDismiss,
-    sheetState = rememberBottomSheetState(
-      initialValue = Hidden,
-      enabledValues = setOf(Hidden, Expanded),
-    ),
+    sheetState =
+      rememberBottomSheetState(
+        initialValue = Hidden,
+        enabledValues = setOf(Hidden, Expanded),
+      ),
   ) {
     Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 24.dp)
-        .padding(bottom = 32.dp),
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(bottom = 32.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       Text(
@@ -107,12 +105,13 @@ internal fun SleepTimerDialog(
         textAlign = TextAlign.Center,
       )
       Spacer(modifier = Modifier.height(24.dp))
-      val presetShapes = listOf(
-        MaterialShapes.Cookie6Sided,
-        MaterialShapes.Sunny,
-        MaterialShapes.Cookie9Sided,
-        MaterialShapes.SoftBurst,
-      )
+      val presetShapes =
+        listOf(
+          MaterialShapes.Cookie6Sided,
+          MaterialShapes.Sunny,
+          MaterialShapes.Cookie9Sided,
+          MaterialShapes.SoftBurst,
+        )
       Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -121,16 +120,18 @@ internal fun SleepTimerDialog(
           PresetButton(
             minutes = time,
             polygon = presetShapes[index],
-            containerColor = if (index % 2 == 0) {
-              MaterialTheme.colorScheme.primaryContainer
-            } else {
-              MaterialTheme.colorScheme.tertiaryContainer
-            },
-            contentColor = if (index % 2 == 0) {
-              MaterialTheme.colorScheme.onPrimaryContainer
-            } else {
-              MaterialTheme.colorScheme.onTertiaryContainer
-            },
+            containerColor =
+              if (index % 2 == 0) {
+                MaterialTheme.colorScheme.primaryContainer
+              } else {
+                MaterialTheme.colorScheme.tertiaryContainer
+              },
+            contentColor =
+              if (index % 2 == 0) {
+                MaterialTheme.colorScheme.onPrimaryContainer
+              } else {
+                MaterialTheme.colorScheme.onTertiaryContainer
+              },
             onClick = { onAcceptSleepTime(time) },
             // shrinks evenly when four don't fit, e.g. with a large display size
             modifier = Modifier.weight(1F, fill = false),
@@ -140,7 +141,7 @@ internal fun SleepTimerDialog(
       Spacer(modifier = Modifier.height(24.dp))
       Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(28.dp),
+        shape = MaterialTheme.shapes.extraLarge,
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
       ) {
         Row(
@@ -149,8 +150,9 @@ internal fun SleepTimerDialog(
         ) {
           ContinuousPressIcon(
             onEmit = onDecrementSleepTime,
-            icon = VoiceIcons.Remove,
-            contentDescription = stringResource(id = StringsR.string.sleep_timer_dialog_action_decrement),
+            icon = UiR.drawable.ic_remove,
+            contentDescription =
+              stringResource(id = StringsR.string.sleep_timer_dialog_action_decrement),
           )
           AnimatedContent(
             modifier = Modifier.weight(1F),
@@ -173,8 +175,9 @@ internal fun SleepTimerDialog(
           }
           ContinuousPressIcon(
             onEmit = onIncrementSleepTime,
-            icon = VoiceIcons.Add,
-            contentDescription = stringResource(id = StringsR.string.sleep_timer_dialog_action_increment),
+            icon = UiR.drawable.ic_add,
+            contentDescription =
+              stringResource(id = StringsR.string.sleep_timer_dialog_action_increment),
           )
           FilledIconButton(
             onClick = { onAcceptSleepTime(viewState.customSleepTime) },
@@ -182,7 +185,7 @@ internal fun SleepTimerDialog(
             modifier = Modifier.size(IconButtonDefaults.mediumContainerSize()),
           ) {
             Icon(
-              imageVector = VoiceIcons.Check,
+              painter = painterResource(UiR.drawable.ic_check),
               contentDescription = minutes(minutes = viewState.customSleepTime),
             )
           }
@@ -190,13 +193,11 @@ internal fun SleepTimerDialog(
       }
       Spacer(modifier = Modifier.height(12.dp))
       FilledTonalButton(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(56.dp),
+        modifier = Modifier.fillMaxWidth().height(56.dp),
         onClick = onAcceptSleepAtEndOfChapter,
         shapes = ButtonDefaults.shapes(),
       ) {
-        Icon(imageVector = VoiceIcons.Bedtime, contentDescription = null)
+        Icon(painter = painterResource(UiR.drawable.ic_bedtime), contentDescription = null)
         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
         Text(text = stringResource(id = StringsR.string.sleep_timer_end_of_chapter))
       }
@@ -223,40 +224,43 @@ private fun PresetButton(
 ) {
   val interactionSource = remember { MutableInteractionSource() }
   val pressed by interactionSource.collectIsPressedAsState()
-  val rotation by animateFloatAsState(
-    targetValue = if (pressed) 60F else 0F,
-    animationSpec = spring(dampingRatio = 0.4F, stiffness = Spring.StiffnessMediumLow),
-    label = "presetRotation",
-  )
-  val scale by animateFloatAsState(
-    targetValue = if (pressed) 0.88F else 1F,
-    animationSpec = spring(dampingRatio = 0.4F, stiffness = Spring.StiffnessMedium),
-    label = "presetScale",
-  )
+  val rotation by
+    animateFloatAsState(
+      targetValue = if (pressed) 60F else 0F,
+      animationSpec = spring(dampingRatio = 0.4F, stiffness = Spring.StiffnessMediumLow),
+      label = "presetRotation",
+    )
+  val scale by
+    animateFloatAsState(
+      targetValue = if (pressed) 0.88F else 1F,
+      animationSpec = spring(dampingRatio = 0.4F, stiffness = Spring.StiffnessMedium),
+      label = "presetScale",
+    )
   val shape = polygon.toShape()
   val description = minutes(minutes = minutes)
   Box(
-    modifier = modifier
-      .widthIn(max = 76.dp)
-      .aspectRatio(1F)
-      .graphicsLayer {
-        scaleX = scale
-        scaleY = scale
-      }
-      .clickable(
-        interactionSource = interactionSource,
-        indication = null,
-        role = Role.Button,
-        onClick = onClick,
-      )
-      .semantics { contentDescription = description },
+    modifier =
+      modifier
+        .widthIn(max = 76.dp)
+        .aspectRatio(1F)
+        .graphicsLayer {
+          scaleX = scale
+          scaleY = scale
+        }
+        .clickable(
+          interactionSource = interactionSource,
+          indication = null,
+          role = Role.Button,
+          onClick = onClick,
+        )
+        .semantics { contentDescription = description },
     contentAlignment = Alignment.Center,
   ) {
     Box(
-      modifier = Modifier
-        .fillMaxSize()
-        .graphicsLayer { rotationZ = rotation }
-        .background(containerColor, shape),
+      modifier =
+        Modifier.fillMaxSize()
+          .graphicsLayer { rotationZ = rotation }
+          .background(containerColor, shape),
     )
     Column(
       modifier = Modifier.clearAndSetSemantics {},
@@ -279,7 +283,7 @@ private fun PresetButton(
 @Composable
 private fun ContinuousPressIcon(
   onEmit: () -> Unit,
-  icon: ImageVector,
+  @DrawableRes icon: Int,
   contentDescription: String,
   modifier: Modifier = Modifier,
 ) {
@@ -296,23 +300,22 @@ private fun ContinuousPressIcon(
   }
   val interactionSource = remember { MutableInteractionSource() }
   Icon(
-    imageVector = icon,
+    painter = painterResource(icon),
     contentDescription = contentDescription,
-    modifier = modifier
-      .size(48.dp)
-      .combinedClickable(
-        interactionSource = interactionSource,
-        indication = ripple(bounded = false),
-        onClick = onEmit,
-        onLongClick = { isPressed = true },
-      )
-      .padding(12.dp),
+    modifier =
+      modifier
+        .size(48.dp)
+        .combinedClickable(
+          interactionSource = interactionSource,
+          indication = ripple(bounded = false),
+          onClick = onEmit,
+          onLongClick = { isPressed = true },
+        )
+        .padding(12.dp),
   )
   LaunchedEffect(interactionSource) {
     interactionSource.interactions.collect { interaction ->
-      if (interaction is PressInteraction.Release ||
-        interaction is PressInteraction.Cancel
-      ) {
+      if (interaction is PressInteraction.Release || interaction is PressInteraction.Cancel) {
         isPressed = false
       }
     }

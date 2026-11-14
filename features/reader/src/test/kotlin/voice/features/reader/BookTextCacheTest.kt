@@ -1,23 +1,23 @@
 package voice.features.reader
 
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import org.junit.Rule
+import org.junit.rules.TemporaryFolder
 
 class BookTextCacheTest {
 
-  @get:Rule
-  val folder = TemporaryFolder()
+  @get:Rule val folder = TemporaryFolder()
 
-  private val text = BookText(
-    title = "The Quiet Orbit",
-    chapters = listOf("First line.\n\nSecond line.", "x".repeat(100_000), "Ünïcödé ✓"),
-    chapterTitles = listOf("Launch", null, "Drift & Return"),
-  )
+  private val text =
+    BookText(
+      title = "The Quiet Orbit",
+      chapters = listOf("First line.\n\nSecond line.", "x".repeat(100_000), "Ünïcödé ✓"),
+      chapterTitles = listOf("Launch", null, "Drift & Return"),
+    )
 
   @Test
   fun `the key changes with the file`() {
@@ -71,7 +71,10 @@ class BookTextCacheTest {
     }
     pruneBookTexts(folder.root, keep = 2)
     val kept = folder.root.listFiles()!!.toSet()
-    assertEquals(setOf(bookTextFile(folder.root, "content://2"), bookTextFile(folder.root, "content://3")), kept)
+    assertEquals(
+      setOf(bookTextFile(folder.root, "content://2"), bookTextFile(folder.root, "content://3")),
+      kept,
+    )
     assertTrue(kept.all { it.exists() })
   }
 }

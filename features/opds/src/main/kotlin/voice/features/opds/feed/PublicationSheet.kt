@@ -36,17 +36,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import voice.core.data.BookId
-import voice.core.ui.bookText
-import voice.core.ui.icons.VoiceIcons
 import java.text.NumberFormat
+import voice.core.data.BookId
 import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
+import voice.core.ui.bookText
 
 @Composable
 internal fun PublicationSheet(
@@ -62,25 +63,23 @@ internal fun PublicationSheet(
   val colors = MaterialTheme.colorScheme
   ModalBottomSheet(
     onDismissRequest = onDismiss,
-    sheetState = rememberBottomSheetState(
-      initialValue = Hidden,
-      enabledValues = setOf(Hidden, Expanded),
-    ),
+    sheetState =
+      rememberBottomSheetState(
+        initialValue = Hidden,
+        enabledValues = setOf(Hidden, Expanded),
+      ),
   ) {
     Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .verticalScroll(rememberScrollState())
-        .padding(horizontal = 24.dp)
-        .padding(bottom = 24.dp),
+      modifier =
+        Modifier.fillMaxWidth()
+          .verticalScroll(rememberScrollState())
+          .padding(horizontal = 24.dp)
+          .padding(bottom = 24.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       CatalogCover(
         image = publication.cover,
-        modifier = Modifier
-          .height(200.dp)
-          .aspectRatio(2F / 3F)
-          .clip(RoundedCornerShape(12.dp)),
+        modifier = Modifier.height(200.dp).aspectRatio(2F / 3F).clip(RoundedCornerShape(12.dp)),
       )
       Spacer(Modifier.height(20.dp))
       Text(
@@ -105,9 +104,10 @@ internal fun PublicationSheet(
         publication.download?.let { download ->
           DownloadAction(
             download = download,
-            downloadText = (download as? EntryDownload.Available)?.let {
-              stringResource(StringsR.string.opds_entry_download, it.format)
-            },
+            downloadText =
+              (download as? EntryDownload.Available)?.let {
+                stringResource(StringsR.string.opds_entry_download, it.format)
+              },
             details = null,
             openText = stringResource(StringsR.string.opds_entry_read),
             primary = true,
@@ -121,10 +121,14 @@ internal fun PublicationSheet(
           DownloadAction(
             download = audiobook,
             downloadText = stringResource(StringsR.string.opds_entry_download_audiobook),
-            details = (audiobook as? EntryDownload.Available)?.let { available ->
-              listOfNotNull(available.format, available.size?.let { Formatter.formatShortFileSize(context, it) })
-                .joinToString(" · ")
-            },
+            details =
+              (audiobook as? EntryDownload.Available)?.let { available ->
+                listOfNotNull(
+                    available.format,
+                    available.size?.let { Formatter.formatShortFileSize(context, it) },
+                  )
+                  .joinToString(" · ")
+              },
             openText = stringResource(StringsR.string.opds_entry_listen),
             // the ebook comes first when a book comes as both
             primary = publication.download == null,
@@ -159,9 +163,7 @@ private fun DownloadAction(
 ) {
   val colors = MaterialTheme.colorScheme
   Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .semantics { liveRegion = LiveRegionMode.Polite },
+    modifier = Modifier.fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite },
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
@@ -218,7 +220,7 @@ private fun DownloadAction(
       EntryDownload.Downloaded -> {
         Row(verticalAlignment = Alignment.CenterVertically) {
           Icon(
-            imageVector = VoiceIcons.DownloadDone,
+            painter = painterResource(UiR.drawable.ic_download_done),
             contentDescription = null,
             tint = colors.primary,
             modifier = Modifier.size(20.dp),
@@ -241,9 +243,7 @@ private fun DownloadAction(
           onClick = {},
           enabled = false,
           shapes = ButtonDefaults.shapes(),
-          modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = ButtonDefaults.MediumContainerHeight),
+          modifier = Modifier.fillMaxWidth().heightIn(min = ButtonDefaults.MediumContainerHeight),
         ) {
           Text(stringResource(StringsR.string.book_download_action))
         }
@@ -271,10 +271,12 @@ private fun downloadingText(download: EntryDownload.Downloading): String {
         Formatter.formatShortFileSize(context, download.totalBytes),
       )
     }
-    progress != null -> downloading + " · " + NumberFormat.getPercentInstance().format(progress.toDouble())
+    progress != null ->
+      downloading + " · " + NumberFormat.getPercentInstance().format(progress.toDouble())
     // the server didn't tell the size, so at least the download shows that it moves
     download.downloadedBytes > 0 ->
-      downloading + " · " +
+      downloading +
+        " · " +
         Formatter.formatShortFileSize(LocalContext.current, download.downloadedBytes)
     else -> downloading
   }
@@ -286,9 +288,7 @@ private fun ActionButton(
   primary: Boolean,
   onClick: () -> Unit,
 ) {
-  val modifier = Modifier
-    .fillMaxWidth()
-    .heightIn(min = ButtonDefaults.MediumContainerHeight)
+  val modifier = Modifier.fillMaxWidth().heightIn(min = ButtonDefaults.MediumContainerHeight)
   if (primary) {
     Button(
       onClick = onClick,

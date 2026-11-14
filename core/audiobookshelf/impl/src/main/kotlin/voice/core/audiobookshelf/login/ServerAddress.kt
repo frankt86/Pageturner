@@ -4,24 +4,25 @@ import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 /**
- * Turns whatever was typed into the server urls to try, the most likely first. People paste the address of the
- * web app, sometimes with a page like `/login` at the end, or leave out the scheme. Servers at home are often only
- * reachable over http, so for them http goes first.
+ * Turns whatever was typed into the server urls to try, the most likely first. People paste the
+ * address of the web app, sometimes with a page like `/login` at the end, or leave out the scheme.
+ * Servers at home are often only reachable over http, so for them http goes first.
  */
 internal fun serverUrlCandidates(input: String): List<String> {
   val trimmed = input.trim().trimEnd('/')
   if (trimmed.isEmpty()) return emptyList()
 
-  val withSchemes = if ("://" in trimmed) {
-    listOf(trimmed)
-  } else {
-    val host = trimmed.substringBefore('/').substringBeforeLast(':')
-    if (isLocalHost(host)) {
-      listOf("http://$trimmed", "https://$trimmed")
+  val withSchemes =
+    if ("://" in trimmed) {
+      listOf(trimmed)
     } else {
-      listOf("https://$trimmed", "http://$trimmed")
+      val host = trimmed.substringBefore('/').substringBeforeLast(':')
+      if (isLocalHost(host)) {
+        listOf("http://$trimmed", "https://$trimmed")
+      } else {
+        listOf("https://$trimmed", "http://$trimmed")
+      }
     }
-  }
 
   return withSchemes
     .mapNotNull { it.toHttpUrlOrNull() }

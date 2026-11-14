@@ -1,8 +1,8 @@
 package voice.core.opds.download
 
-import voice.core.data.folders.FolderType
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import voice.core.data.folders.FolderType
 
 class DownloadNamesTest {
 
@@ -21,7 +21,10 @@ class DownloadNamesTest {
 
   @Test
   fun folderWithoutExtension() {
-    assertEquals("Persuasion (2)", uniqueName("Persuasion", extension = null, taken = listOf("Persuasion", "Persuasion.epub")))
+    assertEquals(
+      "Persuasion (2)",
+      uniqueName("Persuasion", extension = null, taken = listOf("Persuasion", "Persuasion.epub")),
+    )
   }
 
   @Test
@@ -33,15 +36,17 @@ class DownloadNamesTest {
 
   @Test
   fun onlyWritableFoldersOfSeveralBooks() {
-    val candidates = downloadFolderCandidates(
-      folders = mapOf(
-        FolderType.SingleFile to listOf("file"),
-        FolderType.SingleFolder to listOf("book"),
-        FolderType.Author to listOf("authors"),
-        FolderType.Root to listOf("library", "readOnly"),
-      ),
-      writable = setOf("file", "book", "authors", "library"),
-    )
+    val candidates =
+      downloadFolderCandidates(
+        folders =
+          mapOf(
+            FolderType.SingleFile to listOf("file"),
+            FolderType.SingleFolder to listOf("book"),
+            FolderType.Author to listOf("authors"),
+            FolderType.Root to listOf("library", "readOnly"),
+          ),
+        writable = setOf("file", "book", "authors", "library"),
+      )
     assertEquals(listOf("library" to FolderType.Root, "authors" to FolderType.Author), candidates)
   }
 

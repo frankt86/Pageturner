@@ -1,5 +1,7 @@
 package voice.core.opds.download
 
+import java.io.File
+import java.io.IOException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import okhttp3.Call
@@ -7,14 +9,13 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import voice.core.opds.OpdsCatalog
-import java.io.File
-import java.io.IOException
 
 private const val UNKNOWN_SIZE_REPORT_BYTES = 512 * 1024
 
 /**
- * Downloads [request] into [target]. [onProgress] gets the bytes read and the size of the file, which is 0 while the
- * server doesn't tell it. [onCall] gets the call, as a read that waits for the server only stops once it's cancelled.
+ * Downloads [request] into [target]. [onProgress] gets the bytes read and the size of the file,
+ * which is 0 while the server doesn't tell it. [onCall] gets the call, as a read that waits for the
+ * server only stops once it's cancelled.
  */
 internal suspend fun OkHttpClient.fetch(
   request: Request,
@@ -28,7 +29,8 @@ internal suspend fun OkHttpClient.fetch(
     if (!response.isSuccessful) throw IOException("HTTP ${response.code}")
     // a login page or an error message in place of the book must not end up in the library as one
     val type = response.body.contentType()
-    if (type != null && (type.subtype == "html" || type.subtype == "json")) throw IOException("Got $type instead of a file")
+    if (type != null && (type.subtype == "html" || type.subtype == "json"))
+      throw IOException("Got $type instead of a file")
     val total = response.body.contentLength().coerceAtLeast(0)
     var read = 0L
     var lastReported = -1L

@@ -2,11 +2,13 @@ package voice.core.ebook.mobi
 
 import java.io.ByteArrayOutputStream
 
-internal val jpeg = byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte(), 0xE0.toByte(), 1, 2, 3, 4)
+internal val jpeg =
+  byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte(), 0xE0.toByte(), 1, 2, 3, 4)
 
 internal class Bytes {
   private val out = ByteArrayOutputStream()
-  val size: Int get() = out.size()
+  val size: Int
+    get() = out.size()
 
   fun u8(value: Int) {
     out.write(value)
@@ -85,22 +87,25 @@ internal fun record0(
     }
   }
   val nameOffset = 16 + headerLength + exthBytes.size
-  val values = mapOf(
-    28 to 65001L,
-    36 to version.toLong(),
-    108 to NULL,
-    112 to NULL,
-    116 to 0L,
-    0xC0 to NULL,
-    0xF4 to NULL,
-    0xF8 to NULL,
-    0xFC to NULL,
-    0x104 to NULL,
-  ) + fields + mapOf(
-    84 to nameOffset.toLong(),
-    88 to fullName.toByteArray().size.toLong(),
-    128 to if (exth.isEmpty()) 0L else 0x40L,
-  )
+  val values =
+    mapOf(
+      28 to 65001L,
+      36 to version.toLong(),
+      108 to NULL,
+      112 to NULL,
+      116 to 0L,
+      0xC0 to NULL,
+      0xF4 to NULL,
+      0xF8 to NULL,
+      0xFC to NULL,
+      0x104 to NULL,
+    ) +
+      fields +
+      mapOf(
+        84 to nameOffset.toLong(),
+        88 to fullName.toByteArray().size.toLong(),
+        128 to if (exth.isEmpty()) 0L else 0x40L,
+      )
   return bytes {
     u16(compression)
     u16(0)
@@ -149,7 +154,10 @@ internal class Tag(
   val mask: Int,
 )
 
-/** The main and the entry record of an index with one control byte, plus its string record if there are [strings]. */
+/**
+ * The main and the entry record of an index with one control byte, plus its string record if there
+ * are [strings].
+ */
 internal fun index(
   tags: List<Tag>,
   entries: List<Pair<String, ByteArray>>,
@@ -192,9 +200,10 @@ internal fun index(
     starts.forEach { u16(it) }
   }
   bytes {
-    u32(idxt.toLong())
-    u32(entries.size.toLong())
-  }.copyInto(sub, destinationOffset = 20)
+      u32(idxt.toLong())
+      u32(entries.size.toLong())
+    }
+    .copyInto(sub, destinationOffset = 20)
   return listOfNotNull(main, sub, strings)
 }
 

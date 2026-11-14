@@ -24,10 +24,10 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.IntSize
+import kotlin.math.abs
 import voice.core.data.EbookPosition
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
-import kotlin.math.abs
 
 /** The text from [start] until [end] in a section, counted like [EbookPosition.offset]. */
 internal data class BookRange(
@@ -48,12 +48,13 @@ internal fun Page.contains(position: EbookPosition): Boolean {
 }
 
 // highlighter ink like on paper, so it's not taken from the theme
-internal fun HighlightColor.ink(): Color = when (this) {
-  HighlightColor.Yellow -> Color(0xFFFFD54F)
-  HighlightColor.Green -> Color(0xFF81C784)
-  HighlightColor.Blue -> Color(0xFF64B5F6)
-  HighlightColor.Pink -> Color(0xFFF48FB1)
-}
+internal fun HighlightColor.ink(): Color =
+  when (this) {
+    HighlightColor.Yellow -> Color(0xFFFFD54F)
+    HighlightColor.Green -> Color(0xFF81C784)
+    HighlightColor.Blue -> Color(0xFF64B5F6)
+    HighlightColor.Pink -> Color(0xFFF48FB1)
+  }
 
 internal data class Mark(
   val start: Int,
@@ -74,10 +75,14 @@ internal fun pageMarks(
   val searchColor = MaterialTheme.colorScheme.tertiaryContainer
   val selectionColor = LocalTextSelectionColors.current.backgroundColor
   return buildList {
-    highlights.forEach { if (it.section == section) add(Mark(it.start, it.end, it.color.background(highlightOpacity))) }
+    highlights.forEach {
+      if (it.section == section) add(Mark(it.start, it.end, it.color.background(highlightOpacity)))
+    }
     if (readingRange != null) add(Mark(readingRange.first, readingRange.last + 1, readAloudColor))
-    if (searchMatch != null && searchMatch.section == section) add(Mark(searchMatch.start, searchMatch.end, searchColor))
-    if (selection != null && selection.section == section) add(Mark(selection.start, selection.end, selectionColor))
+    if (searchMatch != null && searchMatch.section == section)
+      add(Mark(searchMatch.start, searchMatch.end, searchColor))
+    if (selection != null && selection.section == section)
+      add(Mark(selection.start, selection.end, selectionColor))
   }
 }
 
@@ -124,8 +129,8 @@ private class TextHit(
 )
 
 /**
- * The text selected on the pages. The pager lies above the pages to turn them, so it passes the touches on here and
- * this finds the characters under them.
+ * The text selected on the pages. The pager lies above the pages to turn them, so it passes the
+ * touches on here and this finds the characters under them.
  */
 @Stable
 internal class PageSelection {
@@ -157,7 +162,9 @@ internal class PageSelection {
   ): Highlight? {
     val hit = hit(position, pageIndices) ?: return null
     val character = hit.character ?: return null
-    return highlights.lastOrNull { it.section == hit.section && character >= it.start && character < it.end }
+    return highlights.lastOrNull {
+      it.section == hit.section && character >= it.start && character < it.end
+    }
   }
 
   /** Selects the word under [position], returns whether there was one. */
@@ -185,11 +192,12 @@ internal class PageSelection {
     val range = range ?: return
     val hit = hit(position, pageIndices) ?: return
     if (hit.section != range.section) return
-    anchor = if (abs(hit.caret - range.start) < abs(hit.caret - range.end)) {
-      range.copy(start = range.end)
-    } else {
-      range.copy(end = range.start)
-    }
+    anchor =
+      if (abs(hit.caret - range.start) < abs(hit.caret - range.end)) {
+        range.copy(start = range.end)
+      } else {
+        range.copy(end = range.start)
+      }
   }
 
   fun extend(
@@ -203,7 +211,8 @@ internal class PageSelection {
     val text = (content as? ReaderContent.Epub)?.chapters?.getOrNull(hit.section) ?: return
     if (text.isEmpty()) return
     val word = wordAt(text, (hit.character ?: hit.caret).coerceIn(0, text.length - 1))
-    range = BookRange(anchor.section, minOf(anchor.start, word.first), maxOf(anchor.end, word.last + 1))
+    range =
+      BookRange(anchor.section, minOf(anchor.start, word.first), maxOf(anchor.end, word.last + 1))
   }
 
   private fun hit(
@@ -220,7 +229,10 @@ internal class PageSelection {
       if (local.x < 0F || local.y < 0F || local.x > size.width || local.y > size.height) continue
       val caret = layout.getOffsetForPosition(local)
       val length = layout.layoutInput.text.length
-      val character = listOf(caret, caret - 1).firstOrNull { it in 0 until length && layout.getBoundingBox(it).contains(local) }
+      val character =
+        listOf(caret, caret - 1).firstOrNull {
+          it in 0 until length && layout.getBoundingBox(it).contains(local)
+        }
       return TextHit(
         section = text.section,
         caret = text.offset + caret,
@@ -232,8 +244,9 @@ internal class PageSelection {
 }
 
 /**
- * Long-press selection and taps on highlights for the pages. The page turning below gets every other touch.
- * The lambdas are called for each touch, so they have to read the latest state themselves.
+ * Long-press selection and taps on highlights for the pages. The page turning below gets every
+ * other touch. The lambdas are called for each touch, so they have to read the latest state
+ * themselves.
  */
 internal fun Modifier.selectableText(
   selection: PageSelection,
@@ -243,7 +256,9 @@ internal fun Modifier.selectableText(
   onSelect: () -> Unit,
   // whether it handled the tap, else it goes on to the page turning
   onOtherTap: (Offset, IntSize) -> Boolean,
-): Modifier = onGloballyPositioned { selection.root = it }
+): Modifier = onGloballyPositioned {
+  selection.root = it
+}
   .pointerInput(selection) {
     detectPageGestures(
       selecting = { selection.range != null },
@@ -271,7 +286,8 @@ internal fun Modifier.selectableText(
     )
   }
 
-// everything runs in the initial pass, before the page turning below sees the touch, so it can keep it from turning
+// everything runs in the initial pass, before the page turning below sees the touch, so it can keep
+// it from turning
 private suspend fun PointerInputScope.detectPageGestures(
   selecting: () -> Boolean,
   onTap: (Offset) -> Boolean,
@@ -293,9 +309,10 @@ private suspend fun PointerInputScope.detectPageGestures(
       return@awaitEachGesture
     }
     var cancelled = false
-    val up = withTimeoutOrNull(viewConfiguration.longPressTimeoutMillis) {
-      awaitTapUp(down).also { cancelled = it == null }
-    }
+    val up =
+      withTimeoutOrNull(viewConfiguration.longPressTimeoutMillis) {
+        awaitTapUp(down).also { cancelled = it == null }
+      }
     if (up != null) {
       if (onTap(up.position)) up.consume()
     } else if (!cancelled && onLongPress(down.position)) {
@@ -305,9 +322,13 @@ private suspend fun PointerInputScope.detectPageGestures(
 }
 
 // null when the finger moves away, then it's a page turn
-private suspend fun AwaitPointerEventScope.awaitTapUp(down: PointerInputChange): PointerInputChange? {
+private suspend fun AwaitPointerEventScope.awaitTapUp(
+  down: PointerInputChange,
+): PointerInputChange? {
   while (true) {
-    val change = awaitPointerEvent(PointerEventPass.Initial).changes.firstOrNull { it.id == down.id } ?: return null
+    val change =
+      awaitPointerEvent(PointerEventPass.Initial).changes.firstOrNull { it.id == down.id }
+        ?: return null
     if (change.isConsumed) return null
     if (!change.pressed) return change
     if ((change.position - down.position).getDistance() > viewConfiguration.touchSlop) return null
@@ -322,7 +343,9 @@ private suspend fun AwaitPointerEventScope.followPointer(
 ): Boolean {
   var moved = false
   while (true) {
-    val change = awaitPointerEvent(PointerEventPass.Initial).changes.firstOrNull { it.id == down.id } ?: return moved
+    val change =
+      awaitPointerEvent(PointerEventPass.Initial).changes.firstOrNull { it.id == down.id }
+        ?: return moved
     if (!change.pressed) {
       change.consume()
       return moved

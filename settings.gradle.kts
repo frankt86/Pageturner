@@ -5,19 +5,18 @@ import org.gradle.api.internal.FeaturePreviews
 rootProject.name = "voice"
 
 FeaturePreviews.Feature.entries.forEach { feature ->
-  val enable = when (feature) {
-    FeaturePreviews.Feature.TYPESAFE_PROJECT_ACCESSORS,
-    FeaturePreviews.Feature.STABLE_CONFIGURATION_CACHE,
-    FeaturePreviews.Feature.NO_IMPLICIT_LOOKUP_IN_PARENT_PROJECTS,
-    FeaturePreviews.Feature.ENHANCED_GRAPH_ORDERING,
-      -> true
-    FeaturePreviews.Feature.GROOVY_COMPILATION_AVOIDANCE,
-    FeaturePreviews.Feature.INTERNAL_BUILD_SERVICE_USAGE,
-    FeaturePreviews.Feature.ALWAYS_INACTIVE,
-      -> false
-  }
+  val enable =
+    when (feature) {
+      FeaturePreviews.Feature.TYPESAFE_PROJECT_ACCESSORS,
+      FeaturePreviews.Feature.STABLE_CONFIGURATION_CACHE,
+      FeaturePreviews.Feature.NO_IMPLICIT_LOOKUP_IN_PARENT_PROJECTS,
+      FeaturePreviews.Feature.ENHANCED_GRAPH_ORDERING -> true
+      FeaturePreviews.Feature.GROOVY_COMPILATION_AVOIDANCE,
+      FeaturePreviews.Feature.INTERNAL_BUILD_SERVICE_USAGE,
+      FeaturePreviews.Feature.ALWAYS_INACTIVE -> false
+    }
   if (enable) {
-    check(feature.isActive){
+    check(feature.isActive) {
       "Feature $feature is not active"
     }
     enableFeaturePreview(feature.name)
@@ -45,8 +44,8 @@ plugins {
   id("org.gradle.toolchains.foojay-resolver-convention") version ("1.0.0")
   id("org.jetbrains.kotlin.android") version "2.4.21" apply false
   id("org.jetbrains.kotlin.jvm") version "2.4.21" apply false
-  id("com.android.application") version "9.5.0" apply false
-  id("com.android.library") version "9.5.0" apply false
+  id("com.android.application") version "9.5.1" apply false
+  id("com.android.library") version "9.5.1" apply false
 }
 
 develocity {
@@ -57,47 +56,87 @@ develocity {
 }
 
 include(":app")
+
 include(":navigation")
 
 include(":core:analytics:api")
+
 include(":core:analytics:noop")
+
 include(":core:analytics:firebase")
+
 include(":core:common")
+
 include(":core:data:api")
+
 include(":core:data:impl")
+
 include(":core:documentfile")
+
 include(":core:ebook")
+
 include(":core:initializer")
+
 include(":core:logging:api")
+
 include(":core:logging:crashlytics")
+
 include(":core:logging:debug")
-include(":core:playback")
+
+include(":core:playback:api")
+
+include(":core:playback:impl")
+
 include(":core:remoteconfig:api")
+
 include(":core:remoteconfig:firebase")
+
 include(":core:remoteconfig:noop")
+
 include(":core:scanner")
+
 include(":core:search")
+
 include(":core:sleeptimer:api")
+
 include(":core:sleeptimer:impl")
+
 include(":core:strings")
+
 include(":core:ui")
 
 include(":features:bookOverview")
+
 include(":features:bookmark")
+
 include(":features:cover")
+
 include(":features:folderPicker")
+
 include(":features:onboarding")
+
 include(":features:playbackScreen")
+
 include(":features:reader")
+
 include(":features:settings")
+
 include(":features:widget")
+
 include(":core:featureflag")
+
 include(":core:kioskmode")
+
 include(":core:audiobookshelf:api")
+
 include(":core:audiobookshelf:impl")
+
 include(":features:audiobookshelf")
-include(":core:snapshot")
+
 include(":core:foldersync")
+
 include(":core:datastore")
+
 include(":core:opds")
+
 include(":features:opds")

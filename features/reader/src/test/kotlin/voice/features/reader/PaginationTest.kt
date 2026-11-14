@@ -5,11 +5,11 @@ import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import voice.core.data.EbookPosition
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import voice.core.data.EbookPosition
 
 class PaginationTest {
 
@@ -51,11 +51,12 @@ class PaginationTest {
 
   @Test
   fun `the page holding a position is found`() {
-    val pages = listOf(
-      Page(section = 0, start = 0, end = 10),
-      Page(section = 0, start = 10, end = 20),
-      Page(section = 1, start = 0, end = 10),
-    )
+    val pages =
+      listOf(
+        Page(section = 0, start = 0, end = 10),
+        Page(section = 0, start = 10, end = 20),
+        Page(section = 1, start = 0, end = 10),
+      )
     assertEquals(0, pages.indexOfPosition(EbookPosition(section = 0, offset = 0)))
     assertEquals(1, pages.indexOfPosition(EbookPosition(section = 0, offset = 15)))
     assertEquals(2, pages.indexOfPosition(EbookPosition(section = 1, offset = 3)))

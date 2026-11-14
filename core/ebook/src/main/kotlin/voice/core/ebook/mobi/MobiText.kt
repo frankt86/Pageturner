@@ -34,7 +34,10 @@ internal fun palmDocDecompress(data: ByteArray): ByteArray {
   return buffer.copyOf(length)
 }
 
-/** The Huffman and dictionary compression of larger MOBI books, from the HUFF record and the CDIC records after it. */
+/**
+ * The Huffman and dictionary compression of larger MOBI books, from the HUFF record and the CDIC
+ * records after it.
+ */
 internal class HuffCdic(
   huff: ByteArray,
   cdics: List<ByteArray>,
@@ -49,7 +52,8 @@ internal class HuffCdic(
   private val unpacked = mutableListOf<Boolean>()
 
   init {
-    if (huff.ascii(0, 4) != "HUFF" || huff.u32(4) != 0x18L) throw KindleFormatException("No HUFF record")
+    if (huff.ascii(0, 4) != "HUFF" || huff.u32(4) != 0x18L)
+      throw KindleFormatException("No HUFF record")
     val table1 = huff.u32(8).toInt()
     val table2 = huff.u32(12).toInt()
     for (i in 0 until 256) {
@@ -65,7 +69,8 @@ internal class HuffCdic(
       maxCode[length] = ((huff.u32(table2 + (length - 1) * 8 + 4) + 1) shl (32 - length)) - 1
     }
     cdics.forEach { cdic ->
-      if (cdic.ascii(0, 4) != "CDIC" || cdic.u32(4) != 0x10L) throw KindleFormatException("No CDIC record")
+      if (cdic.ascii(0, 4) != "CDIC" || cdic.u32(4) != 0x10L)
+        throw KindleFormatException("No CDIC record")
       val total = cdic.u32(8).toInt()
       val bits = cdic.u32(12).toInt()
       val count = minOf(1 shl bits, total - phrases.size)
@@ -127,8 +132,9 @@ internal class HuffCdic(
 private fun ByteArray.u64(at: Int): Long = (u32(at) shl 32) or u32(at + 4)
 
 /**
- * The size of the bytes at the end of a text record that aren't text, like the multibyte overlap or indexing data.
- * Each bit in [flags] above the lowest one adds an entry whose size is written backwards at the end.
+ * The size of the bytes at the end of a text record that aren't text, like the multibyte overlap or
+ * indexing data. Each bit in [flags] above the lowest one adds an entry whose size is written
+ * backwards at the end.
  */
 internal fun trailingSize(
   record: ByteArray,
@@ -163,20 +169,24 @@ private fun trailingEntrySize(
   return result
 }
 
-/** The decompressed text of the book that [header] starts, with the trailing bytes of each record removed. */
+/**
+ * The decompressed text of the book that [header] starts, with the trailing bytes of each record
+ * removed.
+ */
 internal fun readText(
   db: PalmDb,
   header: MobiHeader,
 ): ByteArray {
   if (header.encryption != 0) throw KindleDrmException()
-  val huff = if (header.compression == Compression.HUFF_CDIC) {
-    HuffCdic(
-      huff = db.record(header.huffRecord),
-      cdics = (1 until header.huffCount).map { db.record(header.huffRecord + it) },
-    )
-  } else {
-    null
-  }
+  val huff =
+    if (header.compression == Compression.HUFF_CDIC) {
+      HuffCdic(
+        huff = db.record(header.huffRecord),
+        cdics = (1 until header.huffCount).map { db.record(header.huffRecord + it) },
+      )
+    } else {
+      null
+    }
   val out = ByteArrayOutputStream()
   for (i in 1..header.textRecordCount) {
     val record = db.record(header.start + i)

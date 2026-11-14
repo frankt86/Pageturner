@@ -1,9 +1,9 @@
 package voice.features.reader
 
-import voice.core.data.EbookPosition
-import voice.core.opds.komga.RemotePlace
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import voice.core.data.EbookPosition
+import voice.core.opds.komga.RemotePlace
 
 class RemotePlacesTest {
 
@@ -30,31 +30,59 @@ class RemotePlacesTest {
 
   @Test
   fun `the place goes to the old book engine and back`() {
-    val content = ReaderContent.Epub(
-      title = "Book",
-      chapters = listOf("a".repeat(3000), "b".repeat(2000)),
-      chapterTitles = listOf(null, null),
-    )
-    val place = RemotePlace(modified = 1, totalProgression = 0.8, href = null, progression = null, page = null, completed = false)
+    val content =
+      ReaderContent.Epub(
+        title = "Book",
+        chapters = listOf("a".repeat(3000), "b".repeat(2000)),
+        chapterTitles = listOf(null, null),
+      )
+    val place =
+      RemotePlace(
+        modified = 1,
+        totalProgression = 0.8,
+        href = null,
+        progression = null,
+        page = null,
+        completed = false,
+      )
     assertEquals(EbookPosition(1, 1000), place.position(content))
   }
 
   private fun place(totalProgression: Double) =
-    RemotePlace(modified = 1, totalProgression = totalProgression, href = null, progression = null, page = null, completed = false)
+    RemotePlace(
+      modified = 1,
+      totalProgression = totalProgression,
+      href = null,
+      progression = null,
+      page = null,
+      completed = false,
+    )
 
   @Test
   fun `a newer place before the first turn is gone to`() {
-    assertEquals(RemotePlaceAction.Jump, remotePlaceAction(place(0.6), progressAtOpen = 0.2F, turnedPage = false))
+    assertEquals(
+      RemotePlaceAction.Jump,
+      remotePlaceAction(place(0.6), progressAtOpen = 0.2F, turnedPage = false),
+    )
   }
 
   @Test
   fun `a newer place after a turn waits for the next time`() {
-    assertEquals(RemotePlaceAction.KeepForNextTime, remotePlaceAction(place(0.6), progressAtOpen = 0.2F, turnedPage = true))
+    assertEquals(
+      RemotePlaceAction.KeepForNextTime,
+      remotePlaceAction(place(0.6), progressAtOpen = 0.2F, turnedPage = true),
+    )
   }
 
   @Test
   fun `the same page is only noted until the reader moves on`() {
-    assertEquals(RemotePlaceAction.Note, remotePlaceAction(place(0.201), progressAtOpen = 0.2F, turnedPage = false))
-    assertEquals(RemotePlaceAction.Ignore, remotePlaceAction(place(0.201), progressAtOpen = 0.2F, turnedPage = true))
+    assertEquals(
+      RemotePlaceAction.Note,
+      remotePlaceAction(place(0.201), progressAtOpen = 0.2F, turnedPage = false),
+    )
+    assertEquals(
+      RemotePlaceAction.Ignore,
+      remotePlaceAction(place(0.201), progressAtOpen = 0.2F, turnedPage = true),
+    )
   }
 }

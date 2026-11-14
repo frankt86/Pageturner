@@ -1,6 +1,7 @@
 package voice.core.opds.komga
 
 import dev.zacsweers.metro.Inject
+import java.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
@@ -13,9 +14,11 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.coroutines.executeAsync
 import voice.core.audiobookshelf.http.ServerHttpClient
 import voice.core.opds.OpdsCatalog
-import java.io.IOException
 
-/** The parts of Komga's own api that keep the reading progress. It takes the Basic auth of the catalog on every call. */
+/**
+ * The parts of Komga's own api that keep the reading progress. It takes the Basic auth of the
+ * catalog on every call.
+ */
 @Inject
 public class KomgaApi(private val http: ServerHttpClient) {
 
@@ -42,13 +45,15 @@ public class KomgaApi(private val http: ServerHttpClient) {
     modified: Long,
     locator: JsonObject,
   ): Int {
-    val body = JsonObject(
-      mapOf(
-        "modified" to JsonPrimitive(formatInstant(modified)),
-        "device" to JsonObject(mapOf("id" to JsonPrimitive(DEVICE), "name" to JsonPrimitive(DEVICE))),
-        "locator" to locator,
-      ),
-    )
+    val body =
+      JsonObject(
+        mapOf(
+          "modified" to JsonPrimitive(formatInstant(modified)),
+          "device" to
+            JsonObject(mapOf("id" to JsonPrimitive(DEVICE), "name" to JsonPrimitive(DEVICE))),
+          "locator" to locator,
+        ),
+      )
     return send(catalog, "books/$bookId/progression", "PUT", body.toString().toRequestBody(JSON))
   }
 
@@ -58,7 +63,12 @@ public class KomgaApi(private val http: ServerHttpClient) {
     page: Int,
   ): Int {
     val body = JsonObject(mapOf("page" to JsonPrimitive(page), "completed" to JsonPrimitive(false)))
-    return send(catalog, "books/$bookId/read-progress", "PATCH", body.toString().toRequestBody(JSON))
+    return send(
+      catalog,
+      "books/$bookId/read-progress",
+      "PATCH",
+      body.toString().toRequestBody(JSON),
+    )
   }
 
   internal suspend fun markRead(
@@ -66,7 +76,12 @@ public class KomgaApi(private val http: ServerHttpClient) {
     bookId: String,
   ): Int {
     val body = JsonObject(mapOf("completed" to JsonPrimitive(true)))
-    return send(catalog, "books/$bookId/read-progress", "PATCH", body.toString().toRequestBody(JSON))
+    return send(
+      catalog,
+      "books/$bookId/read-progress",
+      "PATCH",
+      body.toString().toRequestBody(JSON),
+    )
   }
 
   internal suspend fun markUnread(

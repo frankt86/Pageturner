@@ -6,13 +6,21 @@ import kotlin.test.assertFailsWith
 
 class Opds2ParserTest {
 
-  private val feed = parseFeed(resource("opds2.json"), "https://library.example.com/opds/v2/catalog", "application/opds+json")
+  private val feed =
+    parseFeed(
+      resource("opds2.json"),
+      "https://library.example.com/opds/v2/catalog",
+      "application/opds+json",
+    )
 
   @Test
   fun feed() {
     assertEquals("Example Library", feed.title)
     assertEquals("https://library.example.com/opds/v2/catalog?page=2", feed.nextUrl)
-    assertEquals(OpdsSearch.Template("https://library.example.com/opds/v2/search{?query}"), feed.search)
+    assertEquals(
+      OpdsSearch.Template("https://library.example.com/opds/v2/search{?query}"),
+      feed.search,
+    )
   }
 
   @Test
@@ -35,7 +43,9 @@ class Opds2ParserTest {
     assertEquals(listOf("Jane Austen"), pride.authors)
     assertEquals("https://library.example.com/covers/1342.jpg", pride.coverUrl)
     assertEquals(
-      listOf(OpdsAcquisition("https://library.example.com/books/1342.epub", "application/epub+zip")),
+      listOf(
+        OpdsAcquisition("https://library.example.com/books/1342.epub", "application/epub+zip"),
+      ),
       pride.acquisitions,
     )
 

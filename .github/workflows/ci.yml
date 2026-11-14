@@ -33,7 +33,7 @@ jobs:
       - name: Check locale config
         run: ./scripts/check_locale_config.main.kts
       - name: Tests + Formatting + Build
-        run: ./gradlew voiceUnitTest lintKotlin :app:assembleFreeDebug
+        run: ./gradlew voiceUnitTest spotlessCheck :app:assembleFreeDebug
       - uses: actions/upload-artifact@v7
         with:
           name: app-free-debug

@@ -2,6 +2,7 @@
 
 package voice.features.settings.views
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
@@ -27,18 +27,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.RoundedPolygon
-import voice.core.ui.ShapedIcon
-import voice.core.ui.icons.VoiceIcons
 import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
+import voice.core.ui.ShapedIcon
 
 private class HelpTile(
   val title: String,
-  val icon: ImageVector,
+  @DrawableRes val icon: Int,
   val shape: RoundedPolygon,
   val containerColor: Color,
   val contentColor: Color,
@@ -57,38 +56,42 @@ internal fun HelpSection(
   modifier: Modifier = Modifier,
 ) {
   val colors = MaterialTheme.colorScheme
-  val faq = HelpTile(
-    title = stringResource(StringsR.string.settings_support_faq_title),
-    icon = VoiceIcons.Help,
-    shape = MaterialShapes.Cookie4Sided,
-    containerColor = colors.primaryContainer,
-    contentColor = colors.onPrimaryContainer,
-    onClick = onFaqClick,
-  )
-  val getHelp = HelpTile(
-    title = stringResource(StringsR.string.settings_support_get_support_title),
-    icon = VoiceIcons.Forum,
-    shape = MaterialShapes.Clover4Leaf,
-    containerColor = colors.tertiaryContainer,
-    contentColor = colors.onTertiaryContainer,
-    onClick = onGetHelpClick,
-  )
-  val report = HelpTile(
-    title = stringResource(StringsR.string.settings_support_report_issue_title),
-    icon = VoiceIcons.BugReport,
-    shape = MaterialShapes.Pentagon,
-    containerColor = colors.secondaryContainer,
-    contentColor = colors.onSecondaryContainer,
-    onClick = onReportClick,
-  )
-  val suggest = HelpTile(
-    title = stringResource(StringsR.string.settings_support_suggest_idea_title),
-    icon = VoiceIcons.Lightbulb,
-    shape = MaterialShapes.Sunny,
-    containerColor = colors.tertiaryContainer,
-    contentColor = colors.onTertiaryContainer,
-    onClick = onSuggestClick,
-  )
+  val faq =
+    HelpTile(
+      title = stringResource(StringsR.string.settings_support_faq_title),
+      icon = UiR.drawable.ic_help,
+      shape = MaterialShapes.Cookie4Sided,
+      containerColor = colors.primaryContainer,
+      contentColor = colors.onPrimaryContainer,
+      onClick = onFaqClick,
+    )
+  val getHelp =
+    HelpTile(
+      title = stringResource(StringsR.string.settings_support_get_support_title),
+      icon = UiR.drawable.ic_forum,
+      shape = MaterialShapes.Clover4Leaf,
+      containerColor = colors.tertiaryContainer,
+      contentColor = colors.onTertiaryContainer,
+      onClick = onGetHelpClick,
+    )
+  val report =
+    HelpTile(
+      title = stringResource(StringsR.string.settings_support_report_issue_title),
+      icon = UiR.drawable.ic_bug_report,
+      shape = MaterialShapes.Pentagon,
+      containerColor = colors.secondaryContainer,
+      contentColor = colors.onSecondaryContainer,
+      onClick = onReportClick,
+    )
+  val suggest =
+    HelpTile(
+      title = stringResource(StringsR.string.settings_support_suggest_idea_title),
+      icon = UiR.drawable.ic_lightbulb,
+      shape = MaterialShapes.Sunny,
+      containerColor = colors.tertiaryContainer,
+      contentColor = colors.onTertiaryContainer,
+      onClick = onSuggestClick,
+    )
   SettingsIsland(
     modifier = modifier,
     title = stringResource(StringsR.string.settings_support_title),
@@ -119,7 +122,7 @@ internal fun HelpSection(
         onCheckedChange = { onAnalyticsToggle() },
         leading = {
           ShapedIcon(
-            icon = VoiceIcons.Analytics,
+            icon = UiR.drawable.ic_analytics,
             shape = MaterialShapes.Square,
             containerColor = colors.surfaceContainerHighest,
             contentColor = colors.onSurfaceVariant,
@@ -137,22 +140,16 @@ private fun TileRow(
   end: HelpTile,
 ) {
   Row(
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(IntrinsicSize.Min),
+    modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
     horizontalArrangement = Arrangement.spacedBy(8.dp),
   ) {
     TileButton(
       tile = start,
-      modifier = Modifier
-        .weight(1F)
-        .fillMaxHeight(),
+      modifier = Modifier.weight(1F).fillMaxHeight(),
     )
     TileButton(
       tile = end,
-      modifier = Modifier
-        .weight(1F)
-        .fillMaxHeight(),
+      modifier = Modifier.weight(1F).fillMaxHeight(),
     )
   }
 }
@@ -164,15 +161,16 @@ private fun TileButton(
 ) {
   val interactionSource = remember { MutableInteractionSource() }
   val pressed by interactionSource.collectIsPressedAsState()
-  val rotation by animateFloatAsState(
-    targetValue = if (pressed) 45F else 0F,
-    animationSpec = spring(dampingRatio = 0.4F, stiffness = Spring.StiffnessMediumLow),
-    label = "tileIconRotation",
-  )
+  val rotation by
+    animateFloatAsState(
+      targetValue = if (pressed) 45F else 0F,
+      animationSpec = spring(dampingRatio = 0.4F, stiffness = Spring.StiffnessMediumLow),
+      label = "tileIconRotation",
+    )
   Surface(
     onClick = tile.onClick,
     modifier = modifier,
-    shape = RoundedCornerShape(24.dp),
+    shape = MaterialTheme.shapes.largeIncreased,
     color = MaterialTheme.colorScheme.surfaceBright,
     interactionSource = interactionSource,
   ) {

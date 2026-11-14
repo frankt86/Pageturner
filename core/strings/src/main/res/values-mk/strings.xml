@@ -58,6 +58,7 @@
     <string name="audiobookshelf.status.needs_login">Серверот бара повторно да се најавите</string>
     <string name="audiobookshelf.status.offline">Серверот моментално не е достапен. Преземените книги сè уште може да се слушаат.</string>
     <string name="audiobookshelf.status.syncing">Се синхронизира…</string>
+    <string name="author.wikipedia">Прочитај повеќе на Википедија</string>
     <string name="book.category.action.mark_completed">Обележи како завршена</string>
     <string name="book.category.action.mark_current">Обележи како тековна</string>
     <string name="book.category.action.mark_not_started">Обележи како непочната</string>
@@ -82,8 +83,11 @@
     <string name="book.edit.server.failed">Не успеавме да зачуваме на вашиот сервер. Обидете се повторно.</string>
     <string name="book.edit.server.not_allowed">Вашата сметка на серверот нема дозвола да менува книги.</string>
     <string name="book.edit.title.label">Наслов</string>
+    <string name="book.hide">Скриј од библиотеката</string>
     <string name="book.remove_from_library">Отстрани од библиотеката</string>
     <string name="book.remove_from_library.summary">Датотеката останува на вашиот уред</string>
+    <string name="book.select">Избери</string>
+    <string name="book.show">Прикажи во библиотеката</string>
     <string name="book.source.device">На овој уред</string>
     <string name="book.source.server_downloaded">%s · преземено</string>
     <string name="bookmark.action.add_note">Додај белешка</string>
@@ -154,8 +158,13 @@
     <string name="folder.add.action.file">Наместо тоа, додај една датотека</string>
     <string name="folder.add.action.folder">Избери фолдер</string>
     <string name="folder.add.action.opds">Преземи од каталог</string>
+    <string name="folder.add.help.answer.no_files">Сè уште немам аудио книги</string>
+    <string name="folder.add.help.answer.not_found">Не можам да ги најдам</string>
+    <string name="folder.add.help.answer.other_app">Во друга апликација се</string>
     <string name="folder.add.help.computer">Вашите книги сè уште се на компјутерот? Прво копирајте ги на телефонот, на пример во фолдерот Audiobooks или Documents.</string>
     <string name="folder.add.help.download">Android не дозволува апликациите сами да го отвораат фолдерот Download. Изберете фолдер во него.</string>
+    <string name="folder.add.help.no_files">Pageturner пушта датотеки со аудио книги од вашиот телефон. На LibriVox можете бесплатно да преземете илјадници.</string>
+    <string name="folder.add.help.other_app">Книгите од апликации како Audible или Spotify се пуштаат само во тие апликации. Pageturner пушта датотеки со аудио книги, како MP3 или M4B.</string>
     <string name="folder.add.help.title">Не ги најдовте вашите книги?</string>
     <string name="folder.add.no_picker.message">Pageturner ги отвора вашите книги преку избирачот на датотеки на Android. Без него, Pageturner не може да ги отвори вашите фолдери и датотеки.</string>
     <string name="folder.add.no_picker.title">Овој уред нема избирач на датотеки</string>
@@ -231,8 +240,14 @@
     <string name="history.source.unplugged">Аудио уредот е откачен</string>
     <string name="history.source.watch">Часовник</string>
     <string name="history.source.widget">Виџет</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d серијал</item>
+        <item quantity="other">%d серијали</item>
+    </plurals>
     <string name="library.book.downloading">Се презема</string>
     <string name="library.book.ebook">Е-книга</string>
+    <string name="library.book.hidden">Скриена</string>
+    <string name="library.book.hidden.message">Книгата „%1$s“ е скриена</string>
     <string name="library.book.offline">Недостапно без интернет</string>
     <string name="library.category.completed.title">Завршени</string>
     <string name="library.category.current.title">Тековни</string>
@@ -243,9 +258,16 @@
     <string name="library.empty.title">Не се пронајдени книги</string>
     <string name="library.empty.message">Pageturner не може да најде книги во вашите фолдери. Проверете дали датотеките сè уште се таму или додајте фолдер.</string>
     <string name="library.empty.action">Прикажи фолдери</string>
-    <string name="library.folders.title">Фолдери со книги</string>
-    <string name="library.folders.moved.dialog.title">Фолдерите со книги се преместени</string>
+    <string name="library.filter">Филтер</string>
+    <string name="library.filter.group_by">Групирај според</string>
+    <string name="library.filter.group_by.author">Автор</string>
+    <string name="library.filter.group_by.series">Серијал</string>
+    <string name="library.filter.hidden_books">Скриени книги</string>
+    <string name="library.filter.not_downloaded">Непреземени</string>
+    <string name="library.filter.show">Прикажи</string>
     <string name="library.folders.moved.dialog.message">Сега можете да управувате со фолдерите со книги во Поставки.</string>
+    <string name="library.folders.moved.dialog.title">Фолдерите со книги се преместени</string>
+    <string name="library.folders.title">Фолдери со книги</string>
     <string name="library.folders.no_access">Нема пристап</string>
     <string name="library.folders.no_access.action">Дозволи пристап</string>
     <string name="library.folders.no_access.badge">Повторно дозволете пристап до вашите фолдери</string>
@@ -257,6 +279,11 @@
         <item quantity="one">%d книга во тек</item>
         <item quantity="other">%d книги во тек</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d скриена книга</item>
+        <item quantity="other">%d скриени книги</item>
+    </plurals>
+    <string name="library.no_author">Без автор</string>
     <string name="library.search.browse.title">Прегледај</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d книга</item>
@@ -288,6 +315,30 @@
     <string name="library.search.recent.clear_all">Избриши сè</string>
     <string name="library.search.recent.remove">Отстрани %s</string>
     <string name="library.search.recent.title">Скорешни</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">Авторот е поставен за %d книга</item>
+        <item quantity="other">Авторот е поставен за %d книги</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d избрана</item>
+        <item quantity="other">%d избрани</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d книга е скриена</item>
+        <item quantity="other">%d книги се скриени</item>
+    </plurals>
+    <string name="library.selection.hide">Скриј</string>
+    <string name="library.selection.select_all">Избери ги сите</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">Серијалот е поставен за %d книга</item>
+        <item quantity="other">Серијалот е поставен за %d книги</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">Не успеавме да зачуваме %d книга на вашиот сервер</item>
+        <item quantity="other">Не успеавме да зачуваме %d книги на вашиот сервер</item>
+    </plurals>
+    <string name="library.selection.show">Прикажи</string>
+    <string name="library.series.hidden.message">Серијалот „%1$s“ е скриен</string>
     <string name="library.storage_permission_bug.action">Дај дозвола</string>
     <string name="library.storage_permission_bug.message">Кај некои уреди, на една системска апликација ѝ недостасува потребната дозвола за пристап до надворешната меморија. Овој пристап му е потребен на Pageturner за да ги вчита вашите аудио книги.</string>
     <string name="library.storage_permission_bug.title">Потребна е дозвола</string>
@@ -575,6 +626,16 @@
     <string name="reader.word_spacing">Растојание меѓу зборовите</string>
     <string name="series.continue">Продолжи</string>
     <string name="series.continue_book">Продолжи со книга %s</string>
+    <string name="series.mark_completed">Обележи како завршен</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">Во %d книга ќе го изгубите местото каде што застанавте.</item>
+        <item quantity="other">Во %d книги ќе го изгубите местото каде што застанавте.</item>
+    </plurals>
+    <string name="series.mark_not_started">Обележи како непочнат</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">Во %d книга ќе го изгубите напредокот.</item>
+        <item quantity="other">Во %d книги ќе го изгубите напредокот.</item>
+    </plurals>
     <string name="series.start">Почни</string>
     <string name="series.start_book">Почни со книга %s</string>
     <string name="settings.about.app_version.title">Верзија на апликацијата</string>

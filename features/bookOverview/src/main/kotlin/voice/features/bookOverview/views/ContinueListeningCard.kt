@@ -3,7 +3,6 @@
 package voice.features.bookOverview.views
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.LocalContentColor
@@ -34,6 +32,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import java.text.NumberFormat
 import voice.core.strings.R
 import voice.core.ui.CoverTheme
 import voice.core.ui.PlayButton
@@ -41,7 +40,6 @@ import voice.core.ui.ProgressWave
 import voice.core.ui.bookText
 import voice.core.ui.playButtonSharedElementModifier
 import voice.features.bookOverview.overview.BookOverviewItemViewState
-import java.text.NumberFormat
 
 /** Uses the same cover theme as the player, so cover and play button hand over seamlessly. */
 @Composable
@@ -52,6 +50,7 @@ internal fun ContinueListeningCard(
   onLongClick: () -> Unit,
   onPlayClick: () -> Unit,
   modifier: Modifier = Modifier,
+  selected: Boolean? = null,
 ) {
   CoverTheme(cover = book.cover) {
     val colors = MaterialTheme.colorScheme
@@ -60,17 +59,21 @@ internal fun ContinueListeningCard(
     // accents use surface / primary roles, which stay legible on either.
     val tint = if (colors.surface.luminance() < 0.5F) 0.35F else 0.85F
     Box(
-      modifier = modifier
-        .fillMaxWidth()
-        .clip(RoundedCornerShape(32.dp))
-        .background(colors.surfaceContainerHigh)
-        .background(
-          Brush.linearGradient(
-            listOf(colors.primaryContainer.copy(alpha = tint), colors.tertiaryContainer.copy(alpha = tint)),
-          ),
-        )
-        .combinedClickable(onClick = onClick, onLongClick = onLongClick)
-        .padding(20.dp),
+      modifier =
+        modifier
+          .fillMaxWidth()
+          .clip(MaterialTheme.shapes.extraLargeIncreased)
+          .background(colors.surfaceContainerHigh)
+          .background(
+            Brush.linearGradient(
+              listOf(
+                colors.primaryContainer.copy(alpha = tint),
+                colors.tertiaryContainer.copy(alpha = tint),
+              ),
+            ),
+          )
+          .libraryItemClickable(selected, onClick = onClick, onLongClick = onLongClick)
+          .padding(20.dp),
     ) {
       CompositionLocalProvider(LocalContentColor provides colors.onSurface) {
         Column {
@@ -80,13 +83,18 @@ internal fun ContinueListeningCard(
               cover = book.cover,
               unavailable = book.unavailable,
               download = book.download,
+              selected = selected,
               ebook = book.isEbook,
               modifier = Modifier.size(112.dp),
             )
             Spacer(Modifier.width(16.dp))
             Column(Modifier.weight(1F)) {
               Text(
-                text = stringResource(if (book.isEbook) R.string.library_continue_reading else R.string.library_continue_listening),
+                text =
+                  stringResource(
+                    if (book.isEbook) R.string.library_continue_reading
+                    else R.string.library_continue_listening,
+                  ),
                 style = MaterialTheme.typography.labelLargeEmphasized,
                 color = colors.primary,
               )
@@ -121,10 +129,19 @@ internal fun ContinueListeningCard(
           Row(verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1F)) {
               val density = LocalDensity.current
-              val stroke = remember(density) { Stroke(width = with(density) { ProgressWave.StrokeWidth.toPx() }, cap = StrokeCap.Round) }
-              // Material takes the amplitude as a share of the room the stroke leaves in its container
+              val stroke =
+                remember(density) {
+                  Stroke(
+                    width = with(density) { ProgressWave.StrokeWidth.toPx() },
+                    cap = StrokeCap.Round,
+                  )
+                }
+              // Material takes the amplitude as a share of the room the stroke leaves in its
+              // container
               val amplitude =
-                ProgressWave.Amplitude / ((WavyProgressIndicatorDefaults.LinearContainerHeight - ProgressWave.StrokeWidth) / 2)
+                ProgressWave.Amplitude /
+                  ((WavyProgressIndicatorDefaults.LinearContainerHeight -
+                    ProgressWave.StrokeWidth) / 2)
               LinearWavyProgressIndicator(
                 progress = { book.progress },
                 modifier = Modifier.fillMaxWidth(),
@@ -141,7 +158,11 @@ internal fun ContinueListeningCard(
               Row {
                 Text(
                   modifier = Modifier.weight(1F),
-                  text = stringResource(R.string.playback_book_progress_read, percentFormat.format(book.progress.toDouble())),
+                  text =
+                    stringResource(
+                      R.string.playback_book_progress_read,
+                      percentFormat.format(book.progress.toDouble()),
+                    ),
                   style = MaterialTheme.typography.labelLargeEmphasized,
                   color = colors.primary,
                   maxLines = 1,
@@ -151,7 +172,8 @@ internal fun ContinueListeningCard(
                 if (!book.isEbook) {
                   Spacer(Modifier.width(8.dp))
                   Text(
-                    text = stringResource(R.string.playback_book_progress_remaining, book.remainingTime),
+                    text =
+                      stringResource(R.string.playback_book_progress_remaining, book.remainingTime),
                     style = MaterialTheme.typography.labelLarge.copy(fontFeatureSettings = "tnum"),
                     maxLines = 1,
                     softWrap = false,
@@ -160,16 +182,19 @@ internal fun ContinueListeningCard(
                 }
               }
             }
-            Spacer(Modifier.width(16.dp))
-            if (book.isEbook) {
-              ReadButton(onClick = onPlayClick, size = 72.dp)
-            } else {
-              PlayButton(
-                playing = playing,
-                onClick = onPlayClick,
-                modifier = Modifier.playButtonSharedElementModifier(book.id),
-                size = 72.dp,
-              )
+            // while selecting, a tap on the card selects it, but a play button would play
+            if (selected == null) {
+              Spacer(Modifier.width(16.dp))
+              if (book.isEbook) {
+                ReadButton(onClick = onPlayClick, size = 72.dp)
+              } else {
+                PlayButton(
+                  playing = playing,
+                  onClick = onPlayClick,
+                  modifier = Modifier.playButtonSharedElementModifier(book.id),
+                  size = 72.dp,
+                )
+              }
             }
           }
         }

@@ -8,7 +8,8 @@ import voice.core.initializer.AppInitializer
 
 @ContributesIntoSet(AppScope::class)
 @Inject
-public class OpdsAudiobookInitializer(private val downloads: OpdsAudiobookDownloads) : AppInitializer {
+public class OpdsAudiobookInitializer(private val downloads: OpdsAudiobookDownloads) :
+  AppInitializer {
 
   override fun onAppStart(application: Application) {
     downloads.start()

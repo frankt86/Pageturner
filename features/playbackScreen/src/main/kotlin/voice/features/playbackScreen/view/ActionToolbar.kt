@@ -2,6 +2,7 @@
 
 package voice.features.playbackScreen.view
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
@@ -52,9 +53,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -63,12 +64,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
+import java.text.DecimalFormat
 import kotlinx.coroutines.launch
 import voice.core.strings.R
+import voice.core.ui.R as UiR
 import voice.core.ui.formatTime
-import voice.core.ui.icons.VoiceIcons
 import voice.features.playbackScreen.BookPlayViewState
-import java.text.DecimalFormat
 
 @Composable
 internal fun ActionToolbar(
@@ -90,45 +91,49 @@ internal fun ActionToolbar(
     modifier = modifier,
     colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(),
   ) {
-    val sleepTimerActive = sleepTimerState is BookPlayViewState.SleepTimerViewState.Enabled
-    ToolbarAction(
-      active = sleepTimerActive,
-      // a click cancels a running timer
-      icon = if (sleepTimerActive) VoiceIcons.BedtimeOff else VoiceIcons.Bedtime,
-      contentDescription = stringResource(R.string.sleep_timer_action_open),
-      label = (sleepTimerState as? BookPlayViewState.SleepTimerViewState.Enabled.WithDuration)
-        ?.let { formatTime(it.leftDuration.inWholeMilliseconds) },
-      // it counts down every second, rolling would keep it moving the whole time
-      rollLabel = false,
-      onClick = onSleepTimerClick,
-    )
-    val speedChanged = playbackSpeed !in 0.99F..1.01F
-    ToolbarAction(
-      active = speedChanged,
-      icon = VoiceIcons.Speed,
-      contentDescription = stringResource(R.string.playback_speed_title),
-      label = if (speedChanged) speedFormat.format(playbackSpeed) + "×" else null,
-      onClick = onSpeedClick,
-    )
-    BookmarkAction(
-      onClick = onBookmarkClick,
-      onLongClick = onBookmarkLongClick,
-    )
-    ToolbarAction(
-      active = skipSilence,
-      icon = VoiceIcons.ContentCut,
-      contentDescription = stringResource(R.string.playback_option_skip_silence),
-      onClick = onSkipSilenceClick,
-      toggle = true,
-      // the only option that doesn't open a titled screen, and its icon alone is ambiguous
-      showTooltipOnClick = true,
-    )
-    ToolbarAction(
-      active = volumeBoostActive,
-      icon = VoiceIcons.VolumeUp,
-      contentDescription = stringResource(R.string.playback_option_volume_boost),
-      onClick = onVolumeBoostClick,
-    )
+    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+      val sleepTimerActive = sleepTimerState is BookPlayViewState.SleepTimerViewState.Enabled
+      ToolbarAction(
+        active = sleepTimerActive,
+        // a click cancels a running timer
+        icon = if (sleepTimerActive) UiR.drawable.ic_bedtime_off else UiR.drawable.ic_bedtime,
+        contentDescription = stringResource(R.string.sleep_timer_action_open),
+        label =
+          (sleepTimerState as? BookPlayViewState.SleepTimerViewState.Enabled.WithDuration)?.let {
+            formatTime(it.leftDuration.inWholeMilliseconds)
+          },
+        // it counts down every second, rolling would keep it moving the whole time
+        rollLabel = false,
+        onClick = onSleepTimerClick,
+      )
+      val speedChanged = playbackSpeed !in 0.99F..1.01F
+      ToolbarAction(
+        active = speedChanged,
+        icon = UiR.drawable.ic_speed,
+        contentDescription = stringResource(R.string.playback_speed_title),
+        label = if (speedChanged) speedFormat.format(playbackSpeed) + "×" else null,
+        onClick = onSpeedClick,
+      )
+      BookmarkAction(
+        onClick = onBookmarkClick,
+        onLongClick = onBookmarkLongClick,
+      )
+      ToolbarAction(
+        active = skipSilence,
+        icon = UiR.drawable.ic_content_cut,
+        contentDescription = stringResource(R.string.playback_option_skip_silence),
+        onClick = onSkipSilenceClick,
+        toggle = true,
+        // the only option that doesn't open a titled screen, and its icon alone is ambiguous
+        showTooltipOnClick = true,
+      )
+      ToolbarAction(
+        active = volumeBoostActive,
+        icon = UiR.drawable.ic_volume_up,
+        contentDescription = stringResource(R.string.playback_option_volume_boost),
+        onClick = onVolumeBoostClick,
+      )
+    }
   }
 }
 
@@ -152,21 +157,23 @@ private fun BookmarkAction(
   Box(modifier = modifier, contentAlignment = Alignment.Center) {
     if (burst.value < 1F) {
       Box(
-        modifier = Modifier
-          .size(48.dp)
-          .graphicsLayer {
-            val p = burst.value
-            scaleX = 0.4F + 1.2F * p
-            scaleY = 0.4F + 1.2F * p
-            rotationZ = 120F * p
-            alpha = 1F - p
-          }
-          .background(burstColor, burstShape),
+        modifier =
+          Modifier.size(48.dp)
+            .graphicsLayer {
+              val p = burst.value
+              scaleX = 0.4F + 1.2F * p
+              scaleY = 0.4F + 1.2F * p
+              rotationZ = 120F * p
+              alpha = 1F - p
+            }
+            .background(burstColor, burstShape),
       )
     }
     ToolbarAction(
       active = burst.value < 0.5F,
-      icon = if (burst.value < 1F) VoiceIcons.BookmarkAdd else VoiceIcons.CollectionsBookmark,
+      icon =
+        if (burst.value < 1F) UiR.drawable.ic_bookmark_add
+        else UiR.drawable.ic_collections_bookmark,
       contentDescription = stringResource(R.string.bookmark_title),
       onClick = onClick,
       onLongClick = {
@@ -183,7 +190,7 @@ private fun BookmarkAction(
 @Composable
 private fun ToolbarAction(
   active: Boolean,
-  icon: ImageVector,
+  @DrawableRes icon: Int,
   contentDescription: String,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
@@ -228,7 +235,7 @@ private fun ToolbarAction(
 @Composable
 private fun ToolbarActionContent(
   active: Boolean,
-  icon: ImageVector,
+  @DrawableRes icon: Int,
   contentDescription: String,
   label: String?,
   rollLabel: Boolean,
@@ -244,55 +251,60 @@ private fun ToolbarActionContent(
   val colors = MaterialTheme.colorScheme
   val inactiveContent = LocalContentColor.current
   // The vibrant toolbar sits on primaryContainer, so active items invert it for maximum contrast.
-  val container by animateColorAsState(
-    targetValue = if (active) colors.onPrimaryContainer else Color.Transparent,
-    label = "toolbarContainer",
-  )
-  val content by animateColorAsState(
-    targetValue = if (active) colors.primaryContainer else inactiveContent,
-    label = "toolbarContent",
-  )
-  val corner by animateDpAsState(
-    targetValue = if (pressed) 12.dp else 24.dp,
-    animationSpec = spring(dampingRatio = 0.5F, stiffness = Spring.StiffnessMedium),
-    label = "toolbarCorner",
-  )
-  val scale by animateFloatAsState(
-    targetValue = if (pressed) 0.9F else 1F,
-    animationSpec = spring(dampingRatio = 0.4F, stiffness = Spring.StiffnessMedium),
-    label = "toolbarScale",
-  )
+  val container by
+    animateColorAsState(
+      targetValue = if (active) colors.onPrimaryContainer else Color.Transparent,
+      label = "toolbarContainer",
+    )
+  val content by
+    animateColorAsState(
+      targetValue = if (active) colors.primaryContainer else inactiveContent,
+      label = "toolbarContent",
+    )
+  val corner by
+    animateDpAsState(
+      targetValue = if (pressed) 12.dp else 24.dp,
+      animationSpec = spring(dampingRatio = 0.5F, stiffness = Spring.StiffnessMedium),
+      label = "toolbarCorner",
+    )
+  val scale by
+    animateFloatAsState(
+      targetValue = if (pressed) 0.9F else 1F,
+      animationSpec = spring(dampingRatio = 0.4F, stiffness = Spring.StiffnessMedium),
+      label = "toolbarScale",
+    )
   Row(
-    modifier = modifier
-      .graphicsLayer {
-        scaleX = scale
-        scaleY = scale
-      }
-      .animateContentSize(spring(dampingRatio = 0.6F, stiffness = Spring.StiffnessMediumLow))
-      .height(48.dp)
-      .widthIn(min = 48.dp)
-      .clip(RoundedCornerShape(corner))
-      .background(container)
-      .combinedClickable(
-        interactionSource = interactionSource,
-        indication = ripple(),
-        role = if (toggle) Role.Switch else Role.Button,
-        onClick = onClick,
-        onLongClick = onLongClick,
-        onLongClickLabel = onLongClickLabel,
-      )
-      .semantics {
-        this.contentDescription = contentDescription
-        when {
-          toggle -> toggleableState = ToggleableState(active)
-          selectable -> selected = active
+    modifier =
+      modifier
+        .graphicsLayer {
+          scaleX = scale
+          scaleY = scale
         }
-      }
-      .padding(horizontal = if (label != null) 10.dp else 12.dp),
+        .animateContentSize(spring(dampingRatio = 0.6F, stiffness = Spring.StiffnessMediumLow))
+        .height(48.dp)
+        .widthIn(min = 48.dp)
+        .clip(RoundedCornerShape(corner))
+        .background(container)
+        .combinedClickable(
+          interactionSource = interactionSource,
+          indication = ripple(),
+          role = if (toggle) Role.Switch else Role.Button,
+          onClick = onClick,
+          onLongClick = onLongClick,
+          onLongClickLabel = onLongClickLabel,
+        )
+        .semantics {
+          this.contentDescription = contentDescription
+          when {
+            toggle -> toggleableState = ToggleableState(active)
+            selectable -> selected = active
+          }
+        }
+        .padding(horizontal = if (label != null) 10.dp else 12.dp),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.Center,
   ) {
-    Icon(imageVector = icon, contentDescription = null, tint = content)
+    Icon(painter = painterResource(icon), contentDescription = null, tint = content)
     if (label != null) {
       Spacer(Modifier.width(4.dp))
       if (rollLabel) {

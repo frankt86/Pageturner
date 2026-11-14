@@ -4,9 +4,9 @@ import android.app.Application
 import android.content.pm.PackageManager
 import android.os.Build
 import dev.zacsweers.metro.Inject
+import kotlin.time.Instant
 import voice.app.BuildConfig
 import voice.core.common.AppInfoProvider
-import kotlin.time.Instant
 
 @Inject
 class AppInfoProviderImpl(private val application: Application) : AppInfoProvider {
@@ -14,11 +14,15 @@ class AppInfoProviderImpl(private val application: Application) : AppInfoProvide
   override val analyticsIncluded: Boolean = BuildConfig.INCLUDE_ANALYTICS
   override val installTime: Instant by lazy {
     val packageManager = application.packageManager
-    val packageInfo = if (Build.VERSION.SDK_INT >= 33) {
-      packageManager.getPackageInfo(application.packageName, PackageManager.PackageInfoFlags.of(0L))
-    } else {
-      packageManager.getPackageInfo(application.packageName, 0)
-    }
+    val packageInfo =
+      if (Build.VERSION.SDK_INT >= 33) {
+        packageManager.getPackageInfo(
+          application.packageName,
+          PackageManager.PackageInfoFlags.of(0L),
+        )
+      } else {
+        packageManager.getPackageInfo(application.packageName, 0)
+      }
     Instant.fromEpochMilliseconds(packageInfo.firstInstallTime)
   }
 }

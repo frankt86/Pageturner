@@ -12,7 +12,6 @@ import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.folders.AudiobookFolders
 import voice.core.data.folders.FolderType
-import voice.core.featureflag.FeatureFlag
 import voice.features.folderPicker.folderPicker.FileTypeSelection
 import voice.navigation.Destination
 import voice.navigation.Destination.OnboardingCompletion
@@ -28,8 +27,7 @@ class AddContentViewModel(
   private val serverAccount: ServerAccount,
   private val analytics: Analytics,
   dispatcherProvider: DispatcherProvider,
-  @Assisted
-  private val origin: Origin,
+  @Assisted private val origin: Origin,
 ) {
 
   internal fun add(
@@ -59,10 +57,27 @@ class AddContentViewModel(
     }
   }
 
-  internal val canConnectAudiobookshelf: Boolean get() = audiobookshelfFeatureFlag.get()
+  internal val canConnectAudiobookshelf: Boolean
+    get() = audiobookshelfFeatureFlag.get()
 
   internal fun onFolderPickerCancel() {
     analytics.event("folder_picker_cancelled")
+  }
+
+  internal fun onHelpAnswer(answer: FolderHelpAnswer) {
+    analytics.event("folder_help_answer", mapOf("answer" to answer.value()))
+  }
+
+  internal fun openLibriVox() {
+    navigator.goTo(Destination.Website("https://librivox.org"))
+  }
+
+  private fun FolderHelpAnswer.value(): String {
+    return when (this) {
+      FolderHelpAnswer.NoFiles -> "no_files"
+      FolderHelpAnswer.NotFound -> "not_found"
+      FolderHelpAnswer.OtherApp -> "other_app"
+    }
   }
 
   private val scope = MainScope(dispatcherProvider)

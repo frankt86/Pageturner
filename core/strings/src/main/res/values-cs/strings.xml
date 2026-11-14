@@ -64,6 +64,7 @@
     <string name="audiobookshelf.status.needs_login">Server vyžaduje nové přihlášení</string>
     <string name="audiobookshelf.status.offline">Server teď není dostupný. Stažené knihy můžete poslouchat dál.</string>
     <string name="audiobookshelf.status.syncing">Synchronizace…</string>
+    <string name="author.wikipedia">Více na Wikipedii</string>
     <string name="book.category.action.mark_completed">Označit jako dokončené</string>
     <string name="book.category.action.mark_current">Označit jako aktuální</string>
     <string name="book.category.action.mark_not_started">Označit jako nezačaté</string>
@@ -88,8 +89,11 @@
     <string name="book.edit.server.failed">Uložení na váš server se nepodařilo. Zkuste to znovu.</string>
     <string name="book.edit.server.not_allowed">Váš účet na serveru nemůže měnit knihy.</string>
     <string name="book.edit.title.label">Název</string>
+    <string name="book.hide">Skrýt z knihovny</string>
     <string name="book.remove_from_library">Odebrat z knihovny</string>
     <string name="book.remove_from_library.summary">Soubor zůstane ve vašem zařízení</string>
+    <string name="book.select">Vybrat</string>
+    <string name="book.show">Zobrazit v knihovně</string>
     <string name="book.source.device">Na tomto zařízení</string>
     <string name="book.source.server_downloaded">%s · staženo</string>
     <string name="bookmark.action.add_note">Přidat poznámku</string>
@@ -164,8 +168,13 @@
     <string name="folder.add.action.file">Přidat místo toho jeden soubor</string>
     <string name="folder.add.action.folder">Vybrat složku</string>
     <string name="folder.add.action.opds">Stáhnout z katalogu</string>
+    <string name="folder.add.help.answer.no_files">Zatím žádné audioknihy</string>
+    <string name="folder.add.help.answer.not_found">Nemůžu je najít</string>
+    <string name="folder.add.help.answer.other_app">Jsou v jiné aplikaci</string>
     <string name="folder.add.help.computer">Knihy jsou stále v počítači? Nejprve je zkopírujte do telefonu, například do složky Audiobooks nebo Documents.</string>
     <string name="folder.add.help.download">Android nedovolí aplikacím otevřít přímo složku Download. Vyberte složku uvnitř ní.</string>
+    <string name="folder.add.help.no_files">Pageturner přehrává soubory audioknih ve vašem telefonu. LibriVox jich nabízí tisíce ke stažení zdarma.</string>
+    <string name="folder.add.help.other_app">Knihy z aplikací jako Audible nebo Spotify se dají přehrát jen v těchto aplikacích. Pageturner přehrává soubory audioknih, například MP3 nebo M4B.</string>
     <string name="folder.add.help.title">Nenašli jste své knihy?</string>
     <string name="folder.add.no_picker.message">Pageturner otevírá vaše knihy přes výběr souborů systému Android. Bez něj Pageturner nemůže otevřít vaše složky ani soubory.</string>
     <string name="folder.add.no_picker.title">Toto zařízení nemá výběr souborů</string>
@@ -257,8 +266,16 @@
     <string name="history.source.unplugged">Zvuk odpojen</string>
     <string name="history.source.watch">Hodinky</string>
     <string name="history.source.widget">Widget</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d série</item>
+        <item quantity="few">%d série</item>
+        <item quantity="many">%d sérií</item>
+        <item quantity="other">%d sérií</item>
+    </plurals>
     <string name="library.book.downloading">Stahuje se</string>
     <string name="library.book.ebook">E-kniha</string>
+    <string name="library.book.hidden">Skrytá</string>
+    <string name="library.book.hidden.message">Kniha „%1$s“ je skrytá</string>
     <string name="library.book.offline">Není k dispozici offline</string>
     <string name="library.category.completed.title">Dokončené</string>
     <string name="library.category.current.title">Aktuální</string>
@@ -269,9 +286,16 @@
     <string name="library.empty.title">Nenašly se žádné knihy</string>
     <string name="library.empty.message">Pageturner ve vašich složkách nemůže najít žádné knihy. Zkontrolujte, jestli jsou soubory stále na svém místě, nebo přidejte složku.</string>
     <string name="library.empty.action">Zobrazit složky</string>
-    <string name="library.folders.title">Složky s knihami</string>
-    <string name="library.folders.moved.dialog.title">Složky s knihami přesunuty</string>
+    <string name="library.filter">Filtr</string>
+    <string name="library.filter.group_by">Seskupit podle</string>
+    <string name="library.filter.group_by.author">Autor</string>
+    <string name="library.filter.group_by.series">Série</string>
+    <string name="library.filter.hidden_books">Skryté knihy</string>
+    <string name="library.filter.not_downloaded">Nestažené</string>
+    <string name="library.filter.show">Zobrazit</string>
     <string name="library.folders.moved.dialog.message">Složky s knihami teď můžete spravovat v Nastavení.</string>
+    <string name="library.folders.moved.dialog.title">Složky s knihami přesunuty</string>
+    <string name="library.folders.title">Složky s knihami</string>
     <string name="library.folders.no_access">Bez přístupu</string>
     <string name="library.folders.no_access.action">Povolit přístup</string>
     <string name="library.folders.no_access.badge">Znovu povolte přístup ke svým složkám</string>
@@ -285,6 +309,13 @@
         <item quantity="many">%d rozposlouchaných knih</item>
         <item quantity="other">%d rozposlouchaných knih</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d skrytá kniha</item>
+        <item quantity="few">%d skryté knihy</item>
+        <item quantity="many">%d skrytých knih</item>
+        <item quantity="other">%d skrytých knih</item>
+    </plurals>
+    <string name="library.no_author">Bez autora</string>
     <string name="library.search.browse.title">Procházet</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d kniha</item>
@@ -322,6 +353,40 @@
     <string name="library.search.recent.clear_all">Vymazat vše</string>
     <string name="library.search.recent.remove">Odstranit %s</string>
     <string name="library.search.recent.title">Nedávné</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">Autor nastaven u %d knihy</item>
+        <item quantity="few">Autor nastaven u %d knih</item>
+        <item quantity="many">Autor nastaven u %d knih</item>
+        <item quantity="other">Autor nastaven u %d knih</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">Vybráno: %d</item>
+        <item quantity="few">Vybráno: %d</item>
+        <item quantity="many">Vybráno: %d</item>
+        <item quantity="other">Vybráno: %d</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d kniha je skrytá</item>
+        <item quantity="few">%d knihy jsou skryté</item>
+        <item quantity="many">%d knih je skrytých</item>
+        <item quantity="other">%d knih je skrytých</item>
+    </plurals>
+    <string name="library.selection.hide">Skrýt</string>
+    <string name="library.selection.select_all">Vybrat vše</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">Série nastavena u %d knihy</item>
+        <item quantity="few">Série nastavena u %d knih</item>
+        <item quantity="many">Série nastavena u %d knih</item>
+        <item quantity="other">Série nastavena u %d knih</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">%d knihu se nepodařilo uložit na váš server</item>
+        <item quantity="few">%d knihy se nepodařilo uložit na váš server</item>
+        <item quantity="many">%d knih se nepodařilo uložit na váš server</item>
+        <item quantity="other">%d knih se nepodařilo uložit na váš server</item>
+    </plurals>
+    <string name="library.selection.show">Zobrazit</string>
+    <string name="library.series.hidden.message">Série „%1$s“ je skrytá</string>
     <string name="library.storage_permission_bug.action">Udělit oprávnění</string>
     <string name="library.storage_permission_bug.message">U některých zařízení chybí systémové aplikaci potřebná oprávnění pro přístup k externímu úložišti. Tento přístup je nezbytný, aby Pageturner mohl číst vaše audioknihy.</string>
     <string name="library.storage_permission_bug.title">Vyžadováno povolení</string>
@@ -615,6 +680,20 @@
     <string name="reader.word_spacing">Mezery mezi slovy</string>
     <string name="series.continue">Pokračovat</string>
     <string name="series.continue_book">Pokračovat v knize %s</string>
+    <string name="series.mark_completed">Označit jako dokončenou</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">U %d knihy přijdete o místo, kde jste skončili.</item>
+        <item quantity="few">U %d knih přijdete o místo, kde jste skončili.</item>
+        <item quantity="many">U %d knih přijdete o místo, kde jste skončili.</item>
+        <item quantity="other">U %d knih přijdete o místo, kde jste skončili.</item>
+    </plurals>
+    <string name="series.mark_not_started">Označit jako nezačatou</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">U %d knihy přijdete o postup.</item>
+        <item quantity="few">U %d knih přijdete o postup.</item>
+        <item quantity="many">U %d knih přijdete o postup.</item>
+        <item quantity="other">U %d knih přijdete o postup.</item>
+    </plurals>
     <string name="series.start">Začít</string>
     <string name="series.start_book">Začít knihu %s</string>
     <string name="settings.about.app_version.title">Verze aplikace</string>

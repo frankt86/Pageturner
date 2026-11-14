@@ -60,12 +60,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -75,7 +73,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
 import coil.compose.AsyncImage
@@ -84,25 +81,24 @@ import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
+import java.text.NumberFormat
 import kotlinx.coroutines.launch
 import voice.core.audiobookshelf.download.BookDownloadState
 import voice.core.audiobookshelf.download.WaitingFor
 import voice.core.common.rootGraphAs
 import voice.core.data.BookId
+import voice.core.strings.R as StringsR
 import voice.core.ui.AuroraBackground
+import voice.core.ui.R as UiR
 import voice.core.ui.ShapedIcon
 import voice.core.ui.VoiceTheme
 import voice.core.ui.bookText
-import voice.core.ui.icons.VoiceIcons
 import voice.core.ui.plus
 import voice.core.ui.rememberAnimationClock
 import voice.core.ui.rememberCoverThumbnailRequest
 import voice.core.ui.segmentedShape
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
-import java.text.NumberFormat
-import voice.core.strings.R as StringsR
-import voice.core.ui.R as UiR
 
 @ContributesTo(AppScope::class)
 interface AudiobookshelfSettingsGraph {
@@ -115,21 +111,26 @@ object AudiobookshelfSettingsProvider {
 
   @Provides
   @IntoSet
-  fun audiobookshelfSettingsNavEntryProvider(): NavEntryProvider<*> = NavEntryProvider<Destination.AudiobookshelfSettings> { key ->
-    NavEntry(key) {
-      AudiobookshelfSettings()
+  fun audiobookshelfSettingsNavEntryProvider(): NavEntryProvider<*> =
+    NavEntryProvider<Destination.AudiobookshelfSettings> { key ->
+      NavEntry(key) {
+        AudiobookshelfSettings()
+      }
     }
-  }
 }
 
 @Composable
 private fun AudiobookshelfSettings() {
-  val viewModel = retain { rootGraphAs<AudiobookshelfSettingsGraph>().audiobookshelfSettingsViewModel }
+  val viewModel = retain {
+    rootGraphAs<AudiobookshelfSettingsGraph>().audiobookshelfSettingsViewModel
+  }
   val viewState = viewModel.viewState()
   AudiobookshelfSettings(
     viewState = viewState,
     onBack = viewModel::onBack,
-    onLibraryToggle = { id -> viewState?.let { viewModel.onLibraryToggle(id, it.selectedLibraryIds) } },
+    onLibraryToggle = { id ->
+      viewState?.let { viewModel.onLibraryToggle(id, it.selectedLibraryIds) }
+    },
     onDownloadOverMobileDataChange = viewModel::onDownloadOverMobileDataChange,
     onRemoveDownload = viewModel::onRemoveDownload,
     onRetryDownload = viewModel::onRetryDownload,
@@ -173,29 +174,31 @@ private fun AudiobookshelfSettings(
         LargeFlexibleTopAppBar(
           title = { Text(stringResource(StringsR.string.audiobookshelf_title)) },
           navigationIcon = {
-            val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
             IconButton(onClick = onBack) {
               Icon(
-                modifier = Modifier.graphicsLayer { scaleX = if (rtl) -1F else 1F },
-                imageVector = VoiceIcons.ArrowBack,
+                painter = painterResource(UiR.drawable.ic_arrow_back),
                 contentDescription = stringResource(StringsR.string.common_action_back),
               )
             }
           },
-          colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent,
-            scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-          ),
+          colors =
+            TopAppBarDefaults.topAppBarColors(
+              containerColor = Color.Transparent,
+              scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+            ),
           scrollBehavior = scrollBehavior,
         )
       },
     ) { contentPadding ->
       if (viewState == null) return@Scaffold
       Column(
-        modifier = Modifier
-          .fillMaxSize()
-          .verticalScroll(rememberScrollState())
-          .padding(contentPadding + PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 32.dp)),
+        modifier =
+          Modifier.fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(
+              contentPadding +
+                PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 32.dp),
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
       ) {
@@ -213,13 +216,18 @@ private fun AudiobookshelfSettings(
         OutlinedButton(
           onClick = onSignOut,
           shapes = ButtonDefaults.shapes(),
-          colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
-          modifier = Modifier
-            .widthIn(max = 520.dp)
-            .fillMaxWidth()
-            .heightIn(min = ButtonDefaults.MediumContainerHeight),
+          colors =
+            ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
+          modifier =
+            Modifier.widthIn(max = 520.dp)
+              .fillMaxWidth()
+              .heightIn(min = ButtonDefaults.MediumContainerHeight),
         ) {
-          Icon(VoiceIcons.Logout, contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
+          Icon(
+            painterResource(UiR.drawable.ic_logout),
+            contentDescription = null,
+            modifier = Modifier.size(ButtonDefaults.IconSize),
+          )
           Spacer(Modifier.width(ButtonDefaults.IconSpacing))
           Text(stringResource(StringsR.string.audiobookshelf_settings_sign_out))
         }
@@ -242,11 +250,15 @@ private fun Island(
   content: @Composable ColumnScope.() -> Unit,
 ) {
   Column(
-    modifier = modifier
-      .widthIn(max = 520.dp)
-      .fillMaxWidth()
-      .background(MaterialTheme.colorScheme.surfaceContainer, RoundedCornerShape(32.dp))
-      .padding(20.dp),
+    modifier =
+      modifier
+        .widthIn(max = 520.dp)
+        .fillMaxWidth()
+        .background(
+          MaterialTheme.colorScheme.surfaceContainer,
+          MaterialTheme.shapes.extraLargeIncreased,
+        )
+        .padding(20.dp),
   ) {
     if (title != null) {
       Text(
@@ -270,7 +282,7 @@ private fun ServerIsland(
   Island(title = null) {
     Row(verticalAlignment = Alignment.CenterVertically) {
       ShapedIcon(
-        icon = VoiceIcons.Dns,
+        icon = UiR.drawable.ic_dns,
         shape = MaterialShapes.Cookie9Sided,
         containerColor = colors.primary,
         contentColor = colors.onPrimary,
@@ -285,35 +297,44 @@ private fun ServerIsland(
           overflow = TextOverflow.Ellipsis,
         )
         Text(
-          text = stringResource(StringsR.string.audiobookshelf_settings_signed_in_as, viewState.username),
+          text =
+            stringResource(
+              StringsR.string.audiobookshelf_settings_signed_in_as,
+              viewState.username,
+            ),
           style = MaterialTheme.typography.bodyMedium,
           color = colors.onSurfaceVariant,
         )
       }
     }
     Spacer(Modifier.height(16.dp))
-    val (icon, text) = when (viewState.status) {
-      ServerStatus.Connected -> VoiceIcons.CloudDone to StringsR.string.audiobookshelf_status_connected
-      ServerStatus.Syncing -> VoiceIcons.Sync to StringsR.string.audiobookshelf_status_syncing
-      ServerStatus.Offline -> VoiceIcons.CloudOff to StringsR.string.audiobookshelf_status_offline
-      ServerStatus.NeedsLogin -> VoiceIcons.Person to StringsR.string.audiobookshelf_status_needs_login
-    }
+    val (icon, text) =
+      when (viewState.status) {
+        ServerStatus.Connected ->
+          UiR.drawable.ic_cloud_done to StringsR.string.audiobookshelf_status_connected
+        ServerStatus.Syncing ->
+          UiR.drawable.ic_sync to StringsR.string.audiobookshelf_status_syncing
+        ServerStatus.Offline ->
+          UiR.drawable.ic_cloud_off to StringsR.string.audiobookshelf_status_offline
+        ServerStatus.NeedsLogin ->
+          UiR.drawable.ic_person to StringsR.string.audiobookshelf_status_needs_login
+      }
     val needsLogin = viewState.status == ServerStatus.NeedsLogin
     Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .background(
-          if (needsLogin) colors.errorContainer else colors.secondaryContainer,
-          RoundedCornerShape(20.dp),
-        )
-        .padding(horizontal = 16.dp, vertical = 12.dp),
+      modifier =
+        Modifier.fillMaxWidth()
+          .background(
+            if (needsLogin) colors.errorContainer else colors.secondaryContainer,
+            MaterialTheme.shapes.largeIncreased,
+          )
+          .padding(horizontal = 16.dp, vertical = 12.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
       val contentColor = if (needsLogin) colors.onErrorContainer else colors.onSecondaryContainer
       if (viewState.status == ServerStatus.Syncing) {
         LoadingIndicator(Modifier.size(24.dp), color = contentColor)
       } else {
-        Icon(icon, contentDescription = null, tint = contentColor)
+        Icon(painterResource(icon), contentDescription = null, tint = contentColor)
       }
       Spacer(Modifier.width(12.dp))
       Text(
@@ -323,13 +344,16 @@ private fun ServerIsland(
         color = contentColor,
       )
       when (viewState.status) {
-        ServerStatus.NeedsLogin -> TextButton(onClick = onSignInAgain) {
-          Text(stringResource(StringsR.string.audiobookshelf_settings_sign_in_again))
-        }
-        ServerStatus.Offline -> TextButton(onClick = onSyncNow) {
-          Text(stringResource(StringsR.string.audiobookshelf_settings_try_again))
-        }
-        ServerStatus.Connected, ServerStatus.Syncing -> Unit
+        ServerStatus.NeedsLogin ->
+          TextButton(onClick = onSignInAgain) {
+            Text(stringResource(StringsR.string.audiobookshelf_settings_sign_in_again))
+          }
+        ServerStatus.Offline ->
+          TextButton(onClick = onSyncNow) {
+            Text(stringResource(StringsR.string.audiobookshelf_settings_try_again))
+          }
+        ServerStatus.Connected,
+        ServerStatus.Syncing -> Unit
       }
     }
   }
@@ -356,11 +380,18 @@ private fun LibrariesIsland(
         FilterChip(
           selected = library.selected,
           onClick = { onLibraryToggle(library.id) },
-          leadingIcon = if (library.selected) {
-            { Icon(VoiceIcons.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
-          } else {
-            null
-          },
+          leadingIcon =
+            if (library.selected) {
+              {
+                Icon(
+                  painterResource(UiR.drawable.ic_check),
+                  contentDescription = null,
+                  modifier = Modifier.size(18.dp),
+                )
+              }
+            } else {
+              null
+            },
           label = {
             Text(
               pluralStringResource(
@@ -388,18 +419,19 @@ private fun DownloadsIsland(
   val context = LocalContext.current
   Island(title = stringResource(StringsR.string.audiobookshelf_settings_downloads)) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-      Icon(VoiceIcons.DownloadDone, contentDescription = null)
+      Icon(painterResource(UiR.drawable.ic_download_done), contentDescription = null)
       Spacer(Modifier.width(16.dp))
       Text(
         modifier = Modifier.weight(1F),
-        text = if (viewState.usedBytes > 0) {
-          stringResource(
-            StringsR.string.audiobookshelf_settings_downloads_used,
-            Formatter.formatShortFileSize(context, viewState.usedBytes),
-          )
-        } else {
-          stringResource(StringsR.string.audiobookshelf_settings_downloads_none)
-        },
+        text =
+          if (viewState.usedBytes > 0) {
+            stringResource(
+              StringsR.string.audiobookshelf_settings_downloads_used,
+              Formatter.formatShortFileSize(context, viewState.usedBytes),
+            )
+          } else {
+            stringResource(StringsR.string.audiobookshelf_settings_downloads_none)
+          },
         style = MaterialTheme.typography.bodyLarge,
       )
       if (viewState.usedBytes > 0) {
@@ -423,17 +455,17 @@ private fun DownloadsIsland(
     }
     Spacer(Modifier.height(8.dp))
     Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .toggleable(
-          value = viewState.downloadOverMobileData,
-          role = Role.Switch,
-          onValueChange = onDownloadOverMobileDataChange,
-        )
-        .heightIn(min = 56.dp),
+      modifier =
+        Modifier.fillMaxWidth()
+          .toggleable(
+            value = viewState.downloadOverMobileData,
+            role = Role.Switch,
+            onValueChange = onDownloadOverMobileDataChange,
+          )
+          .heightIn(min = 56.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      Icon(VoiceIcons.NetworkCell, contentDescription = null)
+      Icon(painterResource(UiR.drawable.ic_network_cell), contentDescription = null)
       Spacer(Modifier.width(16.dp))
       Column(Modifier.weight(1F)) {
         Text(
@@ -463,17 +495,15 @@ private fun DownloadRow(
   val context = LocalContext.current
   val state = download.state
   Row(
-    modifier = Modifier
-      .fillMaxWidth()
-      .background(colors.surfaceContainerHigh, shape)
-      .heightIn(min = 72.dp)
-      .padding(start = 12.dp, top = 8.dp, bottom = 8.dp, end = 4.dp),
+    modifier =
+      Modifier.fillMaxWidth()
+        .background(colors.surfaceContainerHigh, shape)
+        .heightIn(min = 72.dp)
+        .padding(start = 12.dp, top = 8.dp, bottom = 8.dp, end = 4.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     AsyncImage(
-      modifier = Modifier
-        .size(48.dp)
-        .clip(RoundedCornerShape(percent = 12)),
+      modifier = Modifier.size(48.dp).clip(RoundedCornerShape(percent = 12)),
       model = rememberCoverThumbnailRequest(download.cover),
       placeholder = ColorPainter(colors.surfaceContainerHighest),
       error = painterResource(UiR.drawable.album_art),
@@ -489,24 +519,28 @@ private fun DownloadRow(
         overflow = TextOverflow.Ellipsis,
       )
       Text(
-        text = when (state) {
-          is BookDownloadState.Downloading -> when (state.waitingFor) {
-            WaitingFor.Wifi -> stringResource(StringsR.string.book_download_waiting_for_wifi)
-            WaitingFor.Connection -> stringResource(StringsR.string.book_download_waiting_for_connection)
-            null -> if (state.totalBytes > 0) {
-              stringResource(
-                StringsR.string.book_download_progress,
-                Formatter.formatShortFileSize(context, state.downloadedBytes),
-                Formatter.formatShortFileSize(context, state.totalBytes),
-              )
-            } else {
-              NumberFormat.getPercentInstance().format(state.progress)
-            }
-          }
-          is BookDownloadState.Downloaded -> Formatter.formatShortFileSize(context, state.bytes)
-          BookDownloadState.Failed -> stringResource(StringsR.string.book_download_failed)
-          BookDownloadState.NotDownloaded -> ""
-        },
+        text =
+          when (state) {
+            is BookDownloadState.Downloading ->
+              when (state.waitingFor) {
+                WaitingFor.Wifi -> stringResource(StringsR.string.book_download_waiting_for_wifi)
+                WaitingFor.Connection ->
+                  stringResource(StringsR.string.book_download_waiting_for_connection)
+                null ->
+                  if (state.totalBytes > 0) {
+                    stringResource(
+                      StringsR.string.book_download_progress,
+                      Formatter.formatShortFileSize(context, state.downloadedBytes),
+                      Formatter.formatShortFileSize(context, state.totalBytes),
+                    )
+                  } else {
+                    NumberFormat.getPercentInstance().format(state.progress)
+                  }
+              }
+            is BookDownloadState.Downloaded -> Formatter.formatShortFileSize(context, state.bytes)
+            BookDownloadState.Failed -> stringResource(StringsR.string.book_download_failed)
+            BookDownloadState.NotDownloaded -> ""
+          },
         style = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum"),
         color = if (state == BookDownloadState.Failed) colors.error else colors.onSurfaceVariant,
         maxLines = 1,
@@ -525,14 +559,23 @@ private fun DownloadRow(
     Spacer(Modifier.width(4.dp))
     if (state == BookDownloadState.Failed) {
       IconButton(onClick = onRetry) {
-        Icon(VoiceIcons.Replay, contentDescription = stringResource(StringsR.string.book_download_retry))
+        Icon(
+          painterResource(UiR.drawable.ic_replay),
+          contentDescription = stringResource(StringsR.string.book_download_retry),
+        )
       }
     }
     IconButton(onClick = onRemove) {
       if (state is BookDownloadState.Downloading) {
-        Icon(VoiceIcons.Close, contentDescription = stringResource(StringsR.string.book_download_stop))
+        Icon(
+          painterResource(UiR.drawable.ic_close),
+          contentDescription = stringResource(StringsR.string.book_download_stop),
+        )
       } else {
-        Icon(VoiceIcons.Delete, contentDescription = stringResource(StringsR.string.book_download_remove))
+        Icon(
+          painterResource(UiR.drawable.ic_delete),
+          contentDescription = stringResource(StringsR.string.book_download_remove),
+        )
       }
     }
   }
@@ -544,10 +587,11 @@ private fun SignOutSheet(
   onDismiss: () -> Unit,
   onConfirm: () -> Unit,
 ) {
-  val sheetState = rememberBottomSheetState(
-    initialValue = Hidden,
-    enabledValues = setOf(Hidden, Expanded),
-  )
+  val sheetState =
+    rememberBottomSheetState(
+      initialValue = Hidden,
+      enabledValues = setOf(Hidden, Expanded),
+    )
   val scope = rememberCoroutineScope()
   var closing by remember { mutableStateOf(false) }
   val hideThen: (() -> Unit) -> Unit = { action ->
@@ -568,15 +612,15 @@ private fun SignOutSheet(
     sheetState = sheetState,
   ) {
     Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .verticalScroll(rememberScrollState())
-        .navigationBarsPadding()
-        .padding(start = 24.dp, end = 24.dp, bottom = 16.dp),
+      modifier =
+        Modifier.fillMaxWidth()
+          .verticalScroll(rememberScrollState())
+          .navigationBarsPadding()
+          .padding(start = 24.dp, end = 24.dp, bottom = 16.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       ShapedIcon(
-        icon = VoiceIcons.Logout,
+        icon = UiR.drawable.ic_logout,
         shape = MaterialShapes.Cookie9Sided,
         containerColor = colors.errorContainer,
         contentColor = colors.onErrorContainer,
@@ -603,22 +647,19 @@ private fun SignOutSheet(
         OutlinedButton(
           onClick = { hideThen(onDismiss) },
           shapes = ButtonDefaults.shapes(),
-          modifier = Modifier
-            .weight(1F)
-            .heightIn(min = ButtonDefaults.MediumContainerHeight),
+          modifier = Modifier.weight(1F).heightIn(min = ButtonDefaults.MediumContainerHeight),
         ) {
           Text(stringResource(StringsR.string.common_dialog_cancel))
         }
         Button(
           onClick = { hideThen(onConfirm) },
           shapes = ButtonDefaults.shapes(),
-          colors = ButtonDefaults.buttonColors(
-            containerColor = colors.error,
-            contentColor = colors.onError,
-          ),
-          modifier = Modifier
-            .weight(1F)
-            .heightIn(min = ButtonDefaults.MediumContainerHeight),
+          colors =
+            ButtonDefaults.buttonColors(
+              containerColor = colors.error,
+              contentColor = colors.onError,
+            ),
+          modifier = Modifier.weight(1F).heightIn(min = ButtonDefaults.MediumContainerHeight),
         ) {
           Text(stringResource(StringsR.string.audiobookshelf_settings_sign_out))
         }
@@ -632,37 +673,41 @@ private fun SignOutSheet(
 private fun AudiobookshelfSettingsPreview() {
   VoiceTheme {
     AudiobookshelfSettings(
-      viewState = AudiobookshelfSettingsViewState(
-        serverName = "audiobooks.example.com",
-        username = "paul",
-        status = ServerStatus.Connected,
-        libraries = listOf(
-          LibraryViewState(id = "1", name = "Audiobooks", bookCount = 132, selected = true),
-          LibraryViewState(id = "2", name = "Kids", bookCount = 24, selected = false),
-        ),
-        usedBytes = 1_234_567_890,
-        downloads = listOf(
-          DownloadViewState(
-            bookId = BookId("abs://item/1"),
-            name = "The Hobbit",
-            cover = null,
-            state = BookDownloadState.Downloading(
-              progress = 0.4F,
-              downloadedBytes = 120_000_000,
-              totalBytes = 300_000_000,
-              waitingFor = null,
+      viewState =
+        AudiobookshelfSettingsViewState(
+          serverName = "audiobooks.example.com",
+          username = "paul",
+          status = ServerStatus.Connected,
+          libraries =
+            listOf(
+              LibraryViewState(id = "1", name = "Audiobooks", bookCount = 132, selected = true),
+              LibraryViewState(id = "2", name = "Kids", bookCount = 24, selected = false),
             ),
-          ),
-          DownloadViewState(
-            bookId = BookId("abs://item/2"),
-            name = "Dune",
-            cover = null,
-            state = BookDownloadState.Downloaded(bytes = 812_000_000),
-          ),
+          usedBytes = 1_234_567_890,
+          downloads =
+            listOf(
+              DownloadViewState(
+                bookId = BookId("abs://item/1"),
+                name = "The Hobbit",
+                cover = null,
+                state =
+                  BookDownloadState.Downloading(
+                    progress = 0.4F,
+                    downloadedBytes = 120_000_000,
+                    totalBytes = 300_000_000,
+                    waitingFor = null,
+                  ),
+              ),
+              DownloadViewState(
+                bookId = BookId("abs://item/2"),
+                name = "Dune",
+                cover = null,
+                state = BookDownloadState.Downloaded(bytes = 812_000_000),
+              ),
+            ),
+          downloadOverMobileData = false,
+          confirmSignOut = false,
         ),
-        downloadOverMobileData = false,
-        confirmSignOut = false,
-      ),
       onBack = {},
       onLibraryToggle = {},
       onDownloadOverMobileDataChange = {},

@@ -1,19 +1,20 @@
 package voice.features.reader
 
-import kotlinx.coroutines.test.runTest
-import voice.core.data.EbookPosition
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.coroutines.test.runTest
+import voice.core.data.EbookPosition
 
 class MarksTest {
 
-  private val book = ReaderContent.Epub(
-    title = "Book",
-    chapters = listOf("The cat sat.\nA Cat ran.", "No pets here."),
-    chapterTitles = listOf(null, null),
-  )
+  private val book =
+    ReaderContent.Epub(
+      title = "Book",
+      chapters = listOf("The cat sat.\nA Cat ran.", "No pets here."),
+      chapterTitles = listOf(null, null),
+    )
 
   @Test
   fun `a word is found around a letter in it`() {

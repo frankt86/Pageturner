@@ -65,14 +65,18 @@ import org.readium.r2.navigator.DecorableNavigator
 import org.readium.r2.navigator.Decoration
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
 import org.readium.r2.navigator.epub.EpubPreferences
+import org.readium.r2.navigator.epub.css.Color as ReadiumCssColor
 import org.readium.r2.navigator.epub.css.Length
 import org.readium.r2.navigator.epub.css.RsProperties
 import org.readium.r2.navigator.html.HtmlDecorationTemplates
 import org.readium.r2.navigator.input.InputListener
 import org.readium.r2.navigator.input.TapEvent
+import org.readium.r2.navigator.preferences.Color as ReadiumColor
 import org.readium.r2.navigator.preferences.ColumnCount
 import org.readium.r2.navigator.preferences.ImageFilter
 import org.readium.r2.navigator.preferences.Spread
+import org.readium.r2.navigator.preferences.TextAlign as ReadiumTextAlign
+import org.readium.r2.navigator.preferences.Theme as ReadiumTheme
 import org.readium.r2.shared.ExperimentalReadiumApi
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.util.AbsoluteUrl
@@ -90,16 +94,12 @@ import voice.core.data.ReadingMode
 import voice.core.data.ReadingPace
 import voice.core.data.ScrollBehavior
 import voice.core.logging.api.Logger
-import voice.core.ui.bookText
-import org.readium.r2.navigator.epub.css.Color as ReadiumCssColor
-import org.readium.r2.navigator.preferences.Color as ReadiumColor
-import org.readium.r2.navigator.preferences.TextAlign as ReadiumTextAlign
-import org.readium.r2.navigator.preferences.Theme as ReadiumTheme
 import voice.core.strings.R as StringsR
+import voice.core.ui.bookText
 
 /**
- * After the activity is recreated, e.g. when folding, Android puts the book's pages back before the reader
- * can open the book again. They come back empty and the reader replaces them.
+ * After the activity is recreated, e.g. when folding, Android puts the book's pages back before the
+ * reader can open the book again. They come back empty and the reader replaces them.
  */
 fun readerFragmentFactory(): FragmentFactory = EpubNavigatorFragment.createDummyFactory()
 
@@ -109,7 +109,8 @@ private const val NAVIGATOR_TAG = "readium_navigator"
 internal fun ReadiumPages(
   book: ReadiumBook,
   settings: ReaderSettings,
-  // gets the key code, whether Ctrl and Shift are held and whether the key went down, returns whether it took the key
+  // gets the key code, whether Ctrl and Shift are held and whether the key went down, returns
+  // whether it took the key
   onKey: (keyCode: Int, ctrl: Boolean, shift: Boolean, down: Boolean) -> Boolean,
   transition: PageTransition,
   jumps: Flow<Locator>,
@@ -146,11 +147,12 @@ internal fun ReadiumPages(
   val latestScroll by rememberUpdatedState(scroll)
   // Readium can't snap the scrolled text to screens, a snap scrolls smoothly
   val latestSmooth by rememberUpdatedState(settings.scrollBehavior != ScrollBehavior.Stepped)
-  val selectionLabels by rememberUpdatedState(
-    HighlightColor.entries.map { highlightColorName(it, settings.highlightNames) } +
-      stringResource(StringsR.string.reader_highlight_note) +
-      stringResource(StringsR.string.reader_look_up),
-  )
+  val selectionLabels by
+    rememberUpdatedState(
+      HighlightColor.entries.map { highlightColorName(it, settings.highlightNames) } +
+        stringResource(StringsR.string.reader_highlight_note) +
+        stringResource(StringsR.string.reader_look_up),
+    )
   var navigator by remember { mutableStateOf<EpubNavigatorFragment?>(null) }
   var selecting by remember { mutableStateOf(false) }
   val turns = remember { ReadiumTurns(scope) }
@@ -172,11 +174,12 @@ internal fun ReadiumPages(
     container.interceptDrags = !scroll && transition != PageTransition.Slide
     container.onDrag = turns::onDrag
     container.onKey = { keyCode, ctrl, shift, down -> latestOnKey(keyCode, ctrl, shift, down) }
-    container.onWheel = if (wheelTurns) {
-      { step: Int -> latestTurn(step) }
-    } else {
-      null
-    }
+    container.onWheel =
+      if (wheelTurns) {
+        { step: Int -> latestTurn(step) }
+      } else {
+        null
+      }
     container.minSwipe = with(density) { settings.minSwipe.dp.toPx() }
     container.edgeMargin = with(density) { settings.edgeMargin.dp.toPx() }
     container.onFingerMove = { if (latestScroll) latestOnPageTurn() }
@@ -200,17 +203,19 @@ internal fun ReadiumPages(
     )
   }
   // Readium takes these only when its pages are made, so changing them makes them anew
-  // colors wait until they stop changing, so dragging a color slider doesn't make the pages anew all the time
+  // colors wait until they stop changing, so dragging a color slider doesn't make the pages anew
+  // all the time
   val link = settled(pageColors?.link)
   val selectionColor = settled(pageColors?.selection)
-  val cssProperties = RsProperties(
-    // about 65 characters per line
-    maxLineLength = if (settings.shortLines) Length.Rem(32.0) else null,
-    colGap = settings.pageGap?.let { Length.Px(it.toDouble()) },
-    linkColor = link?.let { ReadiumCssColor.Int(it.toArgb()) },
-    visitedColor = link?.let { ReadiumCssColor.Int(it.toArgb()) },
-    selectionBackgroundColor = selectionColor?.let { ReadiumCssColor.Int(it.toArgb()) },
-  )
+  val cssProperties =
+    RsProperties(
+      // about 65 characters per line
+      maxLineLength = if (settings.shortLines) Length.Rem(32.0) else null,
+      colGap = settings.pageGap?.let { Length.Px(it.toDouble()) },
+      linkColor = link?.let { ReadiumCssColor.Int(it.toArgb()) },
+      visitedColor = link?.let { ReadiumCssColor.Int(it.toArgb()) },
+      selectionBackgroundColor = selectionColor?.let { ReadiumCssColor.Int(it.toArgb()) },
+    )
   // Readium draws highlights at 0.3 where the old engine draws them at 0.45
   val highlightAlpha = settled(settings.highlightOpacity) * 0.3 / 0.45
   val customFont = settings.customFont
@@ -220,64 +225,74 @@ internal fun ReadiumPages(
       fragmentManager.commitNow(allowStateLoss = true) { remove(stale) }
     }
     var created: EpubNavigatorFragment? = null
-    val selectionCallback = object : ActionMode.Callback {
-      override fun onCreateActionMode(
-        mode: ActionMode,
-        menu: Menu,
-      ): Boolean {
-        selecting = true
-        selectionLabels.forEachIndexed { index, label -> menu.add(Menu.NONE, index, index, label) }
-        return true
-      }
-
-      override fun onPrepareActionMode(
-        mode: ActionMode,
-        menu: Menu,
-      ): Boolean = false
-
-      override fun onActionItemClicked(
-        mode: ActionMode,
-        item: MenuItem,
-      ): Boolean {
-        val action = item.itemId
-        scope.launch {
-          val selection = created?.currentSelection()
-          mode.finish()
-          created?.clearSelection()
-          val locator = selection?.locator ?: return@launch
-          when (val color = HighlightColor.entries.getOrNull(action)) {
-            null -> if (action == HighlightColor.entries.size) {
-              latestOnNoteAdd(locator)
-            } else {
-              locator.text.highlight?.let { lookUp(context, it) }
-            }
-            else -> latestOnHighlightAdd(locator, color)
+    val selectionCallback =
+      object : ActionMode.Callback {
+        override fun onCreateActionMode(
+          mode: ActionMode,
+          menu: Menu,
+        ): Boolean {
+          selecting = true
+          selectionLabels.forEachIndexed { index, label ->
+            menu.add(Menu.NONE, index, index, label)
           }
+          return true
         }
-        return true
-      }
 
-      override fun onDestroyActionMode(mode: ActionMode) {
-        selecting = false
-      }
-    }
-    val fragment = book.navigatorFactory
-      .createFragmentFactory(
-        initialLocator = book.locator,
-        initialPreferences = latestPreferences,
-        listener = object : EpubNavigatorFragment.Listener {
-          override fun onExternalLinkActivated(url: AbsoluteUrl) {
-            openInBrowser(context, url)
+        override fun onPrepareActionMode(
+          mode: ActionMode,
+          menu: Menu,
+        ): Boolean = false
+
+        override fun onActionItemClicked(
+          mode: ActionMode,
+          item: MenuItem,
+        ): Boolean {
+          val action = item.itemId
+          scope.launch {
+            val selection = created?.currentSelection()
+            mode.finish()
+            created?.clearSelection()
+            val locator = selection?.locator ?: return@launch
+            when (val color = HighlightColor.entries.getOrNull(action)) {
+              null ->
+                if (action == HighlightColor.entries.size) {
+                  latestOnNoteAdd(locator)
+                } else {
+                  locator.text.highlight?.let { lookUp(context, it) }
+                }
+              else -> latestOnHighlightAdd(locator, color)
+            }
           }
-        },
-        configuration = EpubNavigatorFragment.Configuration(
-          readiumCssRsProperties = cssProperties,
-          decorationTemplates = HtmlDecorationTemplates.defaultTemplates(alpha = highlightAlpha),
-          selectionActionModeCallback = selectionCallback,
-          shouldApplyInsetsPadding = false,
-        ).apply { addReaderFonts(customFont) },
-      )
-      .instantiate(activity.classLoader, EpubNavigatorFragment::class.java.name) as EpubNavigatorFragment
+          return true
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode) {
+          selecting = false
+        }
+      }
+    val fragment =
+      book.navigatorFactory
+        .createFragmentFactory(
+          initialLocator = book.locator,
+          initialPreferences = latestPreferences,
+          listener =
+            object : EpubNavigatorFragment.Listener {
+              override fun onExternalLinkActivated(url: AbsoluteUrl) {
+                openInBrowser(context, url)
+              }
+            },
+          configuration =
+            EpubNavigatorFragment.Configuration(
+                readiumCssRsProperties = cssProperties,
+                decorationTemplates =
+                  HtmlDecorationTemplates.defaultTemplates(alpha = highlightAlpha),
+                selectionActionModeCallback = selectionCallback,
+                shouldApplyInsetsPadding = false,
+              )
+              .apply { addReaderFonts(customFont) },
+        )
+        .instantiate(activity.classLoader, EpubNavigatorFragment::class.java.name)
+        as EpubNavigatorFragment
     created = fragment
     fragment.addInputListener(
       object : InputListener {
@@ -292,13 +307,16 @@ internal fun ReadiumPages(
       HIGHLIGHTS,
       object : DecorableNavigator.Listener {
         override fun onDecorationActivated(event: DecorableNavigator.OnActivatedEvent): Boolean {
-          val highlight = latestBook.highlights.firstOrNull { it.id == event.decoration.id } ?: return false
+          val highlight =
+            latestBook.highlights.firstOrNull { it.id == event.decoration.id } ?: return false
           latestOnHighlightClick(highlight)
           return true
         }
       },
     )
-    fragmentManager.commitNow(allowStateLoss = true) { add(container.fragments, fragment, NAVIGATOR_TAG) }
+    fragmentManager.commitNow(allowStateLoss = true) {
+      add(container.fragments, fragment, NAVIGATOR_TAG)
+    }
     navigator = fragment
     turns.navigator = fragment
     turns.view = container
@@ -369,7 +387,15 @@ internal fun ReadiumPages(
   val searchMatch = book.searchMatch
   LaunchedEffect(navigator, searchMatch) {
     navigator?.applyDecorations(
-      listOfNotNull(searchMatch?.let { Decoration(id = "match", locator = it, style = Decoration.Style.Highlight(tint = markTint)) }),
+      listOfNotNull(
+        searchMatch?.let {
+          Decoration(
+            id = "match",
+            locator = it,
+            style = Decoration.Style.Highlight(tint = markTint),
+          )
+        },
+      ),
       SEARCH,
     )
   }
@@ -377,7 +403,15 @@ internal fun ReadiumPages(
   LaunchedEffect(navigator, readingAloud) {
     val current = navigator ?: return@LaunchedEffect
     current.applyDecorations(
-      listOfNotNull(readingAloud?.let { Decoration(id = "spoken", locator = it, style = Decoration.Style.Highlight(tint = markTint)) }),
+      listOfNotNull(
+        readingAloud?.let {
+          Decoration(
+            id = "spoken",
+            locator = it,
+            style = Decoration.Style.Highlight(tint = markTint),
+          )
+        },
+      ),
       READ_ALOUD,
     )
     // turns the page when the reading goes on on the next one
@@ -385,11 +419,12 @@ internal fun ReadiumPages(
   }
 }
 
-private fun EpubNavigatorFragment.locatorAtEnd(): Boolean = (currentLocator.value.locations.totalProgression ?: 0.0) >= 0.999
+private fun EpubNavigatorFragment.locatorAtEnd(): Boolean =
+  (currentLocator.value.locations.totalProgression ?: 0.0) >= 0.999
 
 /**
- * Scrolls the text a screen less a line, or goes on to the next or previous chapter at its end. Readium only turns
- * whole chapters in the scroll mode.
+ * Scrolls the text a screen less a line, or goes on to the next or previous chapter at its end.
+ * Readium only turns whole chapters in the scroll mode.
  */
 private suspend fun scrollStep(
   navigator: EpubNavigatorFragment,
@@ -397,7 +432,8 @@ private suspend fun scrollStep(
   smooth: Boolean,
 ) {
   val behavior = if (smooth) "smooth" else "auto"
-  val script = """
+  val script =
+    """
     (function() {
       var s = document.scrollingElement;
       var line = parseFloat(getComputedStyle(document.body).lineHeight) || 24;
@@ -406,17 +442,22 @@ private suspend fun scrollStep(
       s.scrollBy({ top: $step * Math.max(s.clientHeight - line, line), behavior: '$behavior' });
       return true;
     })();
-  """.trimIndent()
+  """
+      .trimIndent()
   if (navigator.evaluateJavascript(script) != "true") {
-    val _ = if (step > 0) navigator.goForward(animated = false) else navigator.goBackward(animated = false)
+    val _ =
+      if (step > 0) navigator.goForward(animated = false)
+      else navigator.goBackward(animated = false)
   }
 }
 
 /**
- * Scrolls the text [speed] CSS pixels, which are dp, a second in the web view, and says whether it's at the end of the
- * chapter. It stops when it isn't called again within a second, so a chapter that's no longer shown stops too.
+ * Scrolls the text [speed] CSS pixels, which are dp, a second in the web view, and says whether
+ * it's at the end of the chapter. It stops when it isn't called again within a second, so a chapter
+ * that's no longer shown stops too.
  */
-private fun autoScrollScript(speed: Int): String = """
+private fun autoScrollScript(speed: Int): String =
+  """
   (function() {
     var s = document.scrollingElement;
     var a = window.pageturnerAutoScroll || (window.pageturnerAutoScroll = { running: false });
@@ -446,7 +487,8 @@ private fun autoScrollScript(speed: Int): String = """
     }
     return s.scrollTop + s.clientHeight >= s.scrollHeight - 1;
   })();
-""".trimIndent()
+"""
+    .trimIndent()
 
 private const val HIGHLIGHTS = "highlights"
 private const val SEARCH = "search"
@@ -470,17 +512,19 @@ private fun ReaderSettings.epubPreferences(colors: PageColors?): EpubPreferences
   return EpubPreferences(
     backgroundColor = ReadiumColor(paper.toArgb()),
     textColor = ReadiumColor(ink.toArgb()),
-    theme = when {
-      sepia -> ReadiumTheme.SEPIA
-      paper.luminance() < 0.5F -> ReadiumTheme.DARK
-      else -> ReadiumTheme.LIGHT
-    },
+    theme =
+      when {
+        sepia -> ReadiumTheme.SEPIA
+        paper.luminance() < 0.5F -> ReadiumTheme.DARK
+        else -> ReadiumTheme.LIGHT
+      },
     // only applies to dark pages
-    imageFilter = when (imageFilter) {
-      ReaderImageFilter.Original -> null
-      ReaderImageFilter.Dimmed -> ImageFilter.DARKEN
-      ReaderImageFilter.Inverted -> ImageFilter.INVERT
-    },
+    imageFilter =
+      when (imageFilter) {
+        ReaderImageFilter.Original -> null
+        ReaderImageFilter.Dimmed -> ImageFilter.DARKEN
+        ReaderImageFilter.Inverted -> ImageFilter.INVERT
+      },
     fontFamily = readiumFontFamily(),
     // the web view's text is 16 px at 100 %
     fontSize = textSize / 16.0,
@@ -493,13 +537,15 @@ private fun ReaderSettings.epubPreferences(colors: PageColors?): EpubPreferences
     wordSpacing = wordSpacing?.toDouble(),
     paragraphSpacing = paragraphSpacing?.let { it * lineSpacing.toDouble() },
     paragraphIndent = paragraphIndent?.toDouble(),
-    textAlign = when (textAlign) {
-      ReaderTextAlign.Left -> ReadiumTextAlign.LEFT
-      ReaderTextAlign.Right -> ReadiumTextAlign.RIGHT
-      ReaderTextAlign.Justify -> ReadiumTextAlign.JUSTIFY
-      // Readium can't center the text
-      ReaderTextAlign.Center, null -> null
-    },
+    textAlign =
+      when (textAlign) {
+        ReaderTextAlign.Left -> ReadiumTextAlign.LEFT
+        ReaderTextAlign.Right -> ReadiumTextAlign.RIGHT
+        ReaderTextAlign.Justify -> ReadiumTextAlign.JUSTIFY
+        // Readium can't center the text
+        ReaderTextAlign.Center,
+        null -> null
+      },
     // at their defaults, these leave it to the book as before
     hyphens = hyphens.takeIf { it },
     ligatures = ligatures.takeUnless { it },
@@ -507,17 +553,19 @@ private fun ReaderSettings.epubPreferences(colors: PageColors?): EpubPreferences
     pageMargins = margin / 20.0,
     publisherStyles = publisherStyles,
     scroll = readingMode == ReadingMode.Scroll,
-    columnCount = when (pages) {
-      ReaderPages.Auto -> ColumnCount.AUTO
-      ReaderPages.One -> ColumnCount.ONE
-      ReaderPages.Two -> ColumnCount.TWO
-    },
+    columnCount =
+      when (pages) {
+        ReaderPages.Auto -> ColumnCount.AUTO
+        ReaderPages.One -> ColumnCount.ONE
+        ReaderPages.Two -> ColumnCount.TWO
+      },
     // the same choice for books with fixed pages
-    spread = when (pages) {
-      ReaderPages.Auto -> null
-      ReaderPages.One -> Spread.NEVER
-      ReaderPages.Two -> Spread.ALWAYS
-    },
+    spread =
+      when (pages) {
+        ReaderPages.Auto -> null
+        ReaderPages.One -> Spread.NEVER
+        ReaderPages.Two -> Spread.ALWAYS
+      },
   )
 }
 
@@ -545,22 +593,27 @@ internal fun BoxScope.ReadiumPageBar(
   onJump: (Locator) -> Unit,
 ) {
   if (book.positions.isEmpty()) return
-  BottomBar(visible = visible && settings.progressVisibility != ProgressVisibility.Hidden, settings = settings) {
+  BottomBar(
+    visible = visible && settings.progressVisibility != ProgressVisibility.Hidden,
+    settings = settings,
+  ) {
     val current = book.positionIndex(book.locator)
     val chapters = remember(book) { book.chapterStarts.map { fractionOf(it, book.positions.size) } }
-    val marks = if (settings.progressMarks) {
-      val bookmarks = book.bookmarks
-      val highlights = book.highlights
-      remember(book, chapters, bookmarks, highlights) {
-        BarMarks(
-          chapters = chapters,
-          bookmarks = bookmarks.map { fractionOf(book.positionIndex(it), book.positions.size) },
-          highlights = highlights.map { fractionOf(book.positionIndex(it.locator), book.positions.size) },
-        )
+    val marks =
+      if (settings.progressMarks) {
+        val bookmarks = book.bookmarks
+        val highlights = book.highlights
+        remember(book, chapters, bookmarks, highlights) {
+          BarMarks(
+            chapters = chapters,
+            bookmarks = bookmarks.map { fractionOf(book.positionIndex(it), book.positions.size) },
+            highlights =
+              highlights.map { fractionOf(book.positionIndex(it.locator), book.positions.size) },
+          )
+        }
+      } else {
+        null
       }
-    } else {
-      null
-    }
     PageBar(
       pageCount = book.positions.size,
       currentIndex = current,
@@ -584,8 +637,8 @@ internal fun BoxScope.ReadiumPageBar(
 }
 
 /**
- * The chapter and what [ReaderSettings.footer] picks under the pages, and with [ProgressVisibility.Always] a thin line of
- * the book's progress.
+ * The chapter and what [ReaderSettings.footer] picks under the pages, and with
+ * [ProgressVisibility.Always] a thin line of the book's progress.
  */
 @Composable
 internal fun ReadiumFooter(
@@ -597,13 +650,14 @@ internal fun ReadiumFooter(
 ) {
   if (book.positions.isEmpty()) return
   val current = book.positionIndex(book.locator)
-  val progress = book.readingProgress(
-    index = current,
-    locator = book.locator,
-    bodyOnly = settings.progressBodyOnly,
-    characters = characters,
-    pace = pace,
-  )
+  val progress =
+    book.readingProgress(
+      index = current,
+      locator = book.locator,
+      bodyOnly = settings.progressBodyOnly,
+      characters = characters,
+      pace = pace,
+    )
   val chapters = remember(book) { book.chapterStarts.map { fractionOf(it, book.positions.size) } }
   ReaderPageTheme(settings.pageColors()) {
     Column(
@@ -658,7 +712,8 @@ internal fun ReadiumContentsSheet(
       when (selectedTab) {
         ContentsTab.Contents -> ReadiumChapters(book, onJump)
         ContentsTab.Bookmarks -> ReadiumBookmarks(book, onJump, onBookmarkDelete)
-        ContentsTab.Highlights -> ReadiumHighlights(book, highlightOpacity, onJump, onHighlightDelete)
+        ContentsTab.Highlights ->
+          ReadiumHighlights(book, highlightOpacity, onJump, onHighlightDelete)
       }
     }
   }
@@ -679,11 +734,13 @@ private fun ReadiumChapters(
         text = link.title ?: stringResource(StringsR.string.reader_chapter, index + 1),
         style = MaterialTheme.typography.bodyLarge.bookText(),
         fontWeight = if (current) FontWeight.Bold else null,
-        modifier = Modifier
-          .fillMaxWidth()
-          .clickable { book.publication.locatorFromLink(link)?.let(onJump) }
-          .background(if (current) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent)
-          .padding(start = 24.dp + 16.dp * depth, end = 24.dp, top = 14.dp, bottom = 14.dp),
+        modifier =
+          Modifier.fillMaxWidth()
+            .clickable { book.publication.locatorFromLink(link)?.let(onJump) }
+            .background(
+              if (current) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
+            )
+            .padding(start = 24.dp + 16.dp * depth, end = 24.dp, top = 14.dp, bottom = 14.dp),
       )
     }
   }
@@ -705,7 +762,9 @@ private fun ReadiumBookmarks(
     items(book.bookmarks) { bookmark ->
       val page = book.positionIndex(bookmark) + 1
       MarkRow(
-        title = book.chapterTitle(bookmark) ?: stringResource(StringsR.string.reader_page, page, pageCount),
+        title =
+          book.chapterTitle(bookmark)
+            ?: stringResource(StringsR.string.reader_page, page, pageCount),
         text = AnnotatedString(stringResource(StringsR.string.reader_page, page, pageCount)),
         deleteLabel = deleteLabel,
         onClick = { onJump(bookmark) },
@@ -732,9 +791,10 @@ private fun ReadiumHighlights(
       val quote = highlight.locator.text.highlight.orEmpty().replace('\n', ' ')
       MarkRow(
         title = book.chapterTitle(highlight.locator).orEmpty(),
-        text = buildAnnotatedString {
-          withStyle(SpanStyle(background = highlight.color.background(opacity))) { append(quote) }
-        },
+        text =
+          buildAnnotatedString {
+            withStyle(SpanStyle(background = highlight.color.background(opacity))) { append(quote) }
+          },
         note = highlight.note,
         deleteLabel = deleteLabel,
         onClick = { onJump(highlight.locator) },

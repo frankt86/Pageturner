@@ -1,14 +1,14 @@
 package voice.features.reader
 
 import androidx.compose.ui.graphics.Color
-import voice.core.data.ReaderColors
-import voice.core.data.ReaderSettings
-import voice.core.data.ReaderTheme
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import voice.core.data.ReaderColors
+import voice.core.data.ReaderSettings
+import voice.core.data.ReaderTheme
 
 class ThemeColorsTest {
 
@@ -57,16 +57,20 @@ class ThemeColorsTest {
 
   @Test
   fun `saved themes survive an export and import`() {
-    val themes = listOf(
-      ReaderColors(name = "Evening", background = "#2B3440", text = "#CDD3DA", link = "#8AB4F8"),
-      ReaderColors(name = "Paper", background = "#F5F3EE", text = "#3B3B3B"),
-    )
+    val themes =
+      listOf(
+        ReaderColors(name = "Evening", background = "#2B3440", text = "#CDD3DA", link = "#8AB4F8"),
+        ReaderColors(name = "Paper", background = "#F5F3EE", text = "#3B3B3B"),
+      )
     assertEquals(themes, decodeThemes(encodeThemes(themes)))
   }
 
   @Test
   fun `themes with broken colors or files without themes are left out`() {
-    assertEquals(emptyList<ReaderColors>(), decodeThemes("""[{"name":"Odd","background":"red","text":"#000000"}]"""))
+    assertEquals(
+      emptyList<ReaderColors>(),
+      decodeThemes("""[{"name":"Odd","background":"red","text":"#000000"}]"""),
+    )
     assertEquals(emptyList<ReaderColors>(), decodeThemes("not a themes file"))
   }
 }

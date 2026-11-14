@@ -2,6 +2,7 @@
 
 package voice.core.ui
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -15,12 +16,11 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.RoundedPolygon
 import voice.core.data.Bookmark
-import voice.core.ui.icons.VoiceIcons
 
 /**
  * Each kind of bookmark has its own shape, color and icon, so the meaning doesn't depend on color
@@ -32,41 +32,45 @@ data class BookmarkStyle(
   val container: Color,
   val content: Color,
   val pin: Color,
-  val icon: ImageVector?,
+  @DrawableRes val icon: Int?,
 )
 
 @Composable
 fun bookmarkStyle(kind: Bookmark.Kind): BookmarkStyle {
   val colors = MaterialTheme.colorScheme
   return when (kind) {
-    Bookmark.Kind.Note -> BookmarkStyle(
-      polygon = MaterialShapes.Clover4Leaf,
-      container = colors.primaryContainer,
-      content = colors.onPrimaryContainer,
-      pin = colors.primaryContainer,
-      icon = VoiceIcons.Bookmark,
-    )
-    Bookmark.Kind.Favorite -> BookmarkStyle(
-      polygon = MaterialShapes.Heart,
-      container = colors.tertiaryContainer,
-      content = colors.onTertiaryContainer,
-      pin = colors.tertiary,
-      icon = null,
-    )
-    Bookmark.Kind.Quote -> BookmarkStyle(
-      polygon = MaterialShapes.Cookie6Sided,
-      container = colors.secondaryContainer,
-      content = colors.onSecondaryContainer,
-      pin = colors.secondary,
-      icon = VoiceIcons.FormatQuote,
-    )
-    Bookmark.Kind.Revisit -> BookmarkStyle(
-      polygon = MaterialShapes.SoftBurst,
-      container = colors.primary,
-      content = colors.onPrimary,
-      pin = colors.primary,
-      icon = VoiceIcons.Replay,
-    )
+    Bookmark.Kind.Note ->
+      BookmarkStyle(
+        polygon = MaterialShapes.Clover4Leaf,
+        container = colors.primaryContainer,
+        content = colors.onPrimaryContainer,
+        pin = colors.primaryContainer,
+        icon = R.drawable.ic_bookmark,
+      )
+    Bookmark.Kind.Favorite ->
+      BookmarkStyle(
+        polygon = MaterialShapes.Heart,
+        container = colors.tertiaryContainer,
+        content = colors.onTertiaryContainer,
+        pin = colors.tertiary,
+        icon = null,
+      )
+    Bookmark.Kind.Quote ->
+      BookmarkStyle(
+        polygon = MaterialShapes.Cookie6Sided,
+        container = colors.secondaryContainer,
+        content = colors.onSecondaryContainer,
+        pin = colors.secondary,
+        icon = R.drawable.ic_format_quote,
+      )
+    Bookmark.Kind.Revisit ->
+      BookmarkStyle(
+        polygon = MaterialShapes.SoftBurst,
+        container = colors.primary,
+        content = colors.onPrimary,
+        pin = colors.primary,
+        icon = R.drawable.ic_replay,
+      )
   }
 }
 
@@ -78,14 +82,13 @@ fun BookmarkBadge(
 ) {
   val style = bookmarkStyle(kind)
   Box(
-    modifier = modifier
-      .size(size)
-      .background(color = style.container, shape = style.polygon.toShape()),
+    modifier =
+      modifier.size(size).background(color = style.container, shape = style.polygon.toShape()),
     contentAlignment = Alignment.Center,
   ) {
     if (style.icon != null) {
       Icon(
-        imageVector = style.icon,
+        painter = painterResource(style.icon),
         contentDescription = null,
         tint = style.content,
         modifier = Modifier.size(size * 0.45F),

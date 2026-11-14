@@ -11,6 +11,8 @@ import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import java.io.File
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -20,6 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
+import voice.core.data.BookCategory
 import voice.core.data.Ebook
 import voice.core.data.EbookPosition
 import voice.core.data.repo.BookRepository
@@ -27,14 +30,11 @@ import voice.core.data.store.EbooksStore
 import voice.core.logging.api.Logger
 import voice.features.bookOverview.editBook.EditBookState
 import voice.features.bookOverview.editBook.seriesOfOtherBooks
-import voice.features.bookOverview.overview.BookOverviewCategory
 import voice.features.bookOverview.overview.BookOverviewItemViewState
 import voice.features.bookOverview.overview.category
 import voice.features.bookOverview.overview.toItemViewState
 import voice.navigation.Destination
 import voice.navigation.Navigator
-import java.io.File
-import kotlin.uuid.Uuid
 
 @AssistedInject
 class EbookActionsViewModel(
@@ -43,8 +43,7 @@ class EbookActionsViewModel(
   private val application: Application,
   private val navigator: Navigator,
   private val dispatcherProvider: DispatcherProvider,
-  @Assisted
-  private val uri: Uri,
+  @Assisted private val uri: Uri,
 ) {
 
   private val scope = MainScope(dispatcherProvider)
@@ -66,7 +65,8 @@ class EbookActionsViewModel(
     return store.data
       .map { ebooks -> ebooks.firstOrNull { it.uri == uri } }
       .onEach { ebook ->
-        // with no book there is no menu to show, and an invisible one would swallow the next back press
+        // with no book there is no menu to show, and an invisible one would swallow the next back
+        // press
         if (ebook == null) onClose()
       }
       .filterNotNull()
@@ -75,15 +75,16 @@ class EbookActionsViewModel(
   internal suspend fun onEdit() {
     val ebook = ebook().first()
     val book = ebook.toItemViewState()
-    editState = EditBookState(
-      title = book.name,
-      author = book.author.orEmpty(),
-      bookId = book.id,
-      cover = book.cover,
-      series = ebook.shownSeries.orEmpty(),
-      part = ebook.shownPart.orEmpty(),
-      allSeries = seriesOfOtherBooks(repo, store, book.id),
-    )
+    editState =
+      EditBookState(
+        title = book.name,
+        author = book.author.orEmpty(),
+        bookId = book.id,
+        cover = book.cover,
+        series = ebook.shownSeries.orEmpty(),
+        part = ebook.shownPart.orEmpty(),
+        allSeries = seriesOfOtherBooks(repo, store, book.id),
+      )
   }
 
   internal fun onEditTitleChange(title: String) {
@@ -117,35 +118,51 @@ class EbookActionsViewModel(
         edited = edited.copy(customName = state.title.trim().takeIf { it != ebook.name })
       }
       if (state.author != state.initialAuthor) {
-        edited = edited.copy(customAuthor = state.author.trim().takeIf { it.isNotEmpty() && it != ebook.author })
+        edited =
+          edited.copy(
+            customAuthor = state.author.trim().takeIf { it.isNotEmpty() && it != ebook.author },
+          )
       }
       if (state.series != state.initialSeries) {
-        edited = edited.copy(customSeries = state.series.trim().takeIf { it.isNotEmpty() && it != ebook.series })
+        edited =
+          edited.copy(
+            customSeries = state.series.trim().takeIf { it.isNotEmpty() && it != ebook.series },
+          )
       }
       if (state.part != state.initialPart) {
-        edited = edited.copy(customPart = state.part.trim().takeIf { it.isNotEmpty() && it != ebook.seriesPart })
+        edited =
+          edited.copy(
+            customPart = state.part.trim().takeIf { it.isNotEmpty() && it != ebook.seriesPart },
+          )
       }
       edited
     }
   }
 
-  internal fun onStatusChange(category: BookOverviewCategory) {
+  internal fun onStatusChange(category: BookCategory) {
     val now = System.currentTimeMillis()
     update { ebook ->
       when (category) {
-        BookOverviewCategory.NOT_STARTED -> ebook.copy(
-          position = EbookPosition(),
-          progress = 0F,
-          lastOpened = 0,
-          positionModified = now,
-        )
+        BookCategory.NOT_STARTED ->
+          ebook.copy(
+            position = EbookPosition(),
+            progress = 0F,
+            lastOpened = 0,
+            positionModified = now,
+          )
         // a finished book starts over
-        BookOverviewCategory.CURRENT -> if (ebook.category == BookOverviewCategory.FINISHED) {
-          ebook.copy(position = EbookPosition(), progress = 0F, lastOpened = now, positionModified = now)
-        } else {
-          ebook.copy(lastOpened = now)
-        }
-        BookOverviewCategory.FINISHED -> ebook.copy(progress = 1F, lastOpened = now, positionModified = now)
+        BookCategory.CURRENT ->
+          if (ebook.category == BookCategory.FINISHED) {
+            ebook.copy(
+              position = EbookPosition(),
+              progress = 0F,
+              lastOpened = now,
+              positionModified = now,
+            )
+          } else {
+            ebook.copy(lastOpened = now)
+          }
+        BookCategory.FINISHED -> ebook.copy(progress = 1F, lastOpened = now, positionModified = now)
       }
     }
   }
@@ -153,18 +170,19 @@ class EbookActionsViewModel(
   internal fun onCoverPicked(image: Uri) {
     scope.launch {
       val coversDir = File(application.filesDir, "ebookCovers")
-      val cover = withContext(dispatcherProvider.io) {
-        try {
-          val file = coversDir.apply { mkdirs() }.resolve(Uuid.random().toString())
-          application.contentResolver.openInputStream(image)?.use { input ->
-            file.outputStream().use { input.copyTo(it) }
-            file
+      val cover =
+        withContext(dispatcherProvider.io) {
+          try {
+            val file = coversDir.apply { mkdirs() }.resolve(Uuid.random().toString())
+            application.contentResolver.openInputStream(image)?.use { input ->
+              file.outputStream().use { input.copyTo(it) }
+              file
+            }
+          } catch (e: Exception) {
+            Logger.w(e, "Could not save the picked cover")
+            null
           }
-        } catch (e: Exception) {
-          Logger.w(e, "Could not save the picked cover")
-          null
-        }
-      } ?: return@launch
+        } ?: return@launch
       val previous = ebook().first().customCover
       store.updateData { ebooks ->
         ebooks.map { if (it.uri == uri) it.copy(customCover = cover.absolutePath) else it }
@@ -203,5 +221,5 @@ class EbookActionsViewModel(
 
 internal data class EbookActionsState(
   val book: BookOverviewItemViewState,
-  val category: BookOverviewCategory,
+  val category: BookCategory,
 )

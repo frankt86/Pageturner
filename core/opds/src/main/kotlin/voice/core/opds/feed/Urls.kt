@@ -1,7 +1,7 @@
 package voice.core.opds.feed
 
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.net.URLEncoder
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 internal fun resolveUrl(
   base: String,
@@ -14,8 +14,8 @@ internal fun resolveUrl(
 private val templateVariable = Regex("\\{[^}]*\\}")
 
 /**
- * Resolves a search template against the feed it came from. The placeholders are swapped out first, as resolving
- * would percent-encode their braces.
+ * Resolves a search template against the feed it came from. The placeholders are swapped out first,
+ * as resolving would percent-encode their braces.
  */
 internal fun resolveTemplate(
   base: String,
@@ -24,15 +24,20 @@ internal fun resolveTemplate(
   val trimmed = template?.trim()?.takeIf { it.isNotEmpty() } ?: return null
   val variables = templateVariable.findAll(trimmed).map { it.value }.toList()
   var masked = trimmed
-  variables.forEachIndexed { index, variable -> masked = masked.replaceFirst(variable, "opdsvariable$index") }
+  variables.forEachIndexed { index, variable ->
+    masked = masked.replaceFirst(variable, "opdsvariable$index")
+  }
   var resolved = resolveUrl(base, masked) ?: return null
-  variables.forEachIndexed { index, variable -> resolved = resolved.replaceFirst("opdsvariable$index", variable) }
+  variables.forEachIndexed { index, variable ->
+    resolved = resolved.replaceFirst("opdsvariable$index", variable)
+  }
   return resolved
 }
 
 /**
- * Fills a search template: the OpenSearch kind of OPDS 1.2, like `/search?q={searchTerms}&page={startPage?}`, and the
- * URI templates of OPDS 2.0, like `/search{?query,author}`. Placeholders other than the search terms stay empty.
+ * Fills a search template: the OpenSearch kind of OPDS 1.2, like
+ * `/search?q={searchTerms}&page={startPage?}`, and the URI templates of OPDS 2.0, like
+ * `/search{?query,author}`. Placeholders other than the search terms stay empty.
  */
 public fun expandSearchTemplate(
   template: String,
@@ -60,21 +65,22 @@ private fun String.isSearchTerms(): Boolean {
 }
 
 private val entity = Regex("&(#[xX][0-9a-fA-F]+|#[0-9]+|[a-zA-Z]+);")
-private val namedEntities = mapOf(
-  "amp" to "&",
-  "lt" to "<",
-  "gt" to ">",
-  "quot" to "\"",
-  "apos" to "'",
-  "nbsp" to " ",
-  "mdash" to "—",
-  "ndash" to "–",
-  "hellip" to "…",
-  "rsquo" to "’",
-  "lsquo" to "‘",
-  "rdquo" to "”",
-  "ldquo" to "“",
-)
+private val namedEntities =
+  mapOf(
+    "amp" to "&",
+    "lt" to "<",
+    "gt" to ">",
+    "quot" to "\"",
+    "apos" to "'",
+    "nbsp" to " ",
+    "mdash" to "—",
+    "ndash" to "–",
+    "hellip" to "…",
+    "rsquo" to "’",
+    "lsquo" to "‘",
+    "rdquo" to "”",
+    "ldquo" to "“",
+  )
 
 /** The plain text of a summary that comes as HTML, with its paragraphs kept apart. */
 internal fun htmlToText(html: String): String {
@@ -85,7 +91,8 @@ internal fun htmlToText(html: String): String {
       entity.replace(text) { match ->
         val name = match.groupValues[1]
         when {
-          name.startsWith("#x") || name.startsWith("#X") -> name.drop(2).toIntOrNull(16)?.let(::codePointToString)
+          name.startsWith("#x") || name.startsWith("#X") ->
+            name.drop(2).toIntOrNull(16)?.let(::codePointToString)
           name.startsWith("#") -> name.drop(1).toIntOrNull()?.let(::codePointToString)
           else -> namedEntities[name]
         } ?: match.value

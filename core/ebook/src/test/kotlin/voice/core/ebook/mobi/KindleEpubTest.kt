@@ -1,13 +1,13 @@
 package voice.core.ebook.mobi
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.runner.RunWith
-import voice.core.ebook.parseEpub
 import java.io.ByteArrayOutputStream
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import org.junit.runner.RunWith
+import voice.core.ebook.parseEpub
 
 @RunWith(AndroidJUnit4::class)
 class KindleEpubTest {

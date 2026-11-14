@@ -6,6 +6,8 @@ public fun parseFeed(
   url: String,
   contentType: String?,
 ): OpdsFeed {
-  val json = contentType?.contains("json") == true || body.trimStart('\uFEFF', ' ', '\n', '\r', '\t').startsWith("{")
+  val json =
+    contentType?.contains("json") == true ||
+      body.trimStart('\uFEFF', ' ', '\n', '\r', '\t').startsWith("{")
   return if (json) parseOpds2(body, url) else parseOpds1(body, url)
 }

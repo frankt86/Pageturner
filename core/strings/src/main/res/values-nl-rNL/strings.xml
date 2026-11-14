@@ -58,6 +58,7 @@
     <string name="audiobookshelf.status.needs_login">De server wil dat je opnieuw inlogt</string>
     <string name="audiobookshelf.status.offline">De server is nu niet bereikbaar. Gedownloade boeken kun je nog steeds afspelen.</string>
     <string name="audiobookshelf.status.syncing">Synchroniseren…</string>
+    <string name="author.wikipedia">Lees meer op Wikipedia</string>
     <string name="book.category.action.mark_completed">Markeren als voltooid</string>
     <string name="book.category.action.mark_current">Markeren als huidig boek</string>
     <string name="book.category.action.mark_not_started">Markeren als nog niet begonnen</string>
@@ -82,8 +83,11 @@
     <string name="book.edit.server.failed">Opslaan op je server is niet gelukt. Probeer het nog eens.</string>
     <string name="book.edit.server.not_allowed">Je account op de server mag geen boeken wijzigen.</string>
     <string name="book.edit.title.label">Titel</string>
+    <string name="book.hide">Verbergen uit bibliotheek</string>
     <string name="book.remove_from_library">Uit bibliotheek verwijderen</string>
     <string name="book.remove_from_library.summary">Het bestand blijft op je apparaat</string>
+    <string name="book.select">Selecteren</string>
+    <string name="book.show">Tonen in bibliotheek</string>
     <string name="book.source.device">Op dit apparaat</string>
     <string name="book.source.server_downloaded">%s · gedownload</string>
     <string name="bookmark.action.add_note">Notitie toevoegen</string>
@@ -154,8 +158,13 @@
     <string name="folder.add.action.file">Liever één los bestand toevoegen</string>
     <string name="folder.add.action.folder">Kies een map</string>
     <string name="folder.add.action.opds">Downloaden uit een catalogus</string>
+    <string name="folder.add.help.answer.no_files">Nog geen luisterboeken</string>
+    <string name="folder.add.help.answer.not_found">Ik vind ze niet</string>
+    <string name="folder.add.help.answer.other_app">In een andere app</string>
     <string name="folder.add.help.computer">Staan je boeken nog op de computer? Kopieer ze eerst naar je telefoon, bijvoorbeeld naar de map Audiobooks of Documents.</string>
     <string name="folder.add.help.download">Android staat niet toe dat apps de map Download zelf openen. Kies een map binnenin.</string>
+    <string name="folder.add.help.no_files">Pageturner speelt luisterboekbestanden op je telefoon af. Bij LibriVox kun je duizenden gratis luisterboeken downloaden.</string>
+    <string name="folder.add.help.other_app">Boeken uit apps als Audible of Spotify kun je alleen in die apps afspelen. Pageturner speelt luisterboekbestanden af, zoals MP3 of M4B.</string>
     <string name="folder.add.help.title">Je boeken niet gevonden?</string>
     <string name="folder.add.no_picker.message">Pageturner opent je boeken via de bestandskiezer van Android. Zonder bestandskiezer kan Pageturner je mappen en bestanden niet openen.</string>
     <string name="folder.add.no_picker.title">Dit apparaat heeft geen bestandskiezer</string>
@@ -231,8 +240,14 @@
     <string name="history.source.unplugged">Audio losgekoppeld</string>
     <string name="history.source.watch">Horloge</string>
     <string name="history.source.widget">Widget</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d reeks</item>
+        <item quantity="other">%d reeksen</item>
+    </plurals>
     <string name="library.book.downloading">Wordt gedownload</string>
     <string name="library.book.ebook">E-book</string>
+    <string name="library.book.hidden">Verborgen</string>
+    <string name="library.book.hidden.message">%1$s is verborgen</string>
     <string name="library.book.offline">Niet offline beschikbaar</string>
     <string name="library.category.completed.title">Voltooid</string>
     <string name="library.category.current.title">Huidig</string>
@@ -243,9 +258,16 @@
     <string name="library.empty.title">Geen boeken gevonden</string>
     <string name="library.empty.message">Pageturner kan geen boeken vinden in je mappen. Controleer of de bestanden er nog staan, of voeg een map toe.</string>
     <string name="library.empty.action">Mappen tonen</string>
-    <string name="library.folders.title">Boekenmappen</string>
-    <string name="library.folders.moved.dialog.title">Boekenmappen verplaatst</string>
+    <string name="library.filter">Filteren</string>
+    <string name="library.filter.group_by">Groeperen op</string>
+    <string name="library.filter.group_by.author">Auteur</string>
+    <string name="library.filter.group_by.series">Reeks</string>
+    <string name="library.filter.hidden_books">Verborgen boeken</string>
+    <string name="library.filter.not_downloaded">Niet gedownload</string>
+    <string name="library.filter.show">Tonen</string>
     <string name="library.folders.moved.dialog.message">Je kunt boekenmappen nu beheren in Instellingen.</string>
+    <string name="library.folders.moved.dialog.title">Boekenmappen verplaatst</string>
+    <string name="library.folders.title">Boekenmappen</string>
     <string name="library.folders.no_access">Geen toegang</string>
     <string name="library.folders.no_access.action">Toegang toestaan</string>
     <string name="library.folders.no_access.badge">Geef Pageturner weer toegang tot je mappen</string>
@@ -257,6 +279,11 @@
         <item quantity="one">%d boek begonnen</item>
         <item quantity="other">%d boeken begonnen</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d verborgen boek</item>
+        <item quantity="other">%d verborgen boeken</item>
+    </plurals>
+    <string name="library.no_author">Geen auteur</string>
     <string name="library.search.browse.title">Bladeren</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d boek</item>
@@ -288,6 +315,30 @@
     <string name="library.search.recent.clear_all">Alles wissen</string>
     <string name="library.search.recent.remove">%s verwijderen</string>
     <string name="library.search.recent.title">Recent</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">Auteur ingesteld voor %d boek</item>
+        <item quantity="other">Auteur ingesteld voor %d boeken</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d geselecteerd</item>
+        <item quantity="other">%d geselecteerd</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d boek is verborgen</item>
+        <item quantity="other">%d boeken zijn verborgen</item>
+    </plurals>
+    <string name="library.selection.hide">Verbergen</string>
+    <string name="library.selection.select_all">Alles selecteren</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">Reeks ingesteld voor %d boek</item>
+        <item quantity="other">Reeks ingesteld voor %d boeken</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">Opslaan van %d boek op je server is niet gelukt</item>
+        <item quantity="other">Opslaan van %d boeken op je server is niet gelukt</item>
+    </plurals>
+    <string name="library.selection.show">Tonen</string>
+    <string name="library.series.hidden.message">%1$s is verborgen</string>
     <string name="library.storage_permission_bug.action">Toegang geven</string>
     <string name="library.storage_permission_bug.message">Op sommige apparaten mist een systeemapp toegang tot de externe opslag. Pageturner heeft die toegang nodig om je luisterboeken te kunnen lezen.</string>
     <string name="library.storage_permission_bug.title">Toegang vereist</string>
@@ -575,6 +626,16 @@
     <string name="reader.word_spacing">Woordafstand</string>
     <string name="series.continue">Verder luisteren</string>
     <string name="series.continue_book">Verder met boek %s</string>
+    <string name="series.mark_completed">Markeren als voltooid</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">Je raakt je plek kwijt in %d boek.</item>
+        <item quantity="other">Je raakt je plek kwijt in %d boeken.</item>
+    </plurals>
+    <string name="series.mark_not_started">Markeren als nog niet begonnen</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">Je raakt je voortgang kwijt in %d boek.</item>
+        <item quantity="other">Je raakt je voortgang kwijt in %d boeken.</item>
+    </plurals>
     <string name="series.start">Beginnen</string>
     <string name="series.start_book">Beginnen aan boek %s</string>
     <string name="settings.about.app_version.title">Appversie</string>

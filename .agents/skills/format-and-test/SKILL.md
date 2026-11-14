@@ -7,8 +7,11 @@ description: Formatting Kotlin and writing or running tests in Voice. Use when a
 
 ## Formatting
 
-- Don't hand-format. Run `./gradlew formatKotlin`, then `./gradlew lintKotlin` and fix what it can't auto-fix.
-- Rules come from ktlint with the Compose rule set, configured in `.editorconfig`.
+- Don't hand-format or run Spotless yourself. The pre-commit hook in `.githooks` checks the formatting. When the check
+  fails, it formats the code and stops the commit: stage the changes and commit again.
+- Formatting is ktfmt's Google style, run through Spotless. The style is set in the `voice.ktfmt` convention plugin and
+  `plugins/build.gradle.kts`, and the ktfmt version is in `gradle/libs.versions.toml`.
+- Compose rules come from Slack's compose-lints and run with Android Lint: `./gradlew :app:lintFreeDebug`.
 
 ## Running tests
 
@@ -20,7 +23,7 @@ Start narrow, then broaden:
 - All unit tests: `./gradlew voiceUnitTest`. Run this when touching shared behavior, cross-module contracts, or broad
   refactors.
 
-CI runs `./gradlew voiceUnitTest lintKotlin :app:assembleFreeDebug`. If you can't run something, say why and give the
+CI runs `./gradlew voiceUnitTest spotlessCheck :app:assembleFreeDebug`. If you can't run something, say why and give the
 command.
 
 ## Writing tests
@@ -29,8 +32,8 @@ command.
 - Use `kotlin.test` with backtick names that describe behavior. Power-assert is enabled for `assert`, `assertEquals`,
   `assertTrue`, and `assertNull`, so skip message strings.
 - Test dependencies come from the convention plugin: every module's unit tests already have kotlin.test, JUnit, mockk,
-  Turbine, coroutines-test, Robolectric, and AndroidX Test, and Compose modules also have Molecule. Don't add these to a
-  module's build file. Only add what a single module needs, such as `room-testing`.
+  Turbine, coroutines-test, Robolectric, and AndroidX Test, and Compose modules also have Molecule and Compose UI
+  tests. Don't add these to a module's build file. Only add what a single module needs, such as `room-testing`.
 - Mock collaborators with mockk:
   - `mockk<X>(relaxUnitFun = true)`, with `every`/`coEvery` for each value the code under test reads.
   - `relaxed = true` only when the returned values don't matter; plain `mockk<X>()` for constructor fillers that are
@@ -40,7 +43,7 @@ command.
     `coVerify { val _ = billing.consume(token) }`.
 - Use the real class when it's cheap: pure classes, NoOp implementations, `MemoryFeatureFlag(value)` from
   `:core:featureflag`, and `MemoryDataStore(initial)`. `MemoryDataStore` is copied once per module into test sources
-  (e.g. `core/playback/src/test/kotlin/voice/core/playback/MemoryDataStore.kt`); don't create a shared module.
+  (e.g. `core/playback/impl/src/test/kotlin/voice/core/playback/MemoryDataStore.kt`); don't create a shared module.
 - Write a fake only when the test needs real state, such as writes that later reads observe or flows that must re-emit
   after a change. Reuse one the module's tests already have; otherwise keep one fake per type per module, in its own
   file. A fake that only returns canned values, records calls, or copies production logic should be a mock.

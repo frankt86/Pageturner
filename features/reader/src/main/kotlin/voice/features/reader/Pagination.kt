@@ -19,7 +19,8 @@ internal data class Page(
 
 internal fun List<Page>.indexOfPosition(position: EbookPosition): Int {
   val index = indexOfLast { page ->
-    page.section < position.section || (page.section == position.section && page.start <= position.offset)
+    page.section < position.section ||
+      (page.section == position.section && page.start <= position.offset)
   }
   return index.coerceAtLeast(0)
 }
@@ -47,18 +48,25 @@ internal fun paginateChapter(
   height: Int,
 ): List<Page> {
   if (text.isBlank()) return emptyList()
-  val layout = textMeasurer.measure(
-    text = AnnotatedString(text, paragraphStyles = paragraphStyles(text, paragraphGap, continued = false)),
-    style = style,
-    constraints = Constraints(maxWidth = width),
-    skipCache = true,
-  )
+  val layout =
+    textMeasurer.measure(
+      text =
+        AnnotatedString(
+          text,
+          paragraphStyles = paragraphStyles(text, paragraphGap, continued = false),
+        ),
+      style = style,
+      constraints = Constraints(maxWidth = width),
+      skipCache = true,
+    )
   return buildList {
     var firstLine = 0
     while (firstLine < layout.lineCount) {
       val top = layout.getLineTop(firstLine)
       var lastLine = firstLine
-      while (lastLine + 1 < layout.lineCount && layout.getLineBottom(lastLine + 1) - top <= height) {
+      while (
+        lastLine + 1 < layout.lineCount && layout.getLineBottom(lastLine + 1) - top <= height
+      ) {
         lastLine++
       }
       add(Page(section, layout.getLineStart(firstLine), layout.getLineEnd(lastLine)))
@@ -68,9 +76,9 @@ internal fun paginateChapter(
 }
 
 /**
- * The pages of all [chapters] while only the chapter [section] is measured, as [measured]. The other chapters get as
- * many characters on a page as it has, so the book shows and the page numbers are about right until the whole book is
- * measured.
+ * The pages of all [chapters] while only the chapter [section] is measured, as [measured]. The
+ * other chapters get as many characters on a page as it has, so the book shows and the page numbers
+ * are about right until the whole book is measured.
  */
 internal fun estimatedPages(
   chapters: List<String>,
@@ -78,14 +86,18 @@ internal fun estimatedPages(
   measured: List<Page>,
 ): List<Page> {
   val measuredLength = measured.sumOf { it.end - it.start }
-  val perPage = if (measured.isEmpty()) ESTIMATED_PAGE_LENGTH else (measuredLength / measured.size).coerceAtLeast(1)
+  val perPage =
+    if (measured.isEmpty()) ESTIMATED_PAGE_LENGTH
+    else (measuredLength / measured.size).coerceAtLeast(1)
   return chapters.flatMapIndexed { index, text ->
     when {
       index == section -> measured
       text.isBlank() -> emptyList()
       else -> {
         val count = (text.length + perPage - 1) / perPage
-        List(count) { page -> Page(index, page * text.length / count, (page + 1) * text.length / count) }
+        List(count) { page ->
+          Page(index, page * text.length / count, (page + 1) * text.length / count)
+        }
       }
     }
   }
@@ -95,9 +107,9 @@ internal fun estimatedPages(
 private const val ESTIMATED_PAGE_LENGTH = 1_500
 
 /**
- * Lays out the paragraphs of [text] apart from each other, so the empty lines between them take [gap] each, and a
- * paragraph [continued] from the page before doesn't indent its first line. With an unspecified [gap], the text stays
- * one paragraph with blank lines in it, as it's always been.
+ * Lays out the paragraphs of [text] apart from each other, so the empty lines between them take
+ * [gap] each, and a paragraph [continued] from the page before doesn't indent its first line. With
+ * an unspecified [gap], the text stays one paragraph with blank lines in it, as it's always been.
  */
 internal fun paragraphStyles(
   text: String,
@@ -121,8 +133,9 @@ internal fun paragraphStyles(
 }
 
 /**
- * The word after a page that ends in the middle of a paragraph. Laid out after the page but not shown, it keeps the
- * page's last line as it was measured: justified, and with its hyphen when a word is split.
+ * The word after a page that ends in the middle of a paragraph. Laid out after the page but not
+ * shown, it keeps the page's last line as it was measured: justified, and with its hyphen when a
+ * word is split.
  */
 internal fun pageTail(
   chapter: String,
@@ -134,11 +147,15 @@ internal fun pageTail(
   return chapter.substring(end, tailEnd)
 }
 
-/** The next paragraph to read aloud, cut at a sentence when it's longer than the speech engine takes. */
+/**
+ * The next paragraph to read aloud, cut at a sentence when it's longer than the speech engine
+ * takes.
+ */
 internal fun nextChunk(
   text: String,
   from: Int,
-  // the natural voice only starts speaking once the whole chunk is ready, so a long one means a long silence
+  // the natural voice only starts speaking once the whole chunk is ready, so a long one means a
+  // long silence
   maxLength: Int = 200,
 ): IntRange? {
   var start = from.coerceAtLeast(0)
@@ -149,11 +166,12 @@ internal fun nextChunk(
     val limit = start + maxLength
     val sentenceEnd = listOf(". ", "! ", "? ").maxOf { text.lastIndexOf(it, limit) }
     val wordEnd = text.lastIndexOf(' ', limit)
-    end = when {
-      sentenceEnd > start -> sentenceEnd + 1
-      wordEnd > start -> wordEnd
-      else -> limit
-    }
+    end =
+      when {
+        sentenceEnd > start -> sentenceEnd + 1
+        wordEnd > start -> wordEnd
+        else -> limit
+      }
   }
   return start until end
 }

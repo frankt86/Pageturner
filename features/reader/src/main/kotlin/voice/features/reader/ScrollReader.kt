@@ -56,6 +56,10 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.round
+import kotlin.math.roundToInt
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -65,29 +69,26 @@ import voice.core.data.EbookPosition
 import voice.core.data.Highlight
 import voice.core.data.ProgressVisibility
 import voice.core.data.ScrollBehavior
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.round
-import kotlin.math.roundToInt
 import voice.core.strings.R as StringsR
 
 /** The paragraphs of the chapters, each one a [Page], for the scrolled book. */
-internal fun paragraphs(chapters: List<String>): List<Page> = chapters.flatMapIndexed { section, text ->
-  buildList {
-    var start = 0
-    while (true) {
-      while (start < text.length && text[start] == '\n') start++
-      if (start >= text.length) break
-      val end = text.indexOf('\n', start).takeIf { it != -1 } ?: text.length
-      if ((start until end).any { !text[it].isWhitespace() }) add(Page(section, start, end))
-      start = end
+internal fun paragraphs(chapters: List<String>): List<Page> =
+  chapters.flatMapIndexed { section, text ->
+    buildList {
+      var start = 0
+      while (true) {
+        while (start < text.length && text[start] == '\n') start++
+        if (start >= text.length) break
+        val end = text.indexOf('\n', start).takeIf { it != -1 } ?: text.length
+        if ((start until end).any { !text[it].isWhitespace() }) add(Page(section, start, end))
+        start = end
+      }
     }
   }
-}
 
 /**
- * How much further a swipe that already moved the text by [dragged] goes, so it ends on a whole [step]: the next one
- * with a fling forward, the one before with a fling back, else the closer one.
+ * How much further a swipe that already moved the text by [dragged] goes, so it ends on a whole
+ * [step]: the next one with a fling forward, the one before with a fling back, else the closer one.
  */
 internal fun snapDistance(
   dragged: Float,
@@ -97,11 +98,12 @@ internal fun snapDistance(
 ): Float {
   if (step <= 0F) return 0F
   val steps = dragged / step
-  val target = when {
-    velocity > minVelocity -> ceil(steps)
-    velocity < -minVelocity -> floor(steps)
-    else -> round(steps)
-  }
+  val target =
+    when {
+      velocity > minVelocity -> ceil(steps)
+      velocity < -minVelocity -> floor(steps)
+      else -> round(steps)
+    }
   return target * step - dragged
 }
 
@@ -115,8 +117,8 @@ private fun screenStep(
 }
 
 /**
- * The book as one long column, read from top to bottom: the paragraphs of an EPUB or the pages of a PDF. The place is
- * the first line on screen, or for a PDF the page in the middle of the screen.
+ * The book as one long column, read from top to bottom: the paragraphs of an EPUB or the pages of a
+ * PDF. The place is the first line on screen, or for a PDF the page in the middle of the screen.
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -140,17 +142,21 @@ internal fun ScrollBook(
   modifier: Modifier = Modifier,
 ) {
   val content = state.content
-  val items = when (content) {
-    is ReaderContent.Epub -> remember(content) { paragraphs(content.chapters) }
-    is ReaderContent.Pdf -> pages
-  }
+  val items =
+    when (content) {
+      is ReaderContent.Epub -> remember(content) { paragraphs(content.chapters) }
+      is ReaderContent.Pdf -> pages
+    }
   // the page that shows first tells the shape of the others until they're opened
-  val firstAspectRatio = (content as? ReaderContent.Pdf)?.let { pdf ->
-    produceState<Float?>(null, pdf) {
-      val pageCount = pdf.pdf.pageCount
-      if (pageCount > 0) value = pdf.pdf.aspectRatio(state.position.section.coerceIn(0, pageCount - 1))
-    }.value
-  }
+  val firstAspectRatio =
+    (content as? ReaderContent.Pdf)?.let { pdf ->
+      produceState<Float?>(null, pdf) {
+          val pageCount = pdf.pdf.pageCount
+          if (pageCount > 0)
+            value = pdf.pdf.aspectRatio(state.position.section.coerceIn(0, pageCount - 1))
+        }
+        .value
+    }
   if (items.isEmpty()) return
   if (content is ReaderContent.Pdf && firstAspectRatio == null) {
     Box(modifier, contentAlignment = Alignment.Center) {
@@ -169,10 +175,14 @@ internal fun ScrollBook(
   val latestOnAutoScrollEnd by rememberUpdatedState(onAutoScrollEnd)
   val latestOnUserScroll by rememberUpdatedState(onUserScroll)
   val latestBehavior by rememberUpdatedState(state.settings.scrollBehavior)
-  val listState = rememberLazyListState(initialFirstVisibleItemIndex = items.indexOfPosition(state.position))
+  val listState =
+    rememberLazyListState(initialFirstVisibleItemIndex = items.indexOfPosition(state.position))
   // the lines of each paragraph, to tell the first line on screen
   val layouts = remember(items) { mutableMapOf<Int, TextLayoutResult>() }
-  val line = with(density) { if (content is ReaderContent.Epub) textStyle.lineHeight.toPx() else 48.dp.toPx() }
+  val line =
+    with(density) {
+      if (content is ReaderContent.Epub) textStyle.lineHeight.toPx() else 48.dp.toPx()
+    }
   val latestLine by rememberUpdatedState(line)
   val step: (Int) -> Unit = { direction ->
     scope.launch {
@@ -211,11 +221,17 @@ internal fun ScrollBook(
     listState.scrollToItem(index)
     val item = items[index]
     if (content !is ReaderContent.Epub || target.offset <= item.start) return@LaunchedEffect
-    val layout = layouts[index] ?: run {
-      withFrameNanos { }
+    val layout =
       layouts[index]
-    } ?: return@LaunchedEffect
-    val lineIndex = layout.getLineForOffset((target.offset - item.start).coerceAtMost(layout.layoutInput.text.length))
+        ?: run {
+          withFrameNanos {}
+          layouts[index]
+        }
+        ?: return@LaunchedEffect
+    val lineIndex =
+      layout.getLineForOffset(
+        (target.offset - item.start).coerceAtMost(layout.layoutInput.text.length),
+      )
     listState.scrollToItem(index, layout.getLineTop(lineIndex).roundToInt())
   }
 
@@ -249,17 +265,18 @@ internal fun ScrollBook(
 
   val drag = remember { DragDistance() }
   val minVelocity = with(density) { 400.dp.toPx() }
-  val snapFling = remember(listState, drag, minVelocity) {
-    SnapFling(drag, minVelocity) { screenStep(listState.layoutInfo, latestLine) }
-  }
+  val snapFling =
+    remember(listState, drag, minVelocity) {
+      SnapFling(drag, minVelocity) { screenStep(listState.layoutInfo, latestLine) }
+    }
   Column(modifier) {
     if (content is ReaderContent.Epub) {
-      pageHeader(state, state.position.section)?.let { PageHeader(it, Modifier.padding(horizontal = margins.side)) }
+      pageHeader(state, state.position.section)?.let {
+        PageHeader(it, Modifier.padding(horizontal = margins.side))
+      }
     }
     Box(
-      Modifier
-        .weight(1F)
-        .fillMaxWidth(),
+      Modifier.weight(1F).fillMaxWidth(),
     ) {
       if (content is ReaderContent.Epub) {
         PaperTexture(
@@ -271,82 +288,102 @@ internal fun ScrollBook(
       LazyColumn(
         state = listState,
         contentPadding = PaddingValues(top = margins.top, bottom = margins.bottom),
-        flingBehavior = if (state.settings.scrollBehavior == ScrollBehavior.Snap) snapFling else ScrollableDefaults.flingBehavior(),
-        modifier = Modifier
-          .fillMaxSize()
-          .ignoreEdgeTouches(state.settings.edgeMargin.dp)
-          .nestedScroll(drag)
-          .pointerInput(Unit) {
-            awaitPointerEventScope {
-              var down: Offset? = null
-              var moved = false
-              while (true) {
-                val finger = awaitPointerEvent(PointerEventPass.Initial).changes.firstOrNull { it.pressed }
-                fingerDown = finger != null
-                if (finger == null) {
-                  down = null
-                  continue
-                }
-                val start = down ?: finger.position.also {
-                  down = it
-                  moved = false
-                }
-                if (!moved && (finger.position - start).getDistance() > viewConfiguration.touchSlop) {
-                  moved = true
-                  latestOnUserScroll()
+        flingBehavior =
+          if (state.settings.scrollBehavior == ScrollBehavior.Snap) snapFling
+          else ScrollableDefaults.flingBehavior(),
+        modifier =
+          Modifier.fillMaxSize()
+            .ignoreEdgeTouches(state.settings.edgeMargin.dp)
+            .nestedScroll(drag)
+            .pointerInput(Unit) {
+              awaitPointerEventScope {
+                var down: Offset? = null
+                var moved = false
+                while (true) {
+                  val finger =
+                    awaitPointerEvent(PointerEventPass.Initial).changes.firstOrNull { it.pressed }
+                  fingerDown = finger != null
+                  if (finger == null) {
+                    down = null
+                    continue
+                  }
+                  val start =
+                    down
+                      ?: finger.position.also {
+                        down = it
+                        moved = false
+                      }
+                  if (
+                    !moved && (finger.position - start).getDistance() > viewConfiguration.touchSlop
+                  ) {
+                    moved = true
+                    latestOnUserScroll()
+                  }
                 }
               }
             }
-          }
-          .selectableText(
-            selection = selection,
-            shownPages = {
-              val visible = listState.layoutInfo.visibleItemsInfo
-              if (visible.isEmpty()) IntRange.EMPTY else visible.first().index..visible.last().index
-            },
-            state = { latestState },
-            onHighlightClick = { latestOnHighlightClick(it) },
-            onSelect = { haptics.performHapticFeedback(HapticFeedbackType.LongPress) },
-            onOtherTap = { offset, size ->
-              latestOnTap(offset.x / size.width)
-              true
-            },
-          ),
+            .selectableText(
+              selection = selection,
+              shownPages = {
+                val visible = listState.layoutInfo.visibleItemsInfo
+                if (visible.isEmpty()) IntRange.EMPTY
+                else visible.first().index..visible.last().index
+              },
+              state = { latestState },
+              onHighlightClick = { latestOnHighlightClick(it) },
+              onSelect = { haptics.performHapticFeedback(HapticFeedbackType.LongPress) },
+              onOtherTap = { offset, size ->
+                latestOnTap(offset.x / size.width)
+                true
+              },
+            ),
       ) {
         when (content) {
-          is ReaderContent.Epub -> itemsIndexed(items) { index, item ->
-            ParagraphText(
-              content = content,
-              item = item,
-              index = index,
-              state = state,
-              textStyle = textStyle,
-              gap = with(density) { (textStyle.lineHeight * (state.settings.paragraphSpacing ?: 1F)).toDp() },
-              side = margins.side,
-              selection = selection,
-              onLayout = { layouts[index] = it },
-            )
-          }
-          is ReaderContent.Pdf -> itemsIndexed(items) { index, item ->
-            ScrolledPdfPage(
-              pdf = content.pdf,
-              index = item.section,
-              colorFilter = state.settings.imageFilter.colorFilter(paper = MaterialTheme.colorScheme.surface),
-              pageCount = items.size,
-            )
-          }
+          is ReaderContent.Epub ->
+            itemsIndexed(items) { index, item ->
+              ParagraphText(
+                content = content,
+                item = item,
+                index = index,
+                state = state,
+                textStyle = textStyle,
+                gap =
+                  with(density) {
+                    (textStyle.lineHeight * (state.settings.paragraphSpacing ?: 1F)).toDp()
+                  },
+                side = margins.side,
+                selection = selection,
+                onLayout = { layouts[index] = it },
+              )
+            }
+          is ReaderContent.Pdf ->
+            itemsIndexed(items) { index, item ->
+              ScrolledPdfPage(
+                pdf = content.pdf,
+                index = item.section,
+                colorFilter =
+                  state.settings.imageFilter.colorFilter(paper = MaterialTheme.colorScheme.surface),
+                pageCount = items.size,
+              )
+            }
         }
       }
     }
-    if (content is ReaderContent.Epub && state.settings.progressVisibility != ProgressVisibility.Hidden && pages.isNotEmpty()) {
+    if (
+      content is ReaderContent.Epub &&
+        state.settings.progressVisibility != ProgressVisibility.Hidden &&
+        pages.isNotEmpty()
+    ) {
       val index = pages.indexOfPosition(state.position)
       PageFooter(
         chapter = content.chapterTitle(state.position.section),
-        footer = footerText(state.settings.footer, content.readingProgress(pages, index, pagesPerSpread = 1, pace = state.pace)),
+        footer =
+          footerText(
+            state.settings.footer,
+            content.readingProgress(pages, index, pagesPerSpread = 1, pace = state.pace),
+          ),
         settings = state.settings,
-        modifier = Modifier
-          .height(PageNumberHeight)
-          .padding(horizontal = margins.side),
+        modifier = Modifier.height(PageNumberHeight).padding(horizontal = margins.side),
       )
     }
   }
@@ -364,17 +401,19 @@ private fun ParagraphText(
   selection: PageSelection,
   onLayout: (TextLayoutResult) -> Unit,
 ) {
-  val marks = pageMarks(
-    section = item.section,
-    readingRange = state.readingRange.takeIf { item.section == state.position.section },
-    highlights = state.highlights,
-    highlightOpacity = state.settings.highlightOpacity,
-    searchMatch = state.searchMatch,
-    selection = selection.range,
-  )
-  val text = remember(content, item, marks) {
-    markedText(content.chapters[item.section].substring(item.start, item.end), item.start, marks)
-  }
+  val marks =
+    pageMarks(
+      section = item.section,
+      readingRange = state.readingRange.takeIf { item.section == state.position.section },
+      highlights = state.highlights,
+      highlightOpacity = state.settings.highlightOpacity,
+      searchMatch = state.searchMatch,
+      selection = selection.range,
+    )
+  val text =
+    remember(content, item, marks) {
+      markedText(content.chapters[item.section].substring(item.start, item.end), item.start, marks)
+    }
   val pageText = remember { PageText() }
   SideEffect {
     pageText.section = item.section
@@ -388,10 +427,10 @@ private fun ParagraphText(
       pageText.layout = it
       onLayout(it)
     },
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(start = side, end = side, bottom = gap)
-      .onGloballyPositioned { pageText.coordinates = it },
+    modifier =
+      Modifier.fillMaxWidth().padding(start = side, end = side, bottom = gap).onGloballyPositioned {
+        pageText.coordinates = it
+      },
   )
 }
 
@@ -402,18 +441,19 @@ private fun ScrolledPdfPage(
   colorFilter: ColorFilter?,
   pageCount: Int,
 ) {
-  val aspectRatio by produceState(pdf.knownAspectRatio(index), pdf, index) { value = pdf.aspectRatio(index) }
+  val aspectRatio by
+    produceState(pdf.knownAspectRatio(index), pdf, index) { value = pdf.aspectRatio(index) }
   ZoomablePdfPage(
     pdf = pdf,
     index = index,
     contentDescription = stringResource(StringsR.string.reader_page, index + 1, pageCount),
     colorFilter = colorFilter,
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(horizontal = 8.dp, vertical = 4.dp)
-      .aspectRatio(aspectRatio.coerceIn(0.1F, 10F))
-      .clipToBounds()
-      .background(MaterialTheme.colorScheme.surface),
+    modifier =
+      Modifier.fillMaxWidth()
+        .padding(horizontal = 8.dp, vertical = 4.dp)
+        .aspectRatio(aspectRatio.coerceIn(0.1F, 10F))
+        .clipToBounds()
+        .background(MaterialTheme.colorScheme.surface),
   )
 }
 
@@ -426,14 +466,19 @@ private fun shownPosition(
   if (pdf) {
     val info = listState.layoutInfo
     val middle = (info.viewportStartOffset + info.viewportEndOffset) / 2
-    val index = info.visibleItemsInfo.lastOrNull { it.offset <= middle }?.index ?: listState.firstVisibleItemIndex
+    val index =
+      info.visibleItemsInfo.lastOrNull { it.offset <= middle }?.index
+        ?: listState.firstVisibleItemIndex
     return EbookPosition(items[index.coerceIn(items.indices)].section, 0)
   }
   val index = listState.firstVisibleItemIndex.coerceIn(items.indices)
   val item = items[index]
-  val offset = layouts[index]?.let { layout ->
-    layout.getLineStart(layout.getLineForVerticalPosition(listState.firstVisibleItemScrollOffset.toFloat()))
-  } ?: 0
+  val offset =
+    layouts[index]?.let { layout ->
+      layout.getLineStart(
+        layout.getLineForVerticalPosition(listState.firstVisibleItemScrollOffset.toFloat()),
+      )
+    } ?: 0
   return EbookPosition(item.section, item.start + offset)
 }
 
@@ -446,14 +491,17 @@ private fun shownPages(
 ): List<Page> {
   if (content !is ReaderContent.Epub) return listOf(Page(position.section))
   val last = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.let { items.getOrNull(it.index) }
-  val end = if (last != null && last.section == position.section) last.end else content.chapters[position.section].length
+  val end =
+    if (last != null && last.section == position.section) last.end
+    else content.chapters[position.section].length
   return listOf(Page(position.section, position.offset, end.coerceAtLeast(position.offset + 1)))
 }
 
 private fun LazyListState.isFullyVisible(index: Int): Boolean {
   val info = layoutInfo
   val item = info.visibleItemsInfo.firstOrNull { it.index == index } ?: return false
-  return item.offset >= info.viewportStartOffset && item.offset + item.size <= info.viewportEndOffset
+  return item.offset >= info.viewportStartOffset &&
+    item.offset + item.size <= info.viewportEndOffset
 }
 
 /** How far the finger moved the text since the last fling, forward being positive. */

@@ -47,9 +47,7 @@ internal fun SelectionToolbar(
         modifier = Modifier.semantics { contentDescription = name },
       ) {
         Box(
-          Modifier
-            .size(24.dp)
-            .background(color.ink(), CircleShape),
+          Modifier.size(24.dp).background(color.ink(), CircleShape),
         )
       }
     }
@@ -72,12 +70,12 @@ internal fun lookUp(
   context: Context,
   text: String,
 ) {
-  val processText = Intent(Intent.ACTION_PROCESS_TEXT)
-    .setType("text/plain")
-    .putExtra(Intent.EXTRA_PROCESS_TEXT, text)
-    .putExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, true)
-  val webSearch = Intent(Intent.ACTION_WEB_SEARCH)
-    .putExtra(SearchManager.QUERY, text)
+  val processText =
+    Intent(Intent.ACTION_PROCESS_TEXT)
+      .setType("text/plain")
+      .putExtra(Intent.EXTRA_PROCESS_TEXT, text)
+      .putExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, true)
+  val webSearch = Intent(Intent.ACTION_WEB_SEARCH).putExtra(SearchManager.QUERY, text)
   for (intent in listOf(processText, webSearch)) {
     try {
       context.startActivity(intent)

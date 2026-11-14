@@ -32,6 +32,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.core.graphics.createBitmap
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.FragmentContainerView
+import kotlin.coroutines.resume
+import kotlin.math.abs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -47,10 +49,11 @@ import org.readium.r2.navigator.preferences.ReadingProgression
 import org.readium.r2.shared.ExperimentalReadiumApi
 import org.readium.r2.shared.publication.Locator
 import voice.core.data.PageTransition
-import kotlin.coroutines.resume
-import kotlin.math.abs
 
-/** A page turn of the new book engine shown with the curl: pictures of the page before the turn and, going back, after it. */
+/**
+ * A page turn of the new book engine shown with the curl: pictures of the page before the turn and,
+ * going back, after it.
+ */
 internal class CurlTurn(
   val before: Bitmap,
   val after: Bitmap?,
@@ -60,8 +63,8 @@ internal class CurlTurn(
 )
 
 /**
- * Turns the pages of the new book engine. Readium can only slide them, so for the curl the page is captured as a
- * picture, Readium turns at once underneath, and the picture curls away above it.
+ * Turns the pages of the new book engine. Readium can only slide them, so for the curl the page is
+ * captured as a picture, Readium turns at once underneath, and the picture curls away above it.
  */
 @Stable
 internal class ReadiumTurns(private val scope: CoroutineScope) {
@@ -74,6 +77,7 @@ internal class ReadiumTurns(private val scope: CoroutineScope) {
   /** The page before the turn, shown while the next one gets ready underneath. */
   var cover by mutableStateOf<Bitmap?>(null)
     private set
+
   var curl by mutableStateOf<CurlTurn?>(null)
     private set
 
@@ -130,7 +134,9 @@ internal class ReadiumTurns(private val scope: CoroutineScope) {
     val navigator = navigator ?: return onCurlDone()
     scope.launch {
       val before = navigator.currentLocator.value
-      val _ = if (turn.forward) navigator.goBackward(animated = false) else navigator.goForward(animated = false)
+      val _ =
+        if (turn.forward) navigator.goBackward(animated = false)
+        else navigator.goForward(animated = false)
       awaitPage(navigator, before)
       onCurlDone()
     }
@@ -162,7 +168,9 @@ internal class ReadiumTurns(private val scope: CoroutineScope) {
       }
       cover = before
       val from = navigator.currentLocator.value
-      val moved = if (step > 0) navigator.goForward(animated = false) else navigator.goBackward(animated = false)
+      val moved =
+        if (step > 0) navigator.goForward(animated = false)
+        else navigator.goBackward(animated = false)
       if (!moved) {
         cover = null
         onCurlDone()
@@ -171,13 +179,14 @@ internal class ReadiumTurns(private val scope: CoroutineScope) {
       awaitPage(navigator, from)
       // going back, the page that comes back curls over the one from before
       val after = if (step < 0) view.drawToBitmap() else null
-      curl = CurlTurn(
-        before = before,
-        after = after,
-        forward = step > 0,
-        taps = if (drags == null) flowOf(step) else emptyFlow(),
-        drags = drags?.receiveAsFlow() ?: emptyFlow(),
-      )
+      curl =
+        CurlTurn(
+          before = before,
+          after = after,
+          forward = step > 0,
+          taps = if (drags == null) flowOf(step) else emptyFlow(),
+          drags = drags?.receiveAsFlow() ?: emptyFlow(),
+        )
       cover = null
     }
   }
@@ -192,7 +201,7 @@ private suspend fun awaitPage(
 ) {
   val _ = withTimeoutOrNull(1_500) { navigator.currentLocator.first { it != before } }
   // the web view draws the new page in the next frames
-  repeat(2) { withFrameNanos { } }
+  repeat(2) { withFrameNanos {} }
 }
 
 private suspend fun capture(
@@ -222,7 +231,12 @@ internal fun TurnCover(
   modifier: Modifier = Modifier,
 ) {
   val image = remember(bitmap) { bitmap.asImageBitmap() }
-  Image(bitmap = image, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = modifier)
+  Image(
+    bitmap = image,
+    contentDescription = null,
+    contentScale = ContentScale.FillBounds,
+    modifier = modifier,
+  )
 }
 
 @Composable
@@ -247,28 +261,44 @@ internal fun CurlOverlay(
     modifier = modifier,
   ) { index ->
     // going forward, the next page is the book itself underneath
-    val image = when {
-      turn.forward -> before.takeIf { index == 0 }
-      index == 0 -> after
-      else -> before
-    }
+    val image =
+      when {
+        turn.forward -> before.takeIf { index == 0 }
+        index == 0 -> after
+        else -> before
+      }
     if (image != null) {
-      Image(bitmap = image, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
+      Image(
+        bitmap = image,
+        contentDescription = null,
+        contentScale = ContentScale.FillBounds,
+        modifier = Modifier.fillMaxSize(),
+      )
     }
   }
 }
 
 /**
- * Holds the book's pages. Takes the keys also while the web view has the focus, e.g. after selecting text, and,
- * with [interceptDrags], sideways drags before Readium slides the page, so they can curl it instead.
+ * Holds the book's pages. Takes the keys also while the web view has the focus, e.g. after
+ * selecting text, and, with [interceptDrags], sideways drags before Readium slides the page, so
+ * they can curl it instead.
  */
 @SuppressLint("ViewConstructor", "ClickableViewAccessibility")
 internal class NavigatorContainer(context: Context) : FrameLayout(context) {
 
-  /** Gets the key code, whether Ctrl and Shift are held and whether the key went down, returns whether it took the key. */
-  var onKey: (keyCode: Int, ctrl: Boolean, shift: Boolean, down: Boolean) -> Boolean = { _, _, _, _ -> false }
+  /**
+   * Gets the key code, whether Ctrl and Shift are held and whether the key went down, returns
+   * whether it took the key.
+   */
+  var onKey: (keyCode: Int, ctrl: Boolean, shift: Boolean, down: Boolean) -> Boolean =
+    { _, _, _, _ ->
+      false
+    }
 
-  /** Takes the mouse wheel and gets 1 for each step down and -1 for each step up, or null to let the web view scroll. */
+  /**
+   * Takes the mouse wheel and gets 1 for each step down and -1 for each step up, or null to let the
+   * web view scroll.
+   */
   var onWheel: ((Int) -> Unit)? = null
   var interceptDrags = false
   var onDrag: (CurlDrag) -> Unit = {}
@@ -309,23 +339,27 @@ internal class NavigatorContainer(context: Context) : FrameLayout(context) {
         fingerMoved = false
         touchStart = Offset(event.x, event.y)
       }
-      MotionEvent.ACTION_MOVE -> if (!fingerMoved && (Offset(event.x, event.y) - touchStart).getDistance() > touchSlop) {
-        fingerMoved = true
-        onFingerMove()
-      }
-      MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> fingerDown = false
+      MotionEvent.ACTION_MOVE ->
+        if (!fingerMoved && (Offset(event.x, event.y) - touchStart).getDistance() > touchSlop) {
+          fingerMoved = true
+          onFingerMove()
+        }
+      MotionEvent.ACTION_UP,
+      MotionEvent.ACTION_CANCEL -> fingerDown = false
     }
     return super.dispatchTouchEvent(event)
   }
 
   override fun dispatchKeyEvent(event: KeyEvent): Boolean {
     val down = event.action == KeyEvent.ACTION_DOWN
-    return onKey(event.keyCode, event.isCtrlPressed, event.isShiftPressed, down) || super.dispatchKeyEvent(event)
+    return onKey(event.keyCode, event.isCtrlPressed, event.isShiftPressed, down) ||
+      super.dispatchKeyEvent(event)
   }
 
   override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
     val onWheel = onWheel
-    if (onWheel == null || event.actionMasked != MotionEvent.ACTION_SCROLL) return super.dispatchGenericMotionEvent(event)
+    if (onWheel == null || event.actionMasked != MotionEvent.ACTION_SCROLL)
+      return super.dispatchGenericMotionEvent(event)
     val delta = event.getAxisValue(MotionEvent.AXIS_VSCROLL)
     if (delta != 0F && event.eventTime - lastWheelTurn >= WHEEL_TURN_MILLIS) {
       lastWheelTurn = event.eventTime
@@ -346,7 +380,8 @@ internal class NavigatorContainer(context: Context) : FrameLayout(context) {
         val dx = event.x - down.x
         val dy = event.y - down.y
         // a drag after a long press selects text
-        val beforeLongPress = event.eventTime - event.downTime < ViewConfiguration.getLongPressTimeout()
+        val beforeLongPress =
+          event.eventTime - event.downTime < ViewConfiguration.getLongPressTimeout()
         if (beforeLongPress && abs(dx) > touchSlop && abs(dx) > abs(dy) * 1.5F) {
           dragging = true
           onDrag(CurlDrag.Start(down, forward = dx < 0))

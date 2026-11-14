@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -60,6 +61,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 import voice.core.data.PageTransition
 import voice.core.data.ProgressBarStyle
 import voice.core.data.ProgressVisibility
@@ -73,11 +75,10 @@ import voice.core.data.ReaderTextAlign
 import voice.core.data.ReaderTheme
 import voice.core.data.ReadingMode
 import voice.core.data.ScrollBehavior
+import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
 import voice.core.ui.VoiceTheme
 import voice.core.ui.bookText
-import voice.core.ui.icons.VoiceIcons
-import kotlin.math.roundToInt
-import voice.core.strings.R as StringsR
 
 @Composable
 internal fun DisplaySheet(
@@ -145,11 +146,19 @@ private fun DisplaySettings(
     )
     FlowRow {
       TextButton(onClick = onColorsClick) {
-        Icon(VoiceIcons.Contrast, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+        Icon(
+          painterResource(UiR.drawable.ic_contrast),
+          contentDescription = null,
+          modifier = Modifier.padding(end = 8.dp),
+        )
         Text(stringResource(StringsR.string.reader_colors))
       }
       TextButton(onClick = onControlsClick) {
-        Icon(VoiceIcons.TouchApp, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+        Icon(
+          painterResource(UiR.drawable.ic_touch_app),
+          contentDescription = null,
+          modifier = Modifier.padding(end = 8.dp),
+        )
         Text(stringResource(StringsR.string.reader_controls))
       }
     }
@@ -293,11 +302,12 @@ private fun TextSettings(
     OptionChoice(
       label = stringResource(StringsR.string.reader_text_align),
       // Readium can't center the text
-      options = if (newEngine) {
-        listOf(ReaderTextAlign.Left, ReaderTextAlign.Right, ReaderTextAlign.Justify)
-      } else {
-        ReaderTextAlign.entries
-      },
+      options =
+        if (newEngine) {
+          listOf(ReaderTextAlign.Left, ReaderTextAlign.Right, ReaderTextAlign.Justify)
+        } else {
+          ReaderTextAlign.entries
+        },
       // the old engine starts the lines on the left without a choice, the new one keeps the book's
       selected = settings.textAlign ?: ReaderTextAlign.Left.takeUnless { newEngine },
       enabled = styled,
@@ -329,7 +339,11 @@ private fun TextSettings(
       onClick = { onSettingsChange(settings.withDefaultTypography()) },
       enabled = settings != settings.withDefaultTypography(),
     ) {
-      Icon(VoiceIcons.Replay, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+      Icon(
+        painterResource(UiR.drawable.ic_replay),
+        contentDescription = null,
+        modifier = Modifier.padding(end = 8.dp),
+      )
       Text(stringResource(StringsR.string.reader_text_reset))
     }
   }
@@ -383,14 +397,21 @@ private fun ReadingModeSettings(
           onValueChange = { onSettingsChange(settings.copy(autoTurnSeconds = it.roundToInt())) },
         ) {
           Text(
-            text = pluralStringResource(StringsR.plurals.duration_seconds, settings.autoTurnSeconds, settings.autoTurnSeconds),
+            text =
+              pluralStringResource(
+                StringsR.plurals.duration_seconds,
+                settings.autoTurnSeconds,
+                settings.autoTurnSeconds,
+              ),
             style = MaterialTheme.typography.labelLarge,
           )
         }
       }
       ReadingMode.Scroll -> {
         // the web view of the new engine can't snap
-        val behaviors = if (newEngine) listOf(ScrollBehavior.Smooth, ScrollBehavior.Stepped) else ScrollBehavior.entries
+        val behaviors =
+          if (newEngine) listOf(ScrollBehavior.Smooth, ScrollBehavior.Stepped)
+          else ScrollBehavior.entries
         OptionChoice(
           label = stringResource(StringsR.string.reader_scrolling),
           options = behaviors,
@@ -436,7 +457,10 @@ private fun TextSize(
       onClick = { onTextSizeChange((textSize - 1).coerceIn(range)) },
       enabled = textSize > range.start,
     ) {
-      Icon(VoiceIcons.Remove, contentDescription = stringResource(StringsR.string.reader_text_size_smaller))
+      Icon(
+        painterResource(UiR.drawable.ic_remove),
+        contentDescription = stringResource(StringsR.string.reader_text_size_smaller),
+      )
     }
     Text(
       text = textSize.roundToInt().toString(),
@@ -448,7 +472,10 @@ private fun TextSize(
       onClick = { onTextSizeChange((textSize + 1).coerceIn(range)) },
       enabled = textSize < range.endInclusive,
     ) {
-      Icon(VoiceIcons.Add, contentDescription = stringResource(StringsR.string.reader_text_size_larger))
+      Icon(
+        painterResource(UiR.drawable.ic_add),
+        contentDescription = stringResource(StringsR.string.reader_text_size_larger),
+      )
     }
   }
 }
@@ -463,20 +490,18 @@ internal fun SwitchRow(
 ) {
   Row(
     verticalAlignment = Alignment.CenterVertically,
-    modifier = Modifier
-      .fillMaxWidth()
-      .toggleable(
-        value = checked,
-        enabled = enabled,
-        role = Role.Switch,
-        onValueChange = onCheckedChange,
-      )
-      .padding(vertical = 8.dp),
+    modifier =
+      Modifier.fillMaxWidth()
+        .toggleable(
+          value = checked,
+          enabled = enabled,
+          role = Role.Switch,
+          onValueChange = onCheckedChange,
+        )
+        .padding(vertical = 8.dp),
   ) {
     Column(
-      Modifier
-        .weight(1F)
-        .padding(end = 16.dp),
+      Modifier.weight(1F).padding(end = 16.dp),
     ) {
       Text(
         text = label,
@@ -502,20 +527,21 @@ internal fun ThemeChoice(
   onThemeSelect: (ReaderTheme) -> Unit,
 ) {
   Row(
-    modifier = Modifier
-      .fillMaxWidth()
-      .horizontalScroll(rememberScrollState())
-      .selectableGroup(),
+    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).selectableGroup(),
     horizontalArrangement = Arrangement.spacedBy(4.dp),
   ) {
     options.forEach { option ->
       val isSelected = option == selected
       Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-          .clip(MaterialTheme.shapes.medium)
-          .selectable(selected = isSelected, role = Role.RadioButton, onClick = { onThemeSelect(option) })
-          .padding(4.dp),
+        modifier =
+          Modifier.clip(MaterialTheme.shapes.medium)
+            .selectable(
+              selected = isSelected,
+              role = Role.RadioButton,
+              onClick = { onThemeSelect(option) },
+            )
+            .padding(4.dp),
       ) {
         val colors = option.pageColors(settings.customColors)
         // by time shows the day theme in one half and the night theme in the other
@@ -524,27 +550,33 @@ internal fun ThemeChoice(
         val paper = colors?.paper ?: MaterialTheme.colorScheme.surface
         Box(
           contentAlignment = Alignment.Center,
-          modifier = Modifier
-            .size(52.dp)
-            .clip(CircleShape)
-            .background(
-              if (option == ReaderTheme.Scheduled) {
-                Brush.linearGradient(
-                  0.5F to (day?.paper ?: MaterialTheme.colorScheme.surface),
-                  0.5F to (night?.paper ?: MaterialTheme.colorScheme.surface),
-                )
-              } else {
-                SolidColor(paper)
-              },
-            )
-            .border(
-              width = if (isSelected) 3.dp else 1.dp,
-              color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
-              shape = CircleShape,
-            ),
+          modifier =
+            Modifier.size(52.dp)
+              .clip(CircleShape)
+              .background(
+                if (option == ReaderTheme.Scheduled) {
+                  Brush.linearGradient(
+                    0.5F to (day?.paper ?: MaterialTheme.colorScheme.surface),
+                    0.5F to (night?.paper ?: MaterialTheme.colorScheme.surface),
+                  )
+                } else {
+                  SolidColor(paper)
+                },
+              )
+              .border(
+                width = if (isSelected) 3.dp else 1.dp,
+                color =
+                  if (isSelected) MaterialTheme.colorScheme.primary
+                  else MaterialTheme.colorScheme.outlineVariant,
+                shape = CircleShape,
+              ),
         ) {
           if (option == ReaderTheme.Scheduled) {
-            Icon(VoiceIcons.Schedule, contentDescription = null, tint = night?.ink ?: MaterialTheme.colorScheme.onSurface)
+            Icon(
+              painterResource(UiR.drawable.ic_schedule),
+              contentDescription = null,
+              tint = night?.ink ?: MaterialTheme.colorScheme.onSurface,
+            )
           } else {
             Text(
               text = "Aa",
@@ -556,7 +588,9 @@ internal fun ThemeChoice(
         Text(
           text = stringResource(option.label()),
           style = MaterialTheme.typography.labelMedium,
-          color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+          color =
+            if (isSelected) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.onSurfaceVariant,
           maxLines = 1,
           modifier = Modifier.padding(top = 4.dp),
         )
@@ -565,17 +599,18 @@ internal fun ThemeChoice(
   }
 }
 
-internal fun ReaderTheme.label(): Int = when (this) {
-  ReaderTheme.Auto -> StringsR.string.reader_theme_auto
-  ReaderTheme.Day -> StringsR.string.reader_theme_day
-  ReaderTheme.Sepia -> StringsR.string.reader_theme_sepia
-  ReaderTheme.Night -> StringsR.string.reader_theme_night
-  ReaderTheme.Black -> StringsR.string.reader_theme_black
-  ReaderTheme.SoftPaper -> StringsR.string.reader_theme_soft_paper
-  ReaderTheme.Slate -> StringsR.string.reader_theme_slate
-  ReaderTheme.Custom -> StringsR.string.reader_theme_custom
-  ReaderTheme.Scheduled -> StringsR.string.reader_theme_scheduled
-}
+internal fun ReaderTheme.label(): Int =
+  when (this) {
+    ReaderTheme.Auto -> StringsR.string.reader_theme_auto
+    ReaderTheme.Day -> StringsR.string.reader_theme_day
+    ReaderTheme.Sepia -> StringsR.string.reader_theme_sepia
+    ReaderTheme.Night -> StringsR.string.reader_theme_night
+    ReaderTheme.Black -> StringsR.string.reader_theme_black
+    ReaderTheme.SoftPaper -> StringsR.string.reader_theme_soft_paper
+    ReaderTheme.Slate -> StringsR.string.reader_theme_slate
+    ReaderTheme.Custom -> StringsR.string.reader_theme_custom
+    ReaderTheme.Scheduled -> StringsR.string.reader_theme_scheduled
+  }
 
 @Composable
 private fun FontChoice(
@@ -586,19 +621,17 @@ private fun FontChoice(
   onFontImport: (Uri) -> Unit,
   onSettingsChange: (ReaderSettings) -> Unit,
 ) {
-  val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-    if (uri != null) onFontImport(uri)
-  }
+  val picker =
+    rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+      if (uri != null) onFontImport(uri)
+    }
   Column {
     Text(
       text = stringResource(StringsR.string.reader_font),
       style = MaterialTheme.typography.titleSmall,
     )
     FlowRow(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 4.dp)
-        .selectableGroup(),
+      modifier = Modifier.fillMaxWidth().padding(top = 4.dp).selectableGroup(),
       horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       // the old engine's serif is Literata already
@@ -645,7 +678,7 @@ private fun FontChoice(
           )
         },
         enabled = enabled,
-        leadingIcon = { Icon(VoiceIcons.Add, contentDescription = null) },
+        leadingIcon = { Icon(painterResource(UiR.drawable.ic_add), contentDescription = null) },
         label = { Text(stringResource(StringsR.string.reader_font_add)) },
       )
     }
@@ -653,14 +686,15 @@ private fun FontChoice(
 }
 
 @Composable
-private fun fontName(font: ReaderFont): String = when (font) {
-  ReaderFont.Serif -> stringResource(StringsR.string.reader_font_serif)
-  ReaderFont.Sans -> stringResource(StringsR.string.reader_font_sans)
-  ReaderFont.Monospace -> stringResource(StringsR.string.reader_font_mono)
-  ReaderFont.Literata -> "Literata"
-  ReaderFont.AtkinsonHyperlegible -> "Atkinson Hyperlegible"
-  ReaderFont.OpenDyslexic -> "OpenDyslexic"
-}
+private fun fontName(font: ReaderFont): String =
+  when (font) {
+    ReaderFont.Serif -> stringResource(StringsR.string.reader_font_serif)
+    ReaderFont.Sans -> stringResource(StringsR.string.reader_font_sans)
+    ReaderFont.Monospace -> stringResource(StringsR.string.reader_font_mono)
+    ReaderFont.Literata -> "Literata"
+    ReaderFont.AtkinsonHyperlegible -> "Atkinson Hyperlegible"
+    ReaderFont.OpenDyslexic -> "OpenDyslexic"
+  }
 
 @Composable
 private fun LayoutSettings(
@@ -674,9 +708,7 @@ private fun LayoutSettings(
     Text(
       text = stringResource(StringsR.string.reader_layout),
       style = MaterialTheme.typography.titleMedium,
-      modifier = Modifier
-        .padding(top = 8.dp)
-        .semantics { heading() },
+      modifier = Modifier.padding(top = 8.dp).semantics { heading() },
     )
     if (!scroll) {
       OptionChoice(
@@ -765,9 +797,7 @@ private fun ProgressSettings(
     Text(
       text = stringResource(StringsR.string.reader_progress),
       style = MaterialTheme.typography.titleMedium,
-      modifier = Modifier
-        .padding(top = 8.dp)
-        .semantics { heading() },
+      modifier = Modifier.padding(top = 8.dp).semantics { heading() },
     )
     OptionChoice(
       label = stringResource(StringsR.string.reader_progress_visibility),
@@ -874,10 +904,7 @@ internal fun <T : Any> OptionChoice(
       style = MaterialTheme.typography.titleSmall,
     )
     Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 8.dp)
-        .selectableGroup(),
+      modifier = Modifier.fillMaxWidth().padding(top = 8.dp).selectableGroup(),
       horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
     ) {
       options.forEachIndexed { index, option ->
@@ -885,14 +912,13 @@ internal fun <T : Any> OptionChoice(
           checked = option == selected,
           onCheckedChange = { onSelect(option) },
           enabled = enabled,
-          shapes = when (index) {
-            0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-            options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-            else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-          },
-          modifier = Modifier
-            .weight(1F)
-            .semantics { role = Role.RadioButton },
+          shapes =
+            when (index) {
+              0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+              options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+              else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+            },
+          modifier = Modifier.weight(1F).semantics { role = Role.RadioButton },
         ) {
           Text(
             text = optionLabel(option),
@@ -920,10 +946,7 @@ internal fun <T : Any> ChipChoice(
       style = MaterialTheme.typography.titleSmall,
     )
     FlowRow(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 4.dp)
-        .selectableGroup(),
+      modifier = Modifier.fillMaxWidth().padding(top = 4.dp).selectableGroup(),
       horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       options.forEach { option ->
@@ -960,7 +983,8 @@ internal fun SettingSlider(
     }
     val sliderState = rememberSliderState(value = value, steps = steps, trackRange = range)
     val latestSnap by rememberUpdatedState(snap)
-    // follows changes from elsewhere, like the reset button, but not the rounding while it's dragged
+    // follows changes from elsewhere, like the reset button, but not the rounding while it's
+    // dragged
     LaunchedEffect(value) {
       if (latestSnap(sliderState.value) != value) sliderState.value = value
     }

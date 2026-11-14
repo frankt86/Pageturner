@@ -6,38 +6,49 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.DocumentsContract.Document
 import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.ensureActive
-import voice.core.logging.api.Logger
 import java.io.File
 import java.io.IOException
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import voice.core.logging.api.Logger
 
 private const val BINARY = "application/octet-stream"
 
 /**
- * Copies finished downloads into a folder of the library through the system's document provider. A copy is made
- * under a name starting with a dot, which the scan skips, and then renamed, so the library never sees half a book.
+ * Copies finished downloads into a folder of the library through the system's document provider. A
+ * copy is made under a name starting with a dot, which the scan skips, and then renamed, so the
+ * library never sees half a book.
  */
 @Inject
 internal class LibraryFolderWriter(private val context: Context) {
 
-  private val resolver: ContentResolver get() = context.contentResolver
+  private val resolver: ContentResolver
+    get() = context.contentResolver
 
   /** The folder in [root] that a book goes to, created when it's missing. */
   fun bookParent(
     root: DownloadFolder,
     path: List<String>,
   ): Uri {
-    var parent = DocumentsContract.buildDocumentUriUsingTree(root.uri, DocumentsContract.getTreeDocumentId(root.uri))
+    var parent =
+      DocumentsContract.buildDocumentUriUsingTree(
+        root.uri,
+        DocumentsContract.getTreeDocumentId(root.uri),
+      )
     path.forEach { name ->
-      parent = children(parent).firstOrNull { it.isDirectory && it.name.equals(name, ignoreCase = true) }?.uri
-        ?: create(parent, Document.MIME_TYPE_DIR, name)
+      parent =
+        children(parent)
+          .firstOrNull { it.isDirectory && it.name.equals(name, ignoreCase = true) }
+          ?.uri ?: create(parent, Document.MIME_TYPE_DIR, name)
     }
     return parent
   }
 
-  /** Copies [files] into a new folder named [name] in [parent]. @return the folder, as the scan finds it */
+  /**
+   * Copies [files] into a new folder named [name] in [parent]. @return the folder, as the scan
+   * finds it
+   */
   suspend fun copyFolder(
     parent: Uri,
     name: String,
@@ -45,13 +56,14 @@ internal class LibraryFolderWriter(private val context: Context) {
   ): Uri {
     val finalName = uniqueName(name, extension = null, taken = children(parent).map { it.name })
     val hidden = create(parent, Document.MIME_TYPE_DIR, ".${Uuid.random()}")
-    val renamed = try {
-      files.forEach { file -> copy(file, create(hidden, BINARY, file.name)) }
-      rename(hidden, finalName)
-    } catch (e: Exception) {
-      delete(hidden)
-      throw e
-    }
+    val renamed =
+      try {
+        files.forEach { file -> copy(file, create(hidden, BINARY, file.name)) }
+        rename(hidden, finalName)
+      } catch (e: Exception) {
+        delete(hidden)
+        throw e
+      }
     if (renamed != null) return asFoundByScan(parent, renamed)
     // the provider can't rename, so the files go straight into the folder of the book
     delete(hidden)
@@ -60,7 +72,9 @@ internal class LibraryFolderWriter(private val context: Context) {
     return asFoundByScan(parent, folder)
   }
 
-  /** Copies [file] into [parent] as [name] with [extension]. @return the file, as the scan finds it */
+  /**
+   * Copies [file] into [parent] as [name] with [extension]. @return the file, as the scan finds it
+   */
   suspend fun copyFile(
     parent: Uri,
     name: String,
@@ -69,13 +83,14 @@ internal class LibraryFolderWriter(private val context: Context) {
   ): Uri {
     val finalName = uniqueName(name, extension, taken = children(parent).map { it.name })
     val hidden = create(parent, BINARY, ".${Uuid.random()}")
-    val renamed = try {
-      copy(file, hidden)
-      rename(hidden, finalName)
-    } catch (e: Exception) {
-      delete(hidden)
-      throw e
-    }
+    val renamed =
+      try {
+        copy(file, hidden)
+        rename(hidden, finalName)
+      } catch (e: Exception) {
+        delete(hidden)
+        throw e
+      }
     if (renamed != null) return asFoundByScan(parent, renamed)
     delete(hidden)
     val target = create(parent, BINARY, finalName)
@@ -87,7 +102,9 @@ internal class LibraryFolderWriter(private val context: Context) {
   fun exists(uri: Uri): Boolean {
     if (uri.scheme == ContentResolver.SCHEME_FILE) return uri.path?.let(::File)?.exists() == true
     return try {
-      resolver.query(uri, arrayOf(Document.COLUMN_DOCUMENT_ID), null, null, null)?.use { it.count > 0 } == true
+      resolver.query(uri, arrayOf(Document.COLUMN_DOCUMENT_ID), null, null, null)?.use {
+        it.count > 0
+      } == true
     } catch (e: Exception) {
       Logger.w(e, "Could not check for a file")
       false
@@ -101,18 +118,24 @@ internal class LibraryFolderWriter(private val context: Context) {
   )
 
   private fun children(parent: Uri): List<Child> {
-    val childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(parent, DocumentsContract.getDocumentId(parent))
-    val columns = arrayOf(Document.COLUMN_DOCUMENT_ID, Document.COLUMN_DISPLAY_NAME, Document.COLUMN_MIME_TYPE)
+    val childrenUri =
+      DocumentsContract.buildChildDocumentsUriUsingTree(
+        parent,
+        DocumentsContract.getDocumentId(parent),
+      )
+    val columns =
+      arrayOf(Document.COLUMN_DOCUMENT_ID, Document.COLUMN_DISPLAY_NAME, Document.COLUMN_MIME_TYPE)
     return saf {
       resolver.query(childrenUri, columns, null, null, null)?.use { cursor ->
         buildList {
           while (cursor.moveToNext()) {
             val id = cursor.getString(0) ?: continue
-            this += Child(
-              uri = DocumentsContract.buildDocumentUriUsingTree(parent, id),
-              name = cursor.getString(1).orEmpty(),
-              isDirectory = cursor.getString(2) == Document.MIME_TYPE_DIR,
-            )
+            this +=
+              Child(
+                uri = DocumentsContract.buildDocumentUriUsingTree(parent, id),
+                name = cursor.getString(1).orEmpty(),
+                isDirectory = cursor.getString(2) == Document.MIME_TYPE_DIR,
+              )
           }
         }
       } ?: throw IOException("Could not list the folder")
@@ -160,11 +183,13 @@ internal class LibraryFolderWriter(private val context: Context) {
   }
 }
 
-// the scan builds the uris of the files from the folder of the library, so a book keeps the id it gets there
+// the scan builds the uris of the files from the folder of the library, so a book keeps the id it
+// gets there
 private fun asFoundByScan(
   parent: Uri,
   document: Uri,
-): Uri = DocumentsContract.buildDocumentUriUsingTree(parent, DocumentsContract.getDocumentId(document))
+): Uri =
+  DocumentsContract.buildDocumentUriUsingTree(parent, DocumentsContract.getDocumentId(document))
 
 // a provider tells a lost permission or a full disk in other exceptions than IOException
 private inline fun <T> saf(block: () -> T): T {

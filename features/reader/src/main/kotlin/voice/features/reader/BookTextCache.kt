@@ -5,12 +5,12 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
 import androidx.core.net.toFile
-import voice.core.logging.api.Logger
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.File
 import java.io.IOException
 import java.security.MessageDigest
+import voice.core.logging.api.Logger
 
 // raise it when the text taken from a book changes, so the books are read anew
 private const val BOOK_TEXT_VERSION = 1
@@ -18,7 +18,9 @@ private const val BOOK_TEXT_VERSION = 1
 // a novel's text is about a megabyte
 private const val CACHED_BOOKS = 20
 
-/** The old engine's text of an EPUB, taken from the file once and kept for the next time it opens. */
+/**
+ * The old engine's text of an EPUB, taken from the file once and kept for the next time it opens.
+ */
 internal class BookText(
   val title: String?,
   val chapters: List<String>,
@@ -39,7 +41,10 @@ internal fun bookTextFile(
   folder: File,
   uri: String,
 ): File {
-  val hash = MessageDigest.getInstance("SHA-256").digest(uri.toByteArray()).joinToString("") { "%02x".format(it) }
+  val hash =
+    MessageDigest.getInstance("SHA-256").digest(uri.toByteArray()).joinToString("") {
+      "%02x".format(it)
+    }
   return File(folder, hash)
 }
 
@@ -69,24 +74,25 @@ internal fun readBookText(
 ): BookText? {
   if (!file.exists()) return null
   return try {
-    DataInputStream(file.inputStream().buffered()).use { input ->
-      if (input.readString() != key) return null
-      val title = input.readNullableString()
-      val count = input.readInt()
-      val titles = ArrayList<String?>(count)
-      val chapters = ArrayList<String>(count)
-      repeat(count) {
-        titles += input.readNullableString()
-        chapters += input.readString()
+      DataInputStream(file.inputStream().buffered()).use { input ->
+        if (input.readString() != key) return null
+        val title = input.readNullableString()
+        val count = input.readInt()
+        val titles = ArrayList<String?>(count)
+        val chapters = ArrayList<String>(count)
+        repeat(count) {
+          titles += input.readNullableString()
+          chapters += input.readString()
+        }
+        BookText(title, chapters, titles)
       }
-      BookText(title, chapters, titles)
+    } catch (_: IOException) {
+      null
     }
-  } catch (_: IOException) {
-    null
-  }.also {
-    // the most recently opened books stay
-    if (it != null) file.setLastModified(System.currentTimeMillis())
-  }
+    .also {
+      // the most recently opened books stay
+      if (it != null) file.setLastModified(System.currentTimeMillis())
+    }
 }
 
 /** Removes all but the [keep] most recently used texts. */
@@ -98,7 +104,9 @@ internal fun pruneBookTexts(
   files.sortedByDescending { it.lastModified() }.drop(keep).forEach { it.delete() }
 }
 
-/** The key of the book at [uri] by its size and when it changed, or null when the file doesn't tell. */
+/**
+ * The key of the book at [uri] by its size and when it changed, or null when the file doesn't tell.
+ */
 internal fun bookTextKey(
   context: Context,
   uri: Uri,
@@ -115,7 +123,11 @@ internal fun bookTextKey(
           val column = cursor.getColumnIndex(name)
           return if (column == -1 || cursor.isNull(column)) null else cursor.getLong(column)
         }
-        bookTextKey(uri.toString(), long(OpenableColumns.SIZE), long(DocumentsContract.Document.COLUMN_LAST_MODIFIED))
+        bookTextKey(
+          uri.toString(),
+          long(OpenableColumns.SIZE),
+          long(DocumentsContract.Document.COLUMN_LAST_MODIFIED),
+        )
       }
     }
   } catch (e: IllegalArgumentException) {
@@ -153,4 +165,5 @@ private fun DataInputStream.readString(): String {
   return bytes.decodeToString()
 }
 
-private fun DataInputStream.readNullableString(): String? = if (readBoolean()) readString() else null
+private fun DataInputStream.readNullableString(): String? =
+  if (readBoolean()) readString() else null

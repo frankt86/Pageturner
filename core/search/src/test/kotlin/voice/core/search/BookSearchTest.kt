@@ -5,6 +5,10 @@ import androidx.datastore.core.DataStore
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import java.time.Instant
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.updateAndGet
@@ -21,63 +25,66 @@ import voice.core.data.repo.ChapterRepoImpl
 import voice.core.data.repo.CustomMetadataRepoImpl
 import voice.core.data.repo.internals.AppDb
 import voice.core.data.store.EbooksStore
-import java.time.Instant
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.uuid.Uuid
 
 @RunWith(AndroidJUnit4::class)
 class BookSearchTest {
 
   @Suppress("SpellCheckingInspection")
-  private val commendatore = book(
-    name = "Die Ermordung des Commendatore",
-    author = "Haruki Murakami",
-  )
+  private val commendatore =
+    book(
+      name = "Die Ermordung des Commendatore",
+      author = "Haruki Murakami",
+    )
 
-  private val watchtower = book(
-    name = "All Along the Watchtower",
-    author = "Jimi Hendrix",
-  )
+  private val watchtower =
+    book(
+      name = "All Along the Watchtower",
+      author = "Jimi Hendrix",
+    )
 
-  private val unicorns = book(
-    name = "All Along the Unicorns",
-    author = "Jimi Hendrix",
-  )
+  private val unicorns =
+    book(
+      name = "All Along the Unicorns",
+      author = "Jimi Hendrix",
+    )
 
-  private val harryPotter1 = book(
-    name = "Harry Potter and the Philosopher's Stone",
-    author = "J. K. Rowling",
-    genre = "Fantasy",
-    narrator = "Stephen Fry",
-    series = "Harry Potter",
-    part = "1",
-  )
+  private val harryPotter1 =
+    book(
+      name = "Harry Potter and the Philosopher's Stone",
+      author = "J. K. Rowling",
+      genre = "Fantasy",
+      narrator = "Stephen Fry",
+      series = "Harry Potter",
+      part = "1",
+    )
 
-  private val harryPotter2 = book(
-    name = "Harry Potter and the Chamber of Secrets",
-    author = "J. K. Rowling",
-    genre = "Fantasy",
-    narrator = "Stephen Fry",
-    series = "Harry Potter",
-    part = "2",
-  )
-  private val kingkiller1 = book(
-    name = "The Name of the Wind",
-    author = "Patrick Rothfuss",
-    genre = "Fantasy",
-    narrator = "Rupert Degas",
-    series = "Kingkiller Chronicle",
-    part = "1",
-  )
-  private val kingkiller25 = book(
-    name = "The Slow Regard of Silent Things",
-    author = "Patrick Rothfuss",
-    genre = "Fantasy",
-    narrator = "Patrick Rothfuss",
-    series = "Kingkiller Chronicle",
-    part = "2.5",
-  )
+  private val harryPotter2 =
+    book(
+      name = "Harry Potter and the Chamber of Secrets",
+      author = "J. K. Rowling",
+      genre = "Fantasy",
+      narrator = "Stephen Fry",
+      series = "Harry Potter",
+      part = "2",
+    )
+  private val kingkiller1 =
+    book(
+      name = "The Name of the Wind",
+      author = "Patrick Rothfuss",
+      genre = "Fantasy",
+      narrator = "Rupert Degas",
+      series = "Kingkiller Chronicle",
+      part = "1",
+    )
+  private val kingkiller25 =
+    book(
+      name = "The Slow Regard of Silent Things",
+      author = "Patrick Rothfuss",
+      genre = "Fantasy",
+      narrator = "Patrick Rothfuss",
+      series = "Kingkiller Chronicle",
+      part = "2.5",
+    )
 
   @Test
   fun `search complete name`() = test {
@@ -188,11 +195,12 @@ class BookSearchTest {
 
     val rothfuss = search.search("rothfuss slow").single()
     assertEquals(
-      expected = mapOf(
-        BookSearchField.Title to listOf(4..7),
-        BookSearchField.Author to listOf(8..15),
-        BookSearchField.Narrator to listOf(8..15),
-      ),
+      expected =
+        mapOf(
+          BookSearchField.Title to listOf(4..7),
+          BookSearchField.Author to listOf(8..15),
+          BookSearchField.Narrator to listOf(8..15),
+        ),
       actual = rothfuss.matches,
     )
   }
@@ -200,7 +208,10 @@ class BookSearchTest {
   @Test
   fun `fields matching all words`() = test {
     val kingkiller = search.search("kingkiller 1").single()
-    assertEquals(expected = setOf(BookSearchField.Series), actual = kingkiller.fieldsMatchingAllWords)
+    assertEquals(
+      expected = setOf(BookSearchField.Series),
+      actual = kingkiller.fieldsMatchingAllWords,
+    )
 
     val rothfuss = search.search("rothfuss slow").single()
     assertEquals(expected = emptySet(), actual = rothfuss.fieldsMatchingAllWords)
@@ -225,7 +236,10 @@ class BookSearchTest {
 
   @Test
   fun `the author the listener gave a book is found instead of the one from its files`() {
-    val dune = book(name = "Dune", author = "Herbert").let { it.copy(custom = it.custom.copy(author = "Frank Herbert")) }
+    val dune =
+      book(name = "Dune", author = "Herbert").let {
+        it.copy(custom = it.custom.copy(author = "Frank Herbert"))
+      }
     test(dune) {
       expectSearchResult("frank", dune)
       assertEquals(
@@ -237,9 +251,10 @@ class BookSearchTest {
 
   @Test
   fun `the series and part the listener gave a book are found`() {
-    val interference = book(name = "Interference", author = "Sue Burke", series = "Signal", part = "1").let {
-      it.copy(custom = it.custom.copy(series = "The Signal Saga", part = "2"))
-    }
+    val interference =
+      book(name = "Interference", author = "Sue Burke", series = "Signal", part = "1").let {
+        it.copy(custom = it.custom.copy(series = "The Signal Saga", part = "2"))
+      }
     test(interference) {
       expectSearchResult("signal saga 2", interference)
       expectSearchResult("signal 1")
@@ -248,9 +263,10 @@ class BookSearchTest {
 
   @Test
   fun `a book the listener edited is still found by the name and author from its files`() {
-    val edited = book(name = "Track 01", author = "Dan Simmons").let {
-      it.copy(custom = it.custom.copy(name = "Hyperion", author = "Simmons"))
-    }
+    val edited =
+      book(name = "Track 01", author = "Dan Simmons").let {
+        it.copy(custom = it.custom.copy(name = "Hyperion", author = "Simmons"))
+      }
     val tracker = book(name = "Tracker")
     test(edited, tracker) {
       expectSearchResult("hyperion", edited)
@@ -289,7 +305,8 @@ class BookSearchTest {
     expectSearchResult("fyr")
     expectSearchResult("thex")
     assertEquals(
-      expected = mapOf(BookSearchField.Title to listOf(0..11), BookSearchField.Series to listOf(0..11)),
+      expected =
+        mapOf(BookSearchField.Title to listOf(0..11), BookSearchField.Series to listOf(0..11)),
       actual = search.search("harry pottr").first().matches,
     )
   }
@@ -306,8 +323,15 @@ class BookSearchTest {
 
   @Test
   fun `ebooks are found by their title, author and series`() {
-    val dune = ebook(name = "Dune", author = "Frank Herbert", series = "Dune Chronicles", seriesPart = "1")
-    val messiah = ebook(name = "Dune Messiah", author = "Frank Herbert", series = "Dune Chronicles", seriesPart = "2")
+    val dune =
+      ebook(name = "Dune", author = "Frank Herbert", series = "Dune Chronicles", seriesPart = "1")
+    val messiah =
+      ebook(
+        name = "Dune Messiah",
+        author = "Frank Herbert",
+        series = "Dune Chronicles",
+        seriesPart = "2",
+      )
     test(harryPotter1, ebooks = listOf(dune, messiah)) {
       expectSearchResult("messiah", messiah)
       expectSearchResult("herbert", dune, messiah)
@@ -330,7 +354,9 @@ class BookSearchTest {
 
   @Test
   fun `an edited ebook is found by its own names and still by the ones from its file`() {
-    val edited = ebook(name = "scan_0042", author = "Unknown").copy(customName = "Hyperion", customAuthor = "Dan Simmons")
+    val edited =
+      ebook(name = "scan_0042", author = "Unknown")
+        .copy(customName = "Hyperion", customAuthor = "Dan Simmons")
     test(ebooks = listOf(edited)) {
       expectSearchResult("hyperion", edited)
       expectSearchResult("simmons", edited)
@@ -344,7 +370,9 @@ class BookSearchTest {
 
   @Test
   fun `ebooks are found and sorted by the series and part given to them`() {
-    val second = ebook(name = "Alpha", series = "Old", seriesPart = "1").copy(customSeries = "Saga", customPart = "2")
+    val second =
+      ebook(name = "Alpha", series = "Old", seriesPart = "1")
+        .copy(customSeries = "Saga", customPart = "2")
     val first = ebook(name = "Beta").copy(customSeries = "Saga", customPart = "1")
     test(ebooks = listOf(second, first)) {
       expectSearchResult("saga", first, second)
@@ -370,31 +398,34 @@ class BookSearchTest {
     }
   }
 
-  private fun test(run: suspend TestBase.() -> Unit) = test(
-    commendatore,
-    watchtower,
-    unicorns,
-    harryPotter1,
-    harryPotter2,
-    kingkiller1,
-    kingkiller25,
-    run = run,
-  )
+  private fun test(run: suspend TestBase.() -> Unit) =
+    test(
+      commendatore,
+      watchtower,
+      unicorns,
+      harryPotter1,
+      harryPotter2,
+      kingkiller1,
+      kingkiller25,
+      run = run,
+    )
 
   private fun test(
     vararg books: Book,
     ebooks: List<Ebook> = emptyList(),
     run: suspend TestBase.() -> Unit,
   ) {
-    val db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(), AppDb::class.java)
-      .build()
+    val db =
+      Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(), AppDb::class.java)
+        .build()
     val contentRepo = BookContentRepoImpl(db.bookContentDao())
     val customMetadataRepo = CustomMetadataRepoImpl(db.customMetadataDao())
-    val repo = BookRepositoryImpl(
-      chapterRepo = ChapterRepoImpl(db.chapterDao()),
-      contentRepo = contentRepo,
-      customMetadataRepo = customMetadataRepo,
-    )
+    val repo =
+      BookRepositoryImpl(
+        chapterRepo = ChapterRepoImpl(db.chapterDao()),
+        contentRepo = contentRepo,
+        customMetadataRepo = customMetadataRepo,
+      )
     suspend fun addBook(book: Book) {
       db.bookContentDao().insert(book.content)
       customMetadataRepo.put(book.custom)
@@ -404,11 +435,18 @@ class BookSearchTest {
     }
 
     runTest {
-      val search = BookSearch(
-        repo = repo,
-        ebooksStore = EbooksStore(MemoryDataStore(ebooks)),
-        dispatcherProvider = DispatcherProvider(coroutineContext, coroutineContext, coroutineContext, coroutineContext),
-      )
+      val search =
+        BookSearch(
+          repo = repo,
+          ebooksStore = EbooksStore(MemoryDataStore(ebooks)),
+          dispatcherProvider =
+            DispatcherProvider(
+              coroutineContext,
+              coroutineContext,
+              coroutineContext,
+              coroutineContext,
+            ),
+        )
       val testBase = TestBase(search)
       books.forEach { addBook(it) }
 
@@ -432,18 +470,18 @@ private class TestBase(val search: BookSearch) {
     query: String,
     vararg expected: Any,
   ) {
-    val result = search.search(query).map { result ->
-      when (result) {
-        is BookSearchResult.Audiobook -> result.book
-        is BookSearchResult.Ebook -> result.ebook
+    val result =
+      search.search(query).map { result ->
+        when (result) {
+          is BookSearchResult.Audiobook -> result.book
+          is BookSearchResult.Ebook -> result.ebook
+        }
       }
-    }
     assertEquals(expected = expected.toList(), actual = result)
   }
 
   suspend fun search(query: String) {
-    @Suppress("RETURN_VALUE_NOT_USED")
-    search.search(query)
+    @Suppress("RETURN_VALUE_NOT_USED") search.search(query)
   }
 }
 
@@ -452,20 +490,22 @@ private fun ebook(
   author: String? = null,
   series: String? = null,
   seriesPart: String? = null,
-): Ebook = Ebook(
-  uri = Uri.parse("content://books/${Uuid.random()}.epub"),
-  name = name,
-  format = EbookFormat.Epub,
-  author = author,
-  series = series,
-  seriesPart = seriesPart,
-)
+): Ebook =
+  Ebook(
+    uri = Uri.parse("content://books/${Uuid.random()}.epub"),
+    name = name,
+    format = EbookFormat.Epub,
+    author = author,
+    series = series,
+    seriesPart = seriesPart,
+  )
 
 private class MemoryDataStore<T>(initial: T) : DataStore<T> {
 
   private val value = MutableStateFlow(initial)
 
-  override val data: Flow<T> get() = value
+  override val data: Flow<T>
+    get() = value
 
   override suspend fun updateData(transform: suspend (t: T) -> T): T {
     return value.updateAndGet { transform(it) }

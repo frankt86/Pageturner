@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -40,9 +41,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
-import voice.core.ui.bookText
-import voice.core.ui.icons.VoiceIcons
 import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
+import voice.core.ui.bookText
 
 /** A match in the book: the text around it, with the match from [matchStart] until [matchEnd]. */
 internal class SearchSnippet(
@@ -66,7 +67,12 @@ internal fun SearchSheet(
     resultTitle = { result ->
       when (content) {
         is ReaderContent.Epub -> content.chapterTitle(result.match.section)
-        is ReaderContent.Pdf -> stringResource(StringsR.string.reader_page, result.match.section + 1, content.sectionCount)
+        is ReaderContent.Pdf ->
+          stringResource(
+            StringsR.string.reader_page,
+            result.match.section + 1,
+            content.sectionCount,
+          )
       }
     },
     resultSnippet = { result ->
@@ -95,22 +101,24 @@ internal fun <T> SearchSheet(
   val latestSearch by rememberUpdatedState(search)
   val trimmed = query.trim()
   // null while searching
-  val results by produceState<List<T>?>(emptyList(), trimmed) {
-    if (trimmed.length < 2) {
-      value = emptyList()
-      return@produceState
+  val results by
+    produceState<List<T>?>(emptyList(), trimmed) {
+      if (trimmed.length < 2) {
+        value = emptyList()
+        return@produceState
+      }
+      value = null
+      // waits for a pause in typing
+      delay(300)
+      value = latestSearch(trimmed)
     }
-    value = null
-    // waits for a pause in typing
-    delay(300)
-    value = latestSearch(trimmed)
-  }
   ModalBottomSheet(
     onDismissRequest = onDismiss,
-    sheetState = rememberBottomSheetState(
-      initialValue = Hidden,
-      enabledValues = setOf(Hidden, Expanded),
-    ),
+    sheetState =
+      rememberBottomSheetState(
+        initialValue = Hidden,
+        enabledValues = setOf(Hidden, Expanded),
+      ),
   ) {
     ScaledControls(scale) {
       val focusRequester = remember { FocusRequester() }
@@ -119,13 +127,13 @@ internal fun <T> SearchSheet(
         value = query,
         onValueChange = { query = it },
         placeholder = { Text(stringResource(StringsR.string.reader_search)) },
-        leadingIcon = { Icon(VoiceIcons.Search, contentDescription = null) },
+        leadingIcon = { Icon(painterResource(UiR.drawable.ic_search), contentDescription = null) },
         singleLine = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(horizontal = 24.dp, vertical = 8.dp)
-          .focusRequester(focusRequester),
+        modifier =
+          Modifier.fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 8.dp)
+            .focusRequester(focusRequester),
       )
       val found = results
       if (found != null && found.isEmpty() && trimmed.length >= 2) {
@@ -134,9 +142,7 @@ internal fun <T> SearchSheet(
           style = MaterialTheme.typography.bodyLarge,
           color = MaterialTheme.colorScheme.onSurfaceVariant,
           textAlign = TextAlign.Center,
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 32.dp, vertical = 48.dp),
+          modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 48.dp),
         )
       }
       LazyColumn {
@@ -160,8 +166,7 @@ private fun SearchResultRow(
 ) {
   val matchColor = MaterialTheme.colorScheme.tertiaryContainer
   Column(
-    Modifier
-      .fillMaxWidth()
+    Modifier.fillMaxWidth()
       .clickable(onClick = onClick)
       .padding(horizontal = 24.dp, vertical = 10.dp),
   ) {
@@ -172,14 +177,15 @@ private fun SearchResultRow(
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
     )
-    val text = remember(snippet, matchColor) {
-      buildAnnotatedString {
-        append(snippet.text)
-        val start = snippet.matchStart.coerceIn(0, snippet.text.length)
-        val end = snippet.matchEnd.coerceIn(start, snippet.text.length)
-        addStyle(SpanStyle(fontWeight = FontWeight.Bold, background = matchColor), start, end)
+    val text =
+      remember(snippet, matchColor) {
+        buildAnnotatedString {
+          append(snippet.text)
+          val start = snippet.matchStart.coerceIn(0, snippet.text.length)
+          val end = snippet.matchEnd.coerceIn(start, snippet.text.length)
+          addStyle(SpanStyle(fontWeight = FontWeight.Bold, background = matchColor), start, end)
+        }
       }
-    }
     Text(
       text = text,
       style = MaterialTheme.typography.bodyMedium.bookText(),

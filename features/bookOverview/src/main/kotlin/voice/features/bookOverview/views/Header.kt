@@ -15,14 +15,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import java.text.NumberFormat
+import voice.core.data.BookCategory
+import voice.features.bookOverview.overview.nameRes
 
 @Composable
 internal fun Header(
-  title: String,
+  category: BookCategory,
   count: Int,
   modifier: Modifier = Modifier,
 ) {
@@ -31,14 +34,14 @@ internal fun Header(
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Text(
-      text = title,
+      text = stringResource(id = category.nameRes),
       style = MaterialTheme.typography.titleLargeEmphasized,
     )
     Spacer(Modifier.width(10.dp))
     Text(
-      modifier = Modifier
-        .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
-        .padding(horizontal = 10.dp, vertical = 2.dp),
+      modifier =
+        Modifier.background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+          .padding(horizontal = 10.dp, vertical = 2.dp),
       // localized digits, like the counts in the other library texts
       text = remember(count) { NumberFormat.getIntegerInstance().format(count) },
       style = MaterialTheme.typography.labelLargeEmphasized,

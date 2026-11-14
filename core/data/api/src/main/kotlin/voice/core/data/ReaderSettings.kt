@@ -9,7 +9,10 @@ public data class ReaderSettings(
   /** In sp. */
   val textSize: Float = 18F,
   val font: ReaderFont = ReaderFont.Serif,
-  /** The file name of a font the reader added, in the app's fonts folder. It's used instead of [font]. */
+  /**
+   * The file name of a font the reader added, in the app's fonts folder. It's used instead of
+   * [font].
+   */
   val customFont: String? = null,
   /** The line height as a multiple of the text size. */
   val lineSpacing: Float = 1.55F,
@@ -36,11 +39,17 @@ public data class ReaderSettings(
   val progressVisibility: ProgressVisibility = ProgressVisibility.OnTap,
   /** Shows the chapters, bookmarks and highlights along the page bar. */
   val progressMarks: Boolean = false,
-  /** Counts the book's progress over its main text only, without front and back matter like the title page or index. */
+  /**
+   * Counts the book's progress over its main text only, without front and back matter like the
+   * title page or index.
+   */
   val progressBodyOnly: Boolean = false,
   /** What the line at the bottom of the page shows next to the chapter. */
   val footer: ReaderFooter = ReaderFooter.Page,
-  /** Keeps the book's own fonts and formatting in the new book engine, only the text size and colors change. */
+  /**
+   * Keeps the book's own fonts and formatting in the new book engine, only the text size and colors
+   * change.
+   */
   val publisherStyles: Boolean = false,
   /** From 100 to 900, or null for the font's regular weight. */
   val fontWeight: Int? = null,
@@ -48,9 +57,15 @@ public data class ReaderSettings(
   val letterSpacing: Float? = null,
   /** In em, or null to leave it to the book. Only the new book engine has it. */
   val wordSpacing: Float? = null,
-  /** As a multiple of the line height, or null for one blank line in the old engine and the book's own in the new one. */
+  /**
+   * As a multiple of the line height, or null for one blank line in the old engine and the book's
+   * own in the new one.
+   */
   val paragraphSpacing: Float? = null,
-  /** The indent of a paragraph's first line in em, or null for none in the old engine and the book's own in the new one. */
+  /**
+   * The indent of a paragraph's first line in em, or null for none in the old engine and the book's
+   * own in the new one.
+   */
   val paragraphIndent: Float? = null,
   /** Null for the book's own, which is the start of the line in the old engine. */
   val textAlign: ReaderTextAlign? = null,
@@ -109,7 +124,8 @@ public data class ReaderSettings(
   val confirmJumpPages: Int? = null,
 ) {
   /** All buttons of the top bar in their order, also the hidden ones. */
-  public fun orderedActions(): List<ReaderAction> = toolbarOrder.distinct() + ReaderAction.entries.filter { it !in toolbarOrder }
+  public fun orderedActions(): List<ReaderAction> =
+    toolbarOrder.distinct() + ReaderAction.entries.filter { it !in toolbarOrder }
 
   /** The buttons the top bar shows, in their order. */
   public fun toolbarActions(): List<ReaderAction> {
@@ -140,276 +156,180 @@ public data class ReaderSettings(
 
 @Serializable
 public enum class ReaderTextAlign {
-  @SerialName("left")
-  Left,
-
-  @SerialName("center")
-  Center,
-
-  @SerialName("right")
-  Right,
-
-  @SerialName("justify")
-  Justify,
+  @SerialName("left") Left,
+  @SerialName("center") Center,
+  @SerialName("right") Right,
+  @SerialName("justify") Justify,
 }
 
 @Serializable
 public enum class ProgressBarStyle {
-  @SerialName("line")
-  Line,
-
-  @SerialName("bar")
-  Bar,
+  @SerialName("line") Line,
+  @SerialName("bar") Bar,
 
   /** One segment per chapter. */
-  @SerialName("segmented")
-  Segmented,
+  @SerialName("segmented") Segmented,
 }
 
 @Serializable
 public enum class ProgressVisibility {
   /** A thin line at the bottom of the page, and the page bar on a tap. */
-  @SerialName("always")
-  Always,
+  @SerialName("always") Always,
 
   /** The page bar on a tap. */
-  @SerialName("on_tap")
-  OnTap,
-
-  @SerialName("hidden")
-  Hidden,
+  @SerialName("on_tap") OnTap,
+  @SerialName("hidden") Hidden,
 }
 
 @Serializable
 public enum class ReaderFooter {
   /** The page of the book. */
-  @SerialName("page")
-  Page,
+  @SerialName("page") Page,
 
   /** The page of the chapter. */
-  @SerialName("chapter_page")
-  ChapterPage,
-
-  @SerialName("percent")
-  Percent,
+  @SerialName("chapter_page") ChapterPage,
+  @SerialName("percent") Percent,
 
   /** The reading time left in the chapter. */
-  @SerialName("time_left")
-  TimeLeft,
+  @SerialName("time_left") TimeLeft,
 
   /** The pages left in the chapter. */
-  @SerialName("pages_left")
-  PagesLeft,
-
-  @SerialName("nothing")
-  Nothing,
+  @SerialName("pages_left") PagesLeft,
+  @SerialName("nothing") Nothing,
 }
 
 /** What the line at the top of the page shows. */
 @Serializable
 public enum class ReaderHeader {
-  @SerialName("nothing")
-  Nothing,
-
-  @SerialName("title")
-  Title,
-
-  @SerialName("chapter")
-  Chapter,
+  @SerialName("nothing") Nothing,
+  @SerialName("title") Title,
+  @SerialName("chapter") Chapter,
 }
 
 /** What a tap on a side or the middle of the page does. */
 @Serializable
 public enum class TapAction {
-  @SerialName("previous")
-  Previous,
-
-  @SerialName("next")
-  Next,
+  @SerialName("previous") Previous,
+  @SerialName("next") Next,
 
   /** Shows or hides the bars. */
-  @SerialName("bars")
-  Bars,
-
-  @SerialName("nothing")
-  Nothing,
+  @SerialName("bars") Bars,
+  @SerialName("nothing") Nothing,
 }
 
 @Serializable
 public enum class DoubleTapAction {
-  @SerialName("nothing")
-  Nothing,
+  @SerialName("nothing") Nothing,
 
   /** Shows or hides the bars. */
-  @SerialName("bars")
-  Bars,
-
-  @SerialName("bookmark")
-  Bookmark,
+  @SerialName("bars") Bars,
+  @SerialName("bookmark") Bookmark,
 }
 
 @Serializable
 public enum class MouseWheel {
-  @SerialName("scroll")
-  Scroll,
+  @SerialName("scroll") Scroll,
 
   /** Each step of the wheel turns a page, or in the scroll mode moves a screen. */
-  @SerialName("turn")
-  Turn,
+  @SerialName("turn") Turn,
 }
 
 /** The buttons of the reader's top bar. */
 @Serializable
 public enum class ReaderAction {
-  @SerialName("search")
-  Search,
-
-  @SerialName("bookmark")
-  Bookmark,
-
-  @SerialName("contents")
-  Contents,
-
-  @SerialName("display")
-  Display,
+  @SerialName("search") Search,
+  @SerialName("bookmark") Bookmark,
+  @SerialName("contents") Contents,
+  @SerialName("display") Display,
 
   /** Scrolls or turns the pages by itself. */
-  @SerialName("hands_free")
-  HandsFree,
-
-  @SerialName("read_aloud")
-  ReadAloud,
+  @SerialName("hands_free") HandsFree,
+  @SerialName("read_aloud") ReadAloud,
 }
 
 @Serializable
 public enum class ScreenAwake {
   /** The phone's own screen timeout. */
-  @SerialName("system")
-  System,
+  @SerialName("system") System,
 
   /** On as long as the reader is open. */
-  @SerialName("while_reading")
-  WhileReading,
+  @SerialName("while_reading") WhileReading,
 
-  /** On until nothing was touched for [ReaderSettings.screenAwakeMinutes], and while the book is read aloud or moves by itself. */
-  @SerialName("until_idle")
-  UntilIdle,
+  /**
+   * On until nothing was touched for [ReaderSettings.screenAwakeMinutes], and while the book is
+   * read aloud or moves by itself.
+   */
+  @SerialName("until_idle") UntilIdle,
 }
 
 /** One page or two side by side. */
 @Serializable
 public enum class ReaderPages {
   /** Two pages when the screen is wide. */
-  @SerialName("auto")
-  Auto,
-
-  @SerialName("one")
-  One,
-
-  @SerialName("two")
-  Two,
+  @SerialName("auto") Auto,
+  @SerialName("one") One,
+  @SerialName("two") Two,
 }
 
 @Serializable
 public enum class ReadingMode {
-  @SerialName("pages")
-  Pages,
+  @SerialName("pages") Pages,
 
   /** The text runs on from top to bottom. */
-  @SerialName("scroll")
-  Scroll,
+  @SerialName("scroll") Scroll,
 }
 
 @Serializable
 public enum class ScrollBehavior {
-  @SerialName("smooth")
-  Smooth,
+  @SerialName("smooth") Smooth,
 
   /** The volume keys and taps move the text one screen at once, without an animation. */
-  @SerialName("stepped")
-  Stepped,
+  @SerialName("stepped") Stepped,
 
   /** A swipe moves the text one screen. */
-  @SerialName("snap")
-  Snap,
+  @SerialName("snap") Snap,
 }
 
 @Serializable
 public enum class ReaderOrientation {
-  @SerialName("auto")
-  Auto,
-
-  @SerialName("portrait")
-  Portrait,
-
-  @SerialName("landscape")
-  Landscape,
+  @SerialName("auto") Auto,
+  @SerialName("portrait") Portrait,
+  @SerialName("landscape") Landscape,
 }
 
 @Serializable
 public enum class PageTransition {
-  @SerialName("curl")
-  Curl,
-
-  @SerialName("slide")
-  Slide,
-
-  @SerialName("none")
-  None,
+  @SerialName("curl") Curl,
+  @SerialName("slide") Slide,
+  @SerialName("none") None,
 }
 
 @Serializable
 public enum class ReaderFont {
-  @SerialName("serif")
-  Serif,
-
-  @SerialName("sans")
-  Sans,
-
-  @SerialName("monospace")
-  Monospace,
-
-  @SerialName("literata")
-  Literata,
-
-  @SerialName("atkinson_hyperlegible")
-  AtkinsonHyperlegible,
-
-  @SerialName("open_dyslexic")
-  OpenDyslexic,
+  @SerialName("serif") Serif,
+  @SerialName("sans") Sans,
+  @SerialName("monospace") Monospace,
+  @SerialName("literata") Literata,
+  @SerialName("atkinson_hyperlegible") AtkinsonHyperlegible,
+  @SerialName("open_dyslexic") OpenDyslexic,
 }
 
 @Serializable
 public enum class ReaderTheme {
   /** The app's own colors. */
-  @SerialName("auto")
-  Auto,
-
-  @SerialName("day")
-  Day,
-
-  @SerialName("sepia")
-  Sepia,
-
-  @SerialName("night")
-  Night,
-
-  @SerialName("black")
-  Black,
-
-  @SerialName("soft_paper")
-  SoftPaper,
-
-  @SerialName("slate")
-  Slate,
+  @SerialName("auto") Auto,
+  @SerialName("day") Day,
+  @SerialName("sepia") Sepia,
+  @SerialName("night") Night,
+  @SerialName("black") Black,
+  @SerialName("soft_paper") SoftPaper,
+  @SerialName("slate") Slate,
 
   /** [ReaderSettings.customColors]. */
-  @SerialName("custom")
-  Custom,
+  @SerialName("custom") Custom,
 
   /** [ReaderSettings.dayTheme] by day and [ReaderSettings.nightTheme] at night. */
-  @SerialName("scheduled")
-  Scheduled,
+  @SerialName("scheduled") Scheduled,
 }
 
 /** Colors as #RRGGBB. Without a link or selection color, the theme's own are used. */
@@ -424,12 +344,7 @@ public data class ReaderColors(
 
 @Serializable
 public enum class ReaderImageFilter {
-  @SerialName("original")
-  Original,
-
-  @SerialName("dimmed")
-  Dimmed,
-
-  @SerialName("inverted")
-  Inverted,
+  @SerialName("original") Original,
+  @SerialName("dimmed") Dimmed,
+  @SerialName("inverted") Inverted,
 }

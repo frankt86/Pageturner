@@ -5,13 +5,14 @@ import kotlin.test.assertEquals
 
 class ReaderNavigationTest {
 
-  private val pages = listOf(
-    Page(section = 0, start = 0, end = 10),
-    Page(section = 0, start = 10, end = 20),
-    Page(section = 0, start = 20, end = 30),
-    Page(section = 1, start = 0, end = 10),
-    Page(section = 1, start = 10, end = 20),
-  )
+  private val pages =
+    listOf(
+      Page(section = 0, start = 0, end = 10),
+      Page(section = 0, start = 10, end = 20),
+      Page(section = 0, start = 20, end = 30),
+      Page(section = 1, start = 0, end = 10),
+      Page(section = 1, start = 10, end = 20),
+    )
 
   @Test
   fun `the progress counts the pages on screen as read`() {

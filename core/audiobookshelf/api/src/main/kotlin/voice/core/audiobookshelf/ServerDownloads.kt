@@ -7,7 +7,10 @@ import voice.core.data.BookId
 
 interface ServerDownloads {
 
-  /** The download state of the server books that are downloaded, or on their way. */
+  /**
+   * The download state of the server books that are downloaded, or on their way. Emits once the
+   * stored downloads are read.
+   */
   val states: Flow<Map<BookId, BookDownloadState>>
 
   /** The server books that are downloaded, or on their way, by name. */
@@ -19,7 +22,10 @@ interface ServerDownloads {
 
   suspend fun setDownloadOverMobileData(enabled: Boolean)
 
-  /** Downloads the files of a server book that aren't on the device yet, so it plays without a connection. */
+  /**
+   * Downloads the files of a server book that aren't on the device yet, so it plays without a
+   * connection.
+   */
   suspend fun download(bookId: BookId)
 
   /** Stops the download of a server book, or removes it. The book streams again. */

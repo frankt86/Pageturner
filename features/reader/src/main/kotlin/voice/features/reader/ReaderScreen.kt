@@ -72,6 +72,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -93,6 +94,8 @@ import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -115,13 +118,11 @@ import voice.core.data.ReadingMode
 import voice.core.data.ScreenAwake
 import voice.core.data.TapAction
 import voice.core.logging.api.Logger
+import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
 import voice.core.ui.bookText
-import voice.core.ui.icons.VoiceIcons
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
-import voice.core.strings.R as StringsR
 
 @ContributesTo(AppScope::class)
 interface ReaderGraph {
@@ -134,18 +135,20 @@ object ReaderProvider {
 
   @Provides
   @IntoSet
-  fun readerNavEntryProvider(): NavEntryProvider<*> = NavEntryProvider<Destination.Reader> { key ->
-    NavEntry(key) {
-      ReaderScreen(uri = key.uri)
+  fun readerNavEntryProvider(): NavEntryProvider<*> =
+    NavEntryProvider<Destination.Reader> { key ->
+      NavEntry(key) {
+        ReaderScreen(uri = key.uri)
+      }
     }
-  }
 }
 
 @Composable
 internal fun ReaderScreen(uri: Uri) {
-  val viewModel = retain(uri.toString()) {
-    rootGraphAs<ReaderGraph>().readerViewModelFactory.create(uri)
-  }
+  val viewModel =
+    retain(uri.toString()) {
+      rootGraphAs<ReaderGraph>().readerViewModelFactory.create(uri)
+    }
   val activity = LocalActivity.current
   DisposableEffect(viewModel) {
     onDispose {
@@ -158,7 +161,8 @@ internal fun ReaderScreen(uri: Uri) {
   val snackbarHostState = remember { SnackbarHostState() }
   val unavailableMessage = stringResource(StringsR.string.reader_read_aloud_unavailable)
   val nothingToReadMessage = stringResource(StringsR.string.reader_nothing_to_read_aloud)
-  val naturalVoiceUnavailableMessage = stringResource(StringsR.string.reader_voice_natural_unavailable)
+  val naturalVoiceUnavailableMessage =
+    stringResource(StringsR.string.reader_voice_natural_unavailable)
   val movedToRemotePlaceMessage = stringResource(StringsR.string.reader_moved_to_remote_place)
   LaunchedEffect(viewModel) {
     viewModel.messages.collect { message ->
@@ -192,14 +196,27 @@ internal fun ReaderScreen(uri: Uri) {
   var editedReadiumHighlight by remember { mutableStateOf<LocatedHighlight?>(null) }
   // each request turns a page or scrolls a screen, forward for a positive step
   val turnRequests = remember { MutableSharedFlow<Int>(extraBufferCapacity = 1) }
-  val turn = remember(turnRequests) { { step: Int -> val _ = turnRequests.tryEmit(step) } }
-  // automatic scrolling or page turns, which wait while the bars, a sheet, a selection or reading aloud are on
+  val turn =
+    remember(turnRequests) {
+      { step: Int ->
+        val _ = turnRequests.tryEmit(step)
+      }
+    }
+  // automatic scrolling or page turns, which wait while the bars, a sheet, a selection or reading
+  // aloud are on
   var autoRunning by rememberSaveable { mutableStateOf(false) }
   val scrollMode = settings.readingMode == ReadingMode.Scroll
-  val autoPaused = barsVisible || sheet != null || editedHighlight != null || editedReadiumHighlight != null ||
-    selection.range != null || loaded?.readingAloud == true
-  val autoScrollSpeed = loaded?.settings?.autoScrollSpeed?.takeIf { autoRunning && scrollMode && !autoPaused }
-  val autoTurnSeconds = loaded?.settings?.autoTurnSeconds?.takeIf { autoRunning && !scrollMode && !autoPaused }
+  val autoPaused =
+    barsVisible ||
+      sheet != null ||
+      editedHighlight != null ||
+      editedReadiumHighlight != null ||
+      selection.range != null ||
+      loaded?.readingAloud == true
+  val autoScrollSpeed =
+    loaded?.settings?.autoScrollSpeed?.takeIf { autoRunning && scrollMode && !autoPaused }
+  val autoTurnSeconds =
+    loaded?.settings?.autoTurnSeconds?.takeIf { autoRunning && !scrollMode && !autoPaused }
   // any turn, also one by hand, starts the wait anew
   val place: Any? = loaded?.readium?.locator ?: loaded?.position
   LaunchedEffect(autoTurnSeconds, place) {
@@ -227,7 +244,8 @@ internal fun ReaderScreen(uri: Uri) {
   }
   val readium = loaded?.readium
   val bookmark = {
-    if (readium != null) viewModel.onReadiumBookmarkClick() else viewModel.onBookmarkClick(visiblePages)
+    if (readium != null) viewModel.onReadiumBookmarkClick()
+    else viewModel.onBookmarkClick(visiblePages)
   }
   val scope = rememberCoroutineScope()
   val taps = remember(scope) { Taps(scope) }
@@ -253,14 +271,15 @@ internal fun ReaderScreen(uri: Uri) {
   }
   val onKey = { keyCode: Int, ctrl: Boolean, shift: Boolean, down: Boolean ->
     if (down) touches.intValue += 1
-    val action = keyAction(
-      keyCode = keyCode,
-      ctrl = ctrl,
-      shift = shift,
-      // reading aloud keeps the volume keys for the volume
-      volumeKeys = settings.volumeKeysTurnPages && loaded != null && !loaded.readingAloud,
-      rightToLeft = readium?.rightToLeft == true,
-    )
+    val action =
+      keyAction(
+        keyCode = keyCode,
+        ctrl = ctrl,
+        shift = shift,
+        // reading aloud keeps the volume keys for the volume
+        volumeKeys = settings.volumeKeysTurnPages && loaded != null && !loaded.readingAloud,
+        rightToLeft = readium?.rightToLeft == true,
+      )
     if (down && action != null) {
       when (action) {
         KeyAction.Next -> turn(1)
@@ -275,140 +294,156 @@ internal fun ReaderScreen(uri: Uri) {
     action != null
   }
   Box(
-    Modifier
-      .fillMaxSize()
+    Modifier.fillMaxSize()
       .background(loaded?.settings?.pageColors()?.paper ?: MaterialTheme.colorScheme.surface)
       .onAnyTouch(onTouch),
   ) {
     ReaderKeys(onKey)
     when (state) {
-      ReaderState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        LoadingIndicator(Modifier.size(64.dp))
-      }
-      is ReaderState.Locked -> PdfPasswordDialog(
-        wrongPassword = state.wrongPassword,
-        onOpen = viewModel::onPasswordEnter,
-        onCancel = viewModel::onPasswordCancel,
-      )
-      is ReaderState.Failed -> Box(
-        Modifier
-          .fillMaxSize()
-          .safeDrawingPadding()
-          .padding(24.dp),
-        contentAlignment = Alignment.Center,
-      ) {
-        Text(
-          text = stringResource(
-            when (state.failure) {
-              ReaderFailure.Damaged -> StringsR.string.reader_failed_damaged
-              ReaderFailure.Unsupported -> StringsR.string.reader_failed_unsupported
-              ReaderFailure.Missing -> StringsR.string.reader_failed_missing
-              ReaderFailure.Unknown -> StringsR.string.reader_failed
-              ReaderFailure.Drm -> StringsR.string.reader_drm
-            },
-          ),
-          style = MaterialTheme.typography.bodyLarge,
-          textAlign = TextAlign.Center,
+      ReaderState.Loading ->
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+          LoadingIndicator(Modifier.size(64.dp))
+        }
+      is ReaderState.Locked ->
+        PdfPasswordDialog(
+          wrongPassword = state.wrongPassword,
+          onOpen = viewModel::onPasswordEnter,
+          onCancel = viewModel::onPasswordCancel,
         )
-      }
-      is ReaderState.Loaded -> if (state.readium != null) {
+      is ReaderState.Failed ->
         Box(
-          Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout))
-            .padding(top = state.settings.topMargin?.dp ?: 0.dp, bottom = state.settings.bottomMargin?.dp ?: 0.dp),
+          Modifier.fillMaxSize().safeDrawingPadding().padding(24.dp),
+          contentAlignment = Alignment.Center,
         ) {
-          val characters = (state.content as? ReaderContent.Epub)?.totalLength ?: 0
-          Column(Modifier.fillMaxSize()) {
-            val header = when (state.settings.header) {
-              ReaderHeader.Nothing -> null
-              ReaderHeader.Title -> state.content.title
-              ReaderHeader.Chapter -> state.readium.locator?.let { state.readium.chapterTitle(it) }.orEmpty()
-            }
-            if (header != null) {
-              ReaderPageTheme(state.settings.pageColors()) {
-                PageHeader(
-                  text = header,
-                  modifier = Modifier
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(horizontal = state.settings.margin.dp),
+          Text(
+            text =
+              stringResource(
+                when (state.failure) {
+                  ReaderFailure.Damaged -> StringsR.string.reader_failed_damaged
+                  ReaderFailure.Unsupported -> StringsR.string.reader_failed_unsupported
+                  ReaderFailure.Missing -> StringsR.string.reader_failed_missing
+                  ReaderFailure.Unknown -> StringsR.string.reader_failed
+                  ReaderFailure.Drm -> StringsR.string.reader_drm
+                },
+              ),
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+          )
+        }
+      is ReaderState.Loaded ->
+        if (state.readium != null) {
+          Box(
+            Modifier.fillMaxSize()
+              .windowInsetsPadding(
+                WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout),
+              )
+              .padding(
+                top = state.settings.topMargin?.dp ?: 0.dp,
+                bottom = state.settings.bottomMargin?.dp ?: 0.dp,
+              ),
+          ) {
+            val characters = (state.content as? ReaderContent.Epub)?.totalLength ?: 0
+            Column(Modifier.fillMaxSize()) {
+              val header =
+                when (state.settings.header) {
+                  ReaderHeader.Nothing -> null
+                  ReaderHeader.Title -> state.content.title
+                  ReaderHeader.Chapter ->
+                    state.readium.locator?.let { state.readium.chapterTitle(it) }.orEmpty()
+                }
+              if (header != null) {
+                ReaderPageTheme(state.settings.pageColors()) {
+                  PageHeader(
+                    text = header,
+                    modifier =
+                      Modifier.background(MaterialTheme.colorScheme.surface)
+                        .padding(horizontal = state.settings.margin.dp),
+                  )
+                }
+              }
+              ReadiumPages(
+                book = state.readium,
+                settings = state.settings,
+                onKey = onKey,
+                transition = state.settings.pageTransition,
+                jumps = readiumJumps,
+                turnRequests = turnRequests,
+                autoScrollSpeed = autoScrollSpeed,
+                onAutoScrollEnd = { autoRunning = false },
+                onLocatorChange = viewModel::onLocatorChange,
+                onPageTurn = {
+                  barsVisible = false
+                  viewModel.onUserMove()
+                },
+                onTap = onTap,
+                onHighlightAdd = { locator, color ->
+                  val _ = viewModel.onReadiumHighlightAdd(locator, color)
+                },
+                onNoteAdd = { locator ->
+                  editedReadiumHighlight =
+                    viewModel.onReadiumHighlightAdd(locator, HighlightColor.Yellow)
+                },
+                onHighlightClick = { editedReadiumHighlight = it },
+                modifier = Modifier.fillMaxWidth().weight(1F),
+              )
+              if (
+                state.settings.progressVisibility == ProgressVisibility.Always ||
+                  state.settings.clock ||
+                  state.settings.battery
+              ) {
+                ReadiumFooter(
+                  book = state.readium,
+                  settings = state.settings,
+                  characters = characters,
+                  pace = state.pace,
+                  modifier = Modifier.fillMaxWidth(),
                 )
               }
             }
-            ReadiumPages(
+            ReadiumPageBar(
               book = state.readium,
               settings = state.settings,
-              onKey = onKey,
-              transition = state.settings.pageTransition,
-              jumps = readiumJumps,
-              turnRequests = turnRequests,
-              autoScrollSpeed = autoScrollSpeed,
-              onAutoScrollEnd = { autoRunning = false },
-              onLocatorChange = viewModel::onLocatorChange,
-              onPageTurn = {
-                barsVisible = false
-                viewModel.onUserMove()
-              },
-              onTap = onTap,
-              onHighlightAdd = { locator, color -> val _ = viewModel.onReadiumHighlightAdd(locator, color) },
-              onNoteAdd = { locator -> editedReadiumHighlight = viewModel.onReadiumHighlightAdd(locator, HighlightColor.Yellow) },
-              onHighlightClick = { editedReadiumHighlight = it },
-              modifier = Modifier
-                .fillMaxWidth()
-                .weight(1F),
+              characters = characters,
+              pace = state.pace,
+              visible = barsVisible,
+              onJump = readiumJump,
             )
-            if (state.settings.progressVisibility == ProgressVisibility.Always || state.settings.clock || state.settings.battery) {
-              ReadiumFooter(
-                book = state.readium,
-                settings = state.settings,
-                characters = characters,
-                pace = state.pace,
-                modifier = Modifier.fillMaxWidth(),
-              )
-            }
           }
-          ReadiumPageBar(
-            book = state.readium,
-            settings = state.settings,
-            characters = characters,
-            pace = state.pace,
-            visible = barsVisible,
-            onJump = readiumJump,
+        } else {
+          Book(
+            state = state,
+            onPageTurn = turnPage,
+            selection = selection,
+            onHighlightClick = { editedHighlight = it },
+            onVisiblePagesChange = { visiblePages = it },
+            turnRequests = turnRequests,
+            onTurnRequest = turn,
+            onTap = onTap,
+            autoScrollSpeed = autoScrollSpeed,
+            onScroll = viewModel::onScrolled,
+            onUserScroll = {
+              barsVisible = false
+              viewModel.onUserMove()
+            },
+            onAutoScrollEnd = { autoRunning = false },
+            // the insets of hidden bars too, or showing them would lay out all pages anew
+            modifier =
+              Modifier.fillMaxSize()
+                .windowInsetsPadding(
+                  WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout),
+                )
+                .wheelTurns(enabled = state.settings.mouseWheel == MouseWheel.Turn, onTurn = turn),
+            overlay = { pages, pagesPerSpread, _ ->
+              ReaderControls(
+                state = state,
+                pages = pages,
+                pagesPerSpread = pagesPerSpread,
+                barsVisible = barsVisible,
+                onJump = viewModel::onPageTurned,
+              )
+            },
           )
         }
-      } else {
-        Book(
-          state = state,
-          onPageTurn = turnPage,
-          selection = selection,
-          onHighlightClick = { editedHighlight = it },
-          onVisiblePagesChange = { visiblePages = it },
-          turnRequests = turnRequests,
-          onTurnRequest = turn,
-          onTap = onTap,
-          autoScrollSpeed = autoScrollSpeed,
-          onScroll = viewModel::onScrolled,
-          onUserScroll = {
-            barsVisible = false
-            viewModel.onUserMove()
-          },
-          onAutoScrollEnd = { autoRunning = false },
-          // the insets of hidden bars too, or showing them would lay out all pages anew
-          modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout))
-            .wheelTurns(enabled = state.settings.mouseWheel == MouseWheel.Turn, onTurn = turn),
-          overlay = { pages, pagesPerSpread, _ ->
-            ReaderControls(
-              state = state,
-              pages = pages,
-              pagesPerSpread = pagesPerSpread,
-              barsVisible = barsVisible,
-              onJump = viewModel::onPageTurned,
-            )
-          },
-        )
-      }
     }
     val selected = selection.range
     val epub = loaded?.content as? ReaderContent.Epub
@@ -426,10 +461,7 @@ internal fun ReaderScreen(uri: Uri) {
             selection.clear()
           },
           onLookUp = selection::clear,
-          modifier = Modifier
-            .align(Alignment.BottomCenter)
-            .safeDrawingPadding()
-            .padding(16.dp),
+          modifier = Modifier.align(Alignment.BottomCenter).safeDrawingPadding().padding(16.dp),
         )
       }
     }
@@ -438,20 +470,23 @@ internal fun ReaderScreen(uri: Uri) {
         actions = settings.toolbarActions(),
         loaded = loaded != null,
         readingAloud = loaded?.readingAloud,
-        bookmarked = if (readium != null) {
-          readium.bookmarks.any { readium.isOnPage(it, readium.locator) }
-        } else {
-          loaded?.bookmarks?.any { bookmark -> visiblePages.any { it.contains(bookmark) } }
-        },
+        bookmarked =
+          if (readium != null) {
+            readium.bookmarks.any { readium.isOnPage(it, readium.locator) }
+          } else {
+            loaded?.bookmarks?.any { bookmark -> visiblePages.any { it.contains(bookmark) } }
+          },
         showSearch = loaded?.content?.searchable == true,
-        auto = when {
-          loaded == null -> null
-          scrollMode -> AutoMode.Scroll
-          else -> AutoMode.Turn
-        },
+        auto =
+          when {
+            loaded == null -> null
+            scrollMode -> AutoMode.Scroll
+            else -> AutoMode.Turn
+          },
         autoRunning = autoRunning,
         onReadAloudClick = {
-          if (loaded?.readingAloud == true) viewModel.stopReadingAloudClick() else sheet = ReaderSheet.ReadAloud
+          if (loaded?.readingAloud == true) viewModel.stopReadingAloudClick()
+          else sheet = ReaderSheet.ReadAloud
         },
         onContentsClick = { sheet = ReaderSheet.Contents },
         onDisplayClick = { sheet = ReaderSheet.Display },
@@ -493,9 +528,7 @@ internal fun ReaderScreen(uri: Uri) {
     }
     SnackbarHost(
       hostState = snackbarHostState,
-      modifier = Modifier
-        .align(Alignment.BottomCenter)
-        .safeDrawingPadding(),
+      modifier = Modifier.align(Alignment.BottomCenter).safeDrawingPadding(),
     )
   }
   val content = loaded?.content as? ReaderContent.Epub
@@ -519,11 +552,12 @@ internal fun ReaderScreen(uri: Uri) {
     ColorsSheet(
       scale = scale,
       settings = loaded.settings,
-      content = when {
-        loaded.readium != null -> ColorsContent.NewEngine
-        content != null -> ColorsContent.OldEngine
-        else -> ColorsContent.Pdf
-      },
+      content =
+        when {
+          loaded.readium != null -> ColorsContent.NewEngine
+          content != null -> ColorsContent.OldEngine
+          else -> ColorsContent.Pdf
+        },
       themesFileFailed = loaded.themesFileFailed,
       onThemesExport = viewModel::onThemesExport,
       onThemesImport = viewModel::onThemesImport,
@@ -581,32 +615,38 @@ internal fun ReaderScreen(uri: Uri) {
     )
   } else if (loaded != null) {
     when (sheet) {
-      ReaderSheet.Contents -> ContentsSheet(
-        scale = scale,
-        state = loaded,
-        onChapterClick = { section ->
-          sheet = null
-          viewModel.onChapterClick(section)
-        },
-        onMarkClick = { position ->
-          sheet = null
-          viewModel.onMarkClick(position)
-        },
-        onBookmarkDelete = viewModel::onBookmarkDelete,
-        onHighlightDelete = viewModel::onHighlightDelete,
-        onDismiss = { sheet = null },
-      )
-      ReaderSheet.Search -> SearchSheet(
-        scale = scale,
-        content = loaded.content,
-        search = viewModel::search,
-        onResultClick = { result ->
-          sheet = null
-          viewModel.onSearchResultClick(result)
-        },
-        onDismiss = { sheet = null },
-      )
-      ReaderSheet.Display, ReaderSheet.Colors, ReaderSheet.Controls, ReaderSheet.ReadAloud, null -> Unit
+      ReaderSheet.Contents ->
+        ContentsSheet(
+          scale = scale,
+          state = loaded,
+          onChapterClick = { section ->
+            sheet = null
+            viewModel.onChapterClick(section)
+          },
+          onMarkClick = { position ->
+            sheet = null
+            viewModel.onMarkClick(position)
+          },
+          onBookmarkDelete = viewModel::onBookmarkDelete,
+          onHighlightDelete = viewModel::onHighlightDelete,
+          onDismiss = { sheet = null },
+        )
+      ReaderSheet.Search ->
+        SearchSheet(
+          scale = scale,
+          content = loaded.content,
+          search = viewModel::search,
+          onResultClick = { result ->
+            sheet = null
+            viewModel.onSearchResultClick(result)
+          },
+          onDismiss = { sheet = null },
+        )
+      ReaderSheet.Display,
+      ReaderSheet.Colors,
+      ReaderSheet.Controls,
+      ReaderSheet.ReadAloud,
+      null -> Unit
     }
   }
   val readiumHighlight = editedReadiumHighlight
@@ -646,7 +686,10 @@ internal fun ReaderScreen(uri: Uri) {
   }
 }
 
-/** Keeps the screen on as [mode] says. [touches] and [place] change with every touch, key and turned page. */
+/**
+ * Keeps the screen on as [mode] says. [touches] and [place] change with every touch, key and turned
+ * page.
+ */
 @Composable
 private fun KeepScreenOn(
   mode: ScreenAwake,
@@ -664,11 +707,12 @@ private fun KeepScreenOn(
     delay(idleMinutes.minutes)
     idle = true
   }
-  val on = when (mode) {
-    ScreenAwake.System -> false
-    ScreenAwake.WhileReading -> true
-    ScreenAwake.UntilIdle -> busy || !idle
-  }
+  val on =
+    when (mode) {
+      ScreenAwake.System -> false
+      ScreenAwake.WhileReading -> true
+      ScreenAwake.UntilIdle -> busy || !idle
+    }
   DisposableEffect(view, on) {
     view.keepScreenOn = on
     onDispose { view.keepScreenOn = false }
@@ -704,7 +748,10 @@ private fun ReadiumHighlightSheet(
   onDelete: () -> Unit,
 ) {
   // the sheet edits only the color and the note, the place in the text isn't used
-  val editable = remember(highlight) { Highlight(section = 0, start = 0, end = 0, color = highlight.color, note = highlight.note) }
+  val editable =
+    remember(highlight) {
+      Highlight(section = 0, start = 0, end = 0, color = highlight.color, note = highlight.note)
+    }
   HighlightSheet(
     scale = settings.interfaceScale,
     highlight = editable,
@@ -738,7 +785,7 @@ internal fun ReaderTopBar(
       IconButton(onClick = onCloseClick) {
         Icon(
           modifier = Modifier.graphicsLayer { scaleX = if (rtl) -1F else 1F },
-          imageVector = VoiceIcons.ArrowBack,
+          painter = painterResource(UiR.drawable.ic_arrow_back),
           contentDescription = stringResource(StringsR.string.common_action_back),
         )
       }
@@ -756,10 +803,7 @@ private fun BottomActions(
   modifier: Modifier = Modifier,
 ) {
   Box(
-    modifier
-      .fillMaxWidth()
-      .safeDrawingPadding()
-      .padding(bottom = 8.dp),
+    modifier.fillMaxWidth().safeDrawingPadding().padding(bottom = 8.dp),
     contentAlignment = Alignment.Center,
   ) {
     Surface(
@@ -768,9 +812,7 @@ private fun BottomActions(
       shadowElevation = 6.dp,
     ) {
       Row(
-        modifier = Modifier
-          .height(BottomActionsHeight - 16.dp)
-          .padding(horizontal = 8.dp),
+        modifier = Modifier.height(BottomActionsHeight - 16.dp).padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         content = actions,
       )
@@ -778,7 +820,10 @@ private fun BottomActions(
   }
 }
 
-/** The buttons of the top bar in the order of [actions]. Each one leaves itself out while it has nothing to do. */
+/**
+ * The buttons of the top bar in the order of [actions]. Each one leaves itself out while it has
+ * nothing to do.
+ */
 @Composable
 internal fun RowScope.ReaderActionButtons(
   actions: List<ReaderAction>,
@@ -801,63 +846,81 @@ internal fun RowScope.ReaderActionButtons(
 ) {
   actions.forEach { action ->
     when (action) {
-      ReaderAction.Search -> if (showSearch) {
-        IconButton(onClick = onSearchClick) {
-          Icon(
-            imageVector = VoiceIcons.Search,
-            contentDescription = stringResource(StringsR.string.reader_search),
-          )
+      ReaderAction.Search ->
+        if (showSearch) {
+          IconButton(onClick = onSearchClick) {
+            Icon(
+              painter = painterResource(UiR.drawable.ic_search),
+              contentDescription = stringResource(StringsR.string.reader_search),
+            )
+          }
         }
-      }
-      ReaderAction.Bookmark -> if (bookmarked != null) {
-        IconButton(onClick = onBookmarkClick) {
-          Icon(
-            imageVector = if (bookmarked) VoiceIcons.BookmarkFilled else VoiceIcons.Bookmark,
-            contentDescription = stringResource(
-              if (bookmarked) StringsR.string.reader_bookmark_remove else StringsR.string.reader_bookmark_add,
-            ),
-          )
+      ReaderAction.Bookmark ->
+        if (bookmarked != null) {
+          IconButton(onClick = onBookmarkClick) {
+            Icon(
+              painter =
+                painterResource(
+                  if (bookmarked) UiR.drawable.ic_bookmark_filled else UiR.drawable.ic_bookmark,
+                ),
+              contentDescription =
+                stringResource(
+                  if (bookmarked) StringsR.string.reader_bookmark_remove
+                  else StringsR.string.reader_bookmark_add,
+                ),
+            )
+          }
         }
-      }
-      ReaderAction.Contents -> if (loaded) {
-        IconButton(onClick = onContentsClick) {
-          Icon(
-            imageVector = VoiceIcons.ViewList,
-            contentDescription = stringResource(StringsR.string.reader_contents),
-          )
+      ReaderAction.Contents ->
+        if (loaded) {
+          IconButton(onClick = onContentsClick) {
+            Icon(
+              painter = painterResource(UiR.drawable.ic_view_list),
+              contentDescription = stringResource(StringsR.string.reader_contents),
+            )
+          }
         }
-      }
-      ReaderAction.Display -> if (loaded) {
-        IconButton(onClick = onDisplayClick) {
-          Icon(
-            imageVector = VoiceIcons.Title,
-            contentDescription = stringResource(StringsR.string.reader_display),
-          )
+      ReaderAction.Display ->
+        if (loaded) {
+          IconButton(onClick = onDisplayClick) {
+            Icon(
+              painter = painterResource(UiR.drawable.ic_title),
+              contentDescription = stringResource(StringsR.string.reader_display),
+            )
+          }
         }
-      }
-      ReaderAction.HandsFree -> if (auto != null) {
-        IconToggleButton(checked = autoRunning, onCheckedChange = { onAutoClick() }) {
-          Icon(
-            imageVector = if (autoRunning) VoiceIcons.Pause else VoiceIcons.Speed,
-            contentDescription = stringResource(
-              when (auto) {
-                AutoMode.Scroll -> StringsR.string.reader_auto_scroll
-                AutoMode.Turn -> StringsR.string.reader_auto_turn
-              },
-            ),
-          )
+      ReaderAction.HandsFree ->
+        if (auto != null) {
+          IconToggleButton(checked = autoRunning, onCheckedChange = { onAutoClick() }) {
+            Icon(
+              painter =
+                painterResource(if (autoRunning) UiR.drawable.ic_pause else UiR.drawable.ic_speed),
+              contentDescription =
+                stringResource(
+                  when (auto) {
+                    AutoMode.Scroll -> StringsR.string.reader_auto_scroll
+                    AutoMode.Turn -> StringsR.string.reader_auto_turn
+                  },
+                ),
+            )
+          }
         }
-      }
-      ReaderAction.ReadAloud -> if (readingAloud != null) {
-        IconButton(onClick = onReadAloudClick) {
-          Icon(
-            imageVector = if (readingAloud) VoiceIcons.Pause else VoiceIcons.VolumeUp,
-            contentDescription = stringResource(
-              if (readingAloud) StringsR.string.reader_stop_reading_aloud else StringsR.string.reader_read_aloud,
-            ),
-          )
+      ReaderAction.ReadAloud ->
+        if (readingAloud != null) {
+          IconButton(onClick = onReadAloudClick) {
+            Icon(
+              painter =
+                painterResource(
+                  if (readingAloud) UiR.drawable.ic_pause else UiR.drawable.ic_volume_up,
+                ),
+              contentDescription =
+                stringResource(
+                  if (readingAloud) StringsR.string.reader_stop_reading_aloud
+                  else StringsR.string.reader_read_aloud,
+                ),
+            )
+          }
         }
-      }
     }
   }
 }
@@ -889,6 +952,7 @@ private fun ReaderSettings.pageMargins(pageWidth: Dp): PageMargins {
     bottom = bottomMargin?.dp ?: PageVerticalPadding,
   )
 }
+
 internal val PageNumberHeight = 32.dp
 private val SpineWidth = 24.dp
 
@@ -914,31 +978,39 @@ internal fun Book(
   // previews can't swipe, this shows the first page turned this far
   previewTurn: Float? = null,
   // turn is called with 1 for the next page and -1 for the previous one
-  overlay: @Composable BoxScope.(pages: List<Page>, pagesPerSpread: Int, turn: (Int) -> Unit) -> Unit = { _, _, _ -> },
+  overlay:
+    @Composable
+    BoxScope.(pages: List<Page>, pagesPerSpread: Int, turn: (Int) -> Unit) -> Unit =
+    { _, _, _ ->
+    },
 ) {
   BoxWithConstraints(modifier) {
     val scroll = state.settings.readingMode == ReadingMode.Scroll
-    val twoPages = !scroll && when (state.settings.pages) {
-      // an unfolded foldable, a tablet or a phone on its side has room for a spread like an open book
-      ReaderPages.Auto -> maxWidth >= 600.dp && maxWidth >= maxHeight * 0.8F
-      ReaderPages.One -> false
-      ReaderPages.Two -> true
-    }
+    val twoPages =
+      !scroll &&
+        when (state.settings.pages) {
+          // an unfolded foldable, a tablet or a phone on its side has room for a spread like an
+          // open book
+          ReaderPages.Auto -> maxWidth >= 600.dp && maxWidth >= maxHeight * 0.8F
+          ReaderPages.One -> false
+          ReaderPages.Two -> true
+        }
     val spineWidth = state.settings.pageGap?.dp ?: SpineWidth
     val pageWidth = if (twoPages) (maxWidth - spineWidth) / 2 else maxWidth
     val textStyle = state.settings.pageTextStyle()
     val paragraphGap = state.settings.paragraphGap()
     val margins = state.settings.pageMargins(pageWidth)
     val headerHeight = if (state.settings.header == ReaderHeader.Nothing) 0.dp else PageNumberHeight
-    val pages = pages(
-      content = state.content,
-      textStyle = textStyle,
-      paragraphGap = paragraphGap,
-      textWidth = pageWidth - margins.side * 2,
-      textHeight = maxHeight - margins.top - margins.bottom - PageNumberHeight - headerHeight,
-      section = state.position.section,
-      paginateNow = paginateNow,
-    )
+    val pages =
+      pages(
+        content = state.content,
+        textStyle = textStyle,
+        paragraphGap = paragraphGap,
+        textWidth = pageWidth - margins.side * 2,
+        textHeight = maxHeight - margins.top - margins.bottom - PageNumberHeight - headerHeight,
+        section = state.position.section,
+        paginateNow = paginateNow,
+      )
     if (pages == null) {
       Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         LoadingIndicator(Modifier.size(64.dp))
@@ -962,9 +1034,7 @@ internal fun Book(
           onVisiblePagesChange = onVisiblePagesChange,
           onTap = onTap,
           onAutoScrollEnd = onAutoScrollEnd,
-          modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface),
+          modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface),
         )
       } else {
         key(pages, pagesPerSpread) {
@@ -1014,22 +1084,45 @@ private fun pages(
         }
       } else {
         val latestSection by rememberUpdatedState(section)
-        produceState<List<Page>?>(null, content, textStyle, paragraphGap, width, height, textMeasurer) {
-          val started = SystemClock.elapsedRealtime()
-          // the chapter on screen first, so the book shows while the others are measured
-          val first = latestSection.coerceIn(0, (content.chapters.size - 1).coerceAtLeast(0))
-          if (content.chapters.size > 1) {
-            val measured = withContext(Dispatchers.Default) {
-              paginateChapter(first, content.chapters[first], textMeasurer, textStyle, paragraphGap, width, height)
+        produceState<List<Page>?>(
+            null,
+            content,
+            textStyle,
+            paragraphGap,
+            width,
+            height,
+            textMeasurer,
+          ) {
+            val started = SystemClock.elapsedRealtime()
+            // the chapter on screen first, so the book shows while the others are measured
+            val first = latestSection.coerceIn(0, (content.chapters.size - 1).coerceAtLeast(0))
+            if (content.chapters.size > 1) {
+              val measured =
+                withContext(Dispatchers.Default) {
+                  paginateChapter(
+                    first,
+                    content.chapters[first],
+                    textMeasurer,
+                    textStyle,
+                    paragraphGap,
+                    width,
+                    height,
+                  )
+                }
+              value = estimatedPages(content.chapters, first, measured)
+              Logger.d(
+                "Measured the first chapter in ${SystemClock.elapsedRealtime() - started} ms",
+              )
             }
-            value = estimatedPages(content.chapters, first, measured)
-            Logger.d("Measured the first chapter in ${SystemClock.elapsedRealtime() - started} ms")
+            value =
+              withContext(Dispatchers.Default) {
+                paginate(content.chapters, textMeasurer, textStyle, paragraphGap, width, height)
+              }
+            Logger.d(
+              "Measured ${content.chapters.size} chapters in ${SystemClock.elapsedRealtime() - started} ms",
+            )
           }
-          value = withContext(Dispatchers.Default) {
-            paginate(content.chapters, textMeasurer, textStyle, paragraphGap, width, height)
-          }
-          Logger.d("Measured ${content.chapters.size} chapters in ${SystemClock.elapsedRealtime() - started} ms")
-        }.value
+          .value
       }
     }
   }
@@ -1061,20 +1154,23 @@ private fun Spreads(
   fun Modifier.pageGestures(
     shownPages: () -> IntRange,
     onOtherTap: (Offset, IntSize) -> Boolean,
-  ) = selectableText(
-    selection = selection,
-    shownPages = shownPages,
-    state = { latestState },
-    onHighlightClick = { latestOnHighlightClick(it) },
-    onSelect = { haptics.performHapticFeedback(HapticFeedbackType.LongPress) },
-    onOtherTap = onOtherTap,
-  )
+  ) =
+    selectableText(
+      selection = selection,
+      shownPages = shownPages,
+      state = { latestState },
+      onHighlightClick = { latestOnHighlightClick(it) },
+      onSelect = { haptics.performHapticFeedback(HapticFeedbackType.LongPress) },
+      onOtherTap = onOtherTap,
+    )
 
   val current = pages.indexOfPosition(state.position) / pagesPerSpread * pagesPerSpread
   val latestCurrent by rememberUpdatedState(current)
   LaunchedEffect(current) {
     selection.clear()
-    latestOnVisiblePagesChange(pages.subList(current, (current + pagesPerSpread).coerceAtMost(pages.size)))
+    latestOnVisiblePagesChange(
+      pages.subList(current, (current + pagesPerSpread).coerceAtMost(pages.size)),
+    )
   }
   CurlPages(
     count = pages.size,
@@ -1083,23 +1179,34 @@ private fun Spreads(
     onTurn = { first -> onPageTurn(pages[first], pages.progressAt(first, pagesPerSpread)) },
     backColor = MaterialTheme.colorScheme.surface,
     transition = state.settings.pageTransition,
-    modifier = Modifier
-      .fillMaxSize()
-      .ignoreEdgeTouches(state.settings.edgeMargin.dp)
-      .pageGestures(
-        shownPages = { latestCurrent until (latestCurrent + pagesPerSpread).coerceAtMost(pages.size) },
-        onOtherTap = { offset, size ->
-          latestOnTap(offset.x / size.width)
-          true
-        },
-      ),
+    modifier =
+      Modifier.fillMaxSize()
+        .ignoreEdgeTouches(state.settings.edgeMargin.dp)
+        .pageGestures(
+          shownPages = {
+            latestCurrent until (latestCurrent + pagesPerSpread).coerceAtMost(pages.size)
+          },
+          onOtherTap = { offset, size ->
+            latestOnTap(offset.x / size.width)
+            true
+          },
+        ),
     turnRequests = turnRequests,
     previewTurn = previewTurn,
     spineWidth = spineWidth,
     minSwipe = state.settings.minSwipe.dp,
     spine = { Spine(spineWidth) },
   ) { index ->
-    PageSlot(state, pages, index, textStyle, paragraphGap, margins, selection, Modifier.fillMaxSize())
+    PageSlot(
+      state,
+      pages,
+      index,
+      textStyle,
+      paragraphGap,
+      margins,
+      selection,
+      Modifier.fillMaxSize(),
+    )
   }
 }
 
@@ -1123,14 +1230,20 @@ private fun PageSlot(
       )
     }
     if (index < pages.size) {
-      val footer = if (state.settings.progressVisibility == ProgressVisibility.Hidden) {
-        null
-      } else {
-        footerText(
-          state.settings.footer,
-          state.content.readingProgress(pages = pages, index = index, pagesPerSpread = 1, pace = state.pace),
-        )
-      }
+      val footer =
+        if (state.settings.progressVisibility == ProgressVisibility.Hidden) {
+          null
+        } else {
+          footerText(
+            state.settings.footer,
+            state.content.readingProgress(
+              pages = pages,
+              index = index,
+              pagesPerSpread = 1,
+              pace = state.pace,
+            ),
+          )
+        }
       BookPage(
         content = state.content,
         page = pages[index],
@@ -1147,7 +1260,8 @@ private fun PageSlot(
         highlightOpacity = state.settings.highlightOpacity,
         searchMatch = state.searchMatch,
         selection = selection,
-        imageFilter = state.settings.imageFilter.colorFilter(paper = MaterialTheme.colorScheme.surface),
+        imageFilter =
+          state.settings.imageFilter.colorFilter(paper = MaterialTheme.colorScheme.surface),
       )
     }
   }
@@ -1157,8 +1271,7 @@ private fun PageSlot(
 private fun Spine(width: Dp) {
   val shade = MaterialTheme.colorScheme.outlineVariant
   Box(
-    Modifier
-      .width(width)
+    Modifier.width(width)
       .fillMaxHeight()
       .background(Brush.horizontalGradient(listOf(Color.Transparent, shade, Color.Transparent))),
   )
@@ -1185,68 +1298,83 @@ private fun BookPage(
 ) {
   val pageLabel = stringResource(StringsR.string.reader_page, pageNumber, pageCount)
   when (content) {
-    is ReaderContent.Epub -> Column(
-      Modifier
-        .fillMaxSize()
-        .padding(start = margins.side, end = margins.side, top = margins.top, bottom = margins.bottom),
-    ) {
-      if (header != null) PageHeader(header)
-      val marks = pageMarks(page.section, readingRange, highlights, highlightOpacity, searchMatch, selection.range)
-      val textStart = remember(content, page) {
-        val chapter = content.chapters[page.section]
-        var start = page.start
-        while (start < page.end && chapter[start] == '\n') start++
-        start
-      }
-      val text = remember(content, page, textStart, marks, paragraphGap) {
-        val chapter = content.chapters[page.section]
-        val shown = chapter.substring(textStart, page.end)
-        val tail = pageTail(chapter, page.end)
-        val continued = textStart > 0 && chapter[textStart - 1] != '\n'
-        buildAnnotatedString {
-          append(markedText(shown, textStart, marks))
-          withStyle(SpanStyle(color = Color.Transparent)) { append(tail) }
-          paragraphStyles(shown + tail, paragraphGap, continued).forEach { addStyle(it.item, it.start, it.end) }
+    is ReaderContent.Epub ->
+      Column(
+        Modifier.fillMaxSize()
+          .padding(
+            start = margins.side,
+            end = margins.side,
+            top = margins.top,
+            bottom = margins.bottom,
+          ),
+      ) {
+        if (header != null) PageHeader(header)
+        val marks =
+          pageMarks(
+            page.section,
+            readingRange,
+            highlights,
+            highlightOpacity,
+            searchMatch,
+            selection.range,
+          )
+        val textStart =
+          remember(content, page) {
+            val chapter = content.chapters[page.section]
+            var start = page.start
+            while (start < page.end && chapter[start] == '\n') start++
+            start
+          }
+        val text =
+          remember(content, page, textStart, marks, paragraphGap) {
+            val chapter = content.chapters[page.section]
+            val shown = chapter.substring(textStart, page.end)
+            val tail = pageTail(chapter, page.end)
+            val continued = textStart > 0 && chapter[textStart - 1] != '\n'
+            buildAnnotatedString {
+              append(markedText(shown, textStart, marks))
+              withStyle(SpanStyle(color = Color.Transparent)) { append(tail) }
+              paragraphStyles(shown + tail, paragraphGap, continued).forEach {
+                addStyle(it.item, it.start, it.end)
+              }
+            }
+          }
+        val pageText = remember { PageText() }
+        SideEffect {
+          pageText.section = page.section
+          pageText.offset = textStart
+          selection.register(pageNumber - 1, pageText)
         }
+        Text(
+          text = text,
+          style = textStyle,
+          overflow = TextOverflow.Clip,
+          onTextLayout = { pageText.layout = it },
+          modifier =
+            Modifier.weight(1F).fillMaxWidth().onGloballyPositioned { pageText.coordinates = it },
+        )
+        PageFooter(
+          chapter = content.chapterTitle(page.section),
+          footer = footer,
+          settings = settings,
+          modifier = Modifier.height(PageNumberHeight),
+        )
       }
-      val pageText = remember { PageText() }
-      SideEffect {
-        pageText.section = page.section
-        pageText.offset = textStart
-        selection.register(pageNumber - 1, pageText)
-      }
-      Text(
-        text = text,
-        style = textStyle,
-        overflow = TextOverflow.Clip,
-        onTextLayout = { pageText.layout = it },
-        modifier = Modifier
-          .weight(1F)
-          .fillMaxWidth()
-          .onGloballyPositioned { pageText.coordinates = it },
+    is ReaderContent.Pdf ->
+      ZoomablePdfPage(
+        pdf = content.pdf,
+        index = page.section,
+        contentDescription = pageLabel,
+        colorFilter = imageFilter,
+        modifier = Modifier.fillMaxSize().padding(8.dp),
       )
-      PageFooter(
-        chapter = content.chapterTitle(page.section),
-        footer = footer,
-        settings = settings,
-        modifier = Modifier.height(PageNumberHeight),
-      )
-    }
-    is ReaderContent.Pdf -> ZoomablePdfPage(
-      pdf = content.pdf,
-      index = page.section,
-      contentDescription = pageLabel,
-      colorFilter = imageFilter,
-      modifier = Modifier
-        .fillMaxSize()
-        .padding(8.dp),
-    )
   }
 }
 
 @Composable
 internal fun ReaderContent.Epub.chapterTitle(section: Int): String {
-  return chapterTitles.getOrNull(section) ?: stringResource(StringsR.string.reader_chapter, section + 1)
+  return chapterTitles.getOrNull(section)
+    ?: stringResource(StringsR.string.reader_chapter, section + 1)
 }
 
 /** What [ReaderSettings.header] puts above the text of [section], or null for nothing. */

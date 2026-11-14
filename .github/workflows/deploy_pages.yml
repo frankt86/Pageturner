@@ -7,7 +7,6 @@ on:
       - 'docs/**'
       - mkdocs.yml
       - CONTRIBUTING.md
-      - PRIVACY.md
       - LICENSE.md
       - Pipfile
   # puts each new APK on the site, a plain file that downloads on phones without GitHub's redirects

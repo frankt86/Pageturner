@@ -30,8 +30,9 @@ import kotlin.math.min
 private const val MAX_ZOOM = 5F
 
 /**
- * A PDF page that zooms with two fingers and pans with one while zoomed. A double tap switches between the whole page
- * and its full width. While not zoomed, drags and taps go on to turn the pages.
+ * A PDF page that zooms with two fingers and pans with one while zoomed. A double tap switches
+ * between the whole page and its full width. While not zoomed, drags and taps go on to turn the
+ * pages.
  */
 @Composable
 internal fun ZoomablePdfPage(
@@ -48,9 +49,10 @@ internal fun ZoomablePdfPage(
     val detail = if (scale > 1.5F) 2 else 1
     val width = constraints.maxWidth
     val height = constraints.maxHeight
-    val bitmap by produceState<ImageBitmap?>(null, pdf, index, width, height, detail) {
-      value = pdf.render(index, width * detail, height * detail)?.asImageBitmap()
-    }
+    val bitmap by
+      produceState<ImageBitmap?>(null, pdf, index, width, height, detail) {
+        value = pdf.render(index, width * detail, height * detail)?.asImageBitmap()
+      }
     val image = bitmap ?: return@BoxWithConstraints
     val latestImage by rememberUpdatedState(image)
     fun clamp(target: Offset): Offset {
@@ -63,54 +65,58 @@ internal fun ZoomablePdfPage(
       contentDescription = contentDescription,
       contentScale = ContentScale.Fit,
       colorFilter = colorFilter,
-      modifier = Modifier
-        .fillMaxSize()
-        .graphicsLayer {
-          scaleX = scale
-          scaleY = scale
-          translationX = offset.x
-          translationY = offset.y
-        }
-        .pointerInput(index, width, height) {
-          var lastTapMillis = 0L
-          var lastTap = Offset.Zero
-          awaitEachGesture {
-            val down = awaitFirstDown(requireUnconsumed = false)
-            var moved = false
-            var multiTouch = false
-            do {
-              val event = awaitPointerEvent()
-              val fingers = event.changes.count { it.pressed }
-              if (fingers > 1) multiTouch = true
-              if (event.changes.any { it.positionChanged() }) moved = true
-              if (fingers > 1 || scale > 1F) {
-                scale = (scale * event.calculateZoom()).coerceIn(1F, MAX_ZOOM)
-                offset = if (scale == 1F) Offset.Zero else clamp(offset + event.calculatePan())
-                event.changes.forEach { if (it.positionChanged()) it.consume() }
-              }
-            } while (event.changes.any { it.pressed })
-            if (!moved && !multiTouch) {
-              val now = down.uptimeMillis
-              val near = (down.position - lastTap).getDistance() < viewConfiguration.touchSlop * 4
-              if (now - lastTapMillis < viewConfiguration.doubleTapTimeoutMillis && near) {
-                if (scale > 1F) {
-                  scale = 1F
-                  offset = Offset.Zero
-                } else {
-                  // a page narrower than the screen fills its width, a wide one doubles
-                  val shownWidth = min(width.toFloat(), height * latestImage.width.toFloat() / latestImage.height)
-                  scale = (width / shownWidth).takeIf { it > 1.05F } ?: 2F
-                  // starts at the top of the page
-                  offset = clamp(Offset(0F, Float.MAX_VALUE))
+      modifier =
+        Modifier.fillMaxSize()
+          .graphicsLayer {
+            scaleX = scale
+            scaleY = scale
+            translationX = offset.x
+            translationY = offset.y
+          }
+          .pointerInput(index, width, height) {
+            var lastTapMillis = 0L
+            var lastTap = Offset.Zero
+            awaitEachGesture {
+              val down = awaitFirstDown(requireUnconsumed = false)
+              var moved = false
+              var multiTouch = false
+              do {
+                val event = awaitPointerEvent()
+                val fingers = event.changes.count { it.pressed }
+                if (fingers > 1) multiTouch = true
+                if (event.changes.any { it.positionChanged() }) moved = true
+                if (fingers > 1 || scale > 1F) {
+                  scale = (scale * event.calculateZoom()).coerceIn(1F, MAX_ZOOM)
+                  offset = if (scale == 1F) Offset.Zero else clamp(offset + event.calculatePan())
+                  event.changes.forEach { if (it.positionChanged()) it.consume() }
                 }
-                lastTapMillis = 0L
-              } else {
-                lastTapMillis = now
-                lastTap = down.position
+              } while (event.changes.any { it.pressed })
+              if (!moved && !multiTouch) {
+                val now = down.uptimeMillis
+                val near = (down.position - lastTap).getDistance() < viewConfiguration.touchSlop * 4
+                if (now - lastTapMillis < viewConfiguration.doubleTapTimeoutMillis && near) {
+                  if (scale > 1F) {
+                    scale = 1F
+                    offset = Offset.Zero
+                  } else {
+                    // a page narrower than the screen fills its width, a wide one doubles
+                    val shownWidth =
+                      min(
+                        width.toFloat(),
+                        height * latestImage.width.toFloat() / latestImage.height,
+                      )
+                    scale = (width / shownWidth).takeIf { it > 1.05F } ?: 2F
+                    // starts at the top of the page
+                    offset = clamp(Offset(0F, Float.MAX_VALUE))
+                  }
+                  lastTapMillis = 0L
+                } else {
+                  lastTapMillis = now
+                  lastTap = down.position
+                }
               }
             }
-          }
-        },
+          },
     )
   }
 }

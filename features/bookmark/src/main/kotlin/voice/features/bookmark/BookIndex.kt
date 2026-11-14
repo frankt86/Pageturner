@@ -2,6 +2,7 @@ package voice.features.bookmark
 
 import voice.core.data.Book
 import voice.core.data.ChapterId
+import voice.core.data.displayName
 import voice.core.data.durationMs
 import voice.core.data.markForPosition
 import voice.core.ui.formatTime
@@ -19,10 +20,12 @@ internal data class BookLocation(
   val bookDuration: Long,
 ) {
 
-  val time: String get() = formatTime(timeInChapter, chapterDuration)
+  val time: String
+    get() = formatTime(timeInChapter, chapterDuration)
 
   val percent: Int
-    get() = if (bookDuration > 0) (bookPosition * 100 / bookDuration).toInt().coerceIn(0, 100) else 0
+    get() =
+      if (bookDuration > 0) (bookPosition * 100 / bookDuration).toInt().coerceIn(0, 100) else 0
 
   val progress: Float
     get() = if (bookDuration > 0) (bookPosition.toFloat() / bookDuration).coerceIn(0F, 1F) else 0F
@@ -30,23 +33,28 @@ internal data class BookLocation(
 
 internal class BookIndex(private val book: Book) {
 
-  private val chapterIndices = book.chapters.withIndex().associate { (index, chapter) -> chapter.id to index }
-  private val chapterOffsets = book.chapters.runningFold(0L) { offset, chapter -> offset + chapter.duration }
-  private val firstChapterNumbers = book.chapters.runningFold(1) { number, chapter -> number + chapter.chapterMarks.size }
-  private val chapterNames = meaningfulChapterNames(book.chapters.flatMap { chapter -> chapter.chapterMarks.map { it.name } })
+  private val chapterIndices =
+    book.chapters.withIndex().associate { (index, chapter) -> chapter.id to index }
+  private val chapterOffsets =
+    book.chapters.runningFold(0L) { offset, chapter -> offset + chapter.duration }
+  private val firstChapterNumbers =
+    book.chapters.runningFold(1) { number, chapter -> number + chapter.chapterMarks.size }
 
-  val chapterCount: Int = chapterNames.size
+  val chapterCount: Int = book.chapters.sumOf { it.chapterMarks.size }
 
   val duration: Long = book.duration
 
   val current: BookLocation? = locate(book.content.currentChapter, book.content.positionInChapter)
 
   /** The chapter segments of the book bar, as fractions of the whole book. */
-  val segments: List<Float> = if (duration <= 0L) {
-    emptyList()
-  } else {
-    book.chapters.flatMap { chapter -> chapter.chapterMarks.map { it.durationMs.toFloat() / duration } }
-  }
+  val segments: List<Float> =
+    if (duration <= 0L) {
+      emptyList()
+    } else {
+      book.chapters.flatMap { chapter ->
+        chapter.chapterMarks.map { it.durationMs.toFloat() / duration }
+      }
+    }
 
   fun locate(
     chapterId: ChapterId,
@@ -59,7 +67,7 @@ internal class BookIndex(private val book: Book) {
     val number = firstChapterNumbers[index] + chapter.chapterMarks.indexOf(mark).coerceAtLeast(0)
     return BookLocation(
       chapterNumber = number,
-      chapterName = chapterNames.getOrNull(number - 1),
+      chapterName = mark.displayName(number, chapterCount),
       timeInChapter = clamped - mark.startMs,
       chapterDuration = mark.durationMs,
       bookPosition = chapterOffsets[index] + clamped,

@@ -39,6 +39,7 @@ import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
@@ -46,9 +47,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import voice.core.data.folders.FolderType
 import voice.core.logging.api.Logger
-import voice.core.ui.ShapedIcon
-import voice.core.ui.icons.VoiceIcons
 import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
+import voice.core.ui.ShapedIcon
 
 internal data class DownloadFolderSheetState(
   val folders: List<DownloadFolderItem>,
@@ -65,7 +66,9 @@ internal data class DownloadFolderItem(
   val selected: Boolean,
 )
 
-/** Chooses the folder of the library that downloads from the catalogs go into, or adds a new one. */
+/**
+ * Chooses the folder of the library that downloads from the catalogs go into, or adds a new one.
+ */
 @Composable
 internal fun DownloadFolderSheet(
   state: DownloadFolderSheetState,
@@ -74,26 +77,28 @@ internal fun DownloadFolderSheet(
   onDismiss: () -> Unit,
 ) {
   val colors = MaterialTheme.colorScheme
-  val treeLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
-    if (uri != null) onPick(uri)
-  }
+  val treeLauncher =
+    rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+      if (uri != null) onPick(uri)
+    }
   ModalBottomSheet(
     onDismissRequest = onDismiss,
-    sheetState = rememberBottomSheetState(
-      initialValue = Hidden,
-      enabledValues = setOf(Hidden, Expanded),
-    ),
+    sheetState =
+      rememberBottomSheetState(
+        initialValue = Hidden,
+        enabledValues = setOf(Hidden, Expanded),
+      ),
   ) {
     Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .verticalScroll(rememberScrollState())
-        .padding(horizontal = 16.dp)
-        .padding(bottom = 32.dp),
+      modifier =
+        Modifier.fillMaxWidth()
+          .verticalScroll(rememberScrollState())
+          .padding(horizontal = 16.dp)
+          .padding(bottom = 32.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       ShapedIcon(
-        icon = VoiceIcons.Folder,
+        icon = UiR.drawable.ic_folder,
         shape = MaterialShapes.Cookie6Sided,
         containerColor = colors.primaryContainer,
         contentColor = colors.onPrimaryContainer,
@@ -148,16 +153,18 @@ internal fun DownloadFolderSheet(
             Logger.w(e, "Could not pick a download folder")
           }
         }
-        val modifier = Modifier
-          .fillMaxWidth()
-          .heightIn(min = ButtonDefaults.MediumContainerHeight)
+        val modifier = Modifier.fillMaxWidth().heightIn(min = ButtonDefaults.MediumContainerHeight)
         // without a folder of books in the library, picking one is the way
         if (state.folders.isEmpty()) {
           Button(onClick = onClick, shapes = ButtonDefaults.shapes(), modifier = modifier) {
             Text(stringResource(StringsR.string.folder_add_action_folder))
           }
         } else {
-          FilledTonalButton(onClick = onClick, shapes = ButtonDefaults.shapes(), modifier = modifier) {
+          FilledTonalButton(
+            onClick = onClick,
+            shapes = ButtonDefaults.shapes(),
+            modifier = modifier,
+          ) {
             Text(stringResource(StringsR.string.opds_download_folder_new))
           }
         }
@@ -173,9 +180,9 @@ private fun FolderOption(
 ) {
   val colors = MaterialTheme.colorScheme
   Surface(
-    modifier = Modifier
-      .fillMaxWidth()
-      .selectable(selected = folder.selected, onClick = onClick, role = Role.RadioButton),
+    modifier =
+      Modifier.fillMaxWidth()
+        .selectable(selected = folder.selected, onClick = onClick, role = Role.RadioButton),
     shape = RoundedCornerShape(24.dp),
     color = if (folder.selected) colors.secondaryContainer else colors.surfaceContainerHigh,
     contentColor = if (folder.selected) colors.onSecondaryContainer else colors.onSurface,
@@ -185,7 +192,11 @@ private fun FolderOption(
       modifier = Modifier.padding(start = 4.dp, end = 16.dp, top = 12.dp, bottom = 12.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      RadioButton(selected = folder.selected, onClick = null, modifier = Modifier.padding(horizontal = 12.dp))
+      RadioButton(
+        selected = folder.selected,
+        onClick = null,
+        modifier = Modifier.padding(horizontal = 12.dp),
+      )
       Column(Modifier.weight(1F)) {
         Text(
           text = folder.name,
@@ -196,19 +207,24 @@ private fun FolderOption(
         Spacer(Modifier.height(2.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
           Icon(
-            imageVector = if (folder.type == FolderType.Author) VoiceIcons.Person else VoiceIcons.LibraryBooks,
+            painter =
+              painterResource(
+                if (folder.type == FolderType.Author) UiR.drawable.ic_person
+                else UiR.drawable.ic_library_books,
+              ),
             contentDescription = null,
             modifier = Modifier.size(16.dp),
           )
           Spacer(Modifier.size(6.dp))
           Text(
-            text = stringResource(
-              if (folder.type == FolderType.Author) {
-                StringsR.string.folder_mode_author_label
-              } else {
-                StringsR.string.folder_mode_root_label
-              },
-            ),
+            text =
+              stringResource(
+                if (folder.type == FolderType.Author) {
+                  StringsR.string.folder_mode_author_label
+                } else {
+                  StringsR.string.folder_mode_root_label
+                },
+              ),
             style = MaterialTheme.typography.bodyMedium,
           )
         }

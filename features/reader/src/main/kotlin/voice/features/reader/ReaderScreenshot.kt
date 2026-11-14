@@ -16,7 +16,8 @@ import voice.core.data.ReaderSettings
 import voice.core.data.ReaderTheme
 import voice.core.ui.VoiceTheme
 
-private val chapterOne = """
+private val chapterOne =
+  """
   It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.
 
   However little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so well fixed in the minds of the surrounding families, that he is considered the rightful property of some one or other of their daughters.
@@ -52,9 +53,11 @@ private val chapterOne = """
   “Is that his design in settling here?”
 
   “Design! Nonsense, how can you talk so! But it is very likely that he may fall in love with one of them, and therefore you must visit him as soon as he comes.”
-""".trimIndent()
+  """
+    .trimIndent()
 
-// rendered by CI into the screenshots of the README and the docs, one page folded and two pages unfolded
+// rendered by CI into the screenshots of the README and the docs, one page folded and two pages
+// unfolded
 @Composable
 @Preview(widthDp = 411, heightDp = 891, name = "folded")
 @Preview(widthDp = 841, heightDp = 701, name = "unfolded")
@@ -94,29 +97,38 @@ private fun ReaderPreview(
   showControls: Boolean = false,
 ) {
   val readAloud = chapterOne.indexOf("“My dear Mr. Bennet,”")
-  val state = ReaderState.Loaded(
-    content = ReaderContent.Epub(
-      title = "Pride and Prejudice",
-      chapters = listOf(chapterOne + "\n\n" + chapterOne),
-      chapterTitles = listOf("Chapter 1"),
-    ),
-    position = EbookPosition(),
-    readingAloud = true,
-    readingRange = readAloud until chapterOne.indexOf('\n', readAloud),
-    settings = settings,
-    voice = VoiceState(
-      natural = true,
-      naturalReady = true,
-      downloadProgress = null,
-      downloadFailed = false,
-      speechRate = 1F,
-      speakers = emptyList(),
-      speaker = null,
-    ),
-    highlights = listOf(
-      Highlight(section = 0, start = 0, end = chapterOne.indexOf(','), color = HighlightColor.Yellow),
-    ),
-  )
+  val state =
+    ReaderState.Loaded(
+      content =
+        ReaderContent.Epub(
+          title = "Pride and Prejudice",
+          chapters = listOf(chapterOne + "\n\n" + chapterOne),
+          chapterTitles = listOf("Chapter 1"),
+        ),
+      position = EbookPosition(),
+      readingAloud = true,
+      readingRange = readAloud until chapterOne.indexOf('\n', readAloud),
+      settings = settings,
+      voice =
+        VoiceState(
+          natural = true,
+          naturalReady = true,
+          downloadProgress = null,
+          downloadFailed = false,
+          speechRate = 1F,
+          speakers = emptyList(),
+          speaker = null,
+        ),
+      highlights =
+        listOf(
+          Highlight(
+            section = 0,
+            start = 0,
+            end = chapterOne.indexOf(','),
+            color = HighlightColor.Yellow,
+          ),
+        ),
+    )
   VoiceTheme {
     Scaffold(
       topBar = {
@@ -150,9 +162,7 @@ private fun ReaderPreview(
         onVisiblePagesChange = {},
         turnRequests = emptyFlow(),
         onTurnRequest = {},
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(contentPadding),
+        modifier = Modifier.fillMaxSize().padding(contentPadding),
         paginateNow = true,
         previewTurn = previewTurn,
         overlay = { pages, pagesPerSpread, _ ->

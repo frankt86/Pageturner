@@ -58,6 +58,7 @@
     <string name="audiobookshelf.status.needs_login">Palvelin pyytää sinua kirjautumaan uudelleen</string>
     <string name="audiobookshelf.status.offline">Palvelimeen ei saada nyt yhteyttä. Ladattuja kirjoja voit silti kuunnella.</string>
     <string name="audiobookshelf.status.syncing">Synkronoidaan…</string>
+    <string name="author.wikipedia">Lue lisää Wikipediasta</string>
     <string name="book.category.action.mark_completed">Merkitse kuunnelluksi</string>
     <string name="book.category.action.mark_current">Merkitse nykyiseksi</string>
     <string name="book.category.action.mark_not_started">Merkitse aloittamattomaksi</string>
@@ -82,8 +83,11 @@
     <string name="book.edit.server.failed">Tallennus palvelimellesi epäonnistui. Yritä uudelleen.</string>
     <string name="book.edit.server.not_allowed">Tililläsi ei ole palvelimella oikeutta muuttaa kirjoja.</string>
     <string name="book.edit.title.label">Nimi</string>
+    <string name="book.hide">Piilota kirjastosta</string>
     <string name="book.remove_from_library">Poista kirjastosta</string>
     <string name="book.remove_from_library.summary">Tiedosto jää laitteellesi</string>
+    <string name="book.select">Valitse</string>
+    <string name="book.show">Näytä kirjastossa</string>
     <string name="book.source.device">Tällä laitteella</string>
     <string name="book.source.server_downloaded">%s · ladattu</string>
     <string name="bookmark.action.add_note">Lisää muistiinpano</string>
@@ -154,8 +158,13 @@
     <string name="folder.add.action.file">Lisää sen sijaan yksittäinen tiedosto</string>
     <string name="folder.add.action.folder">Valitse kansio</string>
     <string name="folder.add.action.opds">Lataa luettelosta</string>
+    <string name="folder.add.help.answer.no_files">Ei vielä äänikirjoja</string>
+    <string name="folder.add.help.answer.not_found">En löydä niitä</string>
+    <string name="folder.add.help.answer.other_app">Toisessa sovelluksessa</string>
     <string name="folder.add.help.computer">Ovatko kirjasi vielä tietokoneella? Kopioi ne ensin puhelimeesi, esimerkiksi Audiobooks- tai Documents-kansioon.</string>
     <string name="folder.add.help.download">Android ei salli sovellusten avata suoraan Download-kansiota. Valitse jokin sen sisällä oleva kansio.</string>
+    <string name="folder.add.help.no_files">Pageturner toistaa puhelimesi äänikirjatiedostoja. LibriVoxista voit ladata tuhansia ilmaisia äänikirjoja.</string>
+    <string name="folder.add.help.other_app">Audiblen tai Spotifyn kaltaisten sovellusten kirjoja voi kuunnella vain niissä sovelluksissa. Pageturner toistaa äänikirjatiedostoja, kuten MP3- ja M4B-tiedostoja.</string>
     <string name="folder.add.help.title">Etkö löytänyt kirjojasi?</string>
     <string name="folder.add.no_picker.message">Pageturner avaa kirjasi Androidin tiedostovalitsimen kautta. Ilman sitä Pageturner ei voi avata kansioitasi tai tiedostojasi.</string>
     <string name="folder.add.no_picker.title">Tässä laitteessa ei ole tiedostovalitsinta</string>
@@ -231,8 +240,14 @@
     <string name="history.source.unplugged">Ääniyhteys katkesi</string>
     <string name="history.source.watch">Kello</string>
     <string name="history.source.widget">Widget</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d sarja</item>
+        <item quantity="other">%d sarjaa</item>
+    </plurals>
     <string name="library.book.downloading">Ladataan</string>
     <string name="library.book.ebook">E-kirja</string>
+    <string name="library.book.hidden">Piilotettu</string>
+    <string name="library.book.hidden.message">%1$s on piilotettu</string>
     <string name="library.book.offline">Ei saatavilla offline-tilassa</string>
     <string name="library.category.completed.title">Kuunneltu</string>
     <string name="library.category.current.title">Nykyinen</string>
@@ -243,9 +258,16 @@
     <string name="library.empty.title">Kirjoja ei löytynyt</string>
     <string name="library.empty.message">Pageturner ei löydä kansioistasi yhtään kirjaa. Tarkista, että tiedostot ovat yhä paikoillaan, tai lisää kansio.</string>
     <string name="library.empty.action">Näytä kansiot</string>
-    <string name="library.folders.title">Kirjakansiot</string>
-    <string name="library.folders.moved.dialog.title">Kirjakansiot siirretty</string>
+    <string name="library.filter">Suodata</string>
+    <string name="library.filter.group_by">Ryhmittele</string>
+    <string name="library.filter.group_by.author">Tekijä</string>
+    <string name="library.filter.group_by.series">Sarja</string>
+    <string name="library.filter.hidden_books">Piilotetut kirjat</string>
+    <string name="library.filter.not_downloaded">Lataamattomat</string>
+    <string name="library.filter.show">Näytä</string>
     <string name="library.folders.moved.dialog.message">Voit nyt hallita kirjakansioita asetuksissa.</string>
+    <string name="library.folders.moved.dialog.title">Kirjakansiot siirretty</string>
+    <string name="library.folders.title">Kirjakansiot</string>
     <string name="library.folders.no_access">Ei pääsyä</string>
     <string name="library.folders.no_access.action">Salli pääsy</string>
     <string name="library.folders.no_access.badge">Salli taas pääsy kansioihisi</string>
@@ -257,6 +279,11 @@
         <item quantity="one">%d kirja kesken</item>
         <item quantity="other">%d kirjaa kesken</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d piilotettu kirja</item>
+        <item quantity="other">%d piilotettua kirjaa</item>
+    </plurals>
+    <string name="library.no_author">Ei tekijää</string>
     <string name="library.search.browse.title">Selaa</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d kirja</item>
@@ -288,6 +315,30 @@
     <string name="library.search.recent.clear_all">Tyhjennä kaikki</string>
     <string name="library.search.recent.remove">Poista %s</string>
     <string name="library.search.recent.title">Viimeisimmät</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">Tekijä asetettu %d kirjalle</item>
+        <item quantity="other">Tekijä asetettu %d kirjalle</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d valittu</item>
+        <item quantity="other">%d valittua</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d kirja on piilotettu</item>
+        <item quantity="other">%d kirjaa on piilotettu</item>
+    </plurals>
+    <string name="library.selection.hide">Piilota</string>
+    <string name="library.selection.select_all">Valitse kaikki</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">Sarja asetettu %d kirjalle</item>
+        <item quantity="other">Sarja asetettu %d kirjalle</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">%d kirjan tallennus palvelimellesi epäonnistui</item>
+        <item quantity="other">%d kirjan tallennus palvelimellesi epäonnistui</item>
+    </plurals>
+    <string name="library.selection.show">Näytä</string>
+    <string name="library.series.hidden.message">%1$s on piilotettu</string>
     <string name="library.storage_permission_bug.action">Anna käyttöoikeus</string>
     <string name="library.storage_permission_bug.message">Eräillä laitteilla joltakin järjestelmän sovellukselta puuttuu tarvittava käyttöoikeus ulkoiseen tallennustilaan. Tämä oikeus on välttämätön jotta Pageturner voi lukea äänikirjojasi.</string>
     <string name="library.storage_permission_bug.title">Käyttöoikeus tarvitaan</string>
@@ -575,6 +626,16 @@
     <string name="reader.word_spacing">Sanaväli</string>
     <string name="series.continue">Jatka</string>
     <string name="series.continue_book">Jatka kirjaa %s</string>
+    <string name="series.mark_completed">Merkitse kuunnelluksi</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">Menetät kuuntelukohtasi %d kirjassa.</item>
+        <item quantity="other">Menetät kuuntelukohtasi %d kirjassa.</item>
+    </plurals>
+    <string name="series.mark_not_started">Merkitse aloittamattomaksi</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">Menetät edistymisesi %d kirjassa.</item>
+        <item quantity="other">Menetät edistymisesi %d kirjassa.</item>
+    </plurals>
     <string name="series.start">Aloita</string>
     <string name="series.start_book">Aloita kirja %s</string>
     <string name="settings.about.app_version.title">Sovelluksen versio</string>

@@ -61,6 +61,7 @@
     <string name="audiobookshelf.status.needs_login">Serverul îți cere să te conectezi din nou</string>
     <string name="audiobookshelf.status.offline">Serverul nu poate fi contactat acum. Poți asculta în continuare cărțile descărcate.</string>
     <string name="audiobookshelf.status.syncing">Se sincronizează…</string>
+    <string name="author.wikipedia">Citește mai mult pe Wikipedia</string>
     <string name="book.category.action.mark_completed">Marchează ca terminată</string>
     <string name="book.category.action.mark_current">Marchează ca în curs</string>
     <string name="book.category.action.mark_not_started">Marchează ca neîncepută încă</string>
@@ -85,8 +86,11 @@
     <string name="book.edit.server.failed">Nu s-a putut salva pe serverul tău. Încearcă din nou.</string>
     <string name="book.edit.server.not_allowed">Contul tău de pe server nu poate modifica cărți.</string>
     <string name="book.edit.title.label">Titlu</string>
+    <string name="book.hide">Ascunde din bibliotecă</string>
     <string name="book.remove_from_library">Elimină din bibliotecă</string>
     <string name="book.remove_from_library.summary">Fișierul rămâne pe dispozitiv</string>
+    <string name="book.select">Selectează</string>
+    <string name="book.show">Afișează în bibliotecă</string>
     <string name="book.source.device">Pe acest dispozitiv</string>
     <string name="book.source.server_downloaded">%s · descărcată</string>
     <string name="bookmark.action.add_note">Adaugă notă</string>
@@ -159,8 +163,13 @@
     <string name="folder.add.action.file">Adaugă doar un fișier</string>
     <string name="folder.add.action.folder">Alege un director</string>
     <string name="folder.add.action.opds">Descarcă dintr-un catalog</string>
+    <string name="folder.add.help.answer.no_files">Încă nu am cărți audio</string>
+    <string name="folder.add.help.answer.not_found">Nu le găsesc</string>
+    <string name="folder.add.help.answer.other_app">Sunt în altă aplicație</string>
     <string name="folder.add.help.computer">Mai ai cărți pe calculator? Copiază-le mai întâi pe telefon, de exemplu în directorul Audiobooks sau Documents.</string>
     <string name="folder.add.help.download">Android nu permite aplicațiilor să deschidă direct directorul Download. Alege un director din interiorul lui.</string>
+    <string name="folder.add.help.no_files">Pageturner redă fișiere cu cărți audio de pe telefonul tău. LibriVox are mii de cărți audio gratuite pe care le poți descărca.</string>
+    <string name="folder.add.help.other_app">Cărțile din aplicații precum Audible sau Spotify pot fi ascultate doar în aplicațiile respective. Pageturner redă fișiere cu cărți audio, cum ar fi MP3 sau M4B.</string>
     <string name="folder.add.help.title">Nu ai găsit cărțile tale?</string>
     <string name="folder.add.no_picker.message">Pageturner îți deschide cărțile prin selectorul de fișiere din Android. Fără el, Pageturner nu poate deschide nici directoarele, nici fișierele tale.</string>
     <string name="folder.add.no_picker.title">Acest dispozitiv nu are selector de fișiere</string>
@@ -244,8 +253,15 @@
     <string name="history.source.unplugged">Audio deconectat</string>
     <string name="history.source.watch">Ceas</string>
     <string name="history.source.widget">Widget</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d serie</item>
+        <item quantity="few">%d serii</item>
+        <item quantity="other">%d de serii</item>
+    </plurals>
     <string name="library.book.downloading">Se descarcă</string>
     <string name="library.book.ebook">Carte electronică</string>
+    <string name="library.book.hidden">Ascunsă</string>
+    <string name="library.book.hidden.message">Ai ascuns %1$s</string>
     <string name="library.book.offline">Indisponibilă offline</string>
     <string name="library.category.completed.title">Cărți terminate</string>
     <string name="library.category.current.title">Cărți în curs</string>
@@ -256,6 +272,13 @@
     <string name="library.empty.title">Nu s-au găsit cărți</string>
     <string name="library.empty.message">Pageturner nu găsește nicio carte în directoarele tale. Verifică dacă fișierele mai sunt acolo sau adaugă un director.</string>
     <string name="library.empty.action">Afișează directoarele</string>
+    <string name="library.filter">Filtrează</string>
+    <string name="library.filter.group_by">Grupează după</string>
+    <string name="library.filter.group_by.author">Autor</string>
+    <string name="library.filter.group_by.series">Serie</string>
+    <string name="library.filter.hidden_books">Cărți ascunse</string>
+    <string name="library.filter.not_downloaded">Nedescărcate</string>
+    <string name="library.filter.show">Afișează</string>
     <string name="library.folders.title">Directoare cărți</string>
     <string name="library.folders.moved.dialog.title">Directoarele cu cărți s-au mutat</string>
     <string name="library.folders.moved.dialog.message">Acum poți gestiona directoarele cu cărți din Setări.</string>
@@ -271,6 +294,12 @@
         <item quantity="few">%d cărți în curs</item>
         <item quantity="other">%d de cărți în curs</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d carte ascunsă</item>
+        <item quantity="few">%d cărți ascunse</item>
+        <item quantity="other">%d de cărți ascunse</item>
+    </plurals>
+    <string name="library.no_author">Fără autor</string>
     <string name="library.search.browse.title">Răsfoiește</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d carte</item>
@@ -305,6 +334,35 @@
     <string name="library.search.recent.clear_all">Șterge tot</string>
     <string name="library.search.recent.remove">Elimină %s</string>
     <string name="library.search.recent.title">Recente</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">Autor stabilit pentru %d carte</item>
+        <item quantity="few">Autor stabilit pentru %d cărți</item>
+        <item quantity="other">Autor stabilit pentru %d de cărți</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d carte selectată</item>
+        <item quantity="few">%d cărți selectate</item>
+        <item quantity="other">%d de cărți selectate</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">Ai ascuns %d carte</item>
+        <item quantity="few">Ai ascuns %d cărți</item>
+        <item quantity="other">Ai ascuns %d de cărți</item>
+    </plurals>
+    <string name="library.selection.hide">Ascunde</string>
+    <string name="library.selection.select_all">Selectează tot</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">Serie stabilită pentru %d carte</item>
+        <item quantity="few">Serie stabilită pentru %d cărți</item>
+        <item quantity="other">Serie stabilită pentru %d de cărți</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">Nu s-a putut salva %d carte pe serverul tău</item>
+        <item quantity="few">Nu s-au putut salva %d cărți pe serverul tău</item>
+        <item quantity="other">Nu s-au putut salva %d de cărți pe serverul tău</item>
+    </plurals>
+    <string name="library.selection.show">Afișează</string>
+    <string name="library.series.hidden.message">Ai ascuns %1$s</string>
     <string name="library.storage_permission_bug.action">Acordă permisiune</string>
     <string name="library.storage_permission_bug.message">Pe anumite dispozitive, o aplicație de sistem are nevoie de anumite permisiuni pentru a accesa stocarea externă. Aceste permisiuni sunt esențiale pentru ca Pageturner să poată citi cărțile tale audio.</string>
     <string name="library.storage_permission_bug.title">Permisiune necesară</string>
@@ -595,6 +653,18 @@
     <string name="reader.word_spacing">Spațiere între cuvinte</string>
     <string name="series.continue">Continuă</string>
     <string name="series.continue_book">Continuă cartea %s</string>
+    <string name="series.mark_completed">Marchează ca terminată</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">Vei pierde locul unde ai rămas în %d carte.</item>
+        <item quantity="few">Vei pierde locul unde ai rămas în %d cărți.</item>
+        <item quantity="other">Vei pierde locul unde ai rămas în %d de cărți.</item>
+    </plurals>
+    <string name="series.mark_not_started">Marchează ca neîncepută încă</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">Vei pierde progresul din %d carte.</item>
+        <item quantity="few">Vei pierde progresul din %d cărți.</item>
+        <item quantity="other">Vei pierde progresul din %d de cărți.</item>
+    </plurals>
     <string name="series.start">Începe</string>
     <string name="series.start_book">Începe cartea %s</string>
     <string name="settings.about.app_version.title">Versiune aplicație</string>

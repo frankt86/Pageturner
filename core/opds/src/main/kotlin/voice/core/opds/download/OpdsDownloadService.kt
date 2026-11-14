@@ -19,7 +19,10 @@ import voice.core.common.rootGraphAs
 private const val NOTIFICATION_ID = 4245
 private const val ACTION_STOP = "voice.opds.download.STOP"
 
-/** Keeps audiobooks from catalogs downloading while Pageturner is in the background, and shows their progress. */
+/**
+ * Keeps audiobooks from catalogs downloading while Pageturner is in the background, and shows their
+ * progress.
+ */
 public class OpdsDownloadService : Service() {
 
   private val downloads by lazy { rootGraphAs<OpdsDownloadGraph>().opdsAudiobookDownloads }
@@ -47,7 +50,10 @@ public class OpdsDownloadService : Service() {
       scope.launch {
         downloads.notification.collect { notification ->
           if (notification == null) {
-            ServiceCompat.stopForeground(this@OpdsDownloadService, ServiceCompat.STOP_FOREGROUND_REMOVE)
+            ServiceCompat.stopForeground(
+              this@OpdsDownloadService,
+              ServiceCompat.STOP_FOREGROUND_REMOVE,
+            )
             // a download that started in between keeps the service
             stopSelf(lastStartId)
           } else {
@@ -77,12 +83,13 @@ public class OpdsDownloadService : Service() {
 
     fun startIntent(context: Context): Intent = Intent(context, OpdsDownloadService::class.java)
 
-    fun stopIntent(context: Context): PendingIntent = PendingIntent.getService(
-      context,
-      0,
-      startIntent(context).setAction(ACTION_STOP),
-      PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-    )
+    fun stopIntent(context: Context): PendingIntent =
+      PendingIntent.getService(
+        context,
+        0,
+        startIntent(context).setAction(ACTION_STOP),
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+      )
   }
 }
 

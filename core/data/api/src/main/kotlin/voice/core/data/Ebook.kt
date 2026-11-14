@@ -7,8 +7,7 @@ import voice.core.documentfile.CachedDocumentFile
 
 @Serializable
 public data class Ebook(
-  @Serializable(with = UriSerializer::class)
-  val uri: Uri,
+  @Serializable(with = UriSerializer::class) val uri: Uri,
   val name: String,
   val format: EbookFormat,
   val position: EbookPosition = EbookPosition(),
@@ -33,9 +32,14 @@ public data class Ebook(
   /** The bookmarks of the new book engine, Readium Locators as JSON. */
   val readiumBookmarks: List<String> = emptyList(),
   val readiumHighlights: List<ReadiumHighlight> = emptyList(),
-  /** Set for a book downloaded from an OPDS catalog. Older downloads live in the app's own storage. */
+  /**
+   * Set for a book downloaded from an OPDS catalog. Older downloads live in the app's own storage.
+   */
   val opdsSource: OpdsSource? = null,
-  /** Epoch milliseconds of the last move in the book here, which decides against a newer place on a server. */
+  /**
+   * Epoch milliseconds of the last move in the book here, which decides against a newer place on a
+   * server.
+   */
   val positionModified: Long = 0,
   /** The author the listener gave the book, which wins over the one from the file. */
   val customAuthor: String? = null,
@@ -54,15 +58,20 @@ public data class Ebook(
   val pdfPassword: String? = null,
 ) {
 
-  val title: String get() = customName ?: name
+  val title: String
+    get() = customName ?: name
 
-  val shownAuthor: String? get() = customAuthor ?: author
+  val shownAuthor: String?
+    get() = customAuthor ?: author
 
-  val shownCover: String? get() = customCover ?: cover
+  val shownCover: String?
+    get() = customCover ?: cover
 
-  val shownSeries: String? get() = customSeries ?: series
+  val shownSeries: String?
+    get() = customSeries ?: series
 
-  val shownPart: String? get() = customPart ?: seriesPart
+  val shownPart: String?
+    get() = customPart ?: seriesPart
 }
 
 @Serializable
@@ -72,13 +81,16 @@ public data class OpdsSource(
   val acquisitionUrl: String,
   /** The id of the book on a Komga server, which syncs the reading progress. */
   val komgaBookId: String? = null,
-  /** The [Ebook.positionModified] the server knows, so a place that couldn't be sent goes out later. */
+  /**
+   * The [Ebook.positionModified] the server knows, so a place that couldn't be sent goes out later.
+   */
   val syncedPosition: Long = 0,
 )
 
 /**
- * In an EPUB, the chapter and the character in it. In a PDF, the page and the character in its text.
- * Pages are laid out anew for every screen size and font size, so the place is kept in the text.
+ * In an EPUB, the chapter and the character in it. In a PDF, the page and the character in its
+ * text. Pages are laid out anew for every screen size and font size, so the place is kept in the
+ * text.
  */
 @Serializable
 public data class EbookPosition(
@@ -117,10 +129,10 @@ public enum class EbookFormat {
 
   // also .azw and .prc files. Kindle books are read as an EPUB converted from them.
   Mobi,
-  Azw3,
-  ;
+  Azw3;
 
-  public val isKindle: Boolean get() = this == Mobi || this == Azw3
+  public val isKindle: Boolean
+    get() = this == Mobi || this == Azw3
 }
 
 public fun CachedDocumentFile.ebookFormat(): EbookFormat? {
@@ -128,7 +140,9 @@ public fun CachedDocumentFile.ebookFormat(): EbookFormat? {
   return when (name?.substringAfterLast(".")?.lowercase()) {
     "epub" -> EbookFormat.Epub
     "pdf" -> EbookFormat.Pdf
-    "mobi", "azw", "prc" -> EbookFormat.Mobi
+    "mobi",
+    "azw",
+    "prc" -> EbookFormat.Mobi
     "azw3" -> EbookFormat.Azw3
     else -> null
   }

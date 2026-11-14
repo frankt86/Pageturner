@@ -13,7 +13,9 @@ import voice.core.datastore.VoiceDataStoreFactory
 public class EbooksStore(store: DataStore<List<Ebook>>) : DataStore<List<Ebook>> by store {
 
   @Inject
-  public constructor(factory: VoiceDataStoreFactory) : this(
+  public constructor(
+    factory: VoiceDataStoreFactory,
+  ) : this(
     factory.create(
       serializer = ListSerializer(Ebook.serializer()),
       defaultValue = emptyList(),

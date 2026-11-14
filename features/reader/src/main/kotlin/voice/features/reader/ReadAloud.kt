@@ -3,20 +3,21 @@ package voice.features.reader
 import android.content.Context
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
-import kotlinx.coroutines.CancellableContinuation
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.resume
+import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 internal class ReadAloud(context: Context) {
 
   private val ready = CompletableDeferred<Boolean>()
   private val pending = ConcurrentHashMap<String, CancellableContinuation<Unit>>()
-  private val textToSpeech = TextToSpeech(context.applicationContext) { status ->
-    ready.complete(status == TextToSpeech.SUCCESS)
-  }
+  private val textToSpeech =
+    TextToSpeech(context.applicationContext) { status ->
+      ready.complete(status == TextToSpeech.SUCCESS)
+    }
 
   init {
     textToSpeech.setOnUtteranceProgressListener(

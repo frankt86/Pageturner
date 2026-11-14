@@ -55,6 +55,7 @@
     <string name="audiobookshelf.status.needs_login">服务器需要您重新登录</string>
     <string name="audiobookshelf.status.offline">暂时无法连接服务器。已下载的书仍可播放。</string>
     <string name="audiobookshelf.status.syncing">正在同步…</string>
+    <string name="author.wikipedia">在维基百科上了解更多</string>
     <string name="book.category.action.mark_completed">标记为已听完</string>
     <string name="book.category.action.mark_current">标记为在听</string>
     <string name="book.category.action.mark_not_started">标记为未开始</string>
@@ -79,8 +80,11 @@
     <string name="book.edit.server.failed">无法保存到您的服务器。请重试。</string>
     <string name="book.edit.server.not_allowed">您在服务器上的账号无权修改书籍。</string>
     <string name="book.edit.title.label">书名</string>
+    <string name="book.hide">从书库中隐藏</string>
     <string name="book.remove_from_library">从书库中移除</string>
     <string name="book.remove_from_library.summary">文件仍保留在您的设备上</string>
+    <string name="book.select">选择</string>
+    <string name="book.show">在书库中显示</string>
     <string name="book.source.device">在本设备上</string>
     <string name="book.source.server_downloaded">%s · 已下载</string>
     <string name="bookmark.action.add_note">添加笔记</string>
@@ -149,8 +153,13 @@
     <string name="folder.add.action.file">改为添加单个文件</string>
     <string name="folder.add.action.folder">选择文件夹</string>
     <string name="folder.add.action.opds">从目录下载</string>
+    <string name="folder.add.help.answer.no_files">还没有有声书</string>
+    <string name="folder.add.help.answer.not_found">找不到</string>
+    <string name="folder.add.help.answer.other_app">在其他应用里</string>
     <string name="folder.add.help.computer">书籍还在电脑上？请先将它们复制到手机，例如复制到 Audiobooks 或 Documents 文件夹中。</string>
     <string name="folder.add.help.download">Android 不允许应用直接打开 Download 文件夹，请选择其中的一个文件夹。</string>
+    <string name="folder.add.help.no_files">Pageturner 播放的是您手机上的有声书文件。LibriVox 上有数千本免费有声书可供下载。</string>
+    <string name="folder.add.help.other_app">Audible 或 Spotify 等应用中的书只能在这些应用里播放。Pageturner 播放的是有声书文件，例如 MP3 或 M4B。</string>
     <string name="folder.add.help.title">未找到您的书籍？</string>
     <string name="folder.add.no_picker.message">Pageturner 通过 Android 的文件选择器打开您的书籍。没有它，Pageturner 就无法打开您的文件夹或文件。</string>
     <string name="folder.add.no_picker.title">此设备没有文件选择器</string>
@@ -218,8 +227,13 @@
     <string name="history.source.unplugged">音频设备已断开</string>
     <string name="history.source.watch">手表</string>
     <string name="history.source.widget">小部件</string>
+    <plurals name="library.author.series_count">
+        <item quantity="other">%d 个系列</item>
+    </plurals>
     <string name="library.book.downloading">正在下载</string>
     <string name="library.book.ebook">电子书</string>
+    <string name="library.book.hidden">已隐藏</string>
+    <string name="library.book.hidden.message">《%1$s》已隐藏</string>
     <string name="library.book.offline">离线不可用</string>
     <string name="library.category.completed.title">已听完</string>
     <string name="library.category.current.title">在听</string>
@@ -230,9 +244,16 @@
     <string name="library.empty.title">未找到书籍</string>
     <string name="library.empty.message">Pageturner 在您的文件夹中找不到任何书籍。请检查文件是否还在原处，或添加文件夹。</string>
     <string name="library.empty.action">查看文件夹</string>
-    <string name="library.folders.title">书籍文件夹</string>
-    <string name="library.folders.moved.dialog.title">书籍文件夹已移动</string>
+    <string name="library.filter">筛选</string>
+    <string name="library.filter.group_by">分组方式</string>
+    <string name="library.filter.group_by.author">作者</string>
+    <string name="library.filter.group_by.series">系列</string>
+    <string name="library.filter.hidden_books">已隐藏的书</string>
+    <string name="library.filter.not_downloaded">未下载</string>
+    <string name="library.filter.show">显示</string>
     <string name="library.folders.moved.dialog.message">您现在可以在“设置”中管理书籍文件夹。</string>
+    <string name="library.folders.moved.dialog.title">书籍文件夹已移动</string>
+    <string name="library.folders.title">书籍文件夹</string>
     <string name="library.folders.no_access">无法访问</string>
     <string name="library.folders.no_access.action">允许访问</string>
     <string name="library.folders.no_access.badge">请重新允许访问您的文件夹</string>
@@ -243,6 +264,10 @@
     <plurals name="library.header.in_progress">
         <item quantity="other">正在听 %d 本书</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="other">已隐藏 %d 本书</item>
+    </plurals>
+    <string name="library.no_author">无作者</string>
     <string name="library.search.browse.title">浏览</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="other">%d 本书</item>
@@ -271,6 +296,25 @@
     <string name="library.search.recent.clear_all">全部清除</string>
     <string name="library.search.recent.remove">移除 %s</string>
     <string name="library.search.recent.title">最近搜索</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="other">已为 %d 本书设置作者</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="other">已选择 %d 本</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="other">已隐藏 %d 本书</item>
+    </plurals>
+    <string name="library.selection.hide">隐藏</string>
+    <string name="library.selection.select_all">全选</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="other">已为 %d 本书设置系列</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="other">有 %d 本书无法保存到您的服务器</item>
+    </plurals>
+    <string name="library.selection.show">显示</string>
+    <string name="library.series.hidden.message">《%1$s》已隐藏</string>
     <string name="library.storage_permission_bug.action">给予权限</string>
     <string name="library.storage_permission_bug.message">对于某些设备，系统应用程序缺少访问外部存储的必要权限。此访问对于 Pageturner 读取您的有声书至关重要。</string>
     <string name="library.storage_permission_bug.title">需要权限</string>
@@ -555,6 +599,14 @@
     <string name="reader.word_spacing">词间距</string>
     <string name="series.continue">继续收听</string>
     <string name="series.continue_book">继续收听第 %s 卷</string>
+    <string name="series.mark_completed">标记为已听完</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="other">%d 本书的收听位置会丢失。</item>
+    </plurals>
+    <string name="series.mark_not_started">标记为未开始</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="other">%d 本书的收听进度会丢失。</item>
+    </plurals>
     <string name="series.start">开始收听</string>
     <string name="series.start_book">开始收听第 %s 卷</string>
     <string name="settings.about.app_version.title">软件版本</string>

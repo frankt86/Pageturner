@@ -16,7 +16,10 @@ internal fun ByteArray.u8(at: Int): Int = this[at].toInt() and 0xFF
 internal fun ByteArray.u16(at: Int): Int = (u8(at) shl 8) or u8(at + 1)
 
 internal fun ByteArray.u32(at: Int): Long {
-  return (u8(at).toLong() shl 24) or (u8(at + 1).toLong() shl 16) or (u8(at + 2).toLong() shl 8) or u8(at + 3).toLong()
+  return (u8(at).toLong() shl 24) or
+    (u8(at + 1).toLong() shl 16) or
+    (u8(at + 2).toLong() shl 8) or
+    u8(at + 3).toLong()
 }
 
 internal fun ByteArray.ascii(
@@ -42,12 +45,14 @@ internal class PalmDb(private val bytes: ByteArray) {
     offsets = IntArray(count) { bytes.u32(78 + it * 8).toInt() }
   }
 
-  val recordCount: Int get() = offsets.size
+  val recordCount: Int
+    get() = offsets.size
 
   fun record(index: Int): ByteArray {
     if (index !in offsets.indices) return ByteArray(0)
     val start = offsets[index].coerceIn(0, bytes.size)
-    val end = (if (index + 1 < offsets.size) offsets[index + 1] else bytes.size).coerceIn(start, bytes.size)
+    val end =
+      (if (index + 1 < offsets.size) offsets[index + 1] else bytes.size).coerceIn(start, bytes.size)
     return bytes.copyOfRange(start, end)
   }
 }
@@ -59,8 +64,9 @@ internal object Compression {
 }
 
 /**
- * The headers in the first record of a book: the PalmDOC header, the MOBI header and the EXTH metadata. [start] is the
- * index of that record, which is not 0 for the KF8 part of a combined file. Record indices are made absolute with it.
+ * The headers in the first record of a book: the PalmDOC header, the MOBI header and the EXTH
+ * metadata. [start] is the index of that record, which is not 0 for the KF8 part of a combined
+ * file. Record indices are made absolute with it.
  */
 internal class MobiHeader(
   private val record: ByteArray,
@@ -89,7 +95,9 @@ internal class MobiHeader(
 
   val charset: Charset = if (encoding == 65001) Charsets.UTF_8 else Charset.forName("windows-1252")
 
-  val exth: Exth = if (hasMobiHeader && exthFlags and 0x40 != 0L) Exth.parse(record, 16 + headerLength) else Exth(emptyMap())
+  val exth: Exth =
+    if (hasMobiHeader && exthFlags and 0x40 != 0L) Exth.parse(record, 16 + headerLength)
+    else Exth(emptyMap())
 
   val fullName: String? = run {
     val offset = field(84)?.toInt() ?: return@run null
@@ -118,7 +126,8 @@ internal class Exth(private val records: Map<Int, List<ByteArray>>) {
   fun string(
     type: Int,
     charset: Charset,
-  ): String? = all(type).firstOrNull()?.let { String(it, charset).trim() }?.takeIf { it.isNotEmpty() }
+  ): String? =
+    all(type).firstOrNull()?.let { String(it, charset).trim() }?.takeIf { it.isNotEmpty() }
 
   fun int(type: Int): Int? = all(type).firstOrNull()?.takeIf { it.size >= 4 }?.u32(0)?.toInt()
 
@@ -145,7 +154,8 @@ internal class Exth(private val records: Map<Int, List<ByteArray>>) {
         val type = record.u32(offset).toInt()
         val length = record.u32(offset + 4).toInt()
         if (length < 8 || offset + length > record.size) return Exth(records)
-        records.getOrPut(type) { mutableListOf() } += record.copyOfRange(offset + 8, offset + length)
+        records.getOrPut(type) { mutableListOf() } +=
+          record.copyOfRange(offset + 8, offset + length)
         offset += length
       }
       return Exth(records)
@@ -163,12 +173,17 @@ internal class KindleMetadataFields(
 )
 
 internal fun MobiHeader.metadata(dbName: String): KindleMetadataFields {
-  val authors = exth.all(Exth.AUTHOR).map { String(it, charset).trim() }.filter { it.isNotEmpty() }.distinct()
+  val authors =
+    exth.all(Exth.AUTHOR).map { String(it, charset).trim() }.filter { it.isNotEmpty() }.distinct()
   return KindleMetadataFields(
-    title = exth.string(Exth.UPDATED_TITLE, charset) ?: fullName ?: dbName.replace('_', ' ').trim().takeIf { it.isNotEmpty() },
+    title =
+      exth.string(Exth.UPDATED_TITLE, charset)
+        ?: fullName
+        ?: dbName.replace('_', ' ').trim().takeIf { it.isNotEmpty() },
     author = authors.joinToString(", ").ifEmpty { null },
     language = exth.string(Exth.LANGUAGE, charset),
     identifier = exth.string(Exth.ASIN, charset) ?: exth.string(Exth.SECOND_ASIN, charset),
-    coverOffset = (exth.int(Exth.COVER_OFFSET) ?: exth.int(Exth.THUMBNAIL_OFFSET))?.takeIf { it >= 0 },
+    coverOffset =
+      (exth.int(Exth.COVER_OFFSET) ?: exth.int(Exth.THUMBNAIL_OFFSET))?.takeIf { it >= 0 },
   )
 }

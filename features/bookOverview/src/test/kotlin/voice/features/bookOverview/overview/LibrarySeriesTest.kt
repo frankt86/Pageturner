@@ -1,12 +1,13 @@
 package voice.features.bookOverview.overview
 
-import voice.core.data.Book
-import voice.features.bookOverview.book
-import voice.features.bookOverview.chapter
-import voice.features.bookOverview.ebook
 import java.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import voice.core.data.Book
+import voice.core.data.BookCategory
+import voice.features.bookOverview.book
+import voice.features.bookOverview.chapter
+import voice.features.bookOverview.ebook
 
 class LibrarySeriesTest {
 
@@ -15,7 +16,8 @@ class LibrarySeriesTest {
     val book = inProgress(series = "Saga")
 
     assertEquals(
-      expected = mapOf(BookOverviewCategory.CURRENT to listOf(LibraryEntry.Single(LibraryBook.Audiobook(book)))),
+      expected =
+        mapOf(BookCategory.CURRENT to listOf(LibraryEntry.Single(LibraryBook.Audiobook(book)))),
       actual = libraryEntries(listOf(book)),
     )
   }
@@ -29,11 +31,17 @@ class LibrarySeriesTest {
 
     val entries = libraryEntries(listOf(third, other, second, first))
 
-    assertEquals(expected = listOf(BookOverviewCategory.CURRENT, BookOverviewCategory.NOT_STARTED), actual = entries.keys.toList())
-    assertEquals(expected = audiobooks(first, second, third), actual = entries.getValue(BookOverviewCategory.CURRENT).stack().books)
+    assertEquals(
+      expected = listOf(BookCategory.CURRENT, BookCategory.NOT_STARTED),
+      actual = entries.keys.toList(),
+    )
+    assertEquals(
+      expected = audiobooks(first, second, third),
+      actual = entries.getValue(BookCategory.CURRENT).stack().books,
+    )
     assertEquals(
       expected = listOf(LibraryEntry.Single(LibraryBook.Audiobook(other))),
-      actual = entries.getValue(BookOverviewCategory.NOT_STARTED),
+      actual = entries.getValue(BookCategory.NOT_STARTED),
     )
   }
 
@@ -41,31 +49,33 @@ class LibrarySeriesTest {
   fun `a series that is not started is not started`() {
     val entries = libraryEntries(listOf(notStarted(series = "Saga"), notStarted(series = "Saga")))
 
-    assertEquals(expected = setOf(BookOverviewCategory.NOT_STARTED), actual = entries.keys)
+    assertEquals(expected = setOf(BookCategory.NOT_STARTED), actual = entries.keys)
   }
 
   @Test
   fun `a series with every book finished is completed`() {
     val entries = libraryEntries(listOf(finished(series = "Saga"), finished(series = "Saga")))
 
-    assertEquals(expected = setOf(BookOverviewCategory.FINISHED), actual = entries.keys)
+    assertEquals(expected = setOf(BookCategory.FINISHED), actual = entries.keys)
   }
 
   @Test
   fun `a series between two books is current`() {
     val entries = libraryEntries(listOf(finished(series = "Saga"), notStarted(series = "Saga")))
 
-    assertEquals(expected = setOf(BookOverviewCategory.CURRENT), actual = entries.keys)
+    assertEquals(expected = setOf(BookCategory.CURRENT), actual = entries.keys)
   }
 
   @Test
   fun `series names match regardless of case, accents and punctuation`() {
-    val series = listOf(
-      notStarted(series = "Harry Potter"),
-      notStarted(series = " harry-potter "),
-      notStarted(series = "Härry Potter"),
-      notStarted(series = "Harry Potter"),
-    ).audiobookSeries()
+    val series =
+      listOf(
+          notStarted(series = "Harry Potter"),
+          notStarted(series = " harry-potter "),
+          notStarted(series = "Härry Potter"),
+          notStarted(series = "Harry Potter"),
+        )
+        .series()
 
     assertEquals(expected = 1, actual = series.size)
     assertEquals(expected = "Harry Potter", actual = series.single().name)
@@ -73,19 +83,24 @@ class LibrarySeriesTest {
 
   @Test
   fun `the marks of other scripts keep series apart`() {
-    val series = listOf(
-      notStarted(series = "कमल"),
-      notStarted(series = "कमला"),
-      notStarted(series = "ハリー"),
-      notStarted(series = "バリー"),
-    ).audiobookSeries()
+    val series =
+      listOf(
+          notStarted(series = "कमल"),
+          notStarted(series = "कमला"),
+          notStarted(series = "ハリー"),
+          notStarted(series = "バリー"),
+        )
+        .series()
 
     assertEquals(expected = 4, actual = series.size)
   }
 
   @Test
   fun `a series without letters or digits is no series`() {
-    assertEquals(expected = emptyList(), actual = listOf(notStarted(series = "–"), notStarted(series = "–")).audiobookSeries())
+    assertEquals(
+      expected = emptyList(),
+      actual = listOf(notStarted(series = "–"), notStarted(series = "–")).series(),
+    )
   }
 
   @Test
@@ -96,19 +111,23 @@ class LibrarySeriesTest {
     val chapter10 = notStarted(series = "Saga", name = "Chapter 10")
     val chapter9 = notStarted(series = "Saga", name = "Chapter 9")
 
-    val series = listOf(chapter10, part10, chapter9, part2, part1).audiobookSeries().single()
+    val series = listOf(chapter10, part10, chapter9, part2, part1).series().single()
 
-    assertEquals(expected = audiobooks(part1, part2, part10, chapter9, chapter10), actual = series.books)
+    assertEquals(
+      expected = audiobooks(part1, part2, part10, chapter9, chapter10),
+      actual = series.books,
+    )
   }
 
   @Test
   fun `a series and part given in Voice win over the files`() {
     val tagged = notStarted(series = "Saga", part = "2")
-    val untagged = notStarted(series = "Other", part = "9").let { book ->
-      book.copy(custom = book.custom.copy(series = "Saga", part = "1"))
-    }
+    val untagged =
+      notStarted(series = "Other", part = "9").let { book ->
+        book.copy(custom = book.custom.copy(series = "Saga", part = "1"))
+      }
 
-    val series = listOf(tagged, untagged).audiobookSeries().single()
+    val series = listOf(tagged, untagged).series().single()
 
     assertEquals(expected = audiobooks(untagged, tagged), actual = series.books)
   }
@@ -119,7 +138,7 @@ class LibrarySeriesTest {
     val second = inProgress(series = "Saga", part = "2", lastPlayedAt = Instant.ofEpochSecond(3))
     val third = finished(series = "Saga", part = "3", lastPlayedAt = Instant.ofEpochSecond(5))
 
-    val series = listOf(first, second, third).audiobookSeries().single()
+    val series = listOf(first, second, third).series().single()
 
     assertEquals(expected = LibraryBook.Audiobook(second), actual = series.front)
     assertEquals(expected = LibraryBook.Audiobook(second), actual = series.inProgress)
@@ -132,7 +151,7 @@ class LibrarySeriesTest {
     val second = notStarted(series = "Saga", part = "2")
     val third = notStarted(series = "Saga", part = "3")
 
-    val series = listOf(third, second, first).audiobookSeries().single()
+    val series = listOf(third, second, first).series().single()
 
     assertEquals(expected = null, actual = series.inProgress)
     assertEquals(expected = LibraryBook.Audiobook(second), actual = series.front)
@@ -140,35 +159,99 @@ class LibrarySeriesTest {
   }
 
   @Test
+  fun `hidden books aren't the ones to continue`() {
+    val first = inProgress(series = "Saga", part = "1", lastPlayedAt = Instant.ofEpochSecond(1))
+    val second =
+      book(
+        series = "Saga",
+        part = "2",
+        time = 5_000,
+        lastPlayedAt = Instant.ofEpochSecond(3),
+        hidden = true,
+      )
+    val third = book(series = "Saga", part = "3", time = 0, hidden = true)
+
+    val series = listOf(first, second, third).series().single()
+
+    assertEquals(expected = LibraryBook.Audiobook(first), actual = series.inProgress)
+    assertEquals(expected = LibraryBook.Audiobook(first), actual = series.firstUnfinished)
+  }
+
+  @Test
+  fun `a series is hidden once all of its books are`() {
+    val visible = notStarted(series = "Saga")
+    val hidden = book(series = "Saga", hidden = true)
+
+    assertEquals(expected = false, actual = listOf(visible, hidden).series().single().hidden)
+    assertEquals(expected = true, actual = listOf(hidden, hidden).series().single().hidden)
+  }
+
+  @Test
+  fun `the books in a series are found by its name however it's spelled`() {
+    val first = notStarted(series = "The Saga")
+    val second = notStarted(series = "the saga ")
+    val other = notStarted(series = "Other")
+    val single = notStarted()
+
+    assertEquals(
+      expected = listOf(first, second),
+      actual = listOf(first, other, second, single).inSeries("The Saga"),
+    )
+    assertEquals(expected = emptyList(), actual = listOf(single).inSeries("!"))
+  }
+
+  @Test
   fun `a finished series shows its first book`() {
     val first = finished(series = "Saga", part = "1")
     val second = finished(series = "Saga", part = "2")
 
-    val series = listOf(second, first).audiobookSeries().single()
+    val series = listOf(second, first).series().single()
 
     assertEquals(expected = null, actual = series.firstUnfinished)
     assertEquals(expected = LibraryBook.Audiobook(first), actual = series.front)
   }
 
   @Test
-  fun `progress weighs the books by their length`() {
-    val short = book(series = "Saga", part = "1", chapters = listOf(chapter(duration = 10_000)), time = 10_000)
-    val long = book(series = "Saga", part = "2", chapters = listOf(chapter(duration = 10_000), chapter(duration = 10_000)), time = 5_000)
+  fun `each book has its own progress`() {
+    val short =
+      book(series = "Saga", part = "1", chapters = listOf(chapter(duration = 10_000)), time = 9_000)
+    val long =
+      book(
+        series = "Saga",
+        part = "2",
+        chapters = listOf(chapter(duration = 10_000), chapter(duration = 10_000)),
+        time = 5_000,
+      )
+    val third = notStarted(series = "Saga", part = "3")
 
-    val series = listOf(short, long).audiobookSeries().single()
+    val series = listOf(third, short, long).series().single()
 
-    assertEquals(expected = 0.5F, actual = series.progress)
+    assertEquals(expected = listOf(1F, 0.25F, 0F), actual = series.progress)
     assertEquals(expected = 1, actual = series.finishedCount)
   }
 
   @Test
+  fun `a book without a length has no progress`() {
+    val empty =
+      book(series = "Saga", part = "1", chapters = listOf(chapter(duration = 0)), time = 0)
+    val other = notStarted(series = "Saga", part = "2")
+
+    val series = listOf(empty, other).series().single()
+
+    assertEquals(expected = listOf(0F, 0F), actual = series.progress)
+  }
+
+  @Test
   fun `the author is the one most books name`() {
-    val series = listOf(
-      notStarted(series = "Saga", author = "Daniel Hartwell"),
-      notStarted(series = "Saga", author = "D. Hartwell"),
-      notStarted(series = "Saga", author = "Daniel Hartwell"),
-      notStarted(series = "Saga", author = null),
-    ).audiobookSeries().single()
+    val series =
+      listOf(
+          notStarted(series = "Saga", author = "Daniel Hartwell"),
+          notStarted(series = "Saga", author = "D. Hartwell"),
+          notStarted(series = "Saga", author = "Daniel Hartwell"),
+          notStarted(series = "Saga", author = null),
+        )
+        .series()
+        .single()
 
     assertEquals(expected = "Daniel Hartwell", actual = series.author)
   }
@@ -180,25 +263,27 @@ class LibrarySeriesTest {
     val sagaSecond = inProgress(series = "Saga", lastPlayedAt = Instant.ofEpochSecond(3))
     val newest = inProgress(name = "Newest", lastPlayedAt = Instant.ofEpochSecond(4))
 
-    val current = libraryEntries(listOf(book, sagaFirst, sagaSecond, newest)).getValue(BookOverviewCategory.CURRENT)
+    val current =
+      libraryEntries(listOf(book, sagaFirst, sagaSecond, newest)).getValue(BookCategory.CURRENT)
 
     assertEquals(expected = listOf("Newest", "Saga", "Book"), actual = current.map { it.title() })
   }
 
   @Test
   fun `stacks and books not started yet are sorted by name`() {
-    val entries = libraryEntries(
-      listOf(
-        notStarted(name = "Part 10"),
-        notStarted(series = "Part 3"),
-        notStarted(name = "Part 2"),
-        notStarted(series = "Part 3"),
-      ),
-    )
+    val entries =
+      libraryEntries(
+        listOf(
+          notStarted(name = "Part 10"),
+          notStarted(series = "Part 3"),
+          notStarted(name = "Part 2"),
+          notStarted(series = "Part 3"),
+        ),
+      )
 
     assertEquals(
       expected = listOf("Part 2", "Part 3", "Part 10"),
-      actual = entries.getValue(BookOverviewCategory.NOT_STARTED).map { it.title() },
+      actual = entries.getValue(BookCategory.NOT_STARTED).map { it.title() },
     )
   }
 
@@ -208,10 +293,18 @@ class LibrarySeriesTest {
     val second = ebook(series = " saga! ", part = "2")
     val third = notStarted(series = "Saga", part = "3")
 
-    val stack = libraryEntries(listOf(third, first), listOf(second)).getValue(BookOverviewCategory.NOT_STARTED).stack()
+    val stack =
+      libraryEntries(listOf(third, first), listOf(second))
+        .getValue(BookCategory.NOT_STARTED)
+        .stack()
 
     assertEquals(
-      expected = listOf(LibraryBook.Audiobook(first), LibraryBook.Ebook(second), LibraryBook.Audiobook(third)),
+      expected =
+        listOf(
+          LibraryBook.Audiobook(first),
+          LibraryBook.Ebook(second),
+          LibraryBook.Audiobook(third),
+        ),
       actual = stack.books,
     )
     assertEquals(expected = "Saga", actual = stack.name)
@@ -223,9 +316,13 @@ class LibrarySeriesTest {
     val first = ebook(series = "Saga", part = "1")
     val second = ebook(series = "Saga", part = "2")
 
-    val stack = libraryEntries(emptyList(), listOf(second, first)).getValue(BookOverviewCategory.NOT_STARTED).stack()
+    val stack =
+      libraryEntries(emptyList(), listOf(second, first)).getValue(BookCategory.NOT_STARTED).stack()
 
-    assertEquals(expected = listOf(LibraryBook.Ebook(first), LibraryBook.Ebook(second)), actual = stack.books)
+    assertEquals(
+      expected = listOf(LibraryBook.Ebook(first), LibraryBook.Ebook(second)),
+      actual = stack.books,
+    )
   }
 
   @Test
@@ -237,12 +334,13 @@ class LibrarySeriesTest {
     val entries = libraryEntries(listOf(audiobook), listOf(plain, alone))
 
     assertEquals(
-      expected = listOf(
-        LibraryEntry.Single(LibraryBook.Audiobook(audiobook)),
-        LibraryEntry.Single(LibraryBook.Ebook(alone)),
-        LibraryEntry.Single(LibraryBook.Ebook(plain)),
-      ),
-      actual = entries.getValue(BookOverviewCategory.NOT_STARTED),
+      expected =
+        listOf(
+          LibraryEntry.Single(LibraryBook.Audiobook(audiobook)),
+          LibraryEntry.Single(LibraryBook.Ebook(alone)),
+          LibraryEntry.Single(LibraryBook.Ebook(plain)),
+        ),
+      actual = entries.getValue(BookCategory.NOT_STARTED),
     )
   }
 
@@ -251,9 +349,13 @@ class LibrarySeriesTest {
     val tagged = notStarted(series = "Saga", part = "2")
     val edited = ebook(series = "Other", part = "9").copy(customSeries = "Saga", customPart = "1")
 
-    val series = libraryEntries(listOf(tagged), listOf(edited)).getValue(BookOverviewCategory.NOT_STARTED).stack()
+    val series =
+      libraryEntries(listOf(tagged), listOf(edited)).getValue(BookCategory.NOT_STARTED).stack()
 
-    assertEquals(expected = listOf(LibraryBook.Ebook(edited), LibraryBook.Audiobook(tagged)), actual = series.books)
+    assertEquals(
+      expected = listOf(LibraryBook.Ebook(edited), LibraryBook.Audiobook(tagged)),
+      actual = series.books,
+    )
   }
 
   @Test
@@ -261,32 +363,33 @@ class LibrarySeriesTest {
     val audiobook = finished(series = "Saga", part = "1", lastPlayedAt = Instant.ofEpochSecond(1))
     val ebook = ebook(series = "Saga", part = "2", progress = 0.5F, lastOpened = 3_000)
 
-    val stack = libraryEntries(listOf(audiobook), listOf(ebook)).getValue(BookOverviewCategory.CURRENT).stack()
+    val stack =
+      libraryEntries(listOf(audiobook), listOf(ebook)).getValue(BookCategory.CURRENT).stack()
 
     assertEquals(expected = LibraryBook.Ebook(ebook), actual = stack.front)
     assertEquals(expected = Instant.ofEpochSecond(3), actual = stack.lastPlayedAt)
   }
 
   @Test
-  fun `an ebook weighs as much as an average audiobook of its series`() {
+  fun `an ebook shows how far it is read on its stack`() {
     val audiobook = finished(series = "Saga", part = "1")
     val ebook = ebook(series = "Saga", part = "2", progress = 0.5F, lastOpened = 1)
 
-    val series = listOf(LibraryBook.Audiobook(audiobook), LibraryBook.Ebook(ebook)).series().single()
+    val series =
+      listOf(LibraryBook.Audiobook(audiobook), LibraryBook.Ebook(ebook)).series().single()
 
-    assertEquals(expected = 0.75F, actual = series.progress)
+    assertEquals(expected = listOf(1F, 0.5F), actual = series.progress)
   }
 
   private fun audiobooks(vararg books: Book): List<LibraryBook> = books.map(LibraryBook::Audiobook)
 
-  private fun List<Book>.audiobookSeries(): List<Series> = map(LibraryBook::Audiobook).series()
-
   private fun List<LibraryEntry>.stack(): Series = (single() as LibraryEntry.Stack).series
 
-  private fun LibraryEntry.title(): String = when (this) {
-    is LibraryEntry.Single -> book.name
-    is LibraryEntry.Stack -> series.name
-  }
+  private fun LibraryEntry.title(): String =
+    when (this) {
+      is LibraryEntry.Single -> book.name
+      is LibraryEntry.Stack -> series.name
+    }
 
   private fun notStarted(
     series: String? = null,
@@ -300,12 +403,28 @@ class LibrarySeriesTest {
     part: String? = null,
     name: String = "Book",
     lastPlayedAt: Instant = Instant.EPOCH,
-  ): Book = book(series = series, part = part, name = name, author = "Author", time = 5_000, lastPlayedAt = lastPlayedAt)
+  ): Book =
+    book(
+      series = series,
+      part = part,
+      name = name,
+      author = "Author",
+      time = 5_000,
+      lastPlayedAt = lastPlayedAt,
+    )
 
   // the default book has two chapters of 10 seconds
   private fun finished(
     series: String? = null,
     part: String? = null,
     lastPlayedAt: Instant = Instant.EPOCH,
-  ): Book = book(series = series, part = part, name = "Book", author = "Author", time = 20_000, lastPlayedAt = lastPlayedAt)
+  ): Book =
+    book(
+      series = series,
+      part = part,
+      name = "Book",
+      author = "Author",
+      time = 20_000,
+      lastPlayedAt = lastPlayedAt,
+    )
 }

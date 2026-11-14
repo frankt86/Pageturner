@@ -28,17 +28,18 @@ import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import voice.core.ui.VoiceTheme
-import voice.core.ui.icons.VoiceIcons
 import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
+import voice.core.ui.VoiceTheme
 
 /**
- * Says what was searched and where search looks. A missing book is usually in a folder Voice doesn't know about yet,
- * so the audiobook folders are one tap away.
+ * Says what was searched and where search looks. A missing book is usually in a folder Voice
+ * doesn't know about yet, so the audiobook folders are one tap away.
  */
 @Composable
 internal fun NoResults(
@@ -49,22 +50,23 @@ internal fun NoResults(
   modifier: Modifier = Modifier,
 ) {
   Column(
-    modifier = modifier
-      .fillMaxSize()
-      .verticalScroll(rememberScrollState())
-      .padding(contentPadding)
-      .padding(horizontal = 16.dp, vertical = 32.dp),
+    modifier =
+      modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+        .padding(contentPadding)
+        .padding(horizontal = 16.dp, vertical = 32.dp),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(16.dp),
   ) {
     Box(
-      modifier = Modifier
-        .size(128.dp)
-        .background(MaterialTheme.colorScheme.tertiaryContainer, MaterialShapes.Flower.toShape()),
+      modifier =
+        Modifier.size(128.dp)
+          .background(MaterialTheme.colorScheme.tertiaryContainer, MaterialShapes.Flower.toShape()),
       contentAlignment = Alignment.Center,
     ) {
       Icon(
-        imageVector = VoiceIcons.SearchOff,
+        painter = painterResource(UiR.drawable.ic_search_off),
         contentDescription = null,
         modifier = Modifier.size(52.dp),
         tint = MaterialTheme.colorScheme.onTertiaryContainer,
@@ -85,7 +87,7 @@ internal fun NoResults(
     if (viewState.filtered) {
       Button(onClick = onSearchEverythingClick) {
         Icon(
-          imageVector = VoiceIcons.Search,
+          painter = painterResource(UiR.drawable.ic_search),
           contentDescription = null,
           modifier = Modifier.size(ButtonDefaults.IconSize),
         )
@@ -95,7 +97,7 @@ internal fun NoResults(
     }
     FilledTonalButton(onClick = onFoldersClick) {
       Icon(
-        imageVector = VoiceIcons.Folder,
+        painter = painterResource(UiR.drawable.ic_folder),
         contentDescription = null,
         modifier = Modifier.size(ButtonDefaults.IconSize),
       )

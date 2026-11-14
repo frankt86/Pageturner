@@ -2,10 +2,10 @@
 
 package voice.features.reader
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
@@ -22,7 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -30,18 +30,21 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 import voice.core.data.DoubleTapAction
 import voice.core.data.MouseWheel
 import voice.core.data.ReaderAction
 import voice.core.data.ReaderSettings
 import voice.core.data.ScreenAwake
 import voice.core.data.TapAction
-import voice.core.ui.VoiceTheme
-import voice.core.ui.icons.VoiceIcons
-import kotlin.math.roundToInt
 import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
+import voice.core.ui.VoiceTheme
 
-/** How taps, keys, the mouse wheel and the buttons work in the reader, and what keeps them from going off by mistake. */
+/**
+ * How taps, keys, the mouse wheel and the buttons work in the reader, and what keeps them from
+ * going off by mistake.
+ */
 @Composable
 internal fun ControlsSheet(
   scale: Float,
@@ -88,9 +91,7 @@ private fun SectionTitle(text: String) {
   Text(
     text = text,
     style = MaterialTheme.typography.titleMedium,
-    modifier = Modifier
-      .padding(top = 8.dp)
-      .semantics { heading() },
+    modifier = Modifier.padding(top = 8.dp).semantics { heading() },
   )
 }
 
@@ -101,9 +102,15 @@ private fun TapSettings(
 ) {
   Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
     SectionTitle(stringResource(StringsR.string.reader_taps))
-    TapChoice(StringsR.string.reader_tap_left, settings.tapLeft) { onSettingsChange(settings.copy(tapLeft = it)) }
-    TapChoice(StringsR.string.reader_tap_middle, settings.tapMiddle) { onSettingsChange(settings.copy(tapMiddle = it)) }
-    TapChoice(StringsR.string.reader_tap_right, settings.tapRight) { onSettingsChange(settings.copy(tapRight = it)) }
+    TapChoice(StringsR.string.reader_tap_left, settings.tapLeft) {
+      onSettingsChange(settings.copy(tapLeft = it))
+    }
+    TapChoice(StringsR.string.reader_tap_middle, settings.tapMiddle) {
+      onSettingsChange(settings.copy(tapMiddle = it))
+    }
+    TapChoice(StringsR.string.reader_tap_right, settings.tapRight) {
+      onSettingsChange(settings.copy(tapRight = it))
+    }
     SwitchRow(
       label = stringResource(StringsR.string.reader_left_handed),
       summary = stringResource(StringsR.string.reader_left_handed_summary),
@@ -206,21 +213,26 @@ private fun ToolbarSettings(
       Row(verticalAlignment = Alignment.CenterVertically) {
         Row(
           verticalAlignment = Alignment.CenterVertically,
-          modifier = Modifier
-            .weight(1F)
-            .toggleable(
-              value = shown,
-              enabled = !required,
-              role = Role.Checkbox,
-              onValueChange = { show ->
-                val hidden = if (show) settings.hiddenActions - action else settings.hiddenActions + action
-                onSettingsChange(settings.copy(hiddenActions = hidden))
-              },
-            )
-            .padding(vertical = 4.dp),
+          modifier =
+            Modifier.weight(1F)
+              .toggleable(
+                value = shown,
+                enabled = !required,
+                role = Role.Checkbox,
+                onValueChange = { show ->
+                  val hidden =
+                    if (show) settings.hiddenActions - action else settings.hiddenActions + action
+                  onSettingsChange(settings.copy(hiddenActions = hidden))
+                },
+              )
+              .padding(vertical = 4.dp),
         ) {
           Checkbox(checked = shown, onCheckedChange = null, enabled = !required)
-          Icon(action.icon(), contentDescription = null, modifier = Modifier.padding(horizontal = 12.dp))
+          Icon(
+            painterResource(action.icon()),
+            contentDescription = null,
+            modifier = Modifier.padding(horizontal = 12.dp),
+          )
           Text(
             text = stringResource(action.label()),
             style = MaterialTheme.typography.bodyLarge,
@@ -228,13 +240,16 @@ private fun ToolbarSettings(
         }
         IconButton(onClick = { move(-1) }, enabled = index > 0) {
           Icon(
-            VoiceIcons.KeyboardArrowDown,
+            painterResource(UiR.drawable.ic_keyboard_arrow_down),
             contentDescription = stringResource(StringsR.string.reader_move_up),
             modifier = Modifier.rotate(180F),
           )
         }
         IconButton(onClick = { move(1) }, enabled = index < order.lastIndex) {
-          Icon(VoiceIcons.KeyboardArrowDown, contentDescription = stringResource(StringsR.string.reader_move_down))
+          Icon(
+            painterResource(UiR.drawable.ic_keyboard_arrow_down),
+            contentDescription = stringResource(StringsR.string.reader_move_down),
+          )
         }
       }
     }
@@ -255,23 +270,26 @@ private fun ToolbarSettings(
   }
 }
 
-internal fun ReaderAction.icon(): ImageVector = when (this) {
-  ReaderAction.Search -> VoiceIcons.Search
-  ReaderAction.Bookmark -> VoiceIcons.Bookmark
-  ReaderAction.Contents -> VoiceIcons.ViewList
-  ReaderAction.Display -> VoiceIcons.Title
-  ReaderAction.HandsFree -> VoiceIcons.Speed
-  ReaderAction.ReadAloud -> VoiceIcons.VolumeUp
-}
+@DrawableRes
+internal fun ReaderAction.icon(): Int =
+  when (this) {
+    ReaderAction.Search -> UiR.drawable.ic_search
+    ReaderAction.Bookmark -> UiR.drawable.ic_bookmark
+    ReaderAction.Contents -> UiR.drawable.ic_view_list
+    ReaderAction.Display -> UiR.drawable.ic_title
+    ReaderAction.HandsFree -> UiR.drawable.ic_speed
+    ReaderAction.ReadAloud -> UiR.drawable.ic_volume_up
+  }
 
-private fun ReaderAction.label(): Int = when (this) {
-  ReaderAction.Search -> StringsR.string.reader_search
-  ReaderAction.Bookmark -> StringsR.string.reader_tap_bookmark
-  ReaderAction.Contents -> StringsR.string.reader_contents
-  ReaderAction.Display -> StringsR.string.reader_display
-  ReaderAction.HandsFree -> StringsR.string.reader_hands_free
-  ReaderAction.ReadAloud -> StringsR.string.reader_read_aloud
-}
+private fun ReaderAction.label(): Int =
+  when (this) {
+    ReaderAction.Search -> StringsR.string.reader_search
+    ReaderAction.Bookmark -> StringsR.string.reader_tap_bookmark
+    ReaderAction.Contents -> StringsR.string.reader_contents
+    ReaderAction.Display -> StringsR.string.reader_display
+    ReaderAction.HandsFree -> StringsR.string.reader_hands_free
+    ReaderAction.ReadAloud -> StringsR.string.reader_read_aloud
+  }
 
 @Composable
 private fun ScreenSettings(
@@ -341,7 +359,9 @@ private fun ProtectionSettings(
           pluralStringResource(StringsR.plurals.reader_pages_count, it, it)
         }
       },
-      onSelect = { onSettingsChange(settings.copy(confirmJumpPages = it.takeIf { pages -> pages > 0 })) },
+      onSelect = {
+        onSettingsChange(settings.copy(confirmJumpPages = it.takeIf { pages -> pages > 0 }))
+      },
     )
   }
 }
@@ -351,7 +371,11 @@ private fun ProtectionSettings(
 private fun ControlsSettingsPreview() {
   VoiceTheme {
     ControlsSettings(
-      settings = ReaderSettings(hiddenActions = setOf(ReaderAction.Search), screenAwake = ScreenAwake.UntilIdle),
+      settings =
+        ReaderSettings(
+          hiddenActions = setOf(ReaderAction.Search),
+          screenAwake = ScreenAwake.UntilIdle,
+        ),
       onSettingsChange = {},
     )
   }

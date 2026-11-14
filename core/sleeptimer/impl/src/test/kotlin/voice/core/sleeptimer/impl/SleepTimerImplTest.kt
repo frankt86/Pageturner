@@ -6,6 +6,12 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -15,6 +21,7 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
 import voice.core.common.DispatcherProvider
+import voice.core.data.BookId
 import voice.core.data.ListeningEvent
 import voice.core.playback.PlayerController
 import voice.core.playback.playstate.PlayStateManager
@@ -28,12 +35,6 @@ import voice.core.sleeptimer.SleepTimerPreference
 import voice.core.sleeptimer.SleepTimerPreferenceStore
 import voice.core.sleeptimer.SleepTimerState
 import voice.core.sleeptimer.SleepTimerTracker
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 
 private class TestShakeDetector : ShakeDetector {
   private val shakes = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
@@ -56,24 +57,28 @@ private class TestShakeDetector : ShakeDetector {
 
 class SleepTimerImplTest {
 
-  private val playStateManager = PlayStateManager().apply {
-    playState = PlayStateManager.PlayState.Playing
-  }
+  private val playStateManager =
+    PlayStateManager().apply {
+      playState = PlayStateManager.PlayState.Playing(BookId("book"))
+    }
   private val shakeDetector = TestShakeDetector()
   private val sleepTimerPreferenceStore = MemoryDataStore(SleepTimerPreference.Default)
   private val setVolumeSlots = mutableListOf<Float>()
-  private val playerController = mockk<PlayerController> {
-    every { setVolume(capture(setVolumeSlots)) } just Runs
-    every { pauseWithRewind(any()) } answers {
-      playStateManager.playState = PlayStateManager.PlayState.Paused
+  private val playerController =
+    mockk<PlayerController> {
+      every { setVolume(capture(setVolumeSlots)) } just Runs
+      every { pauseWithRewind(any()) } answers
+        {
+          playStateManager.playState = PlayStateManager.PlayState.Paused
+        }
+      every { record(any(), any()) } just Runs
+      every {
+        play(any())
+      } answers
+        {
+          playStateManager.playState = PlayStateManager.PlayState.Playing(BookId("book"))
+        }
     }
-    every { record(any(), any()) } just Runs
-    every {
-      play(any())
-    } answers {
-      playStateManager.playState = PlayStateManager.PlayState.Playing
-    }
-  }
 
   private val fadeOutStore = MemoryDataStore(2.seconds)
   private val tracker = mockk<SleepTimerTracker>(relaxed = true)
@@ -84,15 +89,16 @@ class SleepTimerImplTest {
 
   init {
     val dispatcherProvider = DispatcherProvider(testDispatcher, testDispatcher, testDispatcher)
-    sleepTimer = SleepTimerImpl(
-      playStateManager,
-      shakeDetector,
-      SleepTimerPreferenceStore(sleepTimerPreferenceStore),
-      playerController,
-      FadeOutStore(fadeOutStore),
-      dispatcherProvider,
-      tracker,
-    )
+    sleepTimer =
+      SleepTimerImpl(
+        playStateManager,
+        shakeDetector,
+        SleepTimerPreferenceStore(sleepTimerPreferenceStore),
+        playerController,
+        FadeOutStore(fadeOutStore),
+        dispatcherProvider,
+        tracker,
+      )
   }
 
   @Test
@@ -114,7 +120,10 @@ class SleepTimerImplTest {
     sleepTimer.enable(SleepTimerMode.EndOfChapter)
 
     advanceTimeBy(1)
-    assertEquals(expected = SleepTimerState.Enabled.WithEndOfChapter, actual = sleepTimer.state.value)
+    assertEquals(
+      expected = SleepTimerState.Enabled.WithEndOfChapter,
+      actual = sleepTimer.state.value,
+    )
   }
 
   @Test
@@ -124,7 +133,10 @@ class SleepTimerImplTest {
 
     verify {
       playerController.record(ListeningEvent.Type.SleepTimerStarted, ListeningEvent.Source.App)
-      playerController.record(ListeningEvent.Type.SleepTimerStarted, ListeningEvent.Source.SleepTimer)
+      playerController.record(
+        ListeningEvent.Type.SleepTimerStarted,
+        ListeningEvent.Source.SleepTimer,
+      )
     }
   }
 
@@ -175,7 +187,10 @@ class SleepTimerImplTest {
     shakeDetector.shake()
     runCurrent()
     verify(exactly = 1) { playerController.play(source = null) }
-    assertEquals(expected = SleepTimerState.Enabled.WithDuration(longDuration), actual = sleepTimer.state.value)
+    assertEquals(
+      expected = SleepTimerState.Enabled.WithDuration(longDuration),
+      actual = sleepTimer.state.value,
+    )
 
     // 3) Advance past the original 30s shake window and allow the second countdown to finish
     advanceTimeBy(SleepTimerImpl.SHAKE_TO_RESET_TIME + longDuration + 2.seconds)
@@ -197,11 +212,19 @@ class SleepTimerImplTest {
     advanceTimeBy(200.milliseconds)
     runCurrent()
 
-    assertEquals(expected = SleepTimerState.Enabled.WithDuration(10.seconds), actual = sleepTimer.state.value)
+    assertEquals(
+      expected = SleepTimerState.Enabled.WithDuration(10.seconds),
+      actual = sleepTimer.state.value,
+    )
     assertEquals(expected = 1F, actual = setVolumeSlots.last())
     verify(exactly = 0) { playerController.pauseWithRewind(any()) }
     verify(exactly = 0) { playerController.play(any()) }
-    verify { playerController.record(ListeningEvent.Type.SleepTimerExtended, ListeningEvent.Source.SleepTimer) }
+    verify {
+      playerController.record(
+        ListeningEvent.Type.SleepTimerExtended,
+        ListeningEvent.Source.SleepTimer,
+      )
+    }
     verify { tracker.restarted(RestartTrigger.ShakeWhileFading) }
   }
 
@@ -228,12 +251,20 @@ class SleepTimerImplTest {
     runCurrent()
     assertEquals(expected = SleepTimerState.Disabled, actual = sleepTimer.state.value)
 
-    playStateManager.playState = PlayStateManager.PlayState.Playing
+    playStateManager.playState = PlayStateManager.PlayState.Playing(BookId("book"))
     runCurrent()
 
-    assertEquals(expected = SleepTimerState.Enabled.WithDuration(5.seconds), actual = sleepTimer.state.value)
+    assertEquals(
+      expected = SleepTimerState.Enabled.WithDuration(5.seconds),
+      actual = sleepTimer.state.value,
+    )
     verify(exactly = 0) { playerController.play(any()) }
-    verify { playerController.record(ListeningEvent.Type.SleepTimerStarted, ListeningEvent.Source.SleepTimer) }
+    verify {
+      playerController.record(
+        ListeningEvent.Type.SleepTimerStarted,
+        ListeningEvent.Source.SleepTimer,
+      )
+    }
     verify { tracker.restarted(RestartTrigger.Play) }
   }
 
@@ -249,9 +280,12 @@ class SleepTimerImplTest {
     runCurrent()
     assertEquals(expected = SleepTimerState.Disabled, actual = sleepTimer.state.value)
 
-    playStateManager.playState = PlayStateManager.PlayState.Playing
+    playStateManager.playState = PlayStateManager.PlayState.Playing(BookId("book"))
     runCurrent()
-    assertEquals(expected = SleepTimerState.Enabled.WithDuration(5.seconds), actual = sleepTimer.state.value)
+    assertEquals(
+      expected = SleepTimerState.Enabled.WithDuration(5.seconds),
+      actual = sleepTimer.state.value,
+    )
   }
 
   @Test
@@ -260,7 +294,7 @@ class SleepTimerImplTest {
     advanceTimeBy(6.seconds + SleepTimerImpl.SHAKE_TO_RESET_TIME)
     runCurrent()
 
-    playStateManager.playState = PlayStateManager.PlayState.Playing
+    playStateManager.playState = PlayStateManager.PlayState.Playing(BookId("book"))
     runCurrent()
 
     assertEquals(expected = SleepTimerState.Disabled, actual = sleepTimer.state.value)

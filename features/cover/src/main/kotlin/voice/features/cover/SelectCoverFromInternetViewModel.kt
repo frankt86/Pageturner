@@ -23,6 +23,10 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesTo
+import java.io.File
+import java.io.IOException
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -34,16 +38,12 @@ import voice.core.data.BookId
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.EbooksStore
 import voice.core.logging.api.Logger
+import voice.core.strings.R as StringsR
 import voice.features.cover.api.CoverApi
 import voice.features.cover.api.ImageSearchPagingSource
 import voice.features.cover.api.SearchResponse
 import voice.navigation.Destination
 import voice.navigation.Navigator
-import java.io.File
-import java.io.IOException
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.uuid.Uuid
-import voice.core.strings.R as StringsR
 
 @AssistedInject
 class SelectCoverFromInternetViewModel(
@@ -68,23 +68,27 @@ class SelectCoverFromInternetViewModel(
         query.setTextAndPlaceCursorAtEnd(initialQuery())
         queryInitialized = true
       }
-      snapshotFlow { query.text.toString() }.collectLatest { text ->
-        if (searchQuery != null) {
-          delay(SEARCH_DEBOUNCE)
+      snapshotFlow { query.text.toString() }
+        .collectLatest { text ->
+          if (searchQuery != null) {
+            delay(SEARCH_DEBOUNCE)
+          }
+          searchQuery = text
         }
-        searchQuery = text
-      }
     }
 
-    val items = remember(searchQuery) {
-      val searchFor = searchQuery.orEmpty()
-      Pager(
-        config = PagingConfig(10),
-        pagingSourceFactory = {
-          ImageSearchPagingSource(api, searchFor)
-        },
-      ).flow
-    }.collectAsLazyPagingItems()
+    val items =
+      remember(searchQuery) {
+          val searchFor = searchQuery.orEmpty()
+          Pager(
+              config = PagingConfig(10),
+              pagingSourceFactory = {
+                ImageSearchPagingSource(api, searchFor)
+              },
+            )
+            .flow
+        }
+        .collectAsLazyPagingItems()
     // the events are collected for the whole screen, while each query gets new items
     val currentItems by rememberUpdatedState(items)
 
@@ -98,10 +102,12 @@ class SelectCoverFromInternetViewModel(
           is Events.CoverClick -> {
             if (downloading == null) {
               downloading = event.cover
-              // apart from the collection, so retrying or searching isn't held up by a slow download
+              // apart from the collection, so retrying or searching isn't held up by a slow
+              // download
               launch {
-                val downloaded = coverDownloader.download(event.cover.image)
-                  ?: coverDownloader.download(event.cover.thumbnail)
+                val downloaded =
+                  coverDownloader.download(event.cover.image)
+                    ?: coverDownloader.download(event.cover.thumbnail)
                 val used = downloaded != null && useCover(downloaded)
                 downloading = null
                 if (!used) {
@@ -127,18 +133,20 @@ class SelectCoverFromInternetViewModel(
 
     val currentSearchQuery = searchQuery
     val loadState = items.loadState
-    val results = when {
-      currentSearchQuery == null -> Results.Loading
-      currentSearchQuery.isBlank() -> Results.Idle
-      loadState.refresh is LoadState.Error -> Results.Error
-      items.itemCount == 0 && loadState.append.endOfPaginationReached -> Results.Empty
-      items.itemCount == 0 -> Results.Loading
-      else -> Results.Content(
-        items = items,
-        loadingMore = loadState.append is LoadState.Loading,
-        loadingMoreFailed = loadState.append is LoadState.Error,
-      )
-    }
+    val results =
+      when {
+        currentSearchQuery == null -> Results.Loading
+        currentSearchQuery.isBlank() -> Results.Idle
+        loadState.refresh is LoadState.Error -> Results.Error
+        items.itemCount == 0 && loadState.append.endOfPaginationReached -> Results.Empty
+        items.itemCount == 0 -> Results.Loading
+        else ->
+          Results.Content(
+            items = items,
+            loadingMore = loadState.append is LoadState.Loading,
+            loadingMoreFailed = loadState.append is LoadState.Error,
+          )
+      }
     return ViewState(
       results = results,
       downloading = downloading,
@@ -166,14 +174,15 @@ class SelectCoverFromInternetViewModel(
     downloaded: File,
   ): Boolean {
     val coversDir = File(context.filesDir, "ebookCovers")
-    val cover = withContext(dispatcherProvider.io) {
-      try {
-        downloaded.copyTo(coversDir.apply { mkdirs() }.resolve(Uuid.random().toString()))
-      } catch (e: IOException) {
-        Logger.w(e, "Can't save the ebook cover")
-        null
-      }
-    } ?: return false
+    val cover =
+      withContext(dispatcherProvider.io) {
+        try {
+          downloaded.copyTo(coversDir.apply { mkdirs() }.resolve(Uuid.random().toString()))
+        } catch (e: IOException) {
+          Logger.w(e, "Can't save the ebook cover")
+          null
+        }
+      } ?: return false
     val previous = ebooksStore.data.first().firstOrNull { it.uri == uri }?.customCover
     ebooksStore.updateData { ebooks ->
       ebooks.map { if (it.uri == uri) it.copy(customCover = cover.absolutePath) else it }
@@ -216,9 +225,13 @@ class SelectCoverFromInternetViewModel(
 
   internal sealed interface Results {
     data object Idle : Results
+
     data object Loading : Results
+
     data object Error : Results
+
     data object Empty : Results
+
     data class Content(
       val items: LazyPagingItems<SearchResponse.ImageResult>,
       val loadingMore: Boolean,
@@ -228,8 +241,11 @@ class SelectCoverFromInternetViewModel(
 
   internal sealed interface Events {
     data object Retry : Events
+
     data class CoverClick(val cover: SearchResponse.ImageResult) : Events
+
     data object Search : Events
+
     data object DownloadErrorShown : Events
   }
 
@@ -246,6 +262,7 @@ class SelectCoverFromInternetViewModel(
 
 sealed interface CoverTarget {
   data class ForBook(val bookId: BookId) : CoverTarget
+
   data class ForEbook(val uri: Uri) : CoverTarget
 }
 

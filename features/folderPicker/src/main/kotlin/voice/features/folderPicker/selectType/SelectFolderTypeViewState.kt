@@ -15,7 +15,8 @@ internal data class SelectFolderTypeViewState(
   val ebookCount: Int = 0,
 ) {
 
-  val bookCount: Int get() = books.size + ebookCount
+  val bookCount: Int
+    get() = books.size + ebookCount
 
   data class Book(
     val name: String,
@@ -25,7 +26,8 @@ internal data class SelectFolderTypeViewState(
     val partCount: Int,
     // sub folders that look like books of their own
     val possibleBookCount: Int,
-    // known once its files are analyzed, which also replaces the name and author with the ones the library will show
+    // known once its files are analyzed, which also replaces the name and author with the ones the
+    // library will show
     val duration: Duration? = null,
     val analyzing: Boolean = false,
   )

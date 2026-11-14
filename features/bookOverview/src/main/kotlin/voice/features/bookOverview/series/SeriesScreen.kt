@@ -2,6 +2,11 @@
 
 package voice.features.bookOverview.series
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,6 +24,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,13 +37,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.retain.retain
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,11 +61,13 @@ import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
 import voice.core.common.rootGraphAs
 import voice.core.data.BookId
+import voice.core.strings.R as StringsR
 import voice.core.ui.CenteredContent
 import voice.core.ui.CoverTheme
+import voice.core.ui.PlayPauseIcon
+import voice.core.ui.R as UiR
 import voice.core.ui.VoiceTheme
 import voice.core.ui.bookText
-import voice.core.ui.icons.VoiceIcons
 import voice.core.ui.segmentedShape
 import voice.features.bookOverview.views.BookOverviewPreviewParameterProvider
 import voice.features.bookOverview.views.ListBookRow
@@ -62,7 +75,6 @@ import voice.features.bookOverview.views.SeriesCover
 import voice.features.bookOverview.views.seriesCounts
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
-import voice.core.strings.R as StringsR
 
 @BindingContainer
 @ContributesTo(AppScope::class)
@@ -70,18 +82,20 @@ object SeriesProvider {
 
   @Provides
   @IntoSet
-  fun seriesNavEntryProvider(): NavEntryProvider<*> = NavEntryProvider<Destination.Series> { key ->
-    NavEntry(key) {
-      SeriesScreen(name = key.name)
+  fun seriesNavEntryProvider(): NavEntryProvider<*> =
+    NavEntryProvider<Destination.Series> { key ->
+      NavEntry(key) {
+        SeriesScreen(name = key.name)
+      }
     }
-  }
 }
 
 @Composable
 fun SeriesScreen(name: String) {
-  val viewModel = retain(name) {
-    rootGraphAs<SeriesViewModel.Factory.Provider>().seriesViewModelFactory.create(name)
-  }
+  val viewModel =
+    retain(name) {
+      rootGraphAs<SeriesViewModel.Factory.Provider>().seriesViewModelFactory.create(name)
+    }
   val viewState = viewModel.viewState() ?: return
   CoverTheme(cover = viewState.covers.first()) {
     SeriesScreen(
@@ -90,6 +104,8 @@ fun SeriesScreen(name: String) {
       onActionClick = viewModel::onActionClick,
       onBookClick = viewModel::onBookClick,
       onBookLongClick = viewModel::onBookLongClick,
+      onMoreClick = viewModel::onMoreClick,
+      onAuthorClick = viewModel::onAuthorClick,
     )
   }
 }
@@ -101,6 +117,8 @@ private fun SeriesScreen(
   onActionClick: (BookId) -> Unit,
   onBookClick: (BookId) -> Unit,
   onBookLongClick: (BookId) -> Unit,
+  onMoreClick: () -> Unit,
+  onAuthorClick: (String) -> Unit,
 ) {
   Scaffold(
     topBar = {
@@ -108,7 +126,18 @@ private fun SeriesScreen(
         title = {},
         navigationIcon = {
           IconButton(onClick = onCloseClick) {
-            Icon(VoiceIcons.ArrowBack, contentDescription = stringResource(StringsR.string.common_action_back))
+            Icon(
+              painterResource(UiR.drawable.ic_arrow_back),
+              contentDescription = stringResource(StringsR.string.common_action_back),
+            )
+          }
+        },
+        actions = {
+          IconButton(onClick = onMoreClick) {
+            Icon(
+              painterResource(UiR.drawable.ic_more_vert),
+              contentDescription = stringResource(StringsR.string.common_action_more),
+            )
           }
         },
       )
@@ -117,17 +146,24 @@ private fun SeriesScreen(
   ) { contentPadding ->
     val layoutDirection = LocalLayoutDirection.current
     CenteredContent(
-      modifier = Modifier.padding(
-        start = contentPadding.calculateStartPadding(layoutDirection),
-        top = contentPadding.calculateTopPadding(),
-        end = contentPadding.calculateEndPadding(layoutDirection),
-      ),
+      modifier =
+        Modifier.padding(
+          start = contentPadding.calculateStartPadding(layoutDirection),
+          top = contentPadding.calculateTopPadding(),
+          end = contentPadding.calculateEndPadding(layoutDirection),
+        ),
     ) { horizontalPadding ->
       LazyColumn(
-        contentPadding = PaddingValues(start = horizontalPadding, end = horizontalPadding, top = 8.dp, bottom = 24.dp),
+        contentPadding =
+          PaddingValues(
+            start = horizontalPadding,
+            end = horizontalPadding,
+            top = 8.dp,
+            bottom = 24.dp,
+          ),
       ) {
         item(key = "header") {
-          Header(viewState)
+          Header(viewState, onAuthorClick = onAuthorClick)
         }
         val action = viewState.action
         if (action != null) {
@@ -164,7 +200,10 @@ private fun SeriesScreen(
 }
 
 @Composable
-private fun Header(viewState: SeriesViewState) {
+private fun Header(
+  viewState: SeriesViewState,
+  onAuthorClick: (String) -> Unit,
+) {
   Row(verticalAlignment = Alignment.CenterVertically) {
     SeriesCover(
       seriesKey = viewState.key,
@@ -180,14 +219,16 @@ private fun Header(viewState: SeriesViewState) {
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.semantics { heading() },
       )
-      if (viewState.author != null) {
+      val author = viewState.author
+      if (author != null) {
         Spacer(Modifier.height(4.dp))
         Text(
-          text = viewState.author,
+          text = author,
           style = MaterialTheme.typography.bodyLarge.bookText(),
           color = MaterialTheme.colorScheme.onSurfaceVariant,
           maxLines = 2,
           overflow = TextOverflow.Ellipsis,
+          modifier = Modifier.clickable(role = Role.Button) { onAuthorClick(author) },
         )
       }
       Spacer(Modifier.height(4.dp))
@@ -207,36 +248,61 @@ private fun ActionButton(
   modifier: Modifier = Modifier,
 ) {
   val haptics = LocalHapticFeedback.current
-  val label = when {
-    action.playing -> stringResource(StringsR.string.playback_action_pause)
-    action.continues && action.part != null -> stringResource(StringsR.string.series_continue_book, action.part)
-    action.continues -> stringResource(StringsR.string.series_continue)
-    action.part != null -> stringResource(StringsR.string.series_start_book, action.part)
-    else -> stringResource(StringsR.string.series_start)
-  }
+  val label =
+    when {
+      action.playing -> stringResource(StringsR.string.playback_action_pause)
+      action.continues && action.part != null ->
+        stringResource(StringsR.string.series_continue_book, action.part)
+      action.continues -> stringResource(StringsR.string.series_continue)
+      action.part != null -> stringResource(StringsR.string.series_start_book, action.part)
+      else -> stringResource(StringsR.string.series_start)
+    }
+  val interactionSource = remember { MutableInteractionSource() }
+  val pressed by interactionSource.collectIsPressedAsState()
+  val cornerPercent by
+    animateFloatAsState(
+      targetValue =
+        when {
+          pressed -> 20F
+          action.playing -> 30F
+          else -> 50F
+        },
+      animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+      label = "actionCorner",
+    )
   Button(
     onClick = {
       if (!action.ebook) {
-        haptics.performHapticFeedback(if (action.playing) HapticFeedbackType.ToggleOff else HapticFeedbackType.ToggleOn)
+        haptics.performHapticFeedback(
+          if (action.playing) HapticFeedbackType.ToggleOff else HapticFeedbackType.ToggleOn,
+        )
       }
       onClick()
     },
-    modifier = modifier
-      .fillMaxWidth()
-      .heightIn(min = ButtonDefaults.MediumContainerHeight),
+    modifier = modifier.fillMaxWidth().heightIn(min = ButtonDefaults.MediumContainerHeight),
+    shape = RoundedCornerShape(CornerSize(cornerPercent.coerceIn(0F, 50F))),
     contentPadding = ButtonDefaults.contentPaddingFor(ButtonDefaults.MediumContainerHeight),
+    interactionSource = interactionSource,
   ) {
-    Icon(
-      imageVector = when {
-        action.playing -> VoiceIcons.Pause
-        action.ebook -> VoiceIcons.Book
-        else -> VoiceIcons.PlayArrow
-      },
-      contentDescription = null,
-      modifier = Modifier.size(ButtonDefaults.iconSizeFor(ButtonDefaults.MediumContainerHeight)),
-    )
+    val iconModifier =
+      Modifier.size(ButtonDefaults.iconSizeFor(ButtonDefaults.MediumContainerHeight))
+    if (action.ebook) {
+      Icon(
+        painter = painterResource(UiR.drawable.ic_book),
+        contentDescription = null,
+        modifier = iconModifier,
+      )
+    } else {
+      PlayPauseIcon(
+        playing = action.playing,
+        contentDescription = null,
+        modifier = iconModifier,
+      )
+    }
     Spacer(Modifier.width(ButtonDefaults.iconSpacingFor(ButtonDefaults.MediumContainerHeight)))
-    Text(label, style = ButtonDefaults.textStyleFor(ButtonDefaults.MediumContainerHeight))
+    AnimatedContent(targetState = label, label = "actionLabel") { text ->
+      Text(text, style = ButtonDefaults.textStyleFor(ButtonDefaults.MediumContainerHeight))
+    }
   }
 }
 
@@ -246,49 +312,71 @@ private fun SeriesScreenPreview() {
   val book = BookOverviewPreviewParameterProvider().book()
   VoiceTheme {
     SeriesScreen(
-      viewState = SeriesViewState(
-        key = "thesignalsaga",
-        name = "The Signal Saga",
-        author = "Daniel Hartwell",
-        covers = listOf(null, null, null),
-        bookCount = 4,
-        finishedCount = 1,
-        action = SeriesViewState.Action(BookId("2"), part = "2", continues = true, playing = true),
-        books = listOf(
-          SeriesViewState.Book(
-            book.copy(id = BookId("1"), name = "Static on the Line", author = null, progress = 1F),
-            "1",
-            finished = true,
-            current = false,
-            playing = false,
-          ),
-          SeriesViewState.Book(
-            book.copy(id = BookId("2"), name = "Echoes of Tomorrow", author = null, progress = 0.72F),
-            "2",
-            finished = false,
-            current = true,
-            playing = true,
-          ),
-          SeriesViewState.Book(
-            book.copy(id = BookId("3"), name = "Interference", author = null, progress = 0F, remainingTime = "EPUB · 0%", isEbook = true),
-            "3",
-            finished = false,
-            current = false,
-            playing = false,
-          ),
-          SeriesViewState.Book(
-            book.copy(id = BookId("4"), name = "Mira's Theory", author = null, progress = 0F),
-            "4",
-            finished = false,
-            current = false,
-            playing = false,
-          ),
+      viewState =
+        SeriesViewState(
+          key = "thesignalsaga",
+          name = "The Signal Saga",
+          author = "Daniel Hartwell",
+          covers = listOf(null, null, null),
+          bookCount = 4,
+          finishedCount = 1,
+          action =
+            SeriesViewState.Action(BookId("2"), part = "2", continues = true, playing = true),
+          books =
+            listOf(
+              SeriesViewState.Book(
+                book.copy(
+                  id = BookId("1"),
+                  name = "Static on the Line",
+                  author = null,
+                  progress = 1F,
+                ),
+                "1",
+                finished = true,
+                current = false,
+                playing = false,
+              ),
+              SeriesViewState.Book(
+                book.copy(
+                  id = BookId("2"),
+                  name = "Echoes of Tomorrow",
+                  author = null,
+                  progress = 0.72F,
+                ),
+                "2",
+                finished = false,
+                current = true,
+                playing = true,
+              ),
+              SeriesViewState.Book(
+                book.copy(
+                  id = BookId("3"),
+                  name = "Interference",
+                  author = null,
+                  progress = 0F,
+                  remainingTime = "EPUB · 0%",
+                  isEbook = true,
+                ),
+                "3",
+                finished = false,
+                current = false,
+                playing = false,
+              ),
+              SeriesViewState.Book(
+                book.copy(id = BookId("4"), name = "Mira's Theory", author = null, progress = 0F),
+                "4",
+                finished = false,
+                current = false,
+                playing = false,
+              ),
+            ),
         ),
-      ),
       onCloseClick = {},
       onActionClick = {},
       onBookClick = {},
       onBookLongClick = {},
+      onMoreClick = {},
+      onAuthorClick = {},
     )
   }
 }
