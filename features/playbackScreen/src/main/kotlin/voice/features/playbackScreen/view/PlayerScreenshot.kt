@@ -56,6 +56,7 @@ private fun PlayerScreenshot() {
         onSkipToPrevious = {},
         onCloseClick = {},
         onBookActionsClick = {},
+        onAuthorClick = {},
         onCurrentChapterClick = {},
         onJumpBack = {},
         onJumpBackExpire = {},
