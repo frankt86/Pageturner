@@ -14,7 +14,11 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import voice.core.data.BookId
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
+import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
+import voice.features.bookOverview.ebook
+import voice.features.bookOverview.overview.bookId
 import voice.features.bookOverview.select.BookSelectionRequests
 import voice.navigation.Destination
 import voice.navigation.Navigator
@@ -27,12 +31,14 @@ class AuthorActionsViewModelTest {
   private val single = book(author = "Lena Morgan", time = 0)
   private val finished = book(author = "Lena Morgan", time = 20_000)
   private val books = MutableStateFlow(listOf(first, second, single, finished))
+  private val ebook = ebook(author = "Lena Morgan")
   private val repo = mockk<BookRepository> { every { flow() } returns books }
+  private val ebooks = EbooksStore(MemoryDataStore(listOf(ebook)))
   private val bookSelectionRequests = BookSelectionRequests()
   private val destination =
-    Destination.AuthorActions("Lena Morgan", listOf(first.id, second.id, single.id))
+    Destination.AuthorActions("Lena Morgan", listOf(first.id, second.id, single.id, ebook.bookId))
   private val viewModel =
-    AuthorActionsViewModel(repo, bookSelectionRequests, navigator, destination)
+    AuthorActionsViewModel(repo, ebooks, bookSelectionRequests, navigator, destination)
 
   @Test
   fun `the sheet shows only the books of the entry`() = runTest {
@@ -44,7 +50,7 @@ class AuthorActionsViewModelTest {
         assertEquals(expected = null, actual = awaitItem())
         val author = awaitItem()!!
         assertEquals(expected = "Lena Morgan", actual = author.name)
-        assertEquals(expected = 3, actual = author.bookCount)
+        assertEquals(expected = 4, actual = author.bookCount)
         assertEquals(expected = 1, actual = author.seriesCount)
       }
   }
@@ -58,7 +64,10 @@ class AuthorActionsViewModelTest {
     viewModel.onSelect()
     runCurrent()
 
-    assertEquals(expected = listOf(listOf(first.id, second.id, single.id)), actual = requests)
+    assertEquals(
+      expected = listOf(listOf(first.id, second.id, single.id, ebook.bookId)),
+      actual = requests,
+    )
   }
 
   @Test
@@ -69,9 +78,11 @@ class AuthorActionsViewModelTest {
       }
       .test {
         assertEquals(expected = null, actual = awaitItem())
-        assertEquals(expected = 3, actual = awaitItem()!!.bookCount)
+        assertEquals(expected = 4, actual = awaitItem()!!.bookCount)
 
         books.value = listOf(finished)
+        assertEquals(expected = 1, actual = awaitItem()!!.bookCount)
+        ebooks.updateData { emptyList() }
 
         assertEquals(expected = null, actual = awaitItem())
       }

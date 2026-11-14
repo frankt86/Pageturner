@@ -87,8 +87,6 @@
     <string name="book.edit.server.not_allowed">Votre compte sur le serveur ne peut pas modifier les livres.</string>
     <string name="book.edit.title.label">Titre</string>
     <string name="book.hide">Masquer de la bibliothèque</string>
-    <string name="book.remove_from_library">Retirer de la bibliothèque</string>
-    <string name="book.remove_from_library.summary">Le fichier reste sur votre appareil</string>
     <string name="book.select">Sélectionner</string>
     <string name="book.show">Afficher dans la bibliothèque</string>
     <string name="book.source.device">Sur cet appareil</string>

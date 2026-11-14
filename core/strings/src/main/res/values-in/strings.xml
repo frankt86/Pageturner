@@ -81,8 +81,6 @@
     <string name="book.edit.server.not_allowed">Akun Anda di server tidak dapat mengubah buku.</string>
     <string name="book.edit.title.label">Judul</string>
     <string name="book.hide">Sembunyikan dari pustaka</string>
-    <string name="book.remove_from_library">Hapus dari pustaka</string>
-    <string name="book.remove_from_library.summary">Berkas tetap ada di perangkat Anda</string>
     <string name="book.select">Pilih</string>
     <string name="book.show">Tampilkan di pustaka</string>
     <string name="book.source.device">Di perangkat ini</string>

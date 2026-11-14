@@ -99,7 +99,7 @@ private val EditItems =
     BottomSheetItem.Show,
   )
 
-private val RemovalItems = listOf(BottomSheetItem.DeleteBook, BottomSheetItem.RemoveFromLibrary)
+private val RemovalItems = listOf(BottomSheetItem.DeleteBook)
 
 /** The order a book moves through, so the picker reads like a timeline. */
 private val StatusOrder =
@@ -493,8 +493,7 @@ internal fun BottomSheetItem.style(): ActionStyle {
       ActionStyle(MaterialShapes.Ghostish, colors.secondaryContainer, colors.onSecondaryContainer)
     BottomSheetItem.Select ->
       ActionStyle(MaterialShapes.Clover8Leaf, colors.primaryContainer, colors.onPrimaryContainer)
-    BottomSheetItem.DeleteBook,
-    BottomSheetItem.RemoveFromLibrary ->
+    BottomSheetItem.DeleteBook ->
       ActionStyle(MaterialShapes.Cookie9Sided, colors.errorContainer, colors.onErrorContainer)
     BottomSheetItem.Download,
     BottomSheetItem.StopDownload,
@@ -618,8 +617,6 @@ private fun BottomSheetItem.supportingText(
       }
     }
     BottomSheetItem.RetryDownload -> stringResource(StringsR.string.book_download_failed)
-    BottomSheetItem.RemoveFromLibrary ->
-      stringResource(StringsR.string.book_remove_from_library_summary)
     BottomSheetItem.RemoveDownload ->
       (download as? BookDownloadState.Downloaded)?.let {
         stringResource(

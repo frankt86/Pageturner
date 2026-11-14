@@ -84,8 +84,6 @@
     <string name="book.edit.server.not_allowed">சர்வரில் உள்ள உங்கள் கணக்கால் புத்தகங்களை மாற்ற முடியாது.</string>
     <string name="book.edit.title.label">தலைப்பு</string>
     <string name="book.hide">நூலகத்திலிருந்து மறை</string>
-    <string name="book.remove_from_library">நூலகத்திலிருந்து அகற்று</string>
-    <string name="book.remove_from_library.summary">கோப்பு உங்கள் சாதனத்திலேயே இருக்கும்</string>
     <string name="book.select">தேர்ந்தெடு</string>
     <string name="book.show">நூலகத்தில் காட்டு</string>
     <string name="book.source.device">இந்தச் சாதனத்தில்</string>

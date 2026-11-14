@@ -14,17 +14,22 @@ import kotlinx.coroutines.launch
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.BookCategory
-import voice.core.data.category
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
 import voice.features.bookOverview.bottomSheet.category
 import voice.features.bookOverview.bottomSheet.markAsItem
 import voice.features.bookOverview.editBookCategory.BookCategoryChanger
 import voice.features.bookOverview.hideBook.BookHider
+import voice.features.bookOverview.overview.LibraryBook
 import voice.features.bookOverview.overview.SeriesStackViewState
+import voice.features.bookOverview.overview.allLibraryBooks
 import voice.features.bookOverview.overview.inSeries
+import voice.features.bookOverview.overview.libraryBooks
 import voice.features.bookOverview.overview.series
 import voice.features.bookOverview.overview.toStackViewState
+import voice.features.bookOverview.overview.update
+import voice.features.bookOverview.overview.withCategory
 import voice.features.bookOverview.select.BookSelectionRequests
 import voice.navigation.Destination
 import voice.navigation.Navigator
@@ -32,6 +37,7 @@ import voice.navigation.Navigator
 @AssistedInject
 class SeriesActionsViewModel(
   private val repo: BookRepository,
+  private val ebooksStore: EbooksStore,
   private val bookHider: BookHider,
   private val bookCategoryChanger: BookCategoryChanger,
   private val navigator: Navigator,
@@ -44,7 +50,9 @@ class SeriesActionsViewModel(
 
   @Composable
   internal fun state(): SeriesActionsViewState? {
-    val books = remember { repo.flow() }.collectAsState(initial = null).value ?: return null
+    val books =
+      remember { libraryBooks(repo, ebooksStore) }.collectAsState(initial = null).value
+        ?: return null
     val canSelect =
       remember { bookSelectionRequests.canSelect }.collectAsState(null).value ?: return null
     val series = remember(books) { books.inSeries(name).series().singleOrNull() }
@@ -81,7 +89,9 @@ class SeriesActionsViewModel(
           BottomSheetItem.Hide -> bookHider.hideSeries(name)
           BottomSheetItem.Show -> bookHider.showSeries(name)
           BottomSheetItem.Select ->
-            bookSelectionRequests.select(repo.all().inSeries(name).map { it.id })
+            bookSelectionRequests.select(
+              allLibraryBooks(repo, ebooksStore).inSeries(name).map { it.id },
+            )
           else -> item.category?.let { markSeries(it) }
         }
       }
@@ -89,11 +99,14 @@ class SeriesActionsViewModel(
   }
 
   private suspend fun markSeries(category: BookCategory) {
-    repo
-      .all()
-      .inSeries(name)
-      .filter { it.category != category }
-      .forEach { bookCategoryChanger.change(it.id, category) }
+    val books = allLibraryBooks(repo, ebooksStore).inSeries(name).filter { it.category != category }
+    books.filterIsInstance<LibraryBook.Audiobook>().forEach {
+      bookCategoryChanger.change(it.id, category)
+    }
+    val now = System.currentTimeMillis()
+    ebooksStore.update(books.filterIsInstance<LibraryBook.Ebook>().map { it.id }) {
+      it.withCategory(category, now)
+    }
   }
 
   internal fun onClose() {

@@ -84,8 +84,6 @@
     <string name="book.edit.server.not_allowed">حساب شما در سرور اجازهٔ تغییر کتاب‌ها را ندارد.</string>
     <string name="book.edit.title.label">عنوان</string>
     <string name="book.hide">پنهان کردن از کتابخانه</string>
-    <string name="book.remove_from_library">حذف از کتابخانه</string>
-    <string name="book.remove_from_library.summary">فایل روی دستگاهتان می‌ماند</string>
     <string name="book.select">انتخاب</string>
     <string name="book.show">نمایش در کتابخانه</string>
     <string name="book.source.device">در این دستگاه</string>

@@ -84,8 +84,6 @@
     <string name="book.edit.server.not_allowed">Din konto på serveren kan ikke ændre bøger.</string>
     <string name="book.edit.title.label">Titel</string>
     <string name="book.hide">Skjul fra biblioteket</string>
-    <string name="book.remove_from_library">Fjern fra biblioteket</string>
-    <string name="book.remove_from_library.summary">Filen bliver på din enhed</string>
     <string name="book.select">Vælg</string>
     <string name="book.show">Vis i biblioteket</string>
     <string name="book.source.device">På denne enhed</string>

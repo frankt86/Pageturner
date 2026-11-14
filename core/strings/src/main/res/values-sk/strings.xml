@@ -90,8 +90,6 @@
     <string name="book.edit.server.not_allowed">Váš účet na serveri nemôže meniť knihy.</string>
     <string name="book.edit.title.label">Názov</string>
     <string name="book.hide">Skryť z knižnice</string>
-    <string name="book.remove_from_library">Odstrániť z knižnice</string>
-    <string name="book.remove_from_library.summary">Súbor zostane vo vašom zariadení</string>
     <string name="book.select">Vybrať</string>
     <string name="book.show">Zobraziť v knižnici</string>
     <string name="book.source.device">Na tomto zariadení</string>

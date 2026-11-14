@@ -41,7 +41,8 @@ library. See [Install](docs/install.md) for the steps.
   book badge. Kindle books open like EPUBs; books with DRM can't be opened.
 - An EPUB's series and its part in it come from the book, and you can change them.
 - Long-press an ebook to mark it read or unread, edit its title, author, series and part, set a cover from the internet or
-  from a file, or remove it.
+  from a file, hide it, or select it with other books. Group by author, author pages, hidden books and the folder chips
+  cover ebooks too.
 - The library search finds ebooks too, forgives typos, and browses them by author and series.
 - A **Continue reading** card takes you back to the book you read last.
 

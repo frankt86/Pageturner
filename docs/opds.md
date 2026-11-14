@@ -102,7 +102,7 @@ from the catalog. The tick in the catalog and the progress sync with Komga keep 
 
 Books you downloaded before there was a download folder stay in Pageturner's own storage and keep working as before.
 
-To remove an ebook, long press it in the library and tap **Remove from library**. Its file stays in the download folder.
+To remove an ebook, long press it in the library and tap **Hide from library**. Its file stays in the download folder.
 Download it again and the book comes back, with your place in it.
 
 To remove an audiobook, long press it in the library and tap **Delete Book**, like any other audiobook. Its files leave your

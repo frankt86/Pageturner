@@ -84,8 +84,6 @@
     <string name="book.edit.server.not_allowed">सर्वर पर आपके खाते को पुस्तकें बदलने की अनुमति नहीं है।</string>
     <string name="book.edit.title.label">शीर्षक</string>
     <string name="book.hide">लाइब्रेरी से छिपाएँ</string>
-    <string name="book.remove_from_library">लाइब्रेरी से हटाएँ</string>
-    <string name="book.remove_from_library.summary">फ़ाइल आपके डिवाइस पर बनी रहेगी</string>
     <string name="book.select">चुनें</string>
     <string name="book.show">लाइब्रेरी में दिखाएँ</string>
     <string name="book.source.device">इस डिवाइस पर</string>

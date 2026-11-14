@@ -1,6 +1,7 @@
 package voice.features.bookOverview.select
 
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.flow.first
 import voice.core.audiobookshelf.ServerBookEdit
 import voice.core.audiobookshelf.ServerEdit
 import voice.core.audiobookshelf.ServerLibrary
@@ -8,8 +9,13 @@ import voice.core.data.Book
 import voice.core.data.BookId
 import voice.core.data.BookMetadata
 import voice.core.data.CustomMetadata
+import voice.core.data.Ebook
 import voice.core.data.isRemote
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
+import voice.features.bookOverview.overview.LibraryBook
+import voice.features.bookOverview.overview.bookId
+import voice.features.bookOverview.overview.update
 
 enum class BookField {
   Series,
@@ -29,6 +35,7 @@ internal data class BooksEdited(
 class SelectedBooksEditor(
   private val repo: BookRepository,
   private val serverLibrary: ServerLibrary,
+  private val ebooksStore: EbooksStore,
 ) {
 
   internal suspend fun set(
@@ -81,6 +88,9 @@ class SelectedBooksEditor(
         repo.updateCustomMetadata(book.id) { field.set(it, value) }
       }
     }
+    val ebooks = ebooksStore.data.first().filter { it.bookId in values }
+    ebooks.forEach { undo[it.bookId] = field.ofCustom(it) }
+    ebooksStore.update(ebooks.map { it.bookId }) { field.set(it, values.getValue(it.bookId)) }
     return BooksEdited(
       field = field,
       count = undo.size,
@@ -103,11 +113,29 @@ private fun serverEdit(
     BookField.Author -> ServerBookEdit(author = value.orEmpty())
   }
 
-internal fun BookField.of(book: Book): String? =
+internal fun BookField.of(book: LibraryBook): String? =
   when (this) {
-    BookField.Series -> book.series
+    BookField.Series -> book.seriesName
     BookField.Author -> book.author
   }
+
+private fun BookField.ofCustom(ebook: Ebook): String? =
+  when (this) {
+    BookField.Series -> ebook.customSeries
+    BookField.Author -> ebook.customAuthor
+  }
+
+// like the edit sheet, a name that's the one from the file follows the file again
+private fun BookField.set(
+  ebook: Ebook,
+  value: String?,
+): Ebook {
+  val custom = value?.takeIf { it.isNotEmpty() }
+  return when (this) {
+    BookField.Series -> ebook.copy(customSeries = custom?.takeIf { it != ebook.series })
+    BookField.Author -> ebook.copy(customAuthor = custom?.takeIf { it != ebook.author })
+  }
+}
 
 private fun BookField.of(metadata: BookMetadata): String? =
   when (this) {

@@ -46,11 +46,7 @@ internal class EbookScanner(
         all.partition { it.opdsSource != null && it.uri.scheme == ContentResolver.SCHEME_FILE }
       val previousByUri = previous.associateBy { it.uri }
       val foundUris = found.mapTo(mutableSetOf()) { it.uri }
-      val gone =
-        previous
-          .filter { it.uri !in foundUris }
-          // a removed book comes back once its folder is added again
-          .map { it.copy(available = false, hidden = false) }
+      val gone = previous.filter { it.uri !in foundUris }.map { it.copy(available = false) }
       found.map { ebook ->
         val known = previousByUri[ebook.uri]
         // once read from the book or taken from a catalog, its own title wins over the file name
@@ -61,9 +57,7 @@ internal class EbookScanner(
     store.data
       .first()
       .filter {
-        it.available &&
-          !it.hidden &&
-          (!it.metadataRead || (it.format == EbookFormat.Epub && !it.seriesRead))
+        it.available && (!it.metadataRead || (it.format == EbookFormat.Epub && !it.seriesRead))
       }
       .forEach { ebook ->
         val metadata = readMetadata(ebook, withCover = !ebook.metadataRead)

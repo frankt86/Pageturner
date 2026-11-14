@@ -21,8 +21,13 @@ import voice.core.audiobookshelf.download.BookDownloadState
 import voice.core.common.DispatcherProvider
 import voice.core.data.Book
 import voice.core.data.BookId
+import voice.core.data.Ebook
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
+import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
+import voice.features.bookOverview.ebook
+import voice.features.bookOverview.overview.bookId
 import voice.features.bookOverview.overview.toItemViewState
 import voice.navigation.Destination
 import voice.navigation.Navigator
@@ -34,6 +39,7 @@ class AuthorViewModelTest {
     DispatcherProvider(testDispatcher, testDispatcher, testDispatcher)
   private val navigator = mockk<Navigator>(relaxed = true)
   private val books = MutableStateFlow<List<Book>>(emptyList())
+  private val ebooks = MemoryDataStore(emptyList<Ebook>())
   private val authorInfoLookup = mockk<AuthorInfoLookup>()
 
   init {
@@ -132,6 +138,31 @@ class AuthorViewModelTest {
   }
 
   @Test
+  fun `an author of only ebooks lists them, and an ebook opens in the reader`() = runTest {
+    val ebook = ebook(name = "Emma", author = "Jane", lastOpened = 1, progress = 1F)
+    ebooks.updateData { listOf(ebook, ebook(author = "Someone else")) }
+
+    testState(name = "Jane") {
+      val state = awaitItem()!!
+      assertEquals(expected = "Jane", actual = state.name)
+      assertEquals(expected = 1, actual = state.bookCount)
+      assertEquals(expected = 1, actual = state.finishedCount)
+      val entry = state.entries.single() as AuthorViewState.Entry.Book
+      assertEquals(expected = ebook.bookId, actual = entry.book.id)
+      assertEquals(expected = true, actual = entry.book.isEbook)
+    }
+
+    val viewModel = viewModel(name = "Jane")
+    viewModel.onBookClick(ebook.bookId)
+    viewModel.onBookLongClick(ebook.bookId)
+
+    verify {
+      navigator.goTo(Destination.Reader(ebook.uri))
+      navigator.goTo(Destination.EbookActions(ebook.uri))
+    }
+  }
+
+  @Test
   fun `a series opens its screen`() {
     viewModel().onSeriesClick("Saga")
 
@@ -144,6 +175,7 @@ class AuthorViewModelTest {
         mockk<BookRepository> {
           every { flow() } returns books
         },
+      ebooksStore = EbooksStore(ebooks),
       navigator = navigator,
       serverLibrary =
         mockk {

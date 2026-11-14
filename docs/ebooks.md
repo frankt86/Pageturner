@@ -24,7 +24,23 @@ Long-press an ebook to:
   sheet suggests series your library already has, from audiobooks and ebooks. Rescanning your folders or downloading the
   book again from a catalog keeps your title, author, cover, series and part,
 - set a **Cover from the Internet** (searched by title and author) or a **Cover from the file system**,
-- **Remove from library**. The file stays on your phone.
+- **Hide from library**, like an audiobook. The file stays on your phone. The library offers **Undo**, and a small badge
+  marks the book when **Hidden books** is on in the library filter. Search still finds it, and **Show in library** brings
+  it back. Ebooks you removed from the library in an older version are hidden books now,
+- **Select** it, to change several books at once, see below.
+
+## In the library
+
+Ebooks work like audiobooks in the library:
+
+- **Select** several books, audiobooks and ebooks together, to set their series or author, or to hide them.
+- **Group by** set to **Author** puts ebooks under the author they show, with that author's audiobooks. The author's
+  page lists both, also for an author with only ebooks. Tap an ebook there to read it.
+- **Hide from library** in the sheet of a series hides its ebooks too. **Mark as Completed** and **Mark as not started
+  yet** there change its ebooks as well, and a series of only ebooks has this sheet too.
+- The chips of your folders show and hide the ebooks found in each folder. Books from a catalog that Pageturner keeps in
+  its own storage belong to no folder, so they always show.
+- Ebooks are on your phone, so the **Not downloaded** switch leaves them in the library.
 
 ## Series
 
@@ -45,8 +61,8 @@ When the **Continue reading** card shows an ebook of a series, it names the seri
 
 The library search finds ebooks next to your audiobooks, by their title, author and series, and forgives one typo per word
 of five or more letters. A book you edited is found by your title, author, series and part, and still by the title and
-author from its file. Books of a series are sorted by their part. **Browse** lists ebooks under their authors and series
-too. Tap a result to read the book.
+author from its file. Hidden ebooks are found too. Books of a series are sorted by their part. **Browse** lists ebooks
+under their authors and series too. Tap a result to read the book.
 
 ## Reading
 

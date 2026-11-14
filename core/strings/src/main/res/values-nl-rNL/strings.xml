@@ -84,8 +84,6 @@
     <string name="book.edit.server.not_allowed">Je account op de server mag geen boeken wijzigen.</string>
     <string name="book.edit.title.label">Titel</string>
     <string name="book.hide">Verbergen uit bibliotheek</string>
-    <string name="book.remove_from_library">Uit bibliotheek verwijderen</string>
-    <string name="book.remove_from_library.summary">Het bestand blijft op je apparaat</string>
     <string name="book.select">Selecteren</string>
     <string name="book.show">Tonen in bibliotheek</string>
     <string name="book.source.device">Op dit apparaat</string>

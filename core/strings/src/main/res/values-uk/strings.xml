@@ -90,8 +90,6 @@
     <string name="book.edit.server.not_allowed">Ваш обліковий запис на сервері не може змінювати книги.</string>
     <string name="book.edit.title.label">Назва</string>
     <string name="book.hide">Приховати з бібліотеки</string>
-    <string name="book.remove_from_library">Прибрати з бібліотеки</string>
-    <string name="book.remove_from_library.summary">Файл залишиться на пристрої</string>
     <string name="book.select">Вибрати</string>
     <string name="book.show">Показати в бібліотеці</string>
     <string name="book.source.device">На цьому пристрої</string>

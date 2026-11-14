@@ -90,8 +90,6 @@
     <string name="book.edit.server.not_allowed">Ваша учётная запись на сервере не может изменять книги.</string>
     <string name="book.edit.title.label">Название</string>
     <string name="book.hide">Скрыть из библиотеки</string>
-    <string name="book.remove_from_library">Убрать из библиотеки</string>
-    <string name="book.remove_from_library.summary">Файл останется на устройстве</string>
     <string name="book.select">Выбрать</string>
     <string name="book.show">Показать в библиотеке</string>
     <string name="book.source.device">На этом устройстве</string>

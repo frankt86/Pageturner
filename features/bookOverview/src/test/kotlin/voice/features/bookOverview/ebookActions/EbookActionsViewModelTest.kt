@@ -3,19 +3,26 @@ package voice.features.bookOverview.ebookActions
 import androidx.core.net.toUri
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import app.cash.molecule.RecompositionMode
+import app.cash.molecule.launchMolecule
+import app.cash.turbine.test
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
 import voice.core.common.DispatcherProvider
 import voice.core.data.BookCategory
+import voice.core.data.BookId
 import voice.core.data.Ebook
 import voice.core.data.EbookFormat
 import voice.core.data.EbookPosition
@@ -23,8 +30,13 @@ import voice.core.data.repo.BookRepository
 import voice.core.data.store.EbooksStore
 import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
+import voice.features.bookOverview.bottomSheet.BottomSheetItem
 import voice.features.bookOverview.editBook.NameSuggestion
+import voice.features.bookOverview.hideBook.BookHider
+import voice.features.bookOverview.hideBook.HiddenBooks
+import voice.features.bookOverview.overview.bookId
 import voice.features.bookOverview.overview.category
+import voice.features.bookOverview.select.BookSelectionRequests
 import voice.navigation.Destination
 import voice.navigation.Navigator
 
@@ -47,6 +59,8 @@ class EbookActionsViewModelTest {
     mockk<BookRepository> {
       coEvery { all() } returns emptyList()
     }
+  private val bookHider = BookHider(repo, store)
+  private val bookSelectionRequests = BookSelectionRequests()
   private val viewModel =
     EbookActionsViewModel(
       store = store,
@@ -55,6 +69,8 @@ class EbookActionsViewModelTest {
       navigator = navigator,
       dispatcherProvider =
         DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
+      bookHider = bookHider,
+      bookSelectionRequests = bookSelectionRequests,
       uri = ebook.uri,
     )
 
@@ -237,10 +253,55 @@ class EbookActionsViewModelTest {
   }
 
   @Test
-  fun `removing a book hides it`() = scope.runTest {
-    viewModel.onRemove()
+  fun `hiding a book hides it with an undo, and showing brings it back`() = scope.runTest {
+    bookHider.hidden.test {
+      viewModel.onHide()
+      testScheduler.advanceUntilIdle()
+
+      assertEquals(HiddenBooks(listOf(ebook.bookId), "Book", series = false), awaitItem())
+    }
+    assertTrue(stored().hidden)
+
+    viewModel.onShow()
     testScheduler.advanceUntilIdle()
 
-    assertTrue(stored().hidden)
+    assertFalse(stored().hidden)
+  }
+
+  @Test
+  fun `the sheet offers to hide a book, and to show a hidden one`() = scope.runTest {
+    backgroundScope
+      .launchMolecule(RecompositionMode.Immediate) {
+        viewModel.state()?.items
+      }
+      .test {
+        assertEquals(expected = null, actual = awaitItem())
+        assertEquals(
+          expected =
+            listOf(
+              BottomSheetItem.Edit,
+              BottomSheetItem.InternetCover,
+              BottomSheetItem.FileCover,
+              BottomSheetItem.Hide,
+            ),
+          actual = awaitItem(),
+        )
+
+        store.updateData { ebooks -> ebooks.map { it.copy(hidden = true) } }
+
+        assertEquals(expected = BottomSheetItem.Show, actual = awaitItem()?.last())
+      }
+  }
+
+  @Test
+  fun `select asks the library to select the book`() = scope.runTest {
+    val requests = mutableListOf<List<BookId>>()
+    backgroundScope.launch { bookSelectionRequests.requests.collect { requests += it } }
+    runCurrent()
+
+    viewModel.onSelect()
+    runCurrent()
+
+    assertEquals(listOf(listOf(ebook.bookId)), requests)
   }
 }

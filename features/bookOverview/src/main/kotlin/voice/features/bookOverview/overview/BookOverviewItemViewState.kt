@@ -108,6 +108,7 @@ internal fun Ebook.toItemViewState() =
     remainingTime =
       "${format.name.uppercase()} · ${NumberFormat.getPercentInstance().format(progress)}",
     series = seriesLine,
+    hidden = hidden,
     isEbook = true,
   )
 

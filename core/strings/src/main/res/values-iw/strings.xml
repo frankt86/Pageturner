@@ -87,8 +87,6 @@
     <string name="book.edit.server.not_allowed">לחשבון שלכם בשרת אין הרשאה לשנות ספרים.</string>
     <string name="book.edit.title.label">כותר</string>
     <string name="book.hide">הסתרה מהספרייה</string>
-    <string name="book.remove_from_library">הסרה מהספרייה</string>
-    <string name="book.remove_from_library.summary">הקובץ נשאר במכשיר</string>
     <string name="book.select">בחירה</string>
     <string name="book.show">הצגה בספרייה</string>
     <string name="book.source.device">במכשיר הזה</string>

@@ -9,25 +9,35 @@ import io.mockk.runs
 import io.mockk.slot
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import voice.core.data.CustomMetadata
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
+import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
+import voice.features.bookOverview.ebook
+import voice.features.bookOverview.overview.bookId
 
 class HideBookViewModelTest {
 
   private val book = book(name = "Dune")
   private val hiddenBook = book(hidden = true)
+  private val other = book()
+  private val books = listOf(book, hiddenBook, other)
+  private val ebook = ebook(name = "Emma")
+  private val ebooks = EbooksStore(MemoryDataStore(listOf(ebook)))
 
   private val repo =
     mockk<BookRepository> {
       coEvery { get(book.id) } returns book
       coEvery { get(hiddenBook.id) } returns hiddenBook
+      coEvery { all() } answers { books }
       coEvery { updateCustomMetadata(any(), any()) } just runs
     }
 
-  private val bookHider = BookHider(repo)
+  private val bookHider = BookHider(repo, ebooks)
 
   private val viewModel = HideBookViewModel(repo, bookHider)
 
@@ -55,8 +65,6 @@ class HideBookViewModelTest {
 
   @Test
   fun `hiding several books leaves out the hidden ones, so the undo keeps them hidden`() = runTest {
-    val other = book()
-    coEvery { repo.get(other.id) } returns other
     bookHider.hidden.test {
       bookHider.hide(listOf(book.id, hiddenBook.id, other.id))
 
@@ -72,5 +80,22 @@ class HideBookViewModelTest {
     val update = slot<(CustomMetadata) -> CustomMetadata>()
     coVerify { repo.updateCustomMetadata(hiddenBook.id, capture(update)) }
     assertEquals(false, update.captured(hiddenBook.custom).hidden)
+  }
+
+  @Test
+  fun `an ebook is hidden like an audiobook, with an undo, and shown again`() = runTest {
+    bookHider.hidden.test {
+      bookHider.hide(listOf(ebook.bookId, book.id))
+
+      assertEquals(
+        HiddenBooks(listOf(book.id, ebook.bookId), name = null, series = false),
+        awaitItem(),
+      )
+    }
+    assertEquals(true, ebooks.data.first().single().hidden)
+
+    bookHider.show(listOf(ebook.bookId))
+
+    assertEquals(false, ebooks.data.first().single().hidden)
   }
 }

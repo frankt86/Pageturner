@@ -59,7 +59,7 @@ import voice.core.ui.GridCount
 import voice.core.ui.GridMode
 import voice.core.ui.GridModeStore
 import voice.features.bookOverview.di.BookOverviewScope
-import voice.features.bookOverview.editBook.nameSuggestions
+import voice.features.bookOverview.editBook.toNameSuggestions
 import voice.features.bookOverview.hideBook.BookHider
 import voice.features.bookOverview.hideBook.HiddenBooks
 import voice.features.bookOverview.select.BookField
@@ -166,11 +166,6 @@ class BookOverviewViewModel(
     }
       .collectAsState(initial = null)
       .value
-    val ebooks = remember {
-      ebooksStore.data.map { ebooks -> ebooks.filter { it.available && !it.hidden } }
-    }
-      .collectAsState(initial = null)
-      .value
     val showHiddenBooks = remember {
       showHiddenBooksStore.data
     }
@@ -188,7 +183,6 @@ class BookOverviewViewModel(
         folderPickerMovedDialogShown == null ||
         gridMode == null ||
         hasFoldersWithoutAccess == null ||
-        ebooks == null ||
         showHiddenBooks == null ||
         showNotDownloadedBooks == null ||
         grouping == null ||
@@ -204,9 +198,11 @@ class BookOverviewViewModel(
         downloadStates?.get(id) !is BookDownloadState.Downloaded
     fun Book.passesHiddenFilter() = showHiddenBooks || !custom.hidden
     fun Book.passesNotDownloadedFilter() = showNotDownloadedBooks || !notDownloaded()
-    // each count is what its switch changes, with the other switch as it is
+    // each count is what its switch changes, with the other switch as it is. Ebooks are on the
+    // device, so the switch for books that aren't downloaded leaves them.
     val hiddenBookCount =
-      library.shownBooks.count { it.custom.hidden && it.passesNotDownloadedFilter() }
+      library.shownBooks.count { it.custom.hidden && it.passesNotDownloadedFilter() } +
+        library.shownEbooks.count { it.hidden }
     val notDownloadedBookCount =
       library.shownBooks.count { it.notDownloaded() && it.passesHiddenFilter() }
     val books =
@@ -219,10 +215,14 @@ class BookOverviewViewModel(
       ) {
         library.shownBooks.filter { it.passesHiddenFilter() && it.passesNotDownloadedFilter() }
       }
+    val ebooks =
+      remember(library, showHiddenBooks) {
+        library.shownEbooks.filter { showHiddenBooks || !it.hidden }
+      }
     // a deleted book can stay the current one
     val currentBookId = currentBook.id?.takeIf { id -> books.any { it.id == id } }
     val heroBookId = heroBookId(books, ebooks, currentBookId)
-    val bookIds = remember(books) { books.mapTo(mutableSetOf()) { it.id } }
+    val bookIds = remember(books, ebooks) { books.map { it.id }.toSet() + ebooks.map { it.bookId } }
     SideEffect { shownBookIds = bookIds }
     // books that leave the library, like hidden ones, leave the selection too, so they don't come
     // back selected
@@ -233,7 +233,10 @@ class BookOverviewViewModel(
 
     // with every book hidden, the folders still have books, so there's nothing to add
     val showEmptyLibrary =
-      !hasStoragePermissionBug && !scannerActive && library.books.isEmpty() && ebooks.isEmpty()
+      !hasStoragePermissionBug &&
+        !scannerActive &&
+        library.books.isEmpty() &&
+        library.ebooks.isEmpty()
     LaunchedEffect(showEmptyLibrary) {
       if (showEmptyLibrary) emptyLibraryTracker.track()
     }
@@ -277,16 +280,9 @@ class BookOverviewViewModel(
           entries.filterNot { it is LibraryEntry.Single && it.book.id == heroBookId }
         }
       }
-    // grouping by author only covers audiobooks so far, ebooks follow the authors
     val authors =
       remember(entries, grouping) {
-        if (grouping == LibraryGrouping.Author) {
-          entries
-            .mapValues { (_, sectionEntries) -> sectionEntries.filterNot { it.hasEbook } }
-            .groupedByAuthor()
-        } else {
-          emptyMap()
-        }
+        if (grouping == LibraryGrouping.Author) entries.groupedByAuthor() else emptyMap()
       }
     val ebookStates =
       remember(ebooks) { ebooks.associate { it.bookId to mutableStateOf(it.toItemViewState()) } }
@@ -315,12 +311,8 @@ class BookOverviewViewModel(
         entries
           .mapValues { (category, entries) ->
             val authorGroups = authors[category]
-            if (authorGroups == null) {
-              entries.map { it.item() }
-            } else {
-              authorGroups.map { LibraryItem.Author(it.toEntryViewState(category)) } +
-                entries.filter { it.hasEbook }.map { it.item() }
-            }
+            authorGroups?.map { LibraryItem.Author(it.toEntryViewState(category)) }
+              ?: entries.map { it.item() }
           }
           .filterValues { it.isNotEmpty() },
       hero =
@@ -339,8 +331,8 @@ class BookOverviewViewModel(
           }
           .takeIf { currentBookId != null },
       showEmptyLibrary = showEmptyLibrary,
-      showSearchIcon = library.books.isNotEmpty() || ebooks.isNotEmpty(),
-      showFilterIcon = library.books.isNotEmpty(),
+      showSearchIcon = library.books.isNotEmpty() || library.ebooks.isNotEmpty(),
+      showFilterIcon = library.books.isNotEmpty() || library.ebooks.isNotEmpty(),
       isLoading = scannerActive,
       showStoragePermissionBugCard = hasStoragePermissionBug,
       showFolderAccessBadge = hasFoldersWithoutAccess,
@@ -360,7 +352,9 @@ class BookOverviewViewModel(
           SelectionViewState(
             ids = ids,
             allSelected = ids.size == bookIds.size,
-            allHidden = books.all { it.id !in ids || it.custom.hidden },
+            allHidden =
+              books.all { it.id !in ids || it.custom.hidden } &&
+                ebooks.all { it.bookId !in ids || it.hidden },
           )
         },
       selectionEdit = selectionEdit,
@@ -369,9 +363,15 @@ class BookOverviewViewModel(
   }
 
   private fun library(): Flow<SourcedLibrary> {
-    return combine(repo.flow(), sources(), hiddenSourcesStore.data) { books, sources, storedHidden
-        ->
-        if (sources.size < 2) return@combine SourcedLibrary(books, books, emptyList())
+    return combine(
+        repo.flow(),
+        ebooksStore.data.map { ebooks -> ebooks.filter { it.available } },
+        sources(),
+        hiddenSourcesStore.data,
+      ) { books, ebooks, sources, storedHidden ->
+        if (sources.size < 2) {
+          return@combine SourcedLibrary(books, books, ebooks, ebooks, emptyList())
+        }
         val folders = sources.mapNotNull { (source) ->
           (source as? LibrarySource.Folder)?.uri?.toUri()
         }
@@ -382,6 +382,9 @@ class BookOverviewViewModel(
         SourcedLibrary(
           books = books,
           shownBooks = books.filter { sourceOf[it.id] !in hidden },
+          ebooks = ebooks,
+          // an ebook from a catalog that lives in the app's storage has no folder, so it shows
+          shownEbooks = ebooks.filter { it.source(folders) !in hidden },
           sources =
             sources.map { (source, name) ->
               LibrarySourceViewState(
@@ -540,7 +543,7 @@ class BookOverviewViewModel(
 
   internal fun onSelectionEdit(field: BookField) {
     scope.launch {
-      val books = repo.all()
+      val books = allLibraryBooks(repo, ebooksStore)
       // while the books load, a second tap or an action that ends selecting can come in
       val ids = selectedIds()
       if (ids.isEmpty() || selectionEdit != null) return@launch
@@ -551,7 +554,7 @@ class BookOverviewViewModel(
           ids = selectedBooks.mapTo(mutableSetOf()) { it.id },
           // a value all of them share is likely what the listener wants to fix
           value = selectedBooks.map { field.of(it) }.distinct().singleOrNull().orEmpty(),
-          suggestions = books.nameSuggestions { field.of(it) },
+          suggestions = books.map { field.of(it) }.toNameSuggestions(),
         )
     }
   }
@@ -671,6 +674,8 @@ private fun DemoAudiobook.toItemViewState() =
 private class SourcedLibrary(
   val books: List<Book>,
   val shownBooks: List<Book>,
+  val ebooks: List<Ebook>,
+  val shownEbooks: List<Ebook>,
   val sources: List<LibrarySourceViewState>,
 )
 
