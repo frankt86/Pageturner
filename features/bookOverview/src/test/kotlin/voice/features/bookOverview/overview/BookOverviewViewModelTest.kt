@@ -125,7 +125,6 @@ class BookOverviewViewModelTest {
         folderPickerMovedDialogShownStore =
           FolderPickerMovedDialogShownStore(MemoryDataStore(false)),
         gridModeStore = GridModeStore(MemoryDataStore(GridMode.LIST)),
-        ebooksStore = EbooksStore(MemoryDataStore(ebooks)),
         ebooksStore = EbooksStore(MemoryDataStore(emptyList())),
         gridCount =
           mockk<GridCount> {
@@ -212,7 +211,6 @@ class BookOverviewViewModelTest {
         folderPickerMovedDialogShownStore =
           FolderPickerMovedDialogShownStore(MemoryDataStore(false)),
         gridModeStore = GridModeStore(MemoryDataStore(GridMode.LIST)),
-        ebooksStore = EbooksStore(MemoryDataStore(ebooks)),
         ebooksStore = EbooksStore(MemoryDataStore(emptyList())),
         gridCount =
           mockk<GridCount> {
