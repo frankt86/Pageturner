@@ -11,12 +11,19 @@ import io.mockk.MockKMatcherScope
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
+import java.io.File
+import java.io.IOException
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.hours
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
+import voice.core.analytics.api.Analytics
 import voice.core.common.DispatcherProvider
 import voice.core.data.folders.AudiobookFolders
 import voice.core.data.folders.FolderType
@@ -28,25 +35,20 @@ import voice.core.scanner.BookPreviewer
 import voice.navigation.Destination
 import voice.navigation.Navigator
 import voice.navigation.Origin
-import java.io.File
-import java.io.IOException
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
-import kotlin.time.Duration.Companion.hours
 
 @RunWith(AndroidJUnit4::class)
 class SelectFolderTypeViewModelTest {
 
-  @get:Rule
-  val temporaryFolder = TemporaryFolder()
+  @get:Rule val temporaryFolder = TemporaryFolder()
 
   private val audiobookFolders = mockk<AudiobookFolders>(relaxed = true)
   private val navigator = mockk<Navigator>(relaxed = true)
+  private val analytics = mockk<Analytics>(relaxUnitFun = true)
   private val previewed = mutableListOf<CachedDocumentFile>()
-  private val bookPreviewer = mockk<BookPreviewer> {
-    coEvery { preview(capture(previewed)) } answers { tagged(firstArg()) }
-  }
+  private val bookPreviewer =
+    mockk<BookPreviewer> {
+      coEvery { preview(capture(previewed)) } answers { tagged(firstArg()) }
+    }
 
   @Test
   fun `the guessed mode is selected and shows its books`() = runTest {
@@ -75,7 +77,10 @@ class SelectFolderTypeViewModelTest {
       viewModel.selectMode(FolderMode.SingleBook)
       val viewState = awaitLoaded()
       assertEquals(expected = FolderMode.SingleBook, actual = viewState.selectedMode)
-      assertEquals(expected = listOf(book("audiobooks", fileCount = 3)), actual = viewState.unanalyzedBooks())
+      assertEquals(
+        expected = listOf(book("audiobooks", fileCount = 3)),
+        actual = viewState.unanalyzedBooks(),
+      )
     }
   }
 
@@ -90,10 +95,11 @@ class SelectFolderTypeViewModelTest {
         viewState = awaitItem()
       }
       assertEquals(
-        expected = listOf(
-          book("Tagged FirstBook", fileCount = 1).copy(author = "Author", duration = 2.hours),
-          book("Tagged SecondBook", fileCount = 2).copy(author = "Author", duration = 2.hours),
-        ),
+        expected =
+          listOf(
+            book("Tagged FirstBook", fileCount = 1).copy(author = "Author", duration = 2.hours),
+            book("Tagged SecondBook", fileCount = 2).copy(author = "Author", duration = 2.hours),
+          ),
         actual = viewState.books.sortedBy { it.name },
       )
     }
@@ -102,10 +108,11 @@ class SelectFolderTypeViewModelTest {
   @Test
   fun `the book being analyzed is marked`() = runTest {
     val analyzed = CompletableDeferred<Unit>()
-    coEvery { bookPreviewer.preview(any()) } coAnswers {
-      analyzed.await()
-      tagged(firstArg())
-    }
+    coEvery { bookPreviewer.preview(any()) } coAnswers
+      {
+        analyzed.await()
+        tagged(firstArg())
+      }
     val viewModel = viewModel(library())
 
     viewStates(viewModel) {
@@ -126,7 +133,8 @@ class SelectFolderTypeViewModelTest {
       assertEquals(expected = listOf("Tagged SecondBook"), actual = viewState.books.map { it.name })
       assertEquals(
         expected = listOf("Tagged SecondBook"),
-        actual = viewState.options.single { it.mode == FolderMode.Audiobooks }.books.map { it.name },
+        actual =
+          viewState.options.single { it.mode == FolderMode.Audiobooks }.books.map { it.name },
       )
     }
   }
@@ -139,10 +147,11 @@ class SelectFolderTypeViewModelTest {
     viewStates(viewModel) {
       val viewState = awaitAnalyzed()
       assertEquals(
-        expected = listOf(
-          book("FirstBook", fileCount = 1),
-          book("Tagged SecondBook", fileCount = 2).copy(author = "Author", duration = 2.hours),
-        ),
+        expected =
+          listOf(
+            book("FirstBook", fileCount = 1),
+            book("Tagged SecondBook", fileCount = 2).copy(author = "Author", duration = 2.hours),
+          ),
         actual = viewState.books.sortedBy { it.name },
       )
     }
@@ -162,7 +171,9 @@ class SelectFolderTypeViewModelTest {
       awaitLoaded()
       viewModel.selectMode(FolderMode.Authors)
       var viewState = awaitAnalyzed()
-      while (viewState.selectedMode != FolderMode.Authors || viewState.books.any { it.duration == null }) {
+      while (
+        viewState.selectedMode != FolderMode.Authors || viewState.books.any { it.duration == null }
+      ) {
         viewState = awaitItem()
       }
       assertEquals(
@@ -181,11 +192,17 @@ class SelectFolderTypeViewModelTest {
       awaitLoaded()
       viewModel.selectMode(FolderMode.SingleBook)
       var viewState = awaitLoaded()
-      while (viewState.selectedMode != FolderMode.SingleBook || viewState.books.any { it.duration == null }) {
+      while (
+        viewState.selectedMode != FolderMode.SingleBook ||
+          viewState.books.any { it.duration == null }
+      ) {
         viewState = awaitItem()
       }
       viewModel.selectMode(FolderMode.Audiobooks)
-      while (viewState.selectedMode != FolderMode.Audiobooks || viewState.books.any { it.duration == null }) {
+      while (
+        viewState.selectedMode != FolderMode.Audiobooks ||
+          viewState.books.any { it.duration == null }
+      ) {
         viewState = awaitItem()
       }
     }
@@ -194,6 +211,41 @@ class SelectFolderTypeViewModelTest {
       expected = listOf("FirstBook", "SecondBook", "audiobooks"),
       actual = previewed.map { it.nameWithoutExtension() }.sorted(),
     )
+  }
+
+  @Test
+  fun `a new folder logs how many books the guessed mode finds, once`() = runTest {
+    val viewModel = viewModel(library())
+
+    viewStates(viewModel) {
+      awaitLoaded()
+      viewModel.selectMode(FolderMode.SingleBook)
+      awaitLoaded()
+    }
+
+    verify(exactly = 1) { analytics.event("folder_review", mapOf("books" to "2")) }
+  }
+
+  @Test
+  fun `a folder without audiobooks logs no books`() = runTest {
+    val viewModel = viewModel(temporaryFolder.newFolder("photos"))
+
+    viewStates(viewModel) {
+      awaitLoaded()
+    }
+
+    verify { analytics.event("folder_review", mapOf("books" to "0")) }
+  }
+
+  @Test
+  fun `a folder added before logs nothing`() = runTest {
+    val viewModel = viewModel(library(), currentType = FolderType.Root)
+
+    viewStates(viewModel) {
+      awaitLoaded()
+    }
+
+    verify(exactly = 0) { analytics.event(any(), any()) }
   }
 
   @Test
@@ -260,32 +312,37 @@ class SelectFolderTypeViewModelTest {
     folder: File,
     origin: Origin = Origin.Default,
     currentType: FolderType? = null,
-  ) = SelectFolderTypeViewModel(
-    dispatcherProvider = DispatcherProvider(coroutineContext, coroutineContext, coroutineContext),
-    audiobookFolders = audiobookFolders,
-    navigator = navigator,
-    documentFileFactory = FileBasedDocumentFactory,
-    bookPreviewer = bookPreviewer,
-    uri = folder.toUri(),
-    documentFile = DocumentFile.fromFile(folder),
-    origin = origin,
-    currentType = currentType,
-  )
+  ) =
+    SelectFolderTypeViewModel(
+      dispatcherProvider = DispatcherProvider(coroutineContext, coroutineContext, coroutineContext),
+      audiobookFolders = audiobookFolders,
+      navigator = navigator,
+      documentFileFactory = FileBasedDocumentFactory,
+      bookPreviewer = bookPreviewer,
+      analytics = analytics,
+      uri = folder.toUri(),
+      documentFile = DocumentFile.fromFile(folder),
+      origin = origin,
+      currentType = currentType,
+    )
 
   private suspend fun TestScope.viewStates(
     viewModel: SelectFolderTypeViewModel,
     validate: suspend ReceiveTurbine<SelectFolderTypeViewState>.() -> Unit,
   ) {
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.test {
-      validate()
-      // the books keep filling in after what a test looks at
-      cancelAndIgnoreRemainingEvents()
-    }
+    backgroundScope
+      .launchMolecule(RecompositionMode.Immediate) {
+        viewModel.viewState()
+      }
+      .test {
+        validate()
+        // the books keep filling in after what a test looks at
+        cancelAndIgnoreRemainingEvents()
+      }
   }
 
-  private suspend fun ReceiveTurbine<SelectFolderTypeViewState>.awaitAnalyzed(): SelectFolderTypeViewState {
+  private suspend fun ReceiveTurbine<SelectFolderTypeViewState>.awaitAnalyzed():
+    SelectFolderTypeViewState {
     var viewState = awaitLoaded()
     while (viewState.books.any { it.analyzing }) {
       viewState = awaitItem()
@@ -294,7 +351,8 @@ class SelectFolderTypeViewModelTest {
   }
 
   @IgnorableReturnValue
-  private suspend fun ReceiveTurbine<SelectFolderTypeViewState>.awaitLoaded(): SelectFolderTypeViewState {
+  private suspend fun ReceiveTurbine<SelectFolderTypeViewState>.awaitLoaded():
+    SelectFolderTypeViewState {
     var viewState = awaitItem()
     while (viewState.loading || viewState.folderName.isEmpty()) {
       viewState = awaitItem()
@@ -307,22 +365,25 @@ class SelectFolderTypeViewModelTest {
     return books.map { it.copy(analyzing = false) }.sortedBy { it.name }
   }
 
-  private fun tagged(file: CachedDocumentFile) = BookPreview(
-    name = "Tagged ${file.nameWithoutExtension()}",
-    author = "Author",
-    duration = 2.hours,
-  )
+  private fun tagged(file: CachedDocumentFile) =
+    BookPreview(
+      name = "Tagged ${file.nameWithoutExtension()}",
+      author = "Author",
+      duration = 2.hours,
+    )
 
-  private fun MockKMatcherScope.named(name: String) = match<CachedDocumentFile> { it.nameWithoutExtension() == name }
+  private fun MockKMatcherScope.named(name: String) =
+    match<CachedDocumentFile> { it.nameWithoutExtension() == name }
 
   private fun book(
     name: String,
     fileCount: Int,
-  ) = SelectFolderTypeViewState.Book(
-    name = name,
-    author = null,
-    fileCount = fileCount,
-    partCount = 0,
-    possibleBookCount = 0,
-  )
+  ) =
+    SelectFolderTypeViewState.Book(
+      name = name,
+      author = null,
+      fileCount = fileCount,
+      partCount = 0,
+      possibleBookCount = 0,
+    )
 }

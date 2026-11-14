@@ -19,18 +19,20 @@ internal fun parseOpds2(
   json: String,
   url: String,
 ): OpdsFeed {
-  val element = try {
-    Json.parseToJsonElement(json)
-  } catch (e: SerializationException) {
-    throw OpdsParseException("Not JSON", e)
-  }
+  val element =
+    try {
+      Json.parseToJsonElement(json)
+    } catch (e: SerializationException) {
+      throw OpdsParseException("Not JSON", e)
+    }
   val root = element as? JsonObject ?: throw OpdsParseException("Not a JSON object")
   if (root["metadata"] == null && root["publications"] == null && root["navigation"] == null) {
     throw OpdsParseException("Not an OPDS 2 feed")
   }
   val links = root.links("links", url)
   val navigation = root.links("navigation", url).mapNotNull { it.toNavigation() }.toMutableList()
-  val publications = root.objects("publications").mapNotNull { it.toPublication(url) }.toMutableList()
+  val publications =
+    root.objects("publications").mapNotNull { it.toPublication(url) }.toMutableList()
   root.objects("groups").forEach { group ->
     val title = group.obj("metadata")?.string("title")
     val self = group.links("links", url).firstOrNull { "self" in it.rels }?.href
@@ -47,13 +49,18 @@ internal fun parseOpds2(
     navigation = navigation,
     publications = publications,
     nextUrl = links.firstOrNull { "next" in it.rels }?.href,
-    search = links.firstOrNull { "search" in it.rels }?.let { link ->
-      when {
-        link.templated || '{' in link.rawHref -> resolveTemplate(url, link.rawHref)?.let(OpdsSearch::Template)
-        link.type == "application/opensearchdescription+xml" -> link.href?.let(OpdsSearch::Description)
-        else -> null
-      }
-    },
+    search =
+      links
+        .firstOrNull { "search" in it.rels }
+        ?.let { link ->
+          when {
+            link.templated || '{' in link.rawHref ->
+              resolveTemplate(url, link.rawHref)?.let(OpdsSearch::Template)
+            link.type == "application/opensearchdescription+xml" ->
+              link.href?.let(OpdsSearch::Description)
+            else -> null
+          }
+        },
   )
 }
 
@@ -79,7 +86,9 @@ private fun JsonLink.toNavigation(): OpdsNavigation? {
 private fun JsonObject.toPublication(base: String): OpdsPublication? {
   val metadata = obj("metadata") ?: return null
   val links = links("links", base)
-  val acquisitions = links.filter { link -> link.href != null && link.rels.any { it in acquisitionRels } }
+  val acquisitions = links.filter { link ->
+    link.href != null && link.rels.any { it in acquisitionRels }
+  }
   if (acquisitions.isEmpty()) return null
   val images = links("images", base).filter { it.href != null }
   return OpdsPublication(
@@ -94,35 +103,36 @@ private fun JsonObject.toPublication(base: String): OpdsPublication? {
   )
 }
 
-private fun JsonLink.toAcquisition(): OpdsAcquisition = OpdsAcquisition(url = href!!, type = type, title = title, length = length)
+private fun JsonLink.toAcquisition(): OpdsAcquisition =
+  OpdsAcquisition(url = href!!, type = type, title = title, length = length)
 
 private fun JsonObject.isAudiobook(): Boolean {
-  val types = listOf("@type", "conformsTo").flatMap { key ->
-    when (val value = this[key]) {
-      is JsonPrimitive -> listOfNotNull(value.contentOrNull)
-      is JsonArray -> value.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
-      else -> emptyList()
+  val types =
+    listOf("@type", "conformsTo").flatMap { key ->
+      when (val value = this[key]) {
+        is JsonPrimitive -> listOfNotNull(value.contentOrNull)
+        is JsonArray -> value.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
+        else -> emptyList()
+      }
     }
-  }
   return types.any { "audiobook" in it.lowercase() }
 }
 
 /**
- * The audio files of a Readium audiobook manifest, in the order they play. Links in it are resolved against [url],
- * where it came from.
+ * The audio files of a Readium audiobook manifest, in the order they play. Links in it are resolved
+ * against [url], where it came from.
  */
 internal fun parseAudiobookManifest(
   json: String,
   url: String,
 ): List<OpdsAcquisition> {
-  val root = try {
-    Json.parseToJsonElement(json) as? JsonObject
-  } catch (e: SerializationException) {
-    throw OpdsParseException("Not JSON", e)
-  } ?: throw OpdsParseException("Not a JSON object")
-  return root.links("readingOrder", url)
-    .filter { it.href != null }
-    .map { it.toAcquisition() }
+  val root =
+    try {
+      Json.parseToJsonElement(json) as? JsonObject
+    } catch (e: SerializationException) {
+      throw OpdsParseException("Not JSON", e)
+    } ?: throw OpdsParseException("Not a JSON object")
+  return root.links("readingOrder", url).filter { it.href != null }.map { it.toAcquisition() }
 }
 
 private fun JsonElement?.contributorNames(): List<String> {
@@ -145,11 +155,12 @@ private fun JsonObject.links(
       href = if (templated) null else resolveUrl(base, rawHref),
       rawHref = rawHref,
       type = link.string("type")?.mediaType(),
-      rels = when (val rel = link["rel"]) {
-        is JsonPrimitive -> listOfNotNull(rel.contentOrNull)
-        is JsonArray -> rel.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
-        else -> emptyList()
-      },
+      rels =
+        when (val rel = link["rel"]) {
+          is JsonPrimitive -> listOfNotNull(rel.contentOrNull)
+          is JsonArray -> rel.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
+          else -> emptyList()
+        },
       title = link.string("title"),
       templated = templated,
       width = (link["width"] as? JsonPrimitive)?.intOrNull,
@@ -158,16 +169,18 @@ private fun JsonObject.links(
   }
 }
 
-private fun JsonObject.objects(key: String): List<JsonObject> = (this[key] as? JsonArray)?.filterIsInstance<JsonObject>().orEmpty()
+private fun JsonObject.objects(key: String): List<JsonObject> =
+  (this[key] as? JsonArray)?.filterIsInstance<JsonObject>().orEmpty()
 
 private fun JsonObject.obj(key: String): JsonObject? = this[key] as? JsonObject
 
 /** A plain string, or the first translation of one that comes in several languages. */
 private fun JsonObject.string(key: String): String? {
-  val value = when (val element = this[key]) {
-    is JsonPrimitive -> element.contentOrNull
-    is JsonObject -> element.values.firstNotNullOfOrNull { (it as? JsonPrimitive)?.contentOrNull }
-    else -> null
-  }
+  val value =
+    when (val element = this[key]) {
+      is JsonPrimitive -> element.contentOrNull
+      is JsonObject -> element.values.firstNotNullOfOrNull { (it as? JsonPrimitive)?.contentOrNull }
+      else -> null
+    }
   return value?.trim()?.takeIf { it.isNotEmpty() }
 }

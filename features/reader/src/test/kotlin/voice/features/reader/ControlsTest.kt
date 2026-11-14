@@ -1,12 +1,12 @@
 package voice.features.reader
 
 import android.view.KeyEvent
-import voice.core.data.ReaderAction
-import voice.core.data.ReaderSettings
-import voice.core.data.TapAction
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import voice.core.data.ReaderAction
+import voice.core.data.ReaderSettings
+import voice.core.data.TapAction
 
 class ControlsTest {
 
@@ -47,14 +47,29 @@ class ControlsTest {
   fun `the volume keys only turn pages when they should`() {
     assertEquals(
       KeyAction.Next,
-      keyAction(KeyEvent.KEYCODE_VOLUME_DOWN, ctrl = false, shift = false, volumeKeys = true, rightToLeft = false),
+      keyAction(
+        KeyEvent.KEYCODE_VOLUME_DOWN,
+        ctrl = false,
+        shift = false,
+        volumeKeys = true,
+        rightToLeft = false,
+      ),
     )
-    assertNull(keyAction(KeyEvent.KEYCODE_VOLUME_DOWN, ctrl = false, shift = false, volumeKeys = false, rightToLeft = false))
+    assertNull(
+      keyAction(
+        KeyEvent.KEYCODE_VOLUME_DOWN,
+        ctrl = false,
+        shift = false,
+        volumeKeys = false,
+        rightToLeft = false,
+      ),
+    )
   }
 
   @Test
   fun `ctrl shortcuts search, bookmark and open the display settings`() {
-    fun ctrl(code: Int) = keyAction(code, ctrl = true, shift = false, volumeKeys = true, rightToLeft = false)
+    fun ctrl(code: Int) =
+      keyAction(code, ctrl = true, shift = false, volumeKeys = true, rightToLeft = false)
     assertEquals(KeyAction.Search, ctrl(KeyEvent.KEYCODE_F))
     assertEquals(KeyAction.Bookmark, ctrl(KeyEvent.KEYCODE_B))
     assertEquals(KeyAction.Display, ctrl(KeyEvent.KEYCODE_D))
@@ -63,12 +78,19 @@ class ControlsTest {
 
   @Test
   fun `the top bar keeps the display button and adds new buttons at the end`() {
-    val settings = ReaderSettings(
-      toolbarOrder = listOf(ReaderAction.ReadAloud, ReaderAction.Display),
-      hiddenActions = setOf(ReaderAction.Display, ReaderAction.Search),
-    )
+    val settings =
+      ReaderSettings(
+        toolbarOrder = listOf(ReaderAction.ReadAloud, ReaderAction.Display),
+        hiddenActions = setOf(ReaderAction.Display, ReaderAction.Search),
+      )
     assertEquals(
-      listOf(ReaderAction.ReadAloud, ReaderAction.Display, ReaderAction.Bookmark, ReaderAction.Contents, ReaderAction.HandsFree),
+      listOf(
+        ReaderAction.ReadAloud,
+        ReaderAction.Display,
+        ReaderAction.Bookmark,
+        ReaderAction.Contents,
+        ReaderAction.HandsFree,
+      ),
       settings.toolbarActions(),
     )
   }

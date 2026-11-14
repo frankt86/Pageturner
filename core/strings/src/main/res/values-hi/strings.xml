@@ -58,6 +58,7 @@
     <string name="audiobookshelf.status.needs_login">सर्वर चाहता है कि आप फिर से साइन इन करें</string>
     <string name="audiobookshelf.status.offline">अभी सर्वर से संपर्क नहीं हो पा रहा है। डाउनलोड की गई पुस्तकें फिर भी चलती हैं।</string>
     <string name="audiobookshelf.status.syncing">सिंक हो रहा है…</string>
+    <string name="author.wikipedia">विकिपीडिया पर और पढ़ें</string>
     <string name="book.category.action.mark_completed">पूर्ण चिह्नित करें</string>
     <string name="book.category.action.mark_current">जारी चिह्नित करें</string>
     <string name="book.category.action.mark_not_started">शुरू नहीं हुई के रूप में चिह्नित करें</string>
@@ -82,8 +83,11 @@
     <string name="book.edit.server.failed">आपके सर्वर पर सहेजा नहीं जा सका। फिर से कोशिश करें।</string>
     <string name="book.edit.server.not_allowed">सर्वर पर आपके खाते को पुस्तकें बदलने की अनुमति नहीं है।</string>
     <string name="book.edit.title.label">शीर्षक</string>
+    <string name="book.hide">लाइब्रेरी से छिपाएँ</string>
     <string name="book.remove_from_library">लाइब्रेरी से हटाएँ</string>
     <string name="book.remove_from_library.summary">फ़ाइल आपके डिवाइस पर बनी रहेगी</string>
+    <string name="book.select">चुनें</string>
+    <string name="book.show">लाइब्रेरी में दिखाएँ</string>
     <string name="book.source.device">इस डिवाइस पर</string>
     <string name="book.source.server_downloaded">%s · डाउनलोड की गई</string>
     <string name="bookmark.action.add_note">नोट जोड़ें</string>
@@ -154,8 +158,13 @@
     <string name="folder.add.action.file">इसके बजाय एक फ़ाइल जोड़ें</string>
     <string name="folder.add.action.folder">फ़ोल्डर चुनें</string>
     <string name="folder.add.action.opds">कैटलॉग से डाउनलोड करें</string>
+    <string name="folder.add.help.answer.no_files">अभी कोई ऑडियोबुक नहीं</string>
+    <string name="folder.add.help.answer.not_found">मुझे नहीं मिल रहीं</string>
+    <string name="folder.add.help.answer.other_app">दूसरे ऐप में हैं</string>
     <string name="folder.add.help.computer">पुस्तकें अब भी आपके कंप्यूटर पर हैं? पहले उन्हें अपने फ़ोन में कॉपी करें, जैसे Audiobooks या Documents फ़ोल्डर में।</string>
     <string name="folder.add.help.download">Android ऐप्स को सीधे Download फ़ोल्डर खोलने नहीं देता। इसके अंदर का कोई फ़ोल्डर चुनें।</string>
+    <string name="folder.add.help.no_files">Pageturner आपके फ़ोन पर मौजूद ऑडियोबुक फ़ाइलें चलाती है। LibriVox पर हज़ारों मुफ़्त ऑडियोबुक डाउनलोड के लिए उपलब्ध हैं।</string>
+    <string name="folder.add.help.other_app">Audible या Spotify जैसे ऐप्स की पुस्तकें सिर्फ़ उन्हीं ऐप्स में चलती हैं। Pageturner MP3 या M4B जैसी ऑडियोबुक फ़ाइलें चलाती है।</string>
     <string name="folder.add.help.title">आपकी पुस्तकें नहीं मिलीं?</string>
     <string name="folder.add.no_picker.message">Pageturner आपकी पुस्तकें Android के फ़ाइल पिकर से खोलती है। इसके बिना Pageturner आपके फ़ोल्डर या फ़ाइलें नहीं खोल सकती।</string>
     <string name="folder.add.no_picker.title">इस डिवाइस में फ़ाइल पिकर नहीं है</string>
@@ -231,8 +240,14 @@
     <string name="history.source.unplugged">ऑडियो डिस्कनेक्ट हुआ</string>
     <string name="history.source.watch">घड़ी</string>
     <string name="history.source.widget">विजेट</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d सीरीज़</item>
+        <item quantity="other">%d सीरीज़</item>
+    </plurals>
     <string name="library.book.downloading">डाउनलोड हो रहा है</string>
     <string name="library.book.ebook">ई-बुक</string>
+    <string name="library.book.hidden">छिपी हुई</string>
+    <string name="library.book.hidden.message">%1$s को छिपा दिया गया</string>
     <string name="library.book.offline">ऑफ़लाइन उपलब्ध नहीं</string>
     <string name="library.category.completed.title">पूर्ण</string>
     <string name="library.category.current.title">जारी</string>
@@ -243,9 +258,16 @@
     <string name="library.empty.title">कोई पुस्तक नहीं मिली</string>
     <string name="library.empty.message">Pageturner को आपके फ़ोल्डरों में कोई पुस्तक नहीं मिल रही है। देख लें कि फ़ाइलें अभी भी वहीं हैं, या कोई फ़ोल्डर जोड़ें।</string>
     <string name="library.empty.action">फ़ोल्डर दिखाएँ</string>
-    <string name="library.folders.title">पुस्तक फ़ोल्डर</string>
-    <string name="library.folders.moved.dialog.title">पुस्तक फ़ोल्डर की जगह बदल गई</string>
+    <string name="library.filter">फ़िल्टर</string>
+    <string name="library.filter.group_by">इसके अनुसार समूह बनाएँ</string>
+    <string name="library.filter.group_by.author">लेखक</string>
+    <string name="library.filter.group_by.series">सीरीज़</string>
+    <string name="library.filter.hidden_books">छिपी हुई पुस्तकें</string>
+    <string name="library.filter.not_downloaded">डाउनलोड नहीं की गईं</string>
+    <string name="library.filter.show">दिखाएँ</string>
     <string name="library.folders.moved.dialog.message">पुस्तक फ़ोल्डर अब सेटिंग्स में मैनेज होते हैं।</string>
+    <string name="library.folders.moved.dialog.title">पुस्तक फ़ोल्डर की जगह बदल गई</string>
+    <string name="library.folders.title">पुस्तक फ़ोल्डर</string>
     <string name="library.folders.no_access">ऐक्सेस नहीं है</string>
     <string name="library.folders.no_access.action">अनुमति दें</string>
     <string name="library.folders.no_access.badge">अपने फ़ोल्डर का ऐक्सेस फिर से दें</string>
@@ -257,6 +279,11 @@
         <item quantity="one">%d पुस्तक जारी है</item>
         <item quantity="other">%d पुस्तकें जारी हैं</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d छिपी हुई पुस्तक</item>
+        <item quantity="other">%d छिपी हुई पुस्तकें</item>
+    </plurals>
+    <string name="library.no_author">बिना लेखक</string>
     <string name="library.search.browse.title">ब्राउज़ करें</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d पुस्तक</item>
@@ -288,6 +315,30 @@
     <string name="library.search.recent.clear_all">सभी साफ़ करें</string>
     <string name="library.search.recent.remove">%s हटाएँ</string>
     <string name="library.search.recent.title">हालिया</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">%d पुस्तक के लिए लेखक सेट किया गया</item>
+        <item quantity="other">%d पुस्तकों के लिए लेखक सेट किया गया</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d चुनी गई</item>
+        <item quantity="other">%d चुनी गईं</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d पुस्तक को छिपा दिया गया</item>
+        <item quantity="other">%d पुस्तकों को छिपा दिया गया</item>
+    </plurals>
+    <string name="library.selection.hide">छिपाएँ</string>
+    <string name="library.selection.select_all">सभी चुनें</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">%d पुस्तक के लिए सीरीज़ सेट की गई</item>
+        <item quantity="other">%d पुस्तकों के लिए सीरीज़ सेट की गई</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">%d पुस्तक को आपके सर्वर पर सहेजा नहीं जा सका</item>
+        <item quantity="other">%d पुस्तकों को आपके सर्वर पर सहेजा नहीं जा सका</item>
+    </plurals>
+    <string name="library.selection.show">दिखाएँ</string>
+    <string name="library.series.hidden.message">%1$s को छिपा दिया गया</string>
     <string name="library.storage_permission_bug.action">अनुमति प्रदान करें</string>
     <string name="library.storage_permission_bug.message">कुछ डिवाइस पर, एक सिस्टम ऐप के पास बाहरी स्टोरेज तक पहुँचने की ज़रूरी अनुमति नहीं होती। Pageturner को आपकी ऑडियोबुक पढ़ने के लिए यह पहुँच चाहिए।</string>
     <string name="library.storage_permission_bug.title">अनुमति आवश्यक है</string>
@@ -575,6 +626,16 @@
     <string name="reader.word_spacing">शब्दों के बीच की दूरी</string>
     <string name="series.continue">जारी रखें</string>
     <string name="series.continue_book">पुस्तक %s जारी रखें</string>
+    <string name="series.mark_completed">पूर्ण चिह्नित करें</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">%d पुस्तक में आपकी जगह खो जाएगी।</item>
+        <item quantity="other">%d पुस्तकों में आपकी जगह खो जाएगी।</item>
+    </plurals>
+    <string name="series.mark_not_started">शुरू नहीं हुई के रूप में चिह्नित करें</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">%d पुस्तक में आपकी प्रगति खो जाएगी।</item>
+        <item quantity="other">%d पुस्तकों में आपकी प्रगति खो जाएगी।</item>
+    </plurals>
     <string name="series.start">शुरू करें</string>
     <string name="series.start_book">पुस्तक %s शुरू करें</string>
     <string name="settings.about.app_version.title">ऐप संस्करण</string>

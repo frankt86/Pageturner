@@ -2,6 +2,7 @@
 
 package voice.features.reader
 
+import android.graphics.Color as AndroidColor
 import android.net.Uri
 import android.text.format.DateFormat
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -52,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -62,18 +64,17 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
 import voice.core.data.HighlightColor
 import voice.core.data.ReaderColors
 import voice.core.data.ReaderImageFilter
 import voice.core.data.ReaderSettings
 import voice.core.data.ReaderTheme
-import voice.core.ui.VoiceTheme
-import voice.core.ui.icons.VoiceIcons
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import kotlin.math.roundToInt
-import android.graphics.Color as AndroidColor
 import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
+import voice.core.ui.VoiceTheme
 
 /** What's open in the reader, as not every color applies to every book. */
 internal enum class ColorsContent {
@@ -130,12 +131,13 @@ private fun ColorSettings(
   val paper = shown?.paper ?: MaterialTheme.colorScheme.surface
   val ink = shown?.ink ?: MaterialTheme.colorScheme.onSurface
   val shownTheme = settings.shownTheme()
-  val current = ReaderColors(
-    background = paper.toHex(),
-    text = ink.toHex(),
-    link = shown?.link?.toHex(),
-    selection = shown?.selection?.toHex(),
-  )
+  val current =
+    ReaderColors(
+      background = paper.toHex(),
+      text = ink.toHex(),
+      link = shown?.link?.toHex(),
+      selection = shown?.selection?.toHex(),
+    )
   fun editColors(change: (ReaderColors) -> ReaderColors) {
     // the first change starts from the colors on screen
     val start = if (shownTheme == ReaderTheme.Custom) settings.customColors else current
@@ -163,13 +165,14 @@ private fun ColorSettings(
       ink = ink,
       link = shown?.link,
       selection = shown?.selection,
-      roles = buildList {
-        add(ColorRole.Background)
-        add(ColorRole.Text)
-        // the old engine shows plain text without links
-        if (content == ColorsContent.NewEngine) add(ColorRole.Link)
-        if (content != ColorsContent.Pdf) add(ColorRole.Selection)
-      },
+      roles =
+        buildList {
+          add(ColorRole.Background)
+          add(ColorRole.Text)
+          // the old engine shows plain text without links
+          if (content == ColorsContent.NewEngine) add(ColorRole.Link)
+          if (content != ColorsContent.Pdf) add(ColorRole.Selection)
+        },
       onColorChange = { role, color ->
         val hex = color?.toHex()
         editColors {
@@ -233,9 +236,7 @@ private fun SectionTitle(text: String) {
   Text(
     text = text,
     style = MaterialTheme.typography.titleMedium,
-    modifier = Modifier
-      .padding(top = 8.dp)
-      .semantics { heading() },
+    modifier = Modifier.padding(top = 8.dp).semantics { heading() },
   )
 }
 
@@ -252,35 +253,35 @@ private fun CustomColors(
   Column {
     SectionTitle(stringResource(StringsR.string.reader_theme_custom))
     roles.forEach { role ->
-      val color = when (role) {
-        ColorRole.Background -> paper
-        ColorRole.Text -> ink
-        ColorRole.Link -> link
-        ColorRole.Selection -> selection
-      }
-      val label = stringResource(
+      val color =
         when (role) {
-          ColorRole.Background -> StringsR.string.reader_color_background
-          ColorRole.Text -> StringsR.string.reader_color_text
-          ColorRole.Link -> StringsR.string.reader_color_links
-          ColorRole.Selection -> StringsR.string.reader_color_selection
-        },
-      )
+          ColorRole.Background -> paper
+          ColorRole.Text -> ink
+          ColorRole.Link -> link
+          ColorRole.Selection -> selection
+        }
+      val label =
+        stringResource(
+          when (role) {
+            ColorRole.Background -> StringsR.string.reader_color_background
+            ColorRole.Text -> StringsR.string.reader_color_text
+            ColorRole.Link -> StringsR.string.reader_color_links
+            ColorRole.Selection -> StringsR.string.reader_color_selection
+          },
+        )
       Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-          .fillMaxWidth()
-          .clip(MaterialTheme.shapes.medium)
-          .clickable { expanded = role.takeUnless { expanded == it } }
-          .padding(vertical = 8.dp),
+        modifier =
+          Modifier.fillMaxWidth()
+            .clip(MaterialTheme.shapes.medium)
+            .clickable { expanded = role.takeUnless { expanded == it } }
+            .padding(vertical = 8.dp),
       ) {
         Swatch(color = color, size = 32)
         Text(
           text = label,
           style = MaterialTheme.typography.bodyLarge,
-          modifier = Modifier
-            .weight(1F)
-            .padding(horizontal = 16.dp),
+          modifier = Modifier.weight(1F).padding(horizontal = 16.dp),
         )
         Text(
           text = color?.toHex() ?: stringResource(StringsR.string.reader_theme_auto),
@@ -315,10 +316,21 @@ private fun Swatch(
   )
 }
 
-private val PaletteColors = listOf(
-  "#FFFFFF", "#F5F3EE", "#F4ECD8", "#E3EEDC", "#DDE6F0", "#B4B1AB",
-  "#1A5FB4", "#8AB4F8", "#4B3B2A", "#2B3440", "#1F1E1C", "#000000",
-)
+private val PaletteColors =
+  listOf(
+    "#FFFFFF",
+    "#F5F3EE",
+    "#F4ECD8",
+    "#E3EEDC",
+    "#DDE6F0",
+    "#B4B1AB",
+    "#1A5FB4",
+    "#8AB4F8",
+    "#4B3B2A",
+    "#2B3440",
+    "#1F1E1C",
+    "#000000",
+  )
 
 /** Hue, saturation and value sliders, a few colors to start from and the HEX code. */
 @Composable
@@ -360,10 +372,18 @@ private fun ColorPicker(
         Swatch(
           color = option,
           size = 32,
-          modifier = Modifier
-            .border(if (selected) 3.dp else 0.dp, MaterialTheme.colorScheme.primary, CircleShape)
-            .selectable(selected = selected, role = Role.RadioButton, onClick = { onColorChange(option) })
-            .semantics { contentDescription = code },
+          modifier =
+            Modifier.border(
+                if (selected) 3.dp else 0.dp,
+                MaterialTheme.colorScheme.primary,
+                CircleShape,
+              )
+              .selectable(
+                selected = selected,
+                role = Role.RadioButton,
+                onClick = { onColorChange(option) },
+              )
+              .semantics { contentDescription = code },
         )
       }
     }
@@ -394,7 +414,11 @@ private fun ColorPicker(
       label = { Text(stringResource(StringsR.string.reader_color_hex)) },
       isError = hex.isNotEmpty() && parseHexColor(hex) == null,
       singleLine = true,
-      keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters, imeAction = ImeAction.Done),
+      keyboardOptions =
+        KeyboardOptions(
+          capitalization = KeyboardCapitalization.Characters,
+          imeAction = ImeAction.Done,
+        ),
       modifier = Modifier.fillMaxWidth(),
     )
   }
@@ -423,14 +447,13 @@ private fun ColorSlider(
         sliderState.value = it
         onValueChange(it)
       },
-      modifier = Modifier
-        .weight(1F)
-        .semantics { contentDescription = label },
+      modifier = Modifier.weight(1F).semantics { contentDescription = label },
     )
   }
 }
 
-private fun hsvOf(color: Color): FloatArray = FloatArray(3).also { AndroidColor.colorToHSV(color.toArgb(), it) }
+private fun hsvOf(color: Color): FloatArray =
+  FloatArray(3).also { AndroidColor.colorToHSV(color.toArgb(), it) }
 
 private fun hsvColor(hsv: FloatArray): Color = Color(AndroidColor.HSVToColor(hsv))
 
@@ -444,17 +467,20 @@ private fun Contrast(
   Row(verticalAlignment = Alignment.CenterVertically) {
     // the icon tells a low contrast apart, not only the color
     Icon(
-      imageVector = if (low) VoiceIcons.Error else VoiceIcons.Contrast,
+      painter = painterResource(if (low) UiR.drawable.ic_error else UiR.drawable.ic_contrast),
       contentDescription = null,
-      tint = if (low) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+      tint =
+        if (low) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
     )
     Column(
-      Modifier
-        .weight(1F)
-        .padding(start = 16.dp),
+      Modifier.weight(1F).padding(start = 16.dp),
     ) {
       Text(
-        text = stringResource(StringsR.string.reader_contrast, String.format(LocalConfiguration.current.locales.get(0), "%.1f:1", ratio)),
+        text =
+          stringResource(
+            StringsR.string.reader_contrast,
+            String.format(LocalConfiguration.current.locales.get(0), "%.1f:1", ratio),
+          ),
         style = MaterialTheme.typography.bodyLarge,
       )
       if (low) {
@@ -486,14 +512,20 @@ private fun Schedule(
       },
     )
     if (settings.theme == ReaderTheme.Scheduled) {
-      Text(stringResource(StringsR.string.reader_schedule_day), style = MaterialTheme.typography.titleSmall)
+      Text(
+        stringResource(StringsR.string.reader_schedule_day),
+        style = MaterialTheme.typography.titleSmall,
+      )
       ThemeChoice(
         settings = settings,
         options = ScheduleThemes,
         selected = settings.dayTheme,
         onThemeSelect = { onSettingsChange(settings.copy(dayTheme = it)) },
       )
-      Text(stringResource(StringsR.string.reader_schedule_night), style = MaterialTheme.typography.titleSmall)
+      Text(
+        stringResource(StringsR.string.reader_schedule_night),
+        style = MaterialTheme.typography.titleSmall,
+      )
       ThemeChoice(
         settings = settings,
         options = ScheduleThemes,
@@ -525,9 +557,13 @@ private fun TimeStepper(
 ) {
   val context = LocalContext.current
   val locale = LocalConfiguration.current.locales.get(0)
-  val formatter = remember(context, locale) {
-    DateTimeFormatter.ofPattern(if (DateFormat.is24HourFormat(context)) "HH:mm" else "h:mm a", locale)
-  }
+  val formatter =
+    remember(context, locale) {
+      DateTimeFormatter.ofPattern(
+        if (DateFormat.is24HourFormat(context)) "HH:mm" else "h:mm a",
+        locale,
+      )
+    }
   Row(verticalAlignment = Alignment.CenterVertically) {
     Text(
       text = label,
@@ -535,7 +571,10 @@ private fun TimeStepper(
       modifier = Modifier.weight(1F),
     )
     IconButton(onClick = { onMinutesChange((minutes - TIME_STEP).mod(MINUTES_PER_DAY)) }) {
-      Icon(VoiceIcons.Remove, contentDescription = stringResource(StringsR.string.reader_schedule_earlier))
+      Icon(
+        painterResource(UiR.drawable.ic_remove),
+        contentDescription = stringResource(StringsR.string.reader_schedule_earlier),
+      )
     }
     Text(
       text = LocalTime.of(minutes / 60, minutes % 60).format(formatter),
@@ -544,7 +583,10 @@ private fun TimeStepper(
       modifier = Modifier.widthIn(min = 72.dp),
     )
     IconButton(onClick = { onMinutesChange((minutes + TIME_STEP).mod(MINUTES_PER_DAY)) }) {
-      Icon(VoiceIcons.Add, contentDescription = stringResource(StringsR.string.reader_schedule_later))
+      Icon(
+        painterResource(UiR.drawable.ic_add),
+        contentDescription = stringResource(StringsR.string.reader_schedule_later),
+      )
     }
   }
 }
@@ -561,8 +603,7 @@ private fun HighlightPaletteSettings(
       val defaultName = highlightColorDefaultName(color)
       Row(verticalAlignment = Alignment.CenterVertically) {
         Box(
-          Modifier
-            .size(32.dp)
+          Modifier.size(32.dp)
             .clip(CircleShape)
             .background(paper)
             .background(color.ink().copy(alpha = settings.highlightOpacity)),
@@ -570,16 +611,22 @@ private fun HighlightPaletteSettings(
         OutlinedTextField(
           value = settings.highlightNames[color].orEmpty(),
           onValueChange = { name ->
-            val names = if (name.isBlank()) settings.highlightNames - color else settings.highlightNames + (color to name.take(30))
+            val names =
+              if (name.isBlank()) settings.highlightNames - color
+              else settings.highlightNames + (color to name.take(30))
             onSettingsChange(settings.copy(highlightNames = names))
           },
           placeholder = { Text(defaultName) },
           singleLine = true,
-          keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done),
-          modifier = Modifier
-            .weight(1F)
-            .padding(start = 16.dp)
-            .semantics { contentDescription = defaultName },
+          keyboardOptions =
+            KeyboardOptions(
+              capitalization = KeyboardCapitalization.Sentences,
+              imeAction = ImeAction.Done,
+            ),
+          modifier =
+            Modifier.weight(1F).padding(start = 16.dp).semantics {
+              contentDescription = defaultName
+            },
         )
       }
     }
@@ -602,12 +649,15 @@ private fun SavedThemes(
   onThemesImport: (Uri) -> Unit,
   onSettingsChange: (ReaderSettings) -> Unit,
 ) {
-  val exporter = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
-    if (uri != null) onThemesExport(uri)
-  }
-  val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-    if (uri != null) onThemesImport(uri)
-  }
+  val exporter =
+    rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) {
+      uri ->
+      if (uri != null) onThemesExport(uri)
+    }
+  val importer =
+    rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+      if (uri != null) onThemesImport(uri)
+    }
   val themes = settings.savedThemes
   val newName = stringResource(StringsR.string.reader_theme_saved_name, themes.size + 1)
   Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -616,30 +666,54 @@ private fun SavedThemes(
       themes.forEachIndexed { index, theme ->
         SavedThemeRow(
           theme = theme,
-          selected = settings.theme == ReaderTheme.Custom && settings.customColors == theme.copy(name = ""),
-          onSelect = { onSettingsChange(settings.copy(theme = ReaderTheme.Custom, customColors = theme.copy(name = ""))) },
+          selected =
+            settings.theme == ReaderTheme.Custom && settings.customColors == theme.copy(name = ""),
+          onSelect = {
+            onSettingsChange(
+              settings.copy(theme = ReaderTheme.Custom, customColors = theme.copy(name = "")),
+            )
+          },
           onRename = { name ->
-            onSettingsChange(settings.copy(savedThemes = themes.toMutableList().also { it[index] = theme.copy(name = name) }))
+            onSettingsChange(
+              settings.copy(
+                savedThemes = themes.toMutableList().also { it[index] = theme.copy(name = name) },
+              ),
+            )
           },
           onDuplicate = { copyName ->
             onSettingsChange(
-              settings.copy(savedThemes = themes.toMutableList().also { it.add(index + 1, theme.copy(name = copyName)) }),
+              settings.copy(
+                savedThemes =
+                  themes.toMutableList().also { it.add(index + 1, theme.copy(name = copyName)) },
+              ),
             )
           },
           onDelete = {
-            onSettingsChange(settings.copy(savedThemes = themes.toMutableList().also { it.removeAt(index) }))
+            onSettingsChange(
+              settings.copy(savedThemes = themes.toMutableList().also { it.removeAt(index) }),
+            )
           },
         )
       }
     }
     FilledTonalButton(
-      onClick = { onSettingsChange(settings.copy(savedThemes = themes + current.copy(name = newName))) },
+      onClick = {
+        onSettingsChange(settings.copy(savedThemes = themes + current.copy(name = newName)))
+      },
     ) {
-      Icon(VoiceIcons.Add, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+      Icon(
+        painterResource(UiR.drawable.ic_add),
+        contentDescription = null,
+        modifier = Modifier.padding(end = 8.dp),
+      )
       Text(stringResource(StringsR.string.reader_theme_save))
     }
     Row {
-      TextButton(onClick = { importer.launch(arrayOf("application/json", "text/plain", "application/octet-stream")) }) {
+      TextButton(
+        onClick = {
+          importer.launch(arrayOf("application/json", "text/plain", "application/octet-stream"))
+        },
+      ) {
         Text(stringResource(StringsR.string.reader_themes_import))
       }
       TextButton(
@@ -674,23 +748,30 @@ private fun SavedThemeRow(
   val copyName = stringResource(StringsR.string.reader_theme_copy_name, theme.name)
   Row(
     verticalAlignment = Alignment.CenterVertically,
-    modifier = Modifier
-      .fillMaxWidth()
-      .clip(MaterialTheme.shapes.medium)
-      .selectable(selected = selected, role = Role.RadioButton, onClick = onSelect, enabled = !renaming)
-      .padding(vertical = 4.dp),
+    modifier =
+      Modifier.fillMaxWidth()
+        .clip(MaterialTheme.shapes.medium)
+        .selectable(
+          selected = selected,
+          role = Role.RadioButton,
+          onClick = onSelect,
+          enabled = !renaming,
+        )
+        .padding(vertical = 4.dp),
   ) {
     Box(
       contentAlignment = Alignment.Center,
-      modifier = Modifier
-        .size(40.dp)
-        .clip(CircleShape)
-        .background(colors.paper)
-        .border(
-          width = if (selected) 3.dp else 1.dp,
-          color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
-          shape = CircleShape,
-        ),
+      modifier =
+        Modifier.size(40.dp)
+          .clip(CircleShape)
+          .background(colors.paper)
+          .border(
+            width = if (selected) 3.dp else 1.dp,
+            color =
+              if (selected) MaterialTheme.colorScheme.primary
+              else MaterialTheme.colorScheme.outlineVariant,
+            shape = CircleShape,
+          ),
     ) {
       Text("Aa", style = MaterialTheme.typography.labelLarge, color = colors.ink)
     }
@@ -701,10 +782,12 @@ private fun SavedThemeRow(
         onValueChange = { name = it.take(40) },
         label = { Text(stringResource(StringsR.string.book_edit_rename)) },
         singleLine = true,
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done),
-        modifier = Modifier
-          .weight(1F)
-          .padding(horizontal = 16.dp),
+        keyboardOptions =
+          KeyboardOptions(
+            capitalization = KeyboardCapitalization.Sentences,
+            imeAction = ImeAction.Done,
+          ),
+        modifier = Modifier.weight(1F).padding(horizontal = 16.dp),
       )
       IconButton(
         onClick = {
@@ -712,19 +795,23 @@ private fun SavedThemeRow(
           if (name.isNotBlank()) onRename(name.trim())
         },
       ) {
-        Icon(VoiceIcons.Check, contentDescription = stringResource(StringsR.string.common_action_done))
+        Icon(
+          painterResource(UiR.drawable.ic_check),
+          contentDescription = stringResource(StringsR.string.common_action_done),
+        )
       }
     } else {
       Text(
         text = theme.name,
         style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier
-          .weight(1F)
-          .padding(horizontal = 16.dp),
+        modifier = Modifier.weight(1F).padding(horizontal = 16.dp),
       )
       Box {
         IconButton(onClick = { menuOpen = true }) {
-          Icon(VoiceIcons.MoreVert, contentDescription = stringResource(StringsR.string.common_action_more))
+          Icon(
+            painterResource(UiR.drawable.ic_more_vert),
+            contentDescription = stringResource(StringsR.string.common_action_more),
+          )
         }
         DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
           DropdownMenuItem(
@@ -759,11 +846,13 @@ private fun SavedThemeRow(
 private fun ColorSettingsPreview() {
   VoiceTheme {
     ColorSettings(
-      settings = ReaderSettings(
-        theme = ReaderTheme.Scheduled,
-        savedThemes = listOf(ReaderColors(name = "Evening", background = "#2B3440", text = "#CDD3DA")),
-        highlightNames = mapOf(HighlightColor.Yellow to "Important"),
-      ),
+      settings =
+        ReaderSettings(
+          theme = ReaderTheme.Scheduled,
+          savedThemes =
+            listOf(ReaderColors(name = "Evening", background = "#2B3440", text = "#CDD3DA")),
+          highlightNames = mapOf(HighlightColor.Yellow to "Important"),
+        ),
       content = ColorsContent.NewEngine,
       themesFileFailed = false,
       onThemesExport = {},

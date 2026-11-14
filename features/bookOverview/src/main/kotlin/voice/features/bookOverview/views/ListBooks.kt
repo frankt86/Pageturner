@@ -3,7 +3,6 @@
 package voice.features.bookOverview.views
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,13 +13,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -47,28 +46,38 @@ internal fun ListBookRow(
   onBookClick: (BookId) -> Unit,
   onBookLongClick: (BookId) -> Unit,
   modifier: Modifier = Modifier,
-  shape: Shape = RoundedCornerShape(24.dp),
+  shape: Shape = MaterialTheme.shapes.largeIncreased,
   finished: Boolean = false,
   part: String? = null,
   current: Boolean = false,
   playing: Boolean = false,
+  selected: Boolean? = null,
 ) {
   val colors = MaterialTheme.colorScheme
-  val secondaryColor = if (current) colors.onPrimaryContainer else colors.onSurfaceVariant
+  val containerColor =
+    selectedContainerColor(
+      selected,
+      if (current) colors.primaryContainer else colors.surfaceContainer,
+    )
+  val contentColor = contentColorFor(containerColor)
+  val secondaryColor = if (selected == true || current) contentColor else colors.onSurfaceVariant
   Surface(
-    modifier = modifier
-      .fillMaxWidth()
-      .clip(shape)
-      .combinedClickable(
-        onClick = { onBookClick(book.id) },
-        onLongClick = { onBookLongClick(book.id) },
-      )
-      .semantics {
-        if (current) selected = true
-      },
+    modifier =
+      modifier
+        .fillMaxWidth()
+        .clip(shape)
+        .libraryItemClickable(
+          selected = selected,
+          onClick = { onBookClick(book.id) },
+          onLongClick = { onBookLongClick(book.id) },
+        )
+        .semantics {
+          // while selecting, selected means in the selection
+          if (current && selected == null) this.selected = true
+        },
     shape = shape,
-    color = if (current) colors.primaryContainer else colors.surfaceContainer,
-    contentColor = if (current) colors.onPrimaryContainer else colors.onSurface,
+    color = containerColor,
+    contentColor = contentColor,
   ) {
     Row(
       modifier = Modifier.padding(10.dp),
@@ -77,10 +86,10 @@ internal fun ListBookRow(
       // like the current chapter in the chapter list
       if (current) {
         Box(
-          modifier = Modifier
-            .padding(end = 8.dp)
-            .size(PartWidth)
-            .background(colors.primary, MaterialShapes.Cookie9Sided.toShape()),
+          modifier =
+            Modifier.padding(end = 8.dp)
+              .size(PartWidth)
+              .background(colors.primary, MaterialShapes.Cookie9Sided.toShape()),
           contentAlignment = Alignment.Center,
         ) {
           NowPlayingBars(playing = playing, color = colors.onPrimary)
@@ -92,9 +101,7 @@ internal fun ListBookRow(
           textAlign = TextAlign.Center,
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
-          modifier = Modifier
-            .padding(end = 8.dp)
-            .widthIn(min = PartWidth, max = 56.dp),
+          modifier = Modifier.padding(end = 8.dp).widthIn(min = PartWidth, max = 56.dp),
         )
       }
       BookCover(
@@ -104,6 +111,7 @@ internal fun ListBookRow(
         unavailable = book.unavailable,
         download = book.download,
         ebook = book.isEbook,
+        selected = selected,
         modifier = Modifier.size(64.dp),
       )
       Spacer(Modifier.width(16.dp))
@@ -129,28 +137,32 @@ internal fun ListBookRow(
             if (book.progress > 0F) {
               LinearProgressIndicator(
                 progress = { book.progress },
-                modifier = Modifier
-                  .weight(1F)
-                  .padding(end = 12.dp),
+                modifier = Modifier.weight(1F).padding(end = 12.dp),
+                trackColor = progressTrackColor(selected),
                 gapSize = 0.dp,
                 drawStopIndicator = {},
               )
             }
             Text(
-              text = if (book.isEbook) {
-                book.remainingTime
-              } else {
-                stringResource(
-                  R.string.playback_book_progress_remaining,
-                  book.remainingTime,
-                )
-              },
+              text =
+                if (book.isEbook) {
+                  book.remainingTime
+                } else {
+                  stringResource(
+                    R.string.playback_book_progress_remaining,
+                    book.remainingTime,
+                  )
+                },
               style = MaterialTheme.typography.labelMedium,
               color = secondaryColor,
               maxLines = 1,
             )
           }
         }
+      }
+      if (book.hidden) {
+        Spacer(Modifier.width(12.dp))
+        HiddenLabel()
       }
     }
   }
@@ -173,7 +185,26 @@ private fun ListBookRowPreviewWithProgress() {
 private fun ListBookRowPreviewFinished() {
   VoiceTheme {
     Surface {
-      ListBookRow(BookOverviewPreviewParameterProvider().book().copy(progress = 1f), {}, {}, finished = true)
+      ListBookRow(
+        BookOverviewPreviewParameterProvider().book().copy(progress = 1f),
+        {},
+        {},
+        finished = true,
+      )
+    }
+  }
+}
+
+@Composable
+@Preview
+private fun ListBookRowPreviewHidden() {
+  VoiceTheme {
+    Surface {
+      ListBookRow(
+        BookOverviewPreviewParameterProvider().book().copy(progress = 0.3f, hidden = true),
+        {},
+        {},
+      )
     }
   }
 }
@@ -184,7 +215,9 @@ private fun ListBookRowPreviewEbook() {
   VoiceTheme {
     Surface {
       ListBookRow(
-        BookOverviewPreviewParameterProvider().book().copy(progress = 0.4f, remainingTime = "EPUB · 40%", isEbook = true),
+        BookOverviewPreviewParameterProvider()
+          .book()
+          .copy(progress = 0.4f, remainingTime = "EPUB · 40%", isEbook = true),
         {},
         {},
       )

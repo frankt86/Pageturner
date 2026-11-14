@@ -58,6 +58,7 @@
     <string name="audiobookshelf.status.needs_login">Servern vill att du loggar in igen</string>
     <string name="audiobookshelf.status.offline">Servern går inte att nå just nu. Nedladdade böcker kan fortfarande spelas.</string>
     <string name="audiobookshelf.status.syncing">Synkroniserar…</string>
+    <string name="author.wikipedia">Läs mer på Wikipedia</string>
     <string name="book.category.action.mark_completed">Markera som färdiglyssnad</string>
     <string name="book.category.action.mark_current">Markera som pågående</string>
     <string name="book.category.action.mark_not_started">Markera som inte påbörjad</string>
@@ -82,8 +83,11 @@
     <string name="book.edit.server.failed">Det gick inte att spara på din server. Försök igen.</string>
     <string name="book.edit.server.not_allowed">Ditt konto på servern får inte ändra böcker.</string>
     <string name="book.edit.title.label">Titel</string>
+    <string name="book.hide">Dölj från biblioteket</string>
     <string name="book.remove_from_library">Ta bort från biblioteket</string>
     <string name="book.remove_from_library.summary">Filen finns kvar på enheten</string>
+    <string name="book.select">Välj</string>
+    <string name="book.show">Visa i biblioteket</string>
     <string name="book.source.device">På den här enheten</string>
     <string name="book.source.server_downloaded">%s · nedladdad</string>
     <string name="bookmark.action.add_note">Lägg till anteckning</string>
@@ -154,8 +158,13 @@
     <string name="folder.add.action.file">Lägg till en enskild fil i stället</string>
     <string name="folder.add.action.folder">Välj en mapp</string>
     <string name="folder.add.action.opds">Ladda ned från en katalog</string>
+    <string name="folder.add.help.answer.no_files">Inga ljudböcker än</string>
+    <string name="folder.add.help.answer.not_found">Hittar dem inte</string>
+    <string name="folder.add.help.answer.other_app">De finns i en annan app</string>
     <string name="folder.add.help.computer">Har du fortfarande böcker på datorn? Kopiera dem till telefonen först, till exempel till mappen Audiobooks eller Documents.</string>
     <string name="folder.add.help.download">Android tillåter inte att appar öppnar själva mappen Download. Välj en mapp inuti den.</string>
+    <string name="folder.add.help.no_files">Pageturner spelar upp ljudboksfiler på din telefon. På LibriVox finns tusentals gratis ljudböcker att ladda ned.</string>
+    <string name="folder.add.help.other_app">Böcker från appar som Audible eller Spotify kan bara spelas upp i de apparna. Pageturner spelar upp ljudboksfiler, till exempel MP3 eller M4B.</string>
     <string name="folder.add.help.title">Hittade du inte dina böcker?</string>
     <string name="folder.add.no_picker.message">Pageturner öppnar dina böcker via Androids filväljare. Utan den kan Pageturner inte öppna dina mappar eller filer.</string>
     <string name="folder.add.no_picker.title">Den här enheten har ingen filväljare</string>
@@ -231,8 +240,14 @@
     <string name="history.source.unplugged">Ljudet kopplades från</string>
     <string name="history.source.watch">Klocka</string>
     <string name="history.source.widget">Widget</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d serie</item>
+        <item quantity="other">%d serier</item>
+    </plurals>
     <string name="library.book.downloading">Laddar ned</string>
     <string name="library.book.ebook">E-bok</string>
+    <string name="library.book.hidden">Dold</string>
+    <string name="library.book.hidden.message">%1$s är dold</string>
     <string name="library.book.offline">Inte tillgänglig offline</string>
     <string name="library.category.completed.title">Färdiglyssnade</string>
     <string name="library.category.current.title">Pågående</string>
@@ -243,9 +258,16 @@
     <string name="library.empty.title">Inga böcker hittades</string>
     <string name="library.empty.message">Pageturner hittar inga böcker i dina mappar. Kontrollera att filerna finns kvar, eller lägg till en mapp.</string>
     <string name="library.empty.action">Visa mappar</string>
-    <string name="library.folders.title">Bokmappar</string>
-    <string name="library.folders.moved.dialog.title">Bokmapparna har flyttats</string>
+    <string name="library.filter">Filter</string>
+    <string name="library.filter.group_by">Gruppera efter</string>
+    <string name="library.filter.group_by.author">Författare</string>
+    <string name="library.filter.group_by.series">Serie</string>
+    <string name="library.filter.hidden_books">Dolda böcker</string>
+    <string name="library.filter.not_downloaded">Inte nedladdade</string>
+    <string name="library.filter.show">Visa</string>
     <string name="library.folders.moved.dialog.message">Du kan nu hantera bokmappar under Inställningar.</string>
+    <string name="library.folders.moved.dialog.title">Bokmapparna har flyttats</string>
+    <string name="library.folders.title">Bokmappar</string>
     <string name="library.folders.no_access">Ingen åtkomst</string>
     <string name="library.folders.no_access.action">Tillåt åtkomst</string>
     <string name="library.folders.no_access.badge">Tillåt åtkomst till dina mappar igen</string>
@@ -257,6 +279,11 @@
         <item quantity="one">%d påbörjad bok</item>
         <item quantity="other">%d påbörjade böcker</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d dold bok</item>
+        <item quantity="other">%d dolda böcker</item>
+    </plurals>
+    <string name="library.no_author">Ingen författare</string>
     <string name="library.search.browse.title">Bläddra</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d bok</item>
@@ -288,6 +315,30 @@
     <string name="library.search.recent.clear_all">Rensa alla</string>
     <string name="library.search.recent.remove">Ta bort %s</string>
     <string name="library.search.recent.title">Senaste</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">Författaren har ändrats för %d bok</item>
+        <item quantity="other">Författaren har ändrats för %d böcker</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d vald</item>
+        <item quantity="other">%d valda</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d bok är dold</item>
+        <item quantity="other">%d böcker är dolda</item>
+    </plurals>
+    <string name="library.selection.hide">Dölj</string>
+    <string name="library.selection.select_all">Välj alla</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">Serien har ändrats för %d bok</item>
+        <item quantity="other">Serien har ändrats för %d böcker</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">Det gick inte att spara %d bok på din server</item>
+        <item quantity="other">Det gick inte att spara %d böcker på din server</item>
+    </plurals>
+    <string name="library.selection.show">Visa</string>
+    <string name="library.series.hidden.message">%1$s är dold</string>
     <string name="library.storage_permission_bug.action">Ge behörighet</string>
     <string name="library.storage_permission_bug.message">På vissa enheter saknar en systemapp den behörighet som krävs för att komma åt den externa lagringen. Den åtkomsten är nödvändig för att Pageturner ska kunna läsa dina ljudböcker.</string>
     <string name="library.storage_permission_bug.title">Behörighet krävs</string>
@@ -575,6 +626,16 @@
     <string name="reader.word_spacing">Ordavstånd</string>
     <string name="series.continue">Fortsätt lyssna</string>
     <string name="series.continue_book">Fortsätt med bok %s</string>
+    <string name="series.mark_completed">Markera som färdiglyssnad</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">Du tappar bort var du var i %d bok.</item>
+        <item quantity="other">Du tappar bort var du var i %d böcker.</item>
+    </plurals>
+    <string name="series.mark_not_started">Markera som inte påbörjad</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">Du förlorar dina framsteg i %d bok.</item>
+        <item quantity="other">Du förlorar dina framsteg i %d böcker.</item>
+    </plurals>
     <string name="series.start">Börja lyssna</string>
     <string name="series.start_book">Börja på bok %s</string>
     <string name="settings.about.app_version.title">Appversion</string>

@@ -6,11 +6,16 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
 import voice.core.common.DispatcherProvider
+import voice.core.data.BookCategory
 import voice.core.data.Ebook
 import voice.core.data.EbookFormat
 import voice.core.data.EbookPosition
@@ -18,61 +23,60 @@ import voice.core.data.repo.BookRepository
 import voice.core.data.store.EbooksStore
 import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
-import voice.features.bookOverview.editBook.SeriesSuggestion
-import voice.features.bookOverview.overview.BookOverviewCategory
+import voice.features.bookOverview.editBook.NameSuggestion
 import voice.features.bookOverview.overview.category
 import voice.navigation.Destination
 import voice.navigation.Navigator
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
 class EbookActionsViewModelTest {
 
   private val scope = TestScope()
-  private val ebook = Ebook(
-    uri = "content://books/document/book.epub".toUri(),
-    name = "Book",
-    format = EbookFormat.Epub,
-    position = EbookPosition(section = 3, offset = 120),
-    progress = 0.4F,
-    lastOpened = 1_000,
-  )
+  private val ebook =
+    Ebook(
+      uri = "content://books/document/book.epub".toUri(),
+      name = "Book",
+      format = EbookFormat.Epub,
+      position = EbookPosition(section = 3, offset = 120),
+      progress = 0.4F,
+      lastOpened = 1_000,
+    )
   private val store = EbooksStore(MemoryDataStore(listOf(ebook)))
   private val navigator = mockk<Navigator>(relaxUnitFun = true)
-  private val repo = mockk<BookRepository> {
-    coEvery { all() } returns emptyList()
-  }
-  private val viewModel = EbookActionsViewModel(
-    store = store,
-    repo = repo,
-    application = ApplicationProvider.getApplicationContext(),
-    navigator = navigator,
-    dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
-    uri = ebook.uri,
-  )
+  private val repo =
+    mockk<BookRepository> {
+      coEvery { all() } returns emptyList()
+    }
+  private val viewModel =
+    EbookActionsViewModel(
+      store = store,
+      repo = repo,
+      application = ApplicationProvider.getApplicationContext(),
+      navigator = navigator,
+      dispatcherProvider =
+        DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
+      uri = ebook.uri,
+    )
 
   private suspend fun stored(): Ebook = store.data.first().single()
 
   @Test
   fun `marking a book as not started forgets its place`() = scope.runTest {
-    viewModel.onStatusChange(BookOverviewCategory.NOT_STARTED)
+    viewModel.onStatusChange(BookCategory.NOT_STARTED)
     testScheduler.advanceUntilIdle()
 
     val updated = stored()
-    assertEquals(BookOverviewCategory.NOT_STARTED, updated.category)
+    assertEquals(BookCategory.NOT_STARTED, updated.category)
     assertEquals(EbookPosition(), updated.position)
   }
 
   @Test
   fun `marking a book as finished keeps its place`() = scope.runTest {
-    viewModel.onStatusChange(BookOverviewCategory.FINISHED)
+    viewModel.onStatusChange(BookCategory.FINISHED)
     testScheduler.advanceUntilIdle()
 
     val updated = stored()
-    assertEquals(BookOverviewCategory.FINISHED, updated.category)
+    assertEquals(BookCategory.FINISHED, updated.category)
     assertEquals(ebook.position, updated.position)
   }
 
@@ -107,7 +111,9 @@ class EbookActionsViewModelTest {
 
   @Test
   fun `editing a book back to its own names drops the custom ones`() = scope.runTest {
-    store.updateData { ebooks -> ebooks.map { it.copy(author = "Writer", customName = "Other", customAuthor = "Someone") } }
+    store.updateData { ebooks ->
+      ebooks.map { it.copy(author = "Writer", customName = "Other", customAuthor = "Someone") }
+    }
     viewModel.onEdit()
     viewModel.onEditTitleChange("Book")
     viewModel.onEditAuthorChange("Writer")
@@ -120,7 +126,9 @@ class EbookActionsViewModelTest {
 
   @Test
   fun `clearing the author brings back the one from the file`() = scope.runTest {
-    store.updateData { ebooks -> ebooks.map { it.copy(author = "Writer", customAuthor = "Someone") } }
+    store.updateData { ebooks ->
+      ebooks.map { it.copy(author = "Writer", customAuthor = "Someone") }
+    }
     viewModel.onEdit()
     viewModel.onEditAuthorChange("")
     viewModel.onEditConfirm()
@@ -131,7 +139,9 @@ class EbookActionsViewModelTest {
 
   @Test
   fun `the sheet starts with the series and part of the book`() = scope.runTest {
-    store.updateData { ebooks -> ebooks.map { it.copy(series = "Dune", seriesPart = "1", customPart = "2") } }
+    store.updateData { ebooks ->
+      ebooks.map { it.copy(series = "Dune", seriesPart = "1", customPart = "2") }
+    }
     viewModel.onEdit()
 
     assertEquals("Dune", viewModel.editState?.series)
@@ -168,7 +178,11 @@ class EbookActionsViewModelTest {
 
   @Test
   fun `editing the series back to the one of the file drops the custom one`() = scope.runTest {
-    store.updateData { ebooks -> ebooks.map { it.copy(series = "Dune", seriesPart = "1", customSeries = "Other", customPart = "3") } }
+    store.updateData { ebooks ->
+      ebooks.map {
+        it.copy(series = "Dune", seriesPart = "1", customSeries = "Other", customPart = "3")
+      }
+    }
     viewModel.onEdit()
     viewModel.onEditSeriesChange("Dune")
     viewModel.onEditPartChange("1")
@@ -181,7 +195,11 @@ class EbookActionsViewModelTest {
 
   @Test
   fun `clearing the series and part brings back the ones from the file`() = scope.runTest {
-    store.updateData { ebooks -> ebooks.map { it.copy(series = "Dune", seriesPart = "1", customSeries = "Other", customPart = "3") } }
+    store.updateData { ebooks ->
+      ebooks.map {
+        it.copy(series = "Dune", seriesPart = "1", customSeries = "Other", customPart = "3")
+      }
+    }
     viewModel.onEdit()
     viewModel.onEditSeriesChange("")
     viewModel.onEditPartChange(" ")
@@ -195,12 +213,20 @@ class EbookActionsViewModelTest {
   @Test
   fun `the series of audiobooks and other ebooks are suggested`() = scope.runTest {
     coEvery { repo.all() } returns listOf(book(series = "The Expanse"))
-    val other = ebook.copy(uri = "content://books/document/other.epub".toUri(), series = "the expanse", customSeries = "The Expanse")
+    val other =
+      ebook.copy(
+        uri = "content://books/document/other.epub".toUri(),
+        series = "the expanse",
+        customSeries = "The Expanse",
+      )
     store.updateData { ebooks -> ebooks.map { it.copy(series = "Dune") } + other }
     viewModel.onEdit()
     viewModel.onEditSeriesChange("exp")
 
-    assertEquals(listOf(SeriesSuggestion("The Expanse", bookCount = 2)), viewModel.editState?.suggestions)
+    assertEquals(
+      listOf(NameSuggestion("The Expanse", bookCount = 2)),
+      viewModel.editState?.suggestions,
+    )
   }
 
   @Test

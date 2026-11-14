@@ -6,7 +6,8 @@ internal fun safeFileName(
   name: String,
   fallback: String = "Audiobook",
 ): String {
-  return name.replace(Regex("[\\\\/:*?\"<>|\\p{Cntrl}]"), "_")
+  return name
+    .replace(Regex("[\\\\/:*?\"<>|\\p{Cntrl}]"), "_")
     .trim()
     .trimStart('.')
     .take(80)
@@ -15,8 +16,8 @@ internal fun safeFileName(
 }
 
 /**
- * [name] with [extension], numbered like `Persuasion (2).epub` when a file in the folder has that name. Many file
- * systems on Android don't tell upper and lower case apart, so neither does this.
+ * [name] with [extension], numbered like `Persuasion (2).epub` when a file in the folder has that
+ * name. Many file systems on Android don't tell upper and lower case apart, so neither does this.
  */
 internal fun uniqueName(
   name: String,
@@ -34,7 +35,10 @@ internal fun uniqueName(
   return candidate
 }
 
-/** The folders of the library that hold several books and that Pageturner may write to, in the order of [folders]. */
+/**
+ * The folders of the library that hold several books and that Pageturner may write to, in the order
+ * of [folders].
+ */
 internal fun <T> downloadFolderCandidates(
   folders: Map<FolderType, List<T>>,
   writable: Set<T>,
@@ -44,7 +48,10 @@ internal fun <T> downloadFolderCandidates(
   }
 }
 
-/** Where in a folder of the library the book goes: in a folder of its author when the folders there are authors. */
+/**
+ * Where in a folder of the library the book goes: in a folder of its author when the folders there
+ * are authors.
+ */
 internal fun bookFolderPath(
   type: FolderType,
   author: String?,

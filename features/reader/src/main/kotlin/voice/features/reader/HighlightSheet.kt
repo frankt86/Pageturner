@@ -41,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -53,9 +54,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import voice.core.data.Highlight
 import voice.core.data.HighlightColor
-import voice.core.ui.bookText
-import voice.core.ui.icons.VoiceIcons
 import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
+import voice.core.ui.bookText
 
 /** Changes to the color and note are kept when the sheet is swiped away, like with Done. */
 @Composable
@@ -74,22 +75,23 @@ internal fun HighlightSheet(
   val done = { onDone(highlight.copy(color = color, note = note.trim().ifEmpty { null })) }
   ModalBottomSheet(
     onDismissRequest = done,
-    sheetState = rememberBottomSheetState(
-      initialValue = Hidden,
-      enabledValues = setOf(Hidden, Expanded),
-    ),
+    sheetState =
+      rememberBottomSheetState(
+        initialValue = Hidden,
+        enabledValues = setOf(Hidden, Expanded),
+      ),
   ) {
     ScaledControls(scale) {
       Column(
-        Modifier
-          .fillMaxWidth()
+        Modifier.fillMaxWidth()
           .navigationBarsPadding()
           .padding(start = 24.dp, end = 24.dp, bottom = 16.dp),
       ) {
         Text(
-          text = buildAnnotatedString {
-            withStyle(SpanStyle(background = color.background(highlightOpacity))) { append(text) }
-          },
+          text =
+            buildAnnotatedString {
+              withStyle(SpanStyle(background = color.background(highlightOpacity))) { append(text) }
+            },
           style = MaterialTheme.typography.bodyLarge.bookText(),
           maxLines = 6,
           overflow = TextOverflow.Ellipsis,
@@ -114,15 +116,24 @@ internal fun HighlightSheet(
         Row(verticalAlignment = Alignment.CenterVertically) {
           TextButton(
             onClick = onDelete,
-            colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
+            colors =
+              ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
           ) {
-            Icon(VoiceIcons.Delete, contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
+            Icon(
+              painterResource(UiR.drawable.ic_delete),
+              contentDescription = null,
+              modifier = Modifier.size(ButtonDefaults.IconSize),
+            )
             Spacer(Modifier.width(ButtonDefaults.IconSpacing))
             Text(stringResource(StringsR.string.reader_highlight_delete))
           }
           Spacer(Modifier.weight(1F))
           Button(onClick = done, shapes = ButtonDefaults.shapes()) {
-            Icon(VoiceIcons.Check, contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
+            Icon(
+              painterResource(UiR.drawable.ic_check),
+              contentDescription = null,
+              modifier = Modifier.size(ButtonDefaults.IconSize),
+            )
             Spacer(Modifier.width(ButtonDefaults.IconSpacing))
             Text(stringResource(StringsR.string.common_action_done))
           }
@@ -146,23 +157,33 @@ private fun ColorPicker(
       val name = highlightColorName(color, names)
       val isSelected = color == selected
       Box(
-        modifier = Modifier
-          .size(48.dp)
-          .clip(CircleShape)
-          .border(2.dp, if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent, CircleShape)
-          .selectable(selected = isSelected, onClick = { onSelect(color) }, role = Role.RadioButton)
-          .semantics { contentDescription = name },
+        modifier =
+          Modifier.size(48.dp)
+            .clip(CircleShape)
+            .border(
+              2.dp,
+              if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+              CircleShape,
+            )
+            .selectable(
+              selected = isSelected,
+              onClick = { onSelect(color) },
+              role = Role.RadioButton,
+            )
+            .semantics { contentDescription = name },
         contentAlignment = Alignment.Center,
       ) {
         Box(
-          modifier = Modifier
-            .size(36.dp)
-            .background(color.ink(), CircleShape),
+          modifier = Modifier.size(36.dp).background(color.ink(), CircleShape),
           contentAlignment = Alignment.Center,
         ) {
           if (isSelected) {
             // the check mark, not only the ring, tells which one is picked
-            Icon(VoiceIcons.Check, contentDescription = null, tint = Color.Black.copy(alpha = 0.7F))
+            Icon(
+              painterResource(UiR.drawable.ic_check),
+              contentDescription = null,
+              tint = Color.Black.copy(alpha = 0.7F),
+            )
           }
         }
       }

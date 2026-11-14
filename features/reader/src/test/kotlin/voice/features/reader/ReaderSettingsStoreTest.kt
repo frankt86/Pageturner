@@ -3,16 +3,16 @@ package voice.features.reader
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import java.io.File
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.runner.RunWith
 import voice.core.data.ReaderSettings
 import voice.core.datastore.VoiceDataStoreFactory
-import java.io.File
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 
 @RunWith(AndroidJUnit4::class)
 class ReaderSettingsStoreTest {

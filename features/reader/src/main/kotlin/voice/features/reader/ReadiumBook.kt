@@ -35,7 +35,10 @@ import voice.core.opds.komga.RemotePlace
 @Stable
 internal class ReadiumBook(
   val publication: Publication,
-  /** Readium's positions, which stay the same for every screen and text size, so they serve as the book's pages. */
+  /**
+   * Readium's positions, which stay the same for every screen and text size, so they serve as the
+   * book's pages.
+   */
   val positions: List<Locator>,
   locator: Locator?,
   bookmarks: List<Locator>,
@@ -46,7 +49,9 @@ internal class ReadiumBook(
   /** The pages turn from right to left, so the sides swap for taps and arrow keys. */
   val rightToLeft: Boolean = publication.metadata.readingProgression == ReadingProgression.RTL
 
-  /** Where the reader is, and where to start when the pages are shown again, e.g. after unfolding. */
+  /**
+   * Where the reader is, and where to start when the pages are shown again, e.g. after unfolding.
+   */
   var locator by mutableStateOf(locator)
   var bookmarks by mutableStateOf(bookmarks)
   var highlights by mutableStateOf(highlights)
@@ -57,13 +62,15 @@ internal class ReadiumBook(
   /** What's read aloud right now. */
   var readingAloud by mutableStateOf<Locator?>(null)
 
-  /** The pages of the printed book, in reading order, found after the book shows as they take reading all of it. */
+  /**
+   * The pages of the printed book, in reading order, found after the book shows as they take
+   * reading all of it.
+   */
   var printPages by mutableStateOf(emptyList<PrintPage>())
 
   /** The table of contents with the depth of each entry, or the chapters when the book has none. */
-  val tableOfContents: List<Pair<Int, Link>> = publication.tableOfContents
-    .ifEmpty { publication.readingOrder }
-    .flattenWithDepth()
+  val tableOfContents: List<Pair<Int, Link>> =
+    publication.tableOfContents.ifEmpty { publication.readingOrder }.flattenWithDepth()
 
   private val titles: Map<Url, String> = buildMap {
     tableOfContents.forEach { entry ->
@@ -72,14 +79,16 @@ internal class ReadiumBook(
     }
   }
 
-  fun chapterTitle(locator: Locator): String? = locator.title ?: titles[locator.href.removeFragment()]
+  fun chapterTitle(locator: Locator): String? =
+    locator.title ?: titles[locator.href.removeFragment()]
 
   fun positionIndex(locator: Locator?): Int {
     val locations = locator?.locations ?: return 0
-    val index = locations.position?.minus(1)
-      // a selection, like a highlight, can come without a position
-      ?: locations.totalProgression?.let { (it * positions.size).toInt() }
-      ?: 0
+    val index =
+      locations.position?.minus(1)
+        // a selection, like a highlight, can come without a position
+        ?: locations.totalProgression?.let { (it * positions.size).toInt() }
+        ?: 0
     return index.coerceIn(0, (positions.size - 1).coerceAtLeast(0))
   }
 
@@ -89,14 +98,18 @@ internal class ReadiumBook(
   }
 
   /** The positions where a new file of the book starts, which is mostly a new chapter. */
-  val chapterStarts: List<Int> = positions.indices.filter { it == 0 || positions[it].href != positions[it - 1].href }
+  val chapterStarts: List<Int> =
+    positions.indices.filter { it == 0 || positions[it].href != positions[it - 1].href }
 
   private val readingOrder: List<Url> = publication.readingOrder.map { it.url().removeFragment() }
 
   /** The positions of the main text, without front and back matter, from the book's landmarks. */
   val bodyRange: IntRange? = run {
     fun landmark(type: String): Int? {
-      val link = publication.landmarks.firstOrNull { entry -> entry.rels.any { it.substringAfterLast('#') == type } } ?: return null
+      val link =
+        publication.landmarks.firstOrNull { entry ->
+          entry.rels.any { it.substringAfterLast('#') == type }
+        } ?: return null
       val href = link.url().removeFragment()
       return positions.indexOfFirst { it.href.removeFragment() == href }.takeIf { it >= 0 }
     }
@@ -109,9 +122,11 @@ internal class ReadiumBook(
     if (printPages.isEmpty()) return null
     val resource = readingOrder.indexOf(locator.href.removeFragment())
     val progression = locator.locations.progression ?: 0.0
-    return printPages.lastOrNull { page ->
-      page.resource < resource || (page.resource == resource && page.progression <= progression)
-    }?.label
+    return printPages
+      .lastOrNull { page ->
+        page.resource < resource || (page.resource == resource && page.progression <= progression)
+      }
+      ?.label
   }
 
   /** The progress at the position [index], or at [locator] when it's the place on screen. */
@@ -126,21 +141,27 @@ internal class ReadiumBook(
     var chapterFirst = index
     while (chapterFirst > 0 && positions[chapterFirst - 1].href == href) chapterFirst--
     var chapterLast = index
-    while (chapterLast < positions.lastIndex && positions[chapterLast + 1].href == href) chapterLast++
+    while (
+      chapterLast < positions.lastIndex && positions[chapterLast + 1].href == href
+    ) chapterLast++
     val body = bodyRange?.takeIf { bodyOnly } ?: positions.indices
     val place = locator ?: positions[index]
-    val progression = place.locations.totalProgression ?: positions[index].locations.totalProgression ?: 0.0
-    fun progressionAt(position: Int): Double = positions.getOrNull(position)?.locations?.totalProgression ?: 1.0
+    val progression =
+      place.locations.totalProgression ?: positions[index].locations.totalProgression ?: 0.0
+    fun progressionAt(position: Int): Double =
+      positions.getOrNull(position)?.locations?.totalProgression ?: 1.0
     return ReadingProgress(
       page = index + 1,
       pageCount = positions.size,
-      bookFraction = ((index + 1 - body.first).toFloat() / (body.last - body.first + 1)).coerceIn(0F, 1F),
+      bookFraction =
+        ((index + 1 - body.first).toFloat() / (body.last - body.first + 1)).coerceIn(0F, 1F),
       pagesLeftInBook = (body.last - index).coerceAtLeast(0),
       chapterPage = index - chapterFirst + 1,
       chapterPageCount = chapterLast - chapterFirst + 1,
       chapterFraction = (index - chapterFirst + 1).toFloat() / (chapterLast - chapterFirst + 1),
       pagesLeftInChapter = chapterLast - index,
-      chapterTimeLeft = timeToRead((progressionAt(chapterLast + 1) - progression) * characters, pace),
+      chapterTimeLeft =
+        timeToRead((progressionAt(chapterLast + 1) - progression) * characters, pace),
       bookTimeLeft = timeToRead((progressionAt(body.last + 1) - progression) * characters, pace),
       printPage = printPage(place),
       standardPages = standardPages(characters),
@@ -161,7 +182,10 @@ private fun List<Link>.flattenWithDepth(depth: Int = 0): List<Pair<Int, Link>> {
   return flatMap { link -> listOf(depth to link) + link.children.flattenWithDepth(depth + 1) }
 }
 
-/** A page of the printed book, starting at [progression] in the file [resource] of the reading order. */
+/**
+ * A page of the printed book, starting at [progression] in the file [resource] of the reading
+ * order.
+ */
 internal class PrintPage(
   val resource: Int,
   val progression: Double,
@@ -169,8 +193,8 @@ internal class PrintPage(
 )
 
 /**
- * Finds where the book's page list puts each printed page. Where a page starts within a file is told by where its
- * anchor is in the file's text, which is about where it is on screen.
+ * Finds where the book's page list puts each printed page. Where a page starts within a file is
+ * told by where its anchor is in the file's text, which is about where it is on screen.
  */
 internal suspend fun Publication.printPages(): List<PrintPage> {
   if (pageList.isEmpty()) return emptyList()
@@ -180,16 +204,18 @@ internal suspend fun Publication.printPages(): List<PrintPage> {
     .mapNotNull { link ->
       val label = link.title?.trim()?.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
       val url = link.url()
-      val resource = files.indexOf(url.removeFragment()).takeIf { it >= 0 } ?: return@mapNotNull null
+      val resource =
+        files.indexOf(url.removeFragment()).takeIf { it >= 0 } ?: return@mapNotNull null
       val fragment = url.fragment ?: return@mapNotNull PrintPage(resource, 0.0, label)
-      val text = texts.getOrPut(resource) {
-        get(readingOrder[resource])?.use { it.read().getOrNull() }?.decodeToString()
-      } ?: return@mapNotNull null
-      val anchor = listOf("id=\"$fragment\"", "id='$fragment'")
-        .map { text.indexOf(it) }
-        .filter { it >= 0 }
-        .minOrNull()
-        ?: return@mapNotNull null
+      val text =
+        texts.getOrPut(resource) {
+          get(readingOrder[resource])?.use { it.read().getOrNull() }?.decodeToString()
+        } ?: return@mapNotNull null
+      val anchor =
+        listOf("id=\"$fragment\"", "id='$fragment'")
+          .map { text.indexOf(it) }
+          .filter { it >= 0 }
+          .minOrNull() ?: return@mapNotNull null
       PrintPage(resource, anchor.toDouble() / text.length, label)
     }
     .sortedWith(compareBy<PrintPage>({ it.resource }, { it.progression }))
@@ -214,38 +240,46 @@ internal suspend fun openReadiumBook(
   val url = uri.toAbsoluteUrl() ?: return null
   val httpClient = DefaultHttpClient()
   val assetRetriever = AssetRetriever(context.contentResolver, httpClient)
-  val asset = assetRetriever.retrieve(url).getOrElse { error ->
-    Logger.w("Readium could not read the book: ${error::class.simpleName}")
-    return null
-  }
-  val opener = PublicationOpener(
-    publicationParser = DefaultPublicationParser(context, httpClient, assetRetriever, pdfFactory = null),
-  )
-  val publication = opener.open(
-    asset = asset,
-    allowUserInteraction = false,
-    onCreatePublication = { container = FontsContainer(context, container) },
-  ).getOrElse { error ->
-    Logger.w("Readium could not open the book: ${error::class.simpleName}")
-    asset.close()
-    return null
-  }
+  val asset =
+    assetRetriever.retrieve(url).getOrElse { error ->
+      Logger.w("Readium could not read the book: ${error::class.simpleName}")
+      return null
+    }
+  val opener =
+    PublicationOpener(
+      publicationParser =
+        DefaultPublicationParser(context, httpClient, assetRetriever, pdfFactory = null),
+    )
+  val publication =
+    opener
+      .open(
+        asset = asset,
+        allowUserInteraction = false,
+        onCreatePublication = { container = FontsContainer(context, container) },
+      )
+      .getOrElse { error ->
+        Logger.w("Readium could not open the book: ${error::class.simpleName}")
+        asset.close()
+        return null
+      }
   if (!publication.conformsTo(Publication.Profile.EPUB)) {
     publication.close()
     return null
   }
   // without a place from the new engine, start about where the old one was
-  val locator = remotePlace?.let { publication.locatorAt(it) }
-    ?: ebook.readiumLocator?.toLocator()
-    ?: ebook.progress.takeIf { it > 0F }?.let { publication.locateProgression(it.toDouble()) }
+  val locator =
+    remotePlace?.let { publication.locatorAt(it) }
+      ?: ebook.readiumLocator?.toLocator()
+      ?: ebook.progress.takeIf { it > 0F }?.let { publication.locateProgression(it.toDouble()) }
   return ReadiumBook(
     publication = publication,
     positions = publication.positions(),
     locator = locator,
     bookmarks = ebook.readiumBookmarks.mapNotNull { it.toLocator() },
-    highlights = ebook.readiumHighlights.mapNotNull { highlight ->
-      highlight.locator.toLocator()?.let { LocatedHighlight(it, highlight.color, highlight.note) }
-    },
+    highlights =
+      ebook.readiumHighlights.mapNotNull { highlight ->
+        highlight.locator.toLocator()?.let { LocatedHighlight(it, highlight.color, highlight.note) }
+      },
   )
 }
 

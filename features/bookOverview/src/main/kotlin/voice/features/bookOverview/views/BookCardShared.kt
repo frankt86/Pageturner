@@ -2,6 +2,7 @@
 
 package voice.features.bookOverview.views
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
@@ -37,12 +39,11 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import voice.core.audiobookshelf.download.WaitingFor
 import voice.core.data.BookId
-import voice.core.ui.icons.VoiceIcons
+import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
 import voice.core.ui.rememberCoverThumbnailRequest
 import voice.core.ui.sharedCoverElementModifier
 import voice.features.bookOverview.overview.DownloadBadge
-import voice.core.strings.R as StringsR
-import voice.core.ui.R as UiR
 
 /** Percentage based so covers keep their look while shared element transitions resize them. */
 internal val CoverShape = RoundedCornerShape(percent = 12)
@@ -56,15 +57,17 @@ internal fun BookCover(
   finished: Boolean = false,
   unavailable: Boolean = false,
   download: DownloadBadge? = null,
+  hidden: Boolean = false,
+  selected: Boolean? = null,
   ebook: Boolean = false,
 ) {
   Box(modifier = modifier) {
     AsyncImage(
-      modifier = Modifier
-        .fillMaxSize()
-        .sharedCoverElementModifier(bookId)
-        .clip(shape)
-        .alpha(if (unavailable) 0.4F else 1F),
+      modifier =
+        Modifier.fillMaxSize()
+          .sharedCoverElementModifier(bookId)
+          .clip(shape)
+          .alpha(if (unavailable) 0.4F else 1F),
       model = rememberCoverThumbnailRequest(cover),
       // a soft fill the cover fades in on, instead of the dark default art flashing up
       placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceContainerHighest),
@@ -73,70 +76,46 @@ internal fun BookCover(
       contentDescription = null,
     )
     if (ebook) {
-      Box(
-        modifier = Modifier
-          .align(Alignment.TopStart)
-          .offset(x = (-4).dp, y = (-4).dp)
-          .size(24.dp)
-          .background(MaterialTheme.colorScheme.surface, CircleShape)
-          .padding(2.dp)
-          .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape),
-        contentAlignment = Alignment.Center,
-      ) {
-        Icon(
-          modifier = Modifier.size(14.dp),
-          imageVector = VoiceIcons.Book,
-          contentDescription = stringResource(StringsR.string.library_book_ebook),
-          tint = MaterialTheme.colorScheme.onSecondaryContainer,
-        )
-      }
-    }
-    // one badge per cover, what a download or the connection says matters more than being finished
-    if (finished && download == null && !unavailable) {
-      Box(
-        modifier = Modifier
-          .align(Alignment.BottomEnd)
-          .offset(x = 4.dp, y = 4.dp)
-          .size(24.dp)
-          .background(MaterialTheme.colorScheme.surface, CircleShape)
-          .padding(2.dp)
-          .background(MaterialTheme.colorScheme.primary, CircleShape),
-        contentAlignment = Alignment.Center,
-      ) {
-        Icon(
-          modifier = Modifier.size(14.dp),
-          imageVector = VoiceIcons.Check,
-          contentDescription = null,
-          tint = MaterialTheme.colorScheme.onPrimary,
-        )
-      }
-    }
-    if (download != null) {
-      DownloadBadgeIcon(
-        badge = download,
-        modifier = Modifier
-          .align(Alignment.BottomEnd)
-          .offset(x = 4.dp, y = 4.dp),
+      CoverBadge(
+        icon = UiR.drawable.ic_book,
+        contentDescription = stringResource(StringsR.string.library_book_ebook),
+        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        modifier = Modifier.align(Alignment.TopStart).offset(x = (-4).dp, y = (-4).dp),
       )
-    } else if (unavailable) {
-      Box(
-        modifier = Modifier
-          .align(Alignment.BottomEnd)
-          .offset(x = 4.dp, y = 4.dp)
-          .size(24.dp)
-          .background(MaterialTheme.colorScheme.surface, CircleShape)
-          .padding(2.dp)
-          .background(MaterialTheme.colorScheme.surfaceContainerHighest, CircleShape),
-        contentAlignment = Alignment.Center,
-      ) {
-        Icon(
-          modifier = Modifier.size(14.dp),
-          imageVector = VoiceIcons.CloudOff,
-          contentDescription = stringResource(StringsR.string.library_book_offline),
-          tint = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-      }
     }
+    // one badge per cover, what a download or the connection says matters most, being finished
+    // least
+    val badgeModifier = Modifier.align(Alignment.BottomEnd).offset(x = 4.dp, y = 4.dp)
+    val colors = MaterialTheme.colorScheme
+    when {
+      download != null -> DownloadBadgeIcon(badge = download, modifier = badgeModifier)
+      unavailable ->
+        CoverBadge(
+          icon = UiR.drawable.ic_cloud_off,
+          contentDescription = stringResource(StringsR.string.library_book_offline),
+          containerColor = colors.surfaceContainerHighest,
+          contentColor = colors.onSurfaceVariant,
+          modifier = badgeModifier,
+        )
+      hidden ->
+        CoverBadge(
+          icon = UiR.drawable.ic_visibility_off,
+          contentDescription = stringResource(StringsR.string.library_book_hidden),
+          containerColor = colors.surfaceContainerHighest,
+          contentColor = colors.onSurfaceVariant,
+          modifier = badgeModifier,
+        )
+      finished ->
+        CoverBadge(
+          icon = UiR.drawable.ic_check,
+          contentDescription = null,
+          containerColor = colors.primary,
+          contentColor = colors.onPrimary,
+          modifier = badgeModifier,
+        )
+    }
+    SelectionBadge(selected)
   }
 }
 
@@ -149,18 +128,45 @@ internal fun ReadButton(
 ) {
   val shape = MaterialShapes.Cookie9Sided.toShape()
   Box(
-    modifier = modifier
-      .size(size)
-      .clip(shape)
-      .background(MaterialTheme.colorScheme.primary)
-      .clickable(role = Role.Button, onClick = onClick),
+    modifier =
+      modifier
+        .size(size)
+        .clip(shape)
+        .background(MaterialTheme.colorScheme.primary)
+        .clickable(role = Role.Button, onClick = onClick),
     contentAlignment = Alignment.Center,
   ) {
     Icon(
       modifier = Modifier.fillMaxSize(0.4F),
-      imageVector = VoiceIcons.Book,
+      painter = painterResource(UiR.drawable.ic_book),
       contentDescription = stringResource(StringsR.string.opds_entry_read),
       tint = MaterialTheme.colorScheme.onPrimary,
+    )
+  }
+}
+
+@Composable
+private fun CoverBadge(
+  @DrawableRes icon: Int,
+  contentDescription: String?,
+  containerColor: Color,
+  contentColor: Color,
+  modifier: Modifier = Modifier,
+) {
+  Box(
+    modifier =
+      modifier
+        .size(24.dp)
+        .background(MaterialTheme.colorScheme.surface, CircleShape)
+        .padding(2.dp)
+        .background(containerColor, CircleShape),
+    contentAlignment = Alignment.Center,
+  ) {
+    Icon(
+      modifier = Modifier.size(14.dp),
+      painter = painterResource(icon),
+      contentDescription = contentDescription,
+      tint = contentColor,
     )
   }
 }
@@ -174,17 +180,19 @@ private fun DownloadBadgeIcon(
   when (badge) {
     is DownloadBadge.Running -> {
       val waiting = badge.waitingFor != null
-      val description = when (badge.waitingFor) {
-        WaitingFor.Wifi -> stringResource(StringsR.string.book_download_waiting_for_wifi)
-        WaitingFor.Connection -> stringResource(StringsR.string.book_download_waiting_for_connection)
-        null -> stringResource(StringsR.string.library_book_downloading)
-      }
+      val description =
+        when (badge.waitingFor) {
+          WaitingFor.Wifi -> stringResource(StringsR.string.book_download_waiting_for_wifi)
+          WaitingFor.Connection ->
+            stringResource(StringsR.string.book_download_waiting_for_connection)
+          null -> stringResource(StringsR.string.library_book_downloading)
+        }
       val progress by animateFloatAsState(badge.progress, label = "downloadBadgeProgress")
       Box(
-        modifier = modifier
-          .size(24.dp)
-          .background(colors.surface, CircleShape)
-          .semantics { contentDescription = description },
+        modifier =
+          modifier.size(24.dp).background(colors.surface, CircleShape).semantics {
+            contentDescription = description
+          },
         contentAlignment = Alignment.Center,
       ) {
         CircularProgressIndicator(
@@ -196,40 +204,29 @@ private fun DownloadBadgeIcon(
         Icon(
           modifier = Modifier.size(12.dp),
           // a clock, so a waiting download doesn't look stuck
-          imageVector = if (waiting) VoiceIcons.Schedule else VoiceIcons.Download,
+          painter =
+            painterResource(if (waiting) UiR.drawable.ic_schedule else UiR.drawable.ic_download),
           contentDescription = null,
           tint = if (waiting) colors.onSurfaceVariant else colors.primary,
         )
       }
     }
-    DownloadBadge.Failed -> Box(
-      modifier = modifier
-        .size(24.dp)
-        .background(colors.surface, CircleShape)
-        .padding(2.dp)
-        .background(colors.errorContainer, CircleShape),
-      contentAlignment = Alignment.Center,
-    ) {
-      Icon(
-        modifier = Modifier.size(14.dp),
-        imageVector = VoiceIcons.Error,
-        contentDescription = stringResource(StringsR.string.book_download_failed),
-        tint = colors.onErrorContainer,
-      )
-    }
-  }
-}
-
-internal fun segmentedShape(
-  index: Int,
-  count: Int,
-): Shape {
-  val large = 24.dp
-  val small = 6.dp
-  return when {
-    count == 1 -> RoundedCornerShape(large)
-    index == 0 -> RoundedCornerShape(topStart = large, topEnd = large, bottomStart = small, bottomEnd = small)
-    index == count - 1 -> RoundedCornerShape(topStart = small, topEnd = small, bottomStart = large, bottomEnd = large)
-    else -> RoundedCornerShape(small)
+    DownloadBadge.Failed ->
+      Box(
+        modifier =
+          modifier
+            .size(24.dp)
+            .background(colors.surface, CircleShape)
+            .padding(2.dp)
+            .background(colors.errorContainer, CircleShape),
+        contentAlignment = Alignment.Center,
+      ) {
+        Icon(
+          modifier = Modifier.size(14.dp),
+          painter = painterResource(UiR.drawable.ic_error),
+          contentDescription = stringResource(StringsR.string.book_download_failed),
+          tint = colors.onErrorContainer,
+        )
+      }
   }
 }

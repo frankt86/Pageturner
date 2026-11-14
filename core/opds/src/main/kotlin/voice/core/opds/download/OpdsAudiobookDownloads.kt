@@ -8,6 +8,12 @@ import androidx.datastore.core.DataStore
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import java.io.File
+import java.io.IOException
+import java.util.concurrent.ConcurrentHashMap
+import java.util.zip.ZipFile
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,16 +55,11 @@ import voice.core.opds.feed.isAudioFileName
 import voice.core.opds.feed.parseAudiobookManifest
 import voice.core.scanner.MediaScanTrigger
 import voice.core.scanner.downloadedAudiobooksFolder
-import java.io.File
-import java.io.IOException
-import java.util.concurrent.ConcurrentHashMap
-import java.util.zip.ZipFile
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.uuid.Uuid
 
 /**
- * A book downloaded from a catalog as audio. [uri] is its folder in the download folder of the library. Without it,
- * the book is from before the download folder and its files are the [folder] in [downloadedAudiobooksFolder].
+ * A book downloaded from a catalog as audio. [uri] is its folder in the download folder of the
+ * library. Without it, the book is from before the download folder and its files are the [folder]
+ * in [downloadedAudiobooksFolder].
  */
 @Serializable
 internal data class DownloadedAudiobook(
@@ -73,10 +74,13 @@ internal data class DownloadedAudiobook(
 )
 
 @SingleIn(AppScope::class)
-internal class DownloadedAudiobookStore(store: DataStore<List<DownloadedAudiobook>>) : DataStore<List<DownloadedAudiobook>> by store {
+internal class DownloadedAudiobookStore(store: DataStore<List<DownloadedAudiobook>>) :
+  DataStore<List<DownloadedAudiobook>> by store {
 
   @Inject
-  constructor(factory: VoiceDataStoreFactory) : this(
+  constructor(
+    factory: VoiceDataStoreFactory,
+  ) : this(
     factory.create(
       serializer = ListSerializer(DownloadedAudiobook.serializer()),
       defaultValue = emptyList(),
@@ -92,14 +96,16 @@ private data class AudiobookDownload(
 )
 
 /**
- * Downloads audiobooks from the catalogs. Their files go to a folder of their own in the download folder of the
- * library, where the scan finds the book like every other one there, so the chapters come from the files. The title,
- * author and cover come from the catalog. Audiobooks are large, so a foreground service keeps them downloading with a
- * notification, the same as books from Audiobookshelf.
+ * Downloads audiobooks from the catalogs. Their files go to a folder of their own in the download
+ * folder of the library, where the scan finds the book like every other one there, so the chapters
+ * come from the files. The title, author and cover come from the catalog. Audiobooks are large, so
+ * a foreground service keeps them downloading with a notification, the same as books from
+ * Audiobookshelf.
  */
 @SingleIn(AppScope::class)
 @Inject
-public class OpdsAudiobookDownloads internal constructor(
+public class OpdsAudiobookDownloads
+internal constructor(
   private val http: ServerHttpClient,
   private val context: Context,
   private val store: DownloadedAudiobookStore,
@@ -117,42 +123,51 @@ public class OpdsAudiobookDownloads internal constructor(
   private val downloads = MutableStateFlow<Map<OpdsEntryKey, AudiobookDownload>>(emptyMap())
 
   /** The downloads that run or failed. A finished one is in the library instead. */
-  public val states: Flow<Map<OpdsEntryKey, OpdsDownloadState>> = downloads
-    .map { downloads -> downloads.mapValues { it.value.state } }
-    .distinctUntilChanged()
+  public val states: Flow<Map<OpdsEntryKey, OpdsDownloadState>> =
+    downloads.map { downloads -> downloads.mapValues { it.value.state } }.distinctUntilChanged()
 
   /** The audiobooks of the catalog that are in the library, by their entry id. */
   public fun downloaded(catalogId: String): Flow<Map<String, BookId>> {
     return combine(store.data, bookRepository.flow()) { entries, books ->
-      val inLibrary = books.mapTo(HashSet()) { it.id }
-      entries
-        .filter { it.catalogId == catalogId }
-        .mapNotNull { entry -> bookId(entry).takeIf { it in inLibrary }?.let { entry.entryId to it } }
-        .toMap()
-    }.distinctUntilChanged()
+        val inLibrary = books.mapTo(HashSet()) { it.id }
+        entries
+          .filter { it.catalogId == catalogId }
+          .mapNotNull { entry ->
+            bookId(entry).takeIf { it in inLibrary }?.let { entry.entryId to it }
+          }
+          .toMap()
+      }
+      .distinctUntilChanged()
   }
 
-  /** Whether to ask for notifications before a download, so its progress shows. Pageturner asks once. */
-  public suspend fun shouldAskForNotifications(): Boolean = serverDownloads.shouldAskForNotifications()
+  /**
+   * Whether to ask for notifications before a download, so its progress shows. Pageturner asks
+   * once.
+   */
+  public suspend fun shouldAskForNotifications(): Boolean =
+    serverDownloads.shouldAskForNotifications()
 
   public suspend fun onAskedForNotifications() {
     serverDownloads.onAskedForNotifications()
   }
 
-  // the scanner adds the book with what the files say, then it gets the title and author from the catalog
+  // the scanner adds the book with what the files say, then it gets the title and author from the
+  // catalog
   internal fun start() {
     scope.launch {
       combine(store.data, bookRepository.flow()) { entries, books ->
-        val inLibrary = books.associateBy { it.id }
-        entries.filter { !it.metadataApplied && bookId(it) in inLibrary }
-      }
+          val inLibrary = books.associateBy { it.id }
+          entries.filter { !it.metadataApplied && bookId(it) in inLibrary }
+        }
         .distinctUntilChanged()
         .collect { found ->
           found.forEach { entry ->
             bookRepository.updateCustomMetadata(bookId(entry)) { it.withCatalogMetadata(entry) }
           }
           if (found.isNotEmpty()) {
-            store.updateData { entries -> entries.map { if (it in found) it.copy(metadataApplied = true) else it } }
+            store.updateData { entries ->
+              entries.map { if (it in found) it.copy(metadataApplied = true) else it }
+            }
           }
         }
     }
@@ -166,7 +181,12 @@ public class OpdsAudiobookDownloads internal constructor(
     val key = OpdsEntryKey(catalog.id, publication.id)
     if (jobs[key]?.isActive == true) return
     val name = publication.title.ifBlank { "Audiobook" }
-    val starting = AudiobookDownload(name = name, cover = null, state = OpdsDownloadState.Downloading(progress = null))
+    val starting =
+      AudiobookDownload(
+        name = name,
+        cover = null,
+        state = OpdsDownloadState.Downloading(progress = null),
+      )
     downloads.update { it + (key to starting) }
     notifications.cancelResult(key.tag)
     startService()
@@ -183,7 +203,8 @@ public class OpdsAudiobookDownloads internal constructor(
         if (isActive) {
           Logger.w(e, "Could not download an audiobook")
           downloads.update { downloads ->
-            val failed = downloads[key]?.copy(state = OpdsDownloadState.Failed) ?: return@update downloads
+            val failed =
+              downloads[key]?.copy(state = OpdsDownloadState.Failed) ?: return@update downloads
             downloads + (key to failed)
           }
           notifications.failed(key.tag, name, cover = null, retry = null)
@@ -208,38 +229,45 @@ public class OpdsAudiobookDownloads internal constructor(
   }
 
   /** The notification of the running downloads, or null when none runs. */
-  internal val notification: StateFlow<Notification?> = MutableStateFlow<Notification?>(null).also { notification ->
-    scope.launch {
-      downloads
-        .map { downloads -> downloads.values.filter { it.state is OpdsDownloadState.Downloading } }
-        .distinctUntilChanged()
-        .collect { running ->
-          notification.value = if (running.isEmpty()) null else progressNotification(running)
-          // Android drops updates of a notification that come too fast, the state flow keeps the latest one
-          delay(NOTIFICATION_INTERVAL)
-        }
+  internal val notification: StateFlow<Notification?> =
+    MutableStateFlow<Notification?>(null).also { notification ->
+      scope.launch {
+        downloads
+          .map { downloads ->
+            downloads.values.filter { it.state is OpdsDownloadState.Downloading }
+          }
+          .distinctUntilChanged()
+          .collect { running ->
+            notification.value = if (running.isEmpty()) null else progressNotification(running)
+            // Android drops updates of a notification that come too fast, the state flow keeps the
+            // latest one
+            delay(NOTIFICATION_INTERVAL)
+          }
+      }
     }
-  }
 
   internal fun currentNotification(): Notification {
-    return notification.value ?: notifications.progress(emptyList(), OpdsDownloadService.stopIntent(context))
+    return notification.value
+      ?: notifications.progress(emptyList(), OpdsDownloadService.stopIntent(context))
   }
 
   private fun progressNotification(running: List<AudiobookDownload>): Notification {
     return notifications.progress(
-      downloads = running.map { download ->
-        val state = download.state as OpdsDownloadState.Downloading
-        DownloadProgress(
-          name = download.name,
-          cover = download.cover,
-          state = BookDownloadState.Downloading(
-            progress = state.progress ?: 0F,
-            downloadedBytes = state.downloadedBytes,
-            totalBytes = state.totalBytes,
-            waitingFor = null,
-          ),
-        )
-      },
+      downloads =
+        running.map { download ->
+          val state = download.state as OpdsDownloadState.Downloading
+          DownloadProgress(
+            name = download.name,
+            cover = download.cover,
+            state =
+              BookDownloadState.Downloading(
+                progress = state.progress ?: 0F,
+                downloadedBytes = state.downloadedBytes,
+                totalBytes = state.totalBytes,
+                waitingFor = null,
+              ),
+          )
+        },
       stop = OpdsDownloadService.stopIntent(context),
     )
   }
@@ -276,22 +304,39 @@ public class OpdsAudiobookDownloads internal constructor(
         }
       }
       when (audiobook.packaging) {
-        AudiobookPackaging.Files -> downloadFiles(key, catalog, publication.title, audiobook.files, audiobook.size, partial)
+        AudiobookPackaging.Files ->
+          downloadFiles(key, catalog, publication.title, audiobook.files, audiobook.size, partial)
         AudiobookPackaging.Manifest -> {
           val files = manifestFiles(key, catalog, audiobook.files.single().url)
-          downloadFiles(key, catalog, publication.title, files, OpdsAudiobook(files, AudiobookPackaging.Files).size, partial)
+          downloadFiles(
+            key,
+            catalog,
+            publication.title,
+            files,
+            OpdsAudiobook(files, AudiobookPackaging.Files).size,
+            partial,
+          )
         }
         AudiobookPackaging.Zip -> {
           val zip = File(partial.parentFile, "${partial.name}.zip")
           try {
-            downloadFiles(key, catalog, publication.title, audiobook.files, audiobook.size, partial, target = zip)
+            downloadFiles(
+              key,
+              catalog,
+              publication.title,
+              audiobook.files,
+              audiobook.size,
+              partial,
+              target = zip,
+            )
             extractAudio(zip, partial)
           } finally {
             zip.delete()
           }
         }
       }
-      val parent = writer.bookParent(root, bookFolderPath(root.type, publication.authors.firstOrNull()))
+      val parent =
+        writer.bookParent(root, bookFolderPath(root.type, publication.authors.firstOrNull()))
       val files = partial.listFiles().orEmpty().sortedBy { it.name }
       val name = safeFileName(publication.title)
       val folder = writer.copyFolder(parent, name, files)
@@ -326,16 +371,25 @@ public class OpdsAudiobookDownloads internal constructor(
     var finished = 0L
     files.forEachIndexed { index, file ->
       val destination = target ?: File(folder, audioFileName(index, files.size, file, title))
-      http.client.fetch(downloadRequest(catalog, file.url), destination, onCall = { calls[key] = it }) { read, total ->
+      http.client.fetch(
+        downloadRequest(catalog, file.url),
+        destination,
+        onCall = { calls[key] = it },
+      ) { read, total ->
         val downloaded = finished + read
         val size = knownSize ?: total.takeIf { files.size == 1 && it > 0 }
-        // without the sizes of all files the share of the book isn't known, so the bytes so far show instead
-        val progress = when {
-          size != null -> downloaded.toFloat() / size
-          total > 0 && files.size == 1 -> read.toFloat() / total
-          else -> null
-        }
-        report(key, OpdsDownloadState.Downloading(progress?.coerceIn(0F, 1F), downloaded, size ?: 0L))
+        // without the sizes of all files the share of the book isn't known, so the bytes so far
+        // show instead
+        val progress =
+          when {
+            size != null -> downloaded.toFloat() / size
+            total > 0 && files.size == 1 -> read.toFloat() / total
+            else -> null
+          }
+        report(
+          key,
+          OpdsDownloadState.Downloading(progress?.coerceIn(0F, 1F), downloaded, size ?: 0L),
+        )
       }
       finished += destination.length()
     }
@@ -358,14 +412,15 @@ public class OpdsAudiobookDownloads internal constructor(
   ): List<OpdsAcquisition> {
     val call = http.client.newCall(downloadRequest(catalog, url))
     calls[key] = call
-    val files = call.execute().use { response ->
-      if (!response.isSuccessful) throw IOException("HTTP ${response.code}")
-      try {
-        parseAudiobookManifest(response.body.string(), response.request.url.toString())
-      } catch (e: OpdsParseException) {
-        throw IOException("Not an audiobook manifest", e)
+    val files =
+      call.execute().use { response ->
+        if (!response.isSuccessful) throw IOException("HTTP ${response.code}")
+        try {
+          parseAudiobookManifest(response.body.string(), response.request.url.toString())
+        } catch (e: OpdsParseException) {
+          throw IOException("Not an audiobook manifest", e)
+        }
       }
-    }
     return files.ifEmpty { throw IOException("The manifest lists no audio") }
   }
 
@@ -375,12 +430,18 @@ public class OpdsAudiobookDownloads internal constructor(
     folder: File,
   ) {
     ZipFile(zip).use { archive ->
-      val entries = archive.entries().toList()
-        .filter { entry ->
-          val name = entry.name.substringAfterLast('/')
-          !entry.isDirectory && !name.startsWith(".") && !entry.name.startsWith("__MACOSX") && isAudioFileName(name)
-        }
-        .sortedWith(compareBy(NaturalOrderComparator.stringComparator) { it.name })
+      val entries =
+        archive
+          .entries()
+          .toList()
+          .filter { entry ->
+            val name = entry.name.substringAfterLast('/')
+            !entry.isDirectory &&
+              !name.startsWith(".") &&
+              !entry.name.startsWith("__MACOSX") &&
+              isAudioFileName(name)
+          }
+          .sortedWith(compareBy(NaturalOrderComparator.stringComparator) { it.name })
       if (entries.isEmpty()) throw IOException("No audio in the zip")
       entries.forEachIndexed { index, entry ->
         currentCoroutineContext().ensureActive()
@@ -418,17 +479,25 @@ public class OpdsAudiobookDownloads internal constructor(
   private suspend fun add(audiobook: DownloadedAudiobook) {
     var replaced: List<DownloadedAudiobook> = emptyList()
     store.updateData { entries ->
-      replaced = entries.filter { it.catalogId == audiobook.catalogId && it.entryId == audiobook.entryId }
+      replaced = entries.filter {
+        it.catalogId == audiobook.catalogId && it.entryId == audiobook.entryId
+      }
       entries - replaced.toSet() + audiobook
     }
-    // a book from before the download folder is in the app's own files, where nothing else would remove it
-    replaced.filter { it.uri == null }.forEach { old ->
-      val _ = File(downloadedAudiobooksFolder(context), old.folder).deleteRecursively()
-    }
+    // a book from before the download folder is in the app's own files, where nothing else would
+    // remove it
+    replaced
+      .filter { it.uri == null }
+      .forEach { old ->
+        val _ = File(downloadedAudiobooksFolder(context), old.folder).deleteRecursively()
+      }
   }
 
   private fun bookId(entry: DownloadedAudiobook): BookId {
-    return BookId(entry.uri?.let(Uri::parse) ?: Uri.fromFile(File(downloadedAudiobooksFolder(context), entry.folder)))
+    return BookId(
+      entry.uri?.let(Uri::parse)
+        ?: Uri.fromFile(File(downloadedAudiobooksFolder(context), entry.folder)),
+    )
   }
 }
 
@@ -436,7 +505,8 @@ private const val COVER_FILE = "cover.jpg"
 private val NOTIFICATION_INTERVAL = 500.milliseconds
 
 /** Tells the result notifications of the books apart. */
-private val OpdsEntryKey.tag: String get() = "opds:$catalogId:$entryId"
+private val OpdsEntryKey.tag: String
+  get() = "opds:$catalogId:$entryId"
 
 // kept like a name the listener gave, so a scan of the files doesn't bring back their tags
 private fun CustomMetadata.withCatalogMetadata(entry: DownloadedAudiobook): CustomMetadata {
@@ -456,7 +526,9 @@ private fun audioFileName(
 ): String {
   val extension = file.audioExtension
   if (count == 1) return "${safeFileName(title)}.$extension"
-  val name = (file.title ?: file.url.substringBefore('?').substringAfterLast('/'))
-    .let { if (it.endsWith(".$extension", ignoreCase = true)) it.dropLast(extension.length + 1) else it }
+  val name =
+    (file.title ?: file.url.substringBefore('?').substringAfterLast('/')).let {
+      if (it.endsWith(".$extension", ignoreCase = true)) it.dropLast(extension.length + 1) else it
+    }
   return "${number(index)} ${safeFileName(name)}.$extension"
 }

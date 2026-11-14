@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
@@ -48,12 +49,12 @@ import kotlinx.coroutines.withContext
 import voice.core.common.rootGraphAs
 import voice.core.data.BookId
 import voice.core.scanner.CoverSaver
+import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
 import voice.core.ui.ShapedIcon
-import voice.core.ui.icons.VoiceIcons
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
 import voice.navigation.Navigator
-import voice.core.strings.R as StringsR
 
 @ContributesTo(AppScope::class)
 interface EditCoverComponent {
@@ -66,11 +67,12 @@ object EditCoverDialogProvider {
 
   @Provides
   @IntoSet
-  fun editCoverDialogNavEntryProvider(navigator: Navigator): NavEntryProvider<*> = NavEntryProvider<Destination.EditCover> { key ->
-    NavEntry(key, metadata = DialogSceneStrategy.dialog()) {
-      EditCoverDialog(coverUri = key.cover, bookId = key.bookId, onDismiss = navigator::goBack)
+  fun editCoverDialogNavEntryProvider(navigator: Navigator): NavEntryProvider<*> =
+    NavEntryProvider<Destination.EditCover> { key ->
+      NavEntry(key, metadata = DialogSceneStrategy.dialog()) {
+        EditCoverDialog(coverUri = key.cover, bookId = key.bookId, onDismiss = navigator::goBack)
+      }
     }
-  }
 }
 
 @Composable
@@ -93,7 +95,7 @@ fun EditCoverDialog(
     Column(Modifier.padding(24.dp)) {
       Row(verticalAlignment = Alignment.CenterVertically) {
         ShapedIcon(
-          icon = VoiceIcons.Crop,
+          icon = UiR.drawable.ic_crop,
           shape = MaterialShapes.Cookie4Sided,
           containerColor = colors.primaryContainer,
           contentColor = colors.onPrimaryContainer,
@@ -116,9 +118,7 @@ fun EditCoverDialog(
         cover = coverUri,
         onCropChange = { crop = it },
         // shrinks to leave room for the buttons on short screens
-        modifier = Modifier
-          .weight(1F, fill = false)
-          .heightIn(max = 420.dp),
+        modifier = Modifier.weight(1F, fill = false).heightIn(max = 420.dp),
       )
       Spacer(Modifier.size(24.dp))
       Row(verticalAlignment = Alignment.CenterVertically) {
@@ -135,14 +135,16 @@ fun EditCoverDialog(
             val selected = crop ?: return@Button
             saving = true
             scope.launch {
-              val bitmap = context.imageLoader
-                .execute(
-                  ImageRequest.Builder(context)
-                    .data(coverUri)
-                    .transformations(CropTransformation(selected))
-                    .build(),
-                )
-                .drawable?.toBitmap()
+              val bitmap =
+                context.imageLoader
+                  .execute(
+                    ImageRequest.Builder(context)
+                      .data(coverUri)
+                      .transformations(CropTransformation(selected))
+                      .build(),
+                  )
+                  .drawable
+                  ?.toBitmap()
               if (bitmap != null) {
                 // leaving the dialog mid-save would leave the book pointing at a deleted cover
                 withContext(NonCancellable) {
@@ -158,7 +160,11 @@ fun EditCoverDialog(
           if (saving) {
             LoadingIndicator(Modifier.size(ButtonDefaults.IconSize))
           } else {
-            Icon(VoiceIcons.Check, contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
+            Icon(
+              painterResource(UiR.drawable.ic_check),
+              contentDescription = null,
+              modifier = Modifier.size(ButtonDefaults.IconSize),
+            )
           }
           Spacer(Modifier.width(ButtonDefaults.IconSpacing))
           Text(stringResource(StringsR.string.common_action_save))

@@ -30,27 +30,29 @@ enum class BookSearchField {
   Author,
   Series,
   Narrator,
-  Genre,
-  ;
+  Genre;
 
   fun text(book: Book): String? {
-    val text = when (this) {
-      Title -> book.name
-      Author -> book.author
-      Series -> seriesText(book.series, book.part)
-      Narrator -> book.content.metadata.narrator
-      Genre -> book.content.metadata.genre
-    }
+    val text =
+      when (this) {
+        Title -> book.name
+        Author -> book.author
+        Series -> seriesText(book.series, book.part)
+        Narrator -> book.content.metadata.narrator
+        Genre -> book.content.metadata.genre
+      }
     return text?.takeIf { it.isNotBlank() }
   }
 
   fun text(ebook: LibraryEbook): String? {
-    val text = when (this) {
-      Title -> ebook.title
-      Author -> ebook.shownAuthor
-      Series -> seriesText(ebook.shownSeries, ebook.shownPart)
-      Narrator, Genre -> null
-    }
+    val text =
+      when (this) {
+        Title -> ebook.title
+        Author -> ebook.shownAuthor
+        Series -> seriesText(ebook.shownSeries, ebook.shownPart)
+        Narrator,
+        Genre -> null
+      }
     return text?.takeIf { it.isNotBlank() }
   }
 }

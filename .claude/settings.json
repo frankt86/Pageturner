@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git revert *)",
+      "Bash(gh search *)",
+      "Bash(adb devices)",
+      "Bash(adb devices -l)",
+      "Bash(unzip -l *)",
+      "Bash(.agents/skills/emulator/scripts/emulator.py list)",
+      "Bash(.agents/skills/translate-strings/scripts/missing_translations.main.kts)",
+      "Bash(.agents/skills/translate-strings/scripts/missing_translations.main.kts *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "git config core.hooksPath .githooks"
+          }
+        ]
+      }
+    ]
+  }
+}

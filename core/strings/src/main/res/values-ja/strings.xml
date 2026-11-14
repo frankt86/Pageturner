@@ -55,6 +55,7 @@
     <string name="audiobookshelf.status.needs_login">サーバーにもう一度ログインしてください</string>
     <string name="audiobookshelf.status.offline">現在サーバーに接続できません。ダウンロード済みの本は引き続き再生できます。</string>
     <string name="audiobookshelf.status.syncing">同期中…</string>
+    <string name="author.wikipedia">ウィキペディアで続きを読む</string>
     <string name="book.category.action.mark_completed">完了としてマーク</string>
     <string name="book.category.action.mark_current">聴きかけとしてマーク</string>
     <string name="book.category.action.mark_not_started">未再生としてマーク</string>
@@ -79,8 +80,11 @@
     <string name="book.edit.server.failed">サーバーに保存できませんでした。もう一度お試しください。</string>
     <string name="book.edit.server.not_allowed">このアカウントには、サーバー上の本を変更する権限がありません。</string>
     <string name="book.edit.title.label">タイトル</string>
+    <string name="book.hide">ライブラリで非表示</string>
     <string name="book.remove_from_library">ライブラリから削除</string>
     <string name="book.remove_from_library.summary">ファイルはデバイスに残ります</string>
+    <string name="book.select">選択</string>
+    <string name="book.show">ライブラリに表示</string>
     <string name="book.source.device">この端末</string>
     <string name="book.source.server_downloaded">%s · ダウンロード済み</string>
     <string name="bookmark.action.add_note">メモを追加</string>
@@ -149,8 +153,13 @@
     <string name="folder.add.action.file">代わりに単一ファイルを追加</string>
     <string name="folder.add.action.folder">フォルダーを選択</string>
     <string name="folder.add.action.opds">カタログからダウンロード</string>
+    <string name="folder.add.help.answer.no_files">まだ持っていない</string>
+    <string name="folder.add.help.answer.not_found">見つけられない</string>
+    <string name="folder.add.help.answer.other_app">他のアプリにある</string>
     <string name="folder.add.help.computer">本がまだパソコンに入っていますか？ 先にスマートフォンの Audiobooks フォルダーや Documents フォルダーなどにコピーしてください。</string>
     <string name="folder.add.help.download">Android では、アプリが Download フォルダー自体を開くことはできません。その中のフォルダーを選んでください。</string>
+    <string name="folder.add.help.no_files">Pageturner はスマートフォン内のオーディオブックのファイルを再生します。LibriVox では、無料のオーディオブックを何千冊もダウンロードできます。</string>
+    <string name="folder.add.help.other_app">Audible や Spotify などのアプリの本は、そのアプリでしか再生できません。Pageturner で再生できるのは、MP3 や M4B などのオーディオブックのファイルです。</string>
     <string name="folder.add.help.title">本が見つかりませんか？</string>
     <string name="folder.add.no_picker.message">Pageturner は Android のファイル選択ツールで本を開きます。これがないと、Pageturner ではフォルダーやファイルを開けません。</string>
     <string name="folder.add.no_picker.title">この端末にはファイル選択ツールがありません</string>
@@ -218,8 +227,13 @@
     <string name="history.source.unplugged">オーディオ切断</string>
     <string name="history.source.watch">スマートウォッチ</string>
     <string name="history.source.widget">ウィジェット</string>
+    <plurals name="library.author.series_count">
+        <item quantity="other">%d シリーズ</item>
+    </plurals>
     <string name="library.book.downloading">ダウンロード中</string>
     <string name="library.book.ebook">電子書籍</string>
+    <string name="library.book.hidden">非表示</string>
+    <string name="library.book.hidden.message">「%1$s」を非表示にしました</string>
     <string name="library.book.offline">オフラインでは利用不可</string>
     <string name="library.category.completed.title">完了</string>
     <string name="library.category.current.title">聴きかけ</string>
@@ -230,9 +244,16 @@
     <string name="library.empty.title">本が見つかりません</string>
     <string name="library.empty.message">追加したフォルダー内に、Pageturner で開ける本が見つかりません。ファイルが移動・削除されていないか確認するか、フォルダーを追加してください。</string>
     <string name="library.empty.action">フォルダーを表示</string>
-    <string name="library.folders.title">本のフォルダー</string>
-    <string name="library.folders.moved.dialog.title">本のフォルダーを移動しました</string>
+    <string name="library.filter">フィルター</string>
+    <string name="library.filter.group_by">グループ化</string>
+    <string name="library.filter.group_by.author">著者</string>
+    <string name="library.filter.group_by.series">シリーズ</string>
+    <string name="library.filter.hidden_books">非表示の本</string>
+    <string name="library.filter.not_downloaded">未ダウンロード</string>
+    <string name="library.filter.show">表示</string>
     <string name="library.folders.moved.dialog.message">本のフォルダーは設定で管理できるようになりました。</string>
+    <string name="library.folders.moved.dialog.title">本のフォルダーを移動しました</string>
+    <string name="library.folders.title">本のフォルダー</string>
     <string name="library.folders.no_access">アクセスできません</string>
     <string name="library.folders.no_access.action">アクセスを許可</string>
     <string name="library.folders.no_access.badge">フォルダーへのアクセスをもう一度許可してください</string>
@@ -243,6 +264,10 @@
     <plurals name="library.header.in_progress">
         <item quantity="other">聴きかけの本 %d 冊</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="other">非表示の本 %d 冊</item>
+    </plurals>
+    <string name="library.no_author">著者なし</string>
     <string name="library.search.browse.title">ブラウズ</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="other">%d 冊</item>
@@ -271,6 +296,25 @@
     <string name="library.search.recent.clear_all">すべて消去</string>
     <string name="library.search.recent.remove">「%s」を削除</string>
     <string name="library.search.recent.title">最近の検索</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="other">%d 冊の著者を設定しました</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="other">%d 冊を選択中</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="other">%d 冊を非表示にしました</item>
+    </plurals>
+    <string name="library.selection.hide">非表示</string>
+    <string name="library.selection.select_all">すべて選択</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="other">%d 冊のシリーズを設定しました</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="other">%d 冊をサーバーに保存できませんでした</item>
+    </plurals>
+    <string name="library.selection.show">表示</string>
+    <string name="library.series.hidden.message">「%1$s」を非表示にしました</string>
     <string name="library.storage_permission_bug.action">権限を付与</string>
     <string name="library.storage_permission_bug.message">一部のデバイスでは、システムアプリに外部ストレージへアクセスするために必要な権限がありません。このアクセスは、Pageturner がオーディオブックを読み取るために必要です。</string>
     <string name="library.storage_permission_bug.title">権限が必要です</string>
@@ -555,6 +599,14 @@
     <string name="reader.word_spacing">単語の間隔</string>
     <string name="series.continue">続きを聴く</string>
     <string name="series.continue_book">第%s巻の続きを聴く</string>
+    <string name="series.mark_completed">完了としてマーク</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="other">%d 冊の再生位置が失われます。</item>
+    </plurals>
+    <string name="series.mark_not_started">未再生としてマーク</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="other">%d 冊の進み具合が失われます。</item>
+    </plurals>
     <string name="series.start">聴き始める</string>
     <string name="series.start_book">第%s巻を聴き始める</string>
     <string name="settings.about.app_version.title">アプリのバージョン</string>

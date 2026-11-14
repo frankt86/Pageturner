@@ -12,8 +12,8 @@ public data class DownloadProgress(
 )
 
 /**
- * The notifications of the server downloads, for other downloads that show with them, like the books from the
- * catalogs. [tag] tells their books apart.
+ * The notifications of the server downloads, for other downloads that show with them, like the
+ * books from the catalogs. [tag] tells their books apart.
  */
 public interface ServerDownloadNotifications {
 

@@ -44,10 +44,14 @@ internal fun PlayButton(
   ShapeButton(
     shape = if (playing) WidgetShape.Square else WidgetShape.Cookie9,
     size = size,
-    icon = if (playing) R.drawable.widget_ic_pause else R.drawable.widget_ic_play,
-    contentDescription = LocalContext.current.getString(
-      if (playing) StringsR.string.playback_action_pause else StringsR.string.playback_action_play,
-    ),
+    icon =
+      if (playing) UiR.drawable.ic_pause_rounded_filled
+      else UiR.drawable.ic_play_arrow_rounded_filled,
+    contentDescription =
+      LocalContext.current.getString(
+        if (playing) StringsR.string.playback_action_pause
+        else StringsR.string.playback_action_play,
+      ),
     images = images,
     onClick = onClick,
     modifier = modifier,
@@ -65,10 +69,12 @@ internal fun SkipButton(
   ShapeButton(
     shape = WidgetShape.Circle,
     size = size,
-    icon = if (forward) UiR.drawable.ic_fast_forward_white_36dp else UiR.drawable.ic_rewind_white_36dp,
-    contentDescription = LocalContext.current.getString(
-      if (forward) StringsR.string.playback_action_fast_forward else StringsR.string.playback_action_rewind,
-    ),
+    icon = if (forward) UiR.drawable.ic_forward_media else UiR.drawable.ic_replay,
+    contentDescription =
+      LocalContext.current.getString(
+        if (forward) StringsR.string.playback_action_fast_forward
+        else StringsR.string.playback_action_rewind,
+      ),
     images = images,
     onClick = onClick,
     modifier = modifier,
@@ -142,7 +148,9 @@ internal fun PlayBadge(
     ShapeButton(
       shape = if (playing) WidgetShape.Square else WidgetShape.Cookie9,
       size = size - 4.dp,
-      icon = if (playing) R.drawable.widget_ic_pause else R.drawable.widget_ic_play,
+      icon =
+        if (playing) UiR.drawable.ic_pause_rounded_filled
+        else UiR.drawable.ic_play_arrow_rounded_filled,
       contentDescription = null,
       images = images,
       onClick = null,
@@ -201,13 +209,19 @@ internal fun SpeedChip(
   modifier: GlanceModifier = GlanceModifier,
 ) {
   Box(
-    modifier = modifier
-      .pillBackground(GlanceTheme.colors.secondaryContainer)
-      .padding(horizontal = 8.dp, vertical = 2.dp),
+    modifier =
+      modifier
+        .pillBackground(GlanceTheme.colors.secondaryContainer)
+        .padding(horizontal = 8.dp, vertical = 2.dp),
   ) {
     Text(
       text = formatSpeed(speed),
-      style = TextStyle(color = GlanceTheme.colors.onSecondaryContainer, fontSize = 12.sp, fontWeight = FontWeight.Medium),
+      style =
+        TextStyle(
+          color = GlanceTheme.colors.onSecondaryContainer,
+          fontSize = 12.sp,
+          fontWeight = FontWeight.Medium,
+        ),
       maxLines = 1,
     )
   }
@@ -221,10 +235,11 @@ internal fun PillButton(
   @DrawableRes icon: Int? = null,
 ) {
   Row(
-    modifier = modifier
-      .pillBackground(GlanceTheme.colors.primary)
-      .clickable(onClick)
-      .padding(horizontal = 14.dp, vertical = 8.dp),
+    modifier =
+      modifier
+        .pillBackground(GlanceTheme.colors.primary)
+        .clickable(onClick)
+        .padding(horizontal = 14.dp, vertical = 8.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     if (icon != null) {
@@ -233,7 +248,12 @@ internal fun PillButton(
     }
     Text(
       text = text,
-      style = TextStyle(color = GlanceTheme.colors.onPrimary, fontSize = 14.sp, fontWeight = FontWeight.Medium),
+      style =
+        TextStyle(
+          color = GlanceTheme.colors.onPrimary,
+          fontSize = 14.sp,
+          fontWeight = FontWeight.Medium,
+        ),
       maxLines = 1,
     )
   }

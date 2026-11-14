@@ -9,14 +9,31 @@ class Opds1ParserTest {
 
   @Test
   fun calibreWebNavigation() {
-    val feed = parseFeed(resource("calibre-web-root.xml"), "https://books.example.com/opds", "application/atom+xml")
+    val feed =
+      parseFeed(
+        resource("calibre-web-root.xml"),
+        "https://books.example.com/opds",
+        "application/atom+xml",
+      )
 
     assertEquals("Calibre-Web", feed.title)
     assertEquals(
       listOf(
-        OpdsNavigation("Alphabetical Books", "https://books.example.com/opds/books", "Books sorted alphabetically"),
-        OpdsNavigation("Recently added Books", "https://books.example.com/opds/new", "The latest Books"),
-        OpdsNavigation("Authors", "https://books.example.com/opds/author", "Books ordered by Author"),
+        OpdsNavigation(
+          "Alphabetical Books",
+          "https://books.example.com/opds/books",
+          "Books sorted alphabetically",
+        ),
+        OpdsNavigation(
+          "Recently added Books",
+          "https://books.example.com/opds/new",
+          "The latest Books",
+        ),
+        OpdsNavigation(
+          "Authors",
+          "https://books.example.com/opds/author",
+          "Books ordered by Author",
+        ),
       ),
       feed.navigation,
     )
@@ -27,7 +44,8 @@ class Opds1ParserTest {
 
   @Test
   fun calibreWebAcquisition() {
-    val feed = parseFeed(resource("calibre-web-books.xml"), "https://books.example.com/opds/new", null)
+    val feed =
+      parseFeed(resource("calibre-web-books.xml"), "https://books.example.com/opds/new", null)
 
     assertEquals("https://books.example.com/opds/new?offset=60", feed.nextUrl)
     assertEquals(2, feed.publications.size)
@@ -42,7 +60,12 @@ class Opds1ParserTest {
     assertEquals("https://books.example.com/opds/cover/12", book.coverUrl)
     assertEquals("https://books.example.com/opds/cover/12", book.thumbnailUrl)
     assertEquals(
-      OpdsAcquisition("https://books.example.com/opds/download/12/epub/", "application/epub+zip", "EPUB", 421337),
+      OpdsAcquisition(
+        "https://books.example.com/opds/download/12/epub/",
+        "application/epub+zip",
+        "EPUB",
+        421337,
+      ),
       book.preferredAcquisition,
     )
     assertEquals("MOBI", book.acquisitions[0].label)
@@ -55,7 +78,12 @@ class Opds1ParserTest {
 
   @Test
   fun komgaNavigation() {
-    val feed = parseFeed(resource("komga-root.xml"), "https://komga.example.com/opds/v1.2/catalog", "application/atom+xml")
+    val feed =
+      parseFeed(
+        resource("komga-root.xml"),
+        "https://komga.example.com/opds/v1.2/catalog",
+        "application/atom+xml",
+      )
 
     assertEquals("Komga OPDS catalog", feed.title)
     assertEquals(
@@ -68,13 +96,21 @@ class Opds1ParserTest {
 
   @Test
   fun komgaBooks() {
-    val feed = parseFeed(resource("komga-books.xml"), "https://komga.example.com/opds/v1.2/series/0B5MNCGK7S9GV", null)
+    val feed =
+      parseFeed(
+        resource("komga-books.xml"),
+        "https://komga.example.com/opds/v1.2/series/0B5MNCGK7S9GV",
+        null,
+      )
 
     assertEquals("https://komga.example.com/opds/v1.2/series/0B5MNCGK7S9GV?page=1", feed.nextUrl)
     val (first, second) = feed.publications
     assertEquals("0B5MNCH8QG7AX", first.id)
     assertEquals("The first Discworld novel.", first.summary)
-    assertEquals("https://komga.example.com/opds/v1.2/books/0B5MNCH8QG7AX/thumbnail/small", first.thumbnailUrl)
+    assertEquals(
+      "https://komga.example.com/opds/v1.2/books/0B5MNCH8QG7AX/thumbnail/small",
+      first.thumbnailUrl,
+    )
     assertEquals(OpdsFormat.Epub, first.preferredAcquisition?.format)
     assertNull(second.summary)
     assertEquals(emptyList(), second.authors)
@@ -87,9 +123,17 @@ class Opds1ParserTest {
 
   @Test
   fun standardEbooks() {
-    val feed = parseFeed(resource("standard-ebooks.xml"), "https://standardebooks.org/feeds/opds/new-releases", null)
+    val feed =
+      parseFeed(
+        resource("standard-ebooks.xml"),
+        "https://standardebooks.org/feeds/opds/new-releases",
+        null,
+      )
 
-    assertEquals(OpdsSearch.Description("https://standardebooks.org/ebooks/opensearch"), feed.search)
+    assertEquals(
+      OpdsSearch.Description("https://standardebooks.org/ebooks/opensearch"),
+      feed.search,
+    )
     val book = feed.publications.single()
     assertEquals("Persuasion", book.title)
     assertEquals(listOf("Jane Austen"), book.authors)
@@ -109,18 +153,28 @@ class Opds1ParserTest {
   fun openSearchDescription() {
     assertEquals(
       "https://books.example.com/opds/search/{searchTerms}",
-      parseOpenSearchTemplate(resource("calibre-web-osd.xml"), "https://books.example.com/opds/osd"),
+      parseOpenSearchTemplate(
+        resource("calibre-web-osd.xml"),
+        "https://books.example.com/opds/osd",
+      ),
     )
     assertEquals(
       "https://komga.example.com/opds/v1.2/search?search={searchTerms}",
-      parseOpenSearchTemplate(resource("komga-osd.xml"), "https://komga.example.com/opds/v1.2/search"),
+      parseOpenSearchTemplate(
+        resource("komga-osd.xml"),
+        "https://komga.example.com/opds/v1.2/search",
+      ),
     )
   }
 
   @Test
   fun htmlPageIsNoCatalog() {
     assertFailsWith<OpdsParseException> {
-      parseFeed("<!DOCTYPE html><html><body>Login</body></html>", "https://example.com", "text/html")
+      parseFeed(
+        "<!DOCTYPE html><html><body>Login</body></html>",
+        "https://example.com",
+        "text/html",
+      )
     }
   }
 
@@ -132,7 +186,10 @@ class Opds1ParserTest {
     )
     assertEquals(
       "https://example.com/search?q=Br%C3%BCcke&page=",
-      expandSearchTemplate("https://example.com/search?q={searchTerms}&page={startPage?}", "Brücke"),
+      expandSearchTemplate(
+        "https://example.com/search?q={searchTerms}&page={startPage?}",
+        "Brücke",
+      ),
     )
     assertEquals(
       "https://example.com/opds/v2/search?query=dune",
@@ -150,7 +207,10 @@ class Opds1ParserTest {
 
   @Test
   fun html() {
-    assertEquals("Tom &amp; Jerry — a story", htmlToText("<b>Tom &amp;amp; Jerry</b> &mdash; a&nbsp;story"))
+    assertEquals(
+      "Tom &amp; Jerry — a story",
+      htmlToText("<b>Tom &amp;amp; Jerry</b> &mdash; a&nbsp;story"),
+    )
   }
 }
 

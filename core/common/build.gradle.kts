@@ -3,6 +3,5 @@ plugins {
 }
 
 dependencies {
-  implementation(libs.serialization.json)
-  implementation(libs.androidxCore)
+  api(libs.okhttp)
 }

@@ -1,4 +1,5 @@
-// Copied from sherpa-onnx v1.13.8 (Apache License 2.0, Copyright (c) 2023 Xiaomi Corporation), sherpa-onnx/kotlin-api/Tts.kt.
+// Copied from sherpa-onnx v1.13.8 (Apache License 2.0, Copyright (c) 2023 Xiaomi Corporation),
+// sherpa-onnx/kotlin-api/Tts.kt.
 // The native library reads these classes and fields by name, so they must stay as they are.
 package com.k2fsa.sherpa.onnx
 
@@ -101,7 +102,6 @@ data class OfflineTtsModelConfig(
   var kitten: OfflineTtsKittenModelConfig = OfflineTtsKittenModelConfig(),
   var pocket: OfflineTtsPocketModelConfig = OfflineTtsPocketModelConfig(),
   var supertonic: OfflineTtsSupertonicModelConfig = OfflineTtsSupertonicModelConfig(),
-
   var numThreads: Int = 1,
   var debug: Boolean = false,
   var provider: String = "cpu",
@@ -119,7 +119,8 @@ class GeneratedAudio(
   val samples: FloatArray,
   val sampleRate: Int,
 ) {
-  fun save(filename: String) = saveImpl(filename = filename, samples = samples, sampleRate = sampleRate)
+  fun save(filename: String) =
+    saveImpl(filename = filename, samples = samples, sampleRate = sampleRate)
 
   private external fun saveImpl(
     filename: String,
@@ -153,11 +154,12 @@ class OfflineTts(
   private var ptr: Long
 
   init {
-    ptr = if (assetManager != null) {
-      newFromAsset(assetManager, config)
-    } else {
-      newFromFile(config)
-    }
+    ptr =
+      if (assetManager != null) {
+        newFromAsset(assetManager, config)
+      } else {
+        newFromFile(config)
+      }
     require(ptr != 0L) {
       "Invalid OfflineTtsConfig: failed to create native OfflineTts"
     }
@@ -210,11 +212,12 @@ class OfflineTts(
 
   fun allocate(assetManager: AssetManager? = null) {
     if (ptr == 0L) {
-      ptr = if (assetManager != null) {
-        newFromAsset(assetManager, config)
-      } else {
-        newFromFile(config)
-      }
+      ptr =
+        if (assetManager != null) {
+          newFromAsset(assetManager, config)
+        } else {
+          newFromFile(config)
+        }
       require(ptr != 0L) {
         "Invalid OfflineTtsConfig: failed to create native OfflineTts"
       }
@@ -236,8 +239,11 @@ class OfflineTts(
   private external fun newFromFile(config: OfflineTtsConfig): Long
 
   private external fun delete(ptr: Long)
+
   private external fun getSampleRate(ptr: Long): Int
+
   private external fun getNumSpeakers(ptr: Long): Int
+
   private external fun getLang(ptr: Long): String
 
   // The returned array has two entries:

@@ -1,7 +1,5 @@
 plugins {
   id("voice.library")
-  alias(libs.plugins.kotlin.serialization)
-  alias(libs.plugins.metro)
   alias(libs.plugins.ksp)
 }
 
@@ -15,7 +13,6 @@ kotlin {
 }
 
 android {
-
   sourceSets {
     named("test") {
       assets.directories += "schemas"
@@ -30,9 +27,6 @@ dependencies {
   implementation(projects.core.datastore)
 
   implementation(libs.datastore)
-  implementation(libs.androidxCore)
-  implementation(libs.serialization.json)
-  implementation(libs.coroutines.core)
   implementation(projects.core.analytics.api)
 
   api(libs.room.runtime)

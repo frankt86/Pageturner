@@ -37,11 +37,13 @@ internal fun writeEpub(
   content: EpubContent,
   output: OutputStream,
 ) {
-  val identifier = content.identifier
-    ?: "urn:uuid:" + UUID.nameUUIDFromBytes((content.title + content.author).toByteArray())
-  val toc = content.toc.ifEmpty {
-    content.documents.take(1).map { TocEntry(content.title, it.path, 0) }
-  }
+  val identifier =
+    content.identifier
+      ?: "urn:uuid:" + UUID.nameUUIDFromBytes((content.title + content.author).toByteArray())
+  val toc =
+    content.toc.ifEmpty {
+      content.documents.take(1).map { TocEntry(content.title, it.path, 0) }
+    }
   ZipOutputStream(output).use { zip ->
     // the mimetype comes first and uncompressed, so the file can be told apart by its first bytes
     val mimetype = "application/epub+zip".toByteArray()
@@ -71,7 +73,8 @@ internal fun writeEpub(
   }
 }
 
-private const val CONTAINER = """<?xml version="1.0" encoding="UTF-8"?>
+private const val CONTAINER =
+  """<?xml version="1.0" encoding="UTF-8"?>
 <container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
   <rootfiles>
     <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
@@ -84,20 +87,35 @@ private fun opf(
   identifier: String,
 ): String = buildString {
   append("""<?xml version="1.0" encoding="UTF-8"?>""").append('\n')
-  append("""<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="book-id">""").append('\n')
+  append(
+      """<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="book-id">""",
+    )
+    .append('\n')
   append("""<metadata xmlns:dc="http://purl.org/dc/elements/1.1/">""").append('\n')
-  append("""<dc:identifier id="book-id">""").append(xmlEscape(identifier)).append("</dc:identifier>\n")
+  append("""<dc:identifier id="book-id">""")
+    .append(xmlEscape(identifier))
+    .append("</dc:identifier>\n")
   append("<dc:title>").append(xmlEscape(content.title)).append("</dc:title>\n")
   content.author?.let { append("<dc:creator>").append(xmlEscape(it)).append("</dc:creator>\n") }
   append("<dc:language>").append(xmlEscape(content.language ?: "und")).append("</dc:language>\n")
   append("""<meta property="dcterms:modified">2000-01-01T00:00:00Z</meta>""").append('\n')
-  val ids = (content.documents + content.resources).withIndex().associate { (index, file) -> file.path to "item$index" }
-  content.coverPath?.let { ids[it] }?.let { append("""<meta name="cover" content="$it"/>""").append('\n') }
+  val ids =
+    (content.documents + content.resources).withIndex().associate { (index, file) ->
+      file.path to "item$index"
+    }
+  content.coverPath
+    ?.let { ids[it] }
+    ?.let { append("""<meta name="cover" content="$it"/>""").append('\n') }
   append("</metadata>\n<manifest>\n")
-  append("""<item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>""").append('\n')
+  append(
+      """<item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>""",
+    )
+    .append('\n')
   append("""<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>""").append('\n')
   (content.documents + content.resources).forEach { file ->
-    append("""<item id="${ids[file.path]}" href="${xmlEscape(file.path)}" media-type="${file.mediaType}"""")
+    append(
+      """<item id="${ids[file.path]}" href="${xmlEscape(file.path)}" media-type="${file.mediaType}"""",
+    )
     if (file.path == content.coverPath) append(""" properties="cover-image"""")
     append("/>\n")
   }
@@ -111,7 +129,10 @@ private fun nav(
   toc: List<TocEntry>,
 ): String = buildString {
   append("""<?xml version="1.0" encoding="UTF-8"?>""").append('\n')
-  append("""<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">""").append('\n')
+  append(
+      """<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">""",
+    )
+    .append('\n')
   append("<head><title>").append(xmlEscape(title)).append("</title></head>\n<body>\n")
   append("""<nav epub:type="toc" id="toc"><ol>""").append('\n')
   var depth = 0
@@ -125,7 +146,9 @@ private fun nav(
         repeat(depth - entryDepth) { append("</ol></li>") }
       }
     }
-    append("""<li><a href="${xmlEscape(entry.href)}">""").append(xmlEscape(entry.title)).append("</a>")
+    append("""<li><a href="${xmlEscape(entry.href)}">""")
+      .append(xmlEscape(entry.title))
+      .append("</a>")
     depth = entryDepth
   }
   if (toc.isNotEmpty()) {
@@ -186,7 +209,8 @@ internal fun xhtmlPage(
 
 /** The type of an image or font record by its first bytes, or null when it's neither. */
 internal fun resourceType(data: ByteArray): Pair<String, String>? {
-  fun startsWith(vararg bytes: Int) = data.size >= bytes.size && bytes.indices.all { data.u8(it) == bytes[it] }
+  fun startsWith(vararg bytes: Int) =
+    data.size >= bytes.size && bytes.indices.all { data.u8(it) == bytes[it] }
   return when {
     startsWith(0xFF, 0xD8, 0xFF) -> "jpg" to "image/jpeg"
     startsWith(0x89, 'P'.code, 'N'.code, 'G'.code) -> "png" to "image/png"

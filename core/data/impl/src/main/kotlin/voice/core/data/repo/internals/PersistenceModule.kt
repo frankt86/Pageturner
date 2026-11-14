@@ -20,14 +20,11 @@ import voice.core.data.repo.internals.dao.RecentBookSearchDao
 @ContributesTo(AppScope::class)
 public object PersistenceModule {
 
-  @Provides
-  private fun chapterDao(appDb: AppDb): ChapterDao = appDb.chapterDao()
+  @Provides private fun chapterDao(appDb: AppDb): ChapterDao = appDb.chapterDao()
 
-  @Provides
-  private fun bookContentDao(appDb: AppDb): BookContentDao = appDb.bookContentDao()
+  @Provides private fun bookContentDao(appDb: AppDb): BookContentDao = appDb.bookContentDao()
 
-  @Provides
-  private fun bookmarkDao(appDb: AppDb): BookmarkDao = appDb.bookmarkDao()
+  @Provides private fun bookmarkDao(appDb: AppDb): BookmarkDao = appDb.bookmarkDao()
 
   @Provides
   private fun customMetadataDao(appDb: AppDb): CustomMetadataDao = appDb.customMetadataDao()
@@ -46,9 +43,19 @@ public object PersistenceModule {
   private fun appDb(
     context: Context,
     migrations: Set<@JvmSuppressWildcards Migration>,
-  ): AppDb {
-    return Room.databaseBuilder(context, AppDb::class.java, AppDb.DATABASE_NAME)
-      .addMigrations(*migrations.toTypedArray())
-      .build()
-  }
+  ): AppDb = createAppDb(context, AppDb.DATABASE_NAME, migrations)
+}
+
+internal fun createAppDb(
+  context: Context,
+  name: String,
+  migrations: Set<Migration>,
+): AppDb {
+  return Room.databaseBuilder(context, AppDb::class.java, name)
+    .addMigrations(*migrations.toTypedArray())
+    .fallbackToDestructiveMigrationFrom(
+      dropAllTables = true,
+      *(1..<AppDb.OLDEST_MIGRATED_VERSION).toList().toIntArray(),
+    )
+    .build()
 }

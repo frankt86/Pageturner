@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -52,17 +53,17 @@ import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
 import voice.core.common.rootGraphAs
 import voice.core.opds.CatalogType
+import voice.core.strings.R as StringsR
 import voice.core.ui.CenteredContent
+import voice.core.ui.R as UiR
 import voice.core.ui.ShapedIcon
 import voice.core.ui.VoiceTheme
-import voice.core.ui.icons.VoiceIcons
 import voice.core.ui.plus
 import voice.core.ui.segmentedShape
 import voice.features.opds.folder.DownloadFolderSheet
 import voice.features.opds.folder.DownloadFolderSheetState
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
-import voice.core.strings.R as StringsR
 
 @ContributesTo(AppScope::class)
 interface OpdsCatalogsGraph {
@@ -75,11 +76,12 @@ object OpdsCatalogsProvider {
 
   @Provides
   @IntoSet
-  fun opdsCatalogsNavEntryProvider(): NavEntryProvider<*> = NavEntryProvider<Destination.OpdsCatalogs> { key ->
-    NavEntry(key) {
-      OpdsCatalogsScreen()
+  fun opdsCatalogsNavEntryProvider(): NavEntryProvider<*> =
+    NavEntryProvider<Destination.OpdsCatalogs> { key ->
+      NavEntry(key) {
+        OpdsCatalogsScreen()
+      }
     }
-  }
 }
 
 @Composable
@@ -135,7 +137,7 @@ private fun OpdsCatalogsScreen(
           IconButton(onClick = onBack) {
             Icon(
               modifier = Modifier.graphicsLayer { scaleX = if (rtl) -1F else 1F },
-              imageVector = VoiceIcons.ArrowBack,
+              painter = painterResource(UiR.drawable.ic_arrow_back),
               contentDescription = stringResource(StringsR.string.common_action_back),
             )
           }
@@ -148,7 +150,7 @@ private fun OpdsCatalogsScreen(
       ExtendedFloatingActionButton(
         text = { Text(text) },
         // the text alone doesn't reach accessibility services
-        icon = { Icon(VoiceIcons.Add, contentDescription = text) },
+        icon = { Icon(painterResource(UiR.drawable.ic_add), contentDescription = text) },
         onClick = onAdd,
       )
     },
@@ -156,31 +158,39 @@ private fun OpdsCatalogsScreen(
     when {
       catalogs == null -> Unit
       catalogs.isEmpty() -> EmptyCatalogs(Modifier.padding(contentPadding))
-      else -> CenteredContent(Modifier.fillMaxSize()) { horizontalPadding ->
-        LazyColumn(
-          modifier = Modifier.fillMaxSize(),
-          // leaves room to scroll the last catalog out from under the add button
-          contentPadding = contentPadding + PaddingValues(start = horizontalPadding, end = horizontalPadding, top = 8.dp, bottom = 96.dp),
-          verticalArrangement = Arrangement.spacedBy(2.dp),
-        ) {
-          item(key = "downloadFolder") {
-            DownloadFolderRow(
-              name = downloadFolder,
-              onClick = onDownloadFolderClick,
-              modifier = Modifier.padding(bottom = 14.dp),
-            )
-          }
-          itemsIndexed(catalogs, key = { _, catalog -> catalog.id }) { index, catalog ->
-            CatalogRow(
-              catalog = catalog,
-              index = index,
-              count = catalogs.size,
-              onOpen = { onOpen(catalog.id) },
-              onEdit = { onEdit(catalog.id) },
-            )
+      else ->
+        CenteredContent(Modifier.fillMaxSize()) { horizontalPadding ->
+          LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            // leaves room to scroll the last catalog out from under the add button
+            contentPadding =
+              contentPadding +
+                PaddingValues(
+                  start = horizontalPadding,
+                  end = horizontalPadding,
+                  top = 8.dp,
+                  bottom = 96.dp,
+                ),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+          ) {
+            item(key = "downloadFolder") {
+              DownloadFolderRow(
+                name = downloadFolder,
+                onClick = onDownloadFolderClick,
+                modifier = Modifier.padding(bottom = 14.dp),
+              )
+            }
+            itemsIndexed(catalogs, key = { _, catalog -> catalog.id }) { index, catalog ->
+              CatalogRow(
+                catalog = catalog,
+                index = index,
+                count = catalogs.size,
+                onOpen = { onOpen(catalog.id) },
+                onEdit = { onEdit(catalog.id) },
+              )
+            }
           }
         }
-      }
     }
     if (editor != null) {
       CatalogEditorSheet(
@@ -213,17 +223,18 @@ private fun DownloadFolderRow(
   val shape = segmentedShape(0, 1)
   val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
   Row(
-    modifier = modifier
-      .fillMaxWidth()
-      .clip(shape)
-      .background(colors.surfaceContainer, shape)
-      .clickable(onClick = onClick)
-      .heightIn(min = 72.dp)
-      .padding(horizontal = 16.dp, vertical = 12.dp),
+    modifier =
+      modifier
+        .fillMaxWidth()
+        .clip(shape)
+        .background(colors.surfaceContainer, shape)
+        .clickable(onClick = onClick)
+        .heightIn(min = 72.dp)
+        .padding(horizontal = 16.dp, vertical = 12.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     ShapedIcon(
-      icon = VoiceIcons.Folder,
+      icon = UiR.drawable.ic_folder,
       shape = MaterialShapes.Cookie6Sided,
       containerColor = colors.primaryContainer,
       contentColor = colors.onPrimaryContainer,
@@ -247,7 +258,7 @@ private fun DownloadFolderRow(
     Spacer(Modifier.width(8.dp))
     Icon(
       modifier = Modifier.graphicsLayer { scaleX = if (rtl) -1F else 1F },
-      imageVector = VoiceIcons.ChevronRight,
+      painter = painterResource(UiR.drawable.ic_chevron_right),
       contentDescription = null,
       tint = colors.onSurfaceVariant,
     )
@@ -265,13 +276,13 @@ private fun CatalogRow(
   val colors = MaterialTheme.colorScheme
   val shape = segmentedShape(index, count)
   Row(
-    modifier = Modifier
-      .fillMaxWidth()
-      .clip(shape)
-      .background(colors.surfaceContainer, shape)
-      .clickable(onClick = onOpen)
-      .heightIn(min = 72.dp)
-      .padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 4.dp),
+    modifier =
+      Modifier.fillMaxWidth()
+        .clip(shape)
+        .background(colors.surfaceContainer, shape)
+        .clickable(onClick = onOpen)
+        .heightIn(min = 72.dp)
+        .padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 4.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     CatalogIcon(catalog.type)
@@ -292,7 +303,10 @@ private fun CatalogRow(
       )
     }
     IconButton(onClick = onEdit) {
-      Icon(VoiceIcons.MoreVert, contentDescription = stringResource(StringsR.string.common_action_edit))
+      Icon(
+        painterResource(UiR.drawable.ic_more_vert),
+        contentDescription = stringResource(StringsR.string.common_action_edit),
+      )
     }
   }
 }
@@ -304,20 +318,22 @@ private fun CatalogIcon(
 ) {
   val colors = MaterialTheme.colorScheme
   when (type) {
-    CatalogType.Opds -> ShapedIcon(
-      modifier = modifier,
-      icon = VoiceIcons.LibraryBooks,
-      shape = MaterialShapes.Pentagon,
-      containerColor = colors.secondary,
-      contentColor = colors.onSecondary,
-    )
-    CatalogType.Komga -> ShapedIcon(
-      modifier = modifier,
-      icon = VoiceIcons.Dns,
-      shape = MaterialShapes.Cookie9Sided,
-      containerColor = colors.tertiary,
-      contentColor = colors.onTertiary,
-    )
+    CatalogType.Opds ->
+      ShapedIcon(
+        modifier = modifier,
+        icon = UiR.drawable.ic_library_books,
+        shape = MaterialShapes.Pentagon,
+        containerColor = colors.secondary,
+        contentColor = colors.onSecondary,
+      )
+    CatalogType.Komga ->
+      ShapedIcon(
+        modifier = modifier,
+        icon = UiR.drawable.ic_dns,
+        shape = MaterialShapes.Cookie9Sided,
+        containerColor = colors.tertiary,
+        contentColor = colors.onTertiary,
+      )
   }
 }
 
@@ -325,9 +341,7 @@ private fun CatalogIcon(
 private fun EmptyCatalogs(modifier: Modifier = Modifier) {
   val colors = MaterialTheme.colorScheme
   Box(
-    modifier = modifier
-      .fillMaxSize()
-      .padding(horizontal = 32.dp),
+    modifier = modifier.fillMaxSize().padding(horizontal = 32.dp),
     contentAlignment = Alignment.Center,
   ) {
     Column(
@@ -335,7 +349,7 @@ private fun EmptyCatalogs(modifier: Modifier = Modifier) {
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       ShapedIcon(
-        icon = VoiceIcons.LibraryBooks,
+        icon = UiR.drawable.ic_library_books,
         shape = MaterialShapes.Pentagon,
         containerColor = colors.secondaryContainer,
         contentColor = colors.onSecondaryContainer,
@@ -365,10 +379,21 @@ private fun EmptyCatalogs(modifier: Modifier = Modifier) {
 private fun OpdsCatalogsPreview() {
   VoiceTheme {
     OpdsCatalogsScreen(
-      catalogs = listOf(
-        CatalogViewState(id = "1", name = "Calibre-Web", address = "books.example.com/opds", type = CatalogType.Opds),
-        CatalogViewState(id = "2", name = "Comics", address = "komga.example.com", type = CatalogType.Komga),
-      ),
+      catalogs =
+        listOf(
+          CatalogViewState(
+            id = "1",
+            name = "Calibre-Web",
+            address = "books.example.com/opds",
+            type = CatalogType.Opds,
+          ),
+          CatalogViewState(
+            id = "2",
+            name = "Comics",
+            address = "komga.example.com",
+            type = CatalogType.Komga,
+          ),
+        ),
       onBack = {},
       onAdd = {},
       onOpen = {},

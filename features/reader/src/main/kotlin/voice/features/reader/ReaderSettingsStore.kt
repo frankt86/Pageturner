@@ -6,11 +6,14 @@ import androidx.datastore.core.DataStore
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import java.io.File
 import voice.core.data.ReaderSettings
 import voice.core.datastore.VoiceDataStoreFactory
-import java.io.File
 
-/** How the ebook reader shows the pages: text, colors, brightness and turning pages with the volume keys. */
+/**
+ * How the ebook reader shows the pages: text, colors, brightness and turning pages with the volume
+ * keys.
+ */
 @SingleIn(AppScope::class)
 class ReaderSettingsStore(store: DataStore<ReaderSettings>) : DataStore<ReaderSettings> by store {
 

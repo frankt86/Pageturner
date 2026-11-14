@@ -58,6 +58,7 @@
     <string name="audiobookshelf.status.needs_login">Der Server möchte, dass Du Dich erneut anmeldest</string>
     <string name="audiobookshelf.status.offline">Der Server ist gerade nicht erreichbar. Heruntergeladene Bücher kannst Du trotzdem hören.</string>
     <string name="audiobookshelf.status.syncing">Wird synchronisiert…</string>
+    <string name="author.wikipedia">Mehr auf Wikipedia lesen</string>
     <string name="book.category.action.mark_completed">Als „Abgeschlossen“ markieren</string>
     <string name="book.category.action.mark_current">Als „Aktuell“ markieren</string>
     <string name="book.category.action.mark_not_started">Als „Neu“ markieren</string>
@@ -82,8 +83,11 @@
     <string name="book.edit.server.failed">Speichern auf Deinem Server hat nicht geklappt. Versuche es noch einmal.</string>
     <string name="book.edit.server.not_allowed">Dein Konto auf dem Server darf keine Bücher ändern.</string>
     <string name="book.edit.title.label">Titel</string>
+    <string name="book.hide">Aus der Bibliothek ausblenden</string>
     <string name="book.remove_from_library">Aus der Bibliothek entfernen</string>
     <string name="book.remove_from_library.summary">Die Datei bleibt auf Deinem Gerät</string>
+    <string name="book.select">Auswählen</string>
+    <string name="book.show">In der Bibliothek anzeigen</string>
     <string name="book.source.device">Auf diesem Gerät</string>
     <string name="book.source.server_downloaded">%s · heruntergeladen</string>
     <string name="bookmark.action.add_note">Notiz hinzufügen</string>
@@ -154,8 +158,13 @@
     <string name="folder.add.action.file">Stattdessen eine einzelne Datei hinzufügen</string>
     <string name="folder.add.action.folder">Ordner auswählen</string>
     <string name="folder.add.action.opds">Aus einem Katalog herunterladen</string>
+    <string name="folder.add.help.answer.no_files">Noch keine Hörbücher</string>
+    <string name="folder.add.help.answer.not_found">Ich finde sie nicht</string>
+    <string name="folder.add.help.answer.other_app">In einer anderen App</string>
     <string name="folder.add.help.computer">Bücher noch auf Deinem Computer? Kopiere sie zuerst auf Dein Handy, zum Beispiel in den Ordner Audiobooks oder Documents.</string>
     <string name="folder.add.help.download">Android erlaubt Apps nicht, den Ordner Download selbst zu öffnen. Wähle einen Ordner darin.</string>
+    <string name="folder.add.help.no_files">Pageturner spielt Hörbuchdateien auf Deinem Handy ab. Bei LibriVox kannst Du Tausende kostenlose Hörbücher herunterladen.</string>
+    <string name="folder.add.help.other_app">Bücher aus Apps wie Audible oder Spotify lassen sich nur dort abspielen. Pageturner spielt Hörbuchdateien wie MP3 oder M4B ab.</string>
     <string name="folder.add.help.title">Deine Bücher nicht gefunden?</string>
     <string name="folder.add.no_picker.message">Pageturner öffnet Deine Bücher über die Dateiauswahl von Android. Ohne sie kann Pageturner weder Ordner noch Dateien öffnen.</string>
     <string name="folder.add.no_picker.title">Dieses Gerät hat keine Dateiauswahl</string>
@@ -231,8 +240,14 @@
     <string name="history.source.unplugged">Audio getrennt</string>
     <string name="history.source.watch">Smartwatch</string>
     <string name="history.source.widget">Widget</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d Reihe</item>
+        <item quantity="other">%d Reihen</item>
+    </plurals>
     <string name="library.book.downloading">Wird heruntergeladen</string>
     <string name="library.book.ebook">E-Book</string>
+    <string name="library.book.hidden">Ausgeblendet</string>
+    <string name="library.book.hidden.message">%1$s ist ausgeblendet</string>
     <string name="library.book.offline">Offline nicht verfügbar</string>
     <string name="library.category.completed.title">Abgeschlossen</string>
     <string name="library.category.current.title">Aktuell</string>
@@ -243,9 +258,16 @@
     <string name="library.empty.title">Keine Bücher gefunden</string>
     <string name="library.empty.message">Pageturner findet in Deinen Ordnern keine Bücher. Prüfe, ob die Dateien noch da sind, oder füge einen Ordner hinzu.</string>
     <string name="library.empty.action">Ordner anzeigen</string>
-    <string name="library.folders.title">Bücherordner</string>
-    <string name="library.folders.moved.dialog.title">Bücherordner verschoben</string>
+    <string name="library.filter">Filter</string>
+    <string name="library.filter.group_by">Gruppieren nach</string>
+    <string name="library.filter.group_by.author">Autor</string>
+    <string name="library.filter.group_by.series">Reihe</string>
+    <string name="library.filter.hidden_books">Ausgeblendete Bücher</string>
+    <string name="library.filter.not_downloaded">Nicht heruntergeladen</string>
+    <string name="library.filter.show">Anzeigen</string>
     <string name="library.folders.moved.dialog.message">Du kannst Bücherordner jetzt in den Einstellungen verwalten.</string>
+    <string name="library.folders.moved.dialog.title">Bücherordner verschoben</string>
+    <string name="library.folders.title">Bücherordner</string>
     <string name="library.folders.no_access">Kein Zugriff</string>
     <string name="library.folders.no_access.action">Zugriff erlauben</string>
     <string name="library.folders.no_access.badge">Zugriff auf Deine Ordner wieder erlauben</string>
@@ -257,6 +279,11 @@
         <item quantity="one">%d angefangenes Buch</item>
         <item quantity="other">%d angefangene Bücher</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d ausgeblendetes Buch</item>
+        <item quantity="other">%d ausgeblendete Bücher</item>
+    </plurals>
+    <string name="library.no_author">Ohne Autor</string>
     <string name="library.search.browse.title">Stöbern</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d Buch</item>
@@ -288,6 +315,30 @@
     <string name="library.search.recent.clear_all">Alle löschen</string>
     <string name="library.search.recent.remove">%s entfernen</string>
     <string name="library.search.recent.title">Zuletzt gesucht</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">Autor für %d Buch festgelegt</item>
+        <item quantity="other">Autor für %d Bücher festgelegt</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d ausgewählt</item>
+        <item quantity="other">%d ausgewählt</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d Buch ist ausgeblendet</item>
+        <item quantity="other">%d Bücher sind ausgeblendet</item>
+    </plurals>
+    <string name="library.selection.hide">Ausblenden</string>
+    <string name="library.selection.select_all">Alle auswählen</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">Reihe für %d Buch festgelegt</item>
+        <item quantity="other">Reihe für %d Bücher festgelegt</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">%d Buch konnte nicht auf Deinem Server gespeichert werden</item>
+        <item quantity="other">%d Bücher konnten nicht auf Deinem Server gespeichert werden</item>
+    </plurals>
+    <string name="library.selection.show">Anzeigen</string>
+    <string name="library.series.hidden.message">%1$s ist ausgeblendet</string>
     <string name="library.storage_permission_bug.action">Berechtigung erteilen</string>
     <string name="library.storage_permission_bug.message">Auf manchen Geräten fehlt einer System-App die nötige Berechtigung für den externen Speicher. Pageturner braucht diesen Zugriff, um Deine Hörbücher zu lesen.</string>
     <string name="library.storage_permission_bug.title">Berechtigung benötigt</string>
@@ -575,6 +626,16 @@
     <string name="reader.word_spacing">Wortabstand</string>
     <string name="series.continue">Weiterhören</string>
     <string name="series.continue_book">Buch %s weiterhören</string>
+    <string name="series.mark_completed">Als „Abgeschlossen“ markieren</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">Du verlierst Deine Stelle in %d Buch.</item>
+        <item quantity="other">Du verlierst Deine Stelle in %d Büchern.</item>
+    </plurals>
+    <string name="series.mark_not_started">Als „Neu“ markieren</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">Du verlierst Deinen Fortschritt in %d Buch.</item>
+        <item quantity="other">Du verlierst Deinen Fortschritt in %d Büchern.</item>
+    </plurals>
     <string name="series.start">Anhören</string>
     <string name="series.start_book">Buch %s anhören</string>
     <string name="settings.about.app_version.title">App-Version</string>

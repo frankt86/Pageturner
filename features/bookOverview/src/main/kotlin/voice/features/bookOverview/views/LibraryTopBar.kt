@@ -19,6 +19,7 @@ import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
@@ -36,26 +37,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
-import voice.core.ui.VoiceTheme
-import voice.core.ui.icons.VoiceIcons
-import voice.features.bookOverview.search.searchBarSharedBounds
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.delay
 import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
+import voice.core.ui.VoiceTheme
+import voice.features.bookOverview.search.searchBarSharedBounds
 
 @Composable
 internal fun LibraryTopBar(
   showSearch: Boolean,
   showFolderPickerIcon: Boolean,
   showFolderAccessBadge: Boolean,
+  showFilter: Boolean,
   isLoading: Boolean,
   scrollBehavior: SearchBarScrollBehavior?,
   onSearchClick: () -> Unit,
   onBookFolderClick: () -> Unit,
+  onFilterClick: () -> Unit,
   onSettingsClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -82,22 +86,32 @@ internal fun LibraryTopBar(
         if (showFolderPickerIcon) {
           BookFolderIcon(onClick = onBookFolderClick)
         }
-        SettingsIcon(showFolderAccessBadge = showFolderAccessBadge, onSettingsClick = onSettingsClick)
+        if (showFilter) {
+          IconButton(onClick = onFilterClick) {
+            Icon(
+              painter = painterResource(UiR.drawable.ic_sort),
+              contentDescription = stringResource(StringsR.string.library_filter),
+            )
+          }
+        }
+        SettingsIcon(
+          showFolderAccessBadge = showFolderAccessBadge,
+          onSettingsClick = onSettingsClick,
+        )
       },
       // the pill draws its own container, so it can grow into the search field
-      colors = SearchBarDefaults.appBarWithSearchColors(
-        searchBarColors = SearchBarDefaults.colors(containerColor = Color.Transparent),
-        scrolledSearchBarContainerColor = Color.Transparent,
-      ),
+      colors =
+        SearchBarDefaults.appBarWithSearchColors(
+          searchBarColors = SearchBarDefaults.colors(containerColor = Color.Transparent),
+          scrolledSearchBarContainerColor = Color.Transparent,
+        ),
       scrollBehavior = scrollBehavior,
     )
     // without books there's no pill to show the scan in. Drawn over the bar's bottom edge so it
     // doesn't push the library down.
     AnimatedVisibility(
       visible = showLoading && !showSearch,
-      modifier = Modifier
-        .matchParentSize()
-        .wrapContentHeight(Alignment.Bottom),
+      modifier = Modifier.matchParentSize().wrapContentHeight(Alignment.Bottom),
       enter = fadeIn(),
       exit = fadeOut(),
     ) {
@@ -115,10 +129,11 @@ private fun LibrarySearchPill(
   val shape = SearchBarDefaults.inputFieldShape
   Surface(
     onClick = onClick,
-    modifier = modifier
-      .searchBarSharedBounds(shape)
-      .fillMaxWidth()
-      .height(SearchBarDefaults.InputFieldHeight),
+    modifier =
+      modifier
+        .searchBarSharedBounds(shape)
+        .fillMaxWidth()
+        .height(SearchBarDefaults.InputFieldHeight),
     shape = shape,
     color = MaterialTheme.colorScheme.surfaceContainerHigh,
     contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -131,7 +146,7 @@ private fun LibrarySearchPill(
         if (showSpinner) {
           LoadingIndicator()
         } else {
-          Icon(imageVector = VoiceIcons.Search, contentDescription = null)
+          Icon(painter = painterResource(UiR.drawable.ic_search), contentDescription = null)
         }
       }
       Spacer(Modifier.width(16.dp))
@@ -153,10 +168,12 @@ private fun LibraryTopBarPreview() {
       showSearch = true,
       showFolderPickerIcon = true,
       showFolderAccessBadge = true,
+      showFilter = true,
       isLoading = false,
       scrollBehavior = null,
       onSearchClick = {},
       onBookFolderClick = {},
+      onFilterClick = {},
       onSettingsClick = {},
     )
   }

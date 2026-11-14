@@ -1,8 +1,8 @@
 package voice.features.settings
 
+import java.time.LocalTime
 import voice.core.ui.ThemeColorScheme
 import voice.core.ui.ThemeMode
-import java.time.LocalTime
 
 data class SettingsViewState(
   val themeMode: ThemeMode,

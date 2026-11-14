@@ -61,6 +61,7 @@
     <string name="audiobookshelf.status.needs_login">השרת מבקש שתיכנסו שוב</string>
     <string name="audiobookshelf.status.offline">אין כרגע חיבור לשרת. ספרים שהורדו ממשיכים להתנגן.</string>
     <string name="audiobookshelf.status.syncing">סנכרון…</string>
+    <string name="author.wikipedia">קריאה נוספת בוויקיפדיה</string>
     <string name="book.category.action.mark_completed">סימון כהושלם</string>
     <string name="book.category.action.mark_current">סימון כ\"בהאזנה\"</string>
     <string name="book.category.action.mark_not_started">סימון כ\"טרם הותחל\"</string>
@@ -85,8 +86,11 @@
     <string name="book.edit.server.failed">השמירה בשרת נכשלה. נסו שוב.</string>
     <string name="book.edit.server.not_allowed">לחשבון שלכם בשרת אין הרשאה לשנות ספרים.</string>
     <string name="book.edit.title.label">כותר</string>
+    <string name="book.hide">הסתרה מהספרייה</string>
     <string name="book.remove_from_library">הסרה מהספרייה</string>
     <string name="book.remove_from_library.summary">הקובץ נשאר במכשיר</string>
+    <string name="book.select">בחירה</string>
+    <string name="book.show">הצגה בספרייה</string>
     <string name="book.source.device">במכשיר הזה</string>
     <string name="book.source.server_downloaded">%s · ההורדה הושלמה</string>
     <string name="bookmark.action.add_note">הוספת הערה</string>
@@ -159,8 +163,13 @@
     <string name="folder.add.action.file">הוספת קובץ בודד במקום זאת</string>
     <string name="folder.add.action.folder">בחירת תיקייה</string>
     <string name="folder.add.action.opds">הורדה מקטלוג</string>
+    <string name="folder.add.help.answer.no_files">עדיין אין לי קולספרים</string>
+    <string name="folder.add.help.answer.not_found">לא מצאתי אותם</string>
+    <string name="folder.add.help.answer.other_app">הם באפליקציה אחרת</string>
     <string name="folder.add.help.computer">הספרים עדיין במחשב? העתיקו אותם לטלפון קודם, למשל לתיקיית Audiobooks או Documents.</string>
     <string name="folder.add.help.download">ב-Android, אפליקציות לא יכולות לפתוח את תיקיית Download עצמה. בחרו תיקייה שבתוכה.</string>
+    <string name="folder.add.help.no_files">עם Pageturner אפשר להאזין לקבצי קולספר שבטלפון שלכם. ב-LibriVox יש אלפי קולספרים להורדה בחינם.</string>
+    <string name="folder.add.help.other_app">ספרים מאפליקציות כמו Audible או Spotify מתנגנים רק באפליקציות האלה. Pageturner משמיעה קבצי קולספר, כמו MP3 או M4B.</string>
     <string name="folder.add.help.title">לא נמצאו הספרים שלכם?</string>
     <string name="folder.add.no_picker.message">הגישה של Pageturner לספרים שלכם עוברת דרך בוחר הקבצים של Android. בלעדיו, אי אפשר לפתוח ב-Pageturner תיקיות או קבצים.</string>
     <string name="folder.add.no_picker.title">אין במכשיר הזה בוחר קבצים</string>
@@ -244,8 +253,15 @@
     <string name="history.source.unplugged">השמע נותק</string>
     <string name="history.source.watch">שעון</string>
     <string name="history.source.widget">ווידג׳ט</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d סדרה</item>
+        <item quantity="two">%d סדרות</item>
+        <item quantity="other">%d סדרות</item>
+    </plurals>
     <string name="library.book.downloading">בהורדה</string>
     <string name="library.book.ebook">ספר דיגיטלי</string>
+    <string name="library.book.hidden">מוסתר</string>
+    <string name="library.book.hidden.message">הספר %1$s הוסתר</string>
     <string name="library.book.offline">לא זמין אופליין</string>
     <string name="library.category.completed.title">הושלמו</string>
     <string name="library.category.current.title">בהאזנה</string>
@@ -256,9 +272,16 @@
     <string name="library.empty.title">לא נמצאו ספרים</string>
     <string name="library.empty.message">בתיקיות שלכם לא נמצאו ספרים. בדקו שהקבצים עדיין במקומם, או הוסיפו תיקייה.</string>
     <string name="library.empty.action">הצגת התיקיות</string>
-    <string name="library.folders.title">תיקיות ספרים</string>
-    <string name="library.folders.moved.dialog.title">תיקיות הספרים הועברו</string>
+    <string name="library.filter">סינון</string>
+    <string name="library.filter.group_by">קיבוץ לפי</string>
+    <string name="library.filter.group_by.author">מחבר</string>
+    <string name="library.filter.group_by.series">סדרה</string>
+    <string name="library.filter.hidden_books">ספרים מוסתרים</string>
+    <string name="library.filter.not_downloaded">לא הורדו</string>
+    <string name="library.filter.show">הצגה</string>
     <string name="library.folders.moved.dialog.message">כעת ניתן לנהל את תיקיות הספרים בהגדרות.</string>
+    <string name="library.folders.moved.dialog.title">תיקיות הספרים הועברו</string>
+    <string name="library.folders.title">תיקיות ספרים</string>
     <string name="library.folders.no_access">אין גישה</string>
     <string name="library.folders.no_access.action">מתן גישה</string>
     <string name="library.folders.no_access.badge">אפשרו שוב גישה לתיקיות שלכם</string>
@@ -271,6 +294,12 @@
         <item quantity="two">%d ספרים בהאזנה</item>
         <item quantity="other">%d ספרים בהאזנה</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d ספר מוסתר</item>
+        <item quantity="two">%d ספרים מוסתרים</item>
+        <item quantity="other">%d ספרים מוסתרים</item>
+    </plurals>
+    <string name="library.no_author">ללא מחבר</string>
     <string name="library.search.browse.title">עיון</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d ספר</item>
@@ -305,6 +334,35 @@
     <string name="library.search.recent.clear_all">ניקוי הכול</string>
     <string name="library.search.recent.remove">הסרת %s</string>
     <string name="library.search.recent.title">אחרונים</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">המחבר הוגדר ל-%d ספר</item>
+        <item quantity="two">המחבר הוגדר ל-%d ספרים</item>
+        <item quantity="other">המחבר הוגדר ל-%d ספרים</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d נבחר</item>
+        <item quantity="two">%d נבחרו</item>
+        <item quantity="other">%d נבחרו</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d ספר הוסתר</item>
+        <item quantity="two">%d ספרים הוסתרו</item>
+        <item quantity="other">%d ספרים הוסתרו</item>
+    </plurals>
+    <string name="library.selection.hide">הסתרה</string>
+    <string name="library.selection.select_all">בחירת הכול</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">הסדרה הוגדרה ל-%d ספר</item>
+        <item quantity="two">הסדרה הוגדרה ל-%d ספרים</item>
+        <item quantity="other">הסדרה הוגדרה ל-%d ספרים</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">שמירת %d ספר בשרת נכשלה</item>
+        <item quantity="two">שמירת %d ספרים בשרת נכשלה</item>
+        <item quantity="other">שמירת %d ספרים בשרת נכשלה</item>
+    </plurals>
+    <string name="library.selection.show">הצגה</string>
+    <string name="library.series.hidden.message">הסדרה %1$s הוסתרה</string>
     <string name="library.storage_permission_bug.action">הענקת הרשאה</string>
     <string name="library.storage_permission_bug.message">במכשירים מסוימים, לאפליקציית מערכת חסרה ההרשאה הנדרשת לגישה לאחסון החיצוני. גישה זו חיונית כדי ש-Pageturner יוכל לקרוא את הקולספרים שלכם.</string>
     <string name="library.storage_permission_bug.title">נדרשת הרשאה</string>
@@ -595,6 +653,18 @@
     <string name="reader.word_spacing">ריווח בין מילים</string>
     <string name="series.continue">המשך</string>
     <string name="series.continue_book">המשך האזנה לספר %s</string>
+    <string name="series.mark_completed">סימון כהושלמה</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">תאבדו את המקום שבו עצרתם ב-%d ספר.</item>
+        <item quantity="two">תאבדו את המקום שבו עצרתם ב-%d ספרים.</item>
+        <item quantity="other">תאבדו את המקום שבו עצרתם ב-%d ספרים.</item>
+    </plurals>
+    <string name="series.mark_not_started">סימון כ\"טרם הותחלה\"</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">תאבדו את ההתקדמות שלכם ב-%d ספר.</item>
+        <item quantity="two">תאבדו את ההתקדמות שלכם ב-%d ספרים.</item>
+        <item quantity="other">תאבדו את ההתקדמות שלכם ב-%d ספרים.</item>
+    </plurals>
     <string name="series.start">התחלה</string>
     <string name="series.start_book">התחלת ספר %s</string>
     <string name="settings.about.app_version.title">גרסת יישום</string>

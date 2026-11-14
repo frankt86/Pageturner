@@ -8,12 +8,17 @@ import kotlinx.serialization.builtins.serializer
 import voice.core.data.ReadingPace
 import voice.core.datastore.VoiceDataStoreFactory
 
-/** Whether reading aloud uses the downloaded natural voice instead of the phone's text-to-speech voice. */
+/**
+ * Whether reading aloud uses the downloaded natural voice instead of the phone's text-to-speech
+ * voice.
+ */
 @SingleIn(AppScope::class)
 class ReaderNaturalVoiceStore(store: DataStore<Boolean>) : DataStore<Boolean> by store {
 
   @Inject
-  constructor(factory: VoiceDataStoreFactory) : this(
+  constructor(
+    factory: VoiceDataStoreFactory,
+  ) : this(
     factory.boolean("readerNaturalVoice", defaultValue = true),
   )
 }
@@ -23,7 +28,9 @@ class ReaderNaturalVoiceStore(store: DataStore<Boolean>) : DataStore<Boolean> by
 class ReaderNaturalSpeakerStore(store: DataStore<Int>) : DataStore<Int> by store {
 
   @Inject
-  constructor(factory: VoiceDataStoreFactory) : this(
+  constructor(
+    factory: VoiceDataStoreFactory,
+  ) : this(
     factory.int("readerNaturalSpeaker", defaultValue = -1),
   )
 }
@@ -33,7 +40,9 @@ class ReaderNaturalSpeakerStore(store: DataStore<Int>) : DataStore<Int> by store
 class ReaderSpeechRateStore(store: DataStore<Float>) : DataStore<Float> by store {
 
   @Inject
-  constructor(factory: VoiceDataStoreFactory) : this(
+  constructor(
+    factory: VoiceDataStoreFactory,
+  ) : this(
     factory.create(
       serializer = Float.serializer(),
       defaultValue = 1F,
@@ -47,7 +56,9 @@ class ReaderSpeechRateStore(store: DataStore<Float>) : DataStore<Float> by store
 class ReadingPaceStore(store: DataStore<ReadingPace>) : DataStore<ReadingPace> by store {
 
   @Inject
-  constructor(factory: VoiceDataStoreFactory) : this(
+  constructor(
+    factory: VoiceDataStoreFactory,
+  ) : this(
     factory.create(
       serializer = ReadingPace.serializer(),
       defaultValue = ReadingPace(),

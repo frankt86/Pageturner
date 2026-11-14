@@ -2,11 +2,14 @@ package voice.features.bookOverview.overview
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.State
+import voice.core.data.BookCategory
 import voice.core.data.BookId
+import voice.features.bookOverview.select.SelectionEditViewState
+import voice.features.bookOverview.select.SelectionViewState
 
 @Immutable
 data class BookOverviewViewState(
-  val sections: Map<BookOverviewCategory, List<LibraryItem>>,
+  val sections: Map<BookCategory, List<LibraryItem>>,
   val hero: State<BookOverviewItemViewState>?,
   val inProgressCount: Int,
   val currentBookId: BookId?,
@@ -19,26 +22,43 @@ data class BookOverviewViewState(
   val showFolderAccessBadge: Boolean,
   val showFolderPickerIcon: Boolean,
   val dialog: Dialog?,
+  val hiddenBookCount: Int = 0,
+  val showHiddenBooks: Boolean = false,
+  val notDownloadedBookCount: Int = 0,
+  val showNotDownloadedBooks: Boolean = true,
+  val sources: List<LibrarySourceViewState> = emptyList(),
+  val grouping: LibraryGrouping = LibraryGrouping.Series,
+  val showFilterIcon: Boolean = false,
+  val selection: SelectionViewState? = null,
+  val selectionEdit: SelectionEditViewState? = null,
   /** The book in the Continue card: the current audiobook, or an ebook read since it was played. */
   val heroBookId: BookId? = currentBookId,
 ) {
 
+  // a switch only shows once it has something to filter, so a library without it stays as it was
+  val showHiddenBooksSwitch: Boolean
+    get() = hiddenBookCount > 0 || showHiddenBooks
+
+  val showNotDownloadedBooksSwitch: Boolean
+    get() = notDownloadedBookCount > 0
+
   companion object {
-    val Loading = BookOverviewViewState(
-      sections = mapOf(),
-      hero = null,
-      inProgressCount = 0,
-      currentBookId = null,
-      layoutMode = BookOverviewLayoutMode.List,
-      playButtonState = null,
-      showEmptyLibrary = false,
-      showSearchIcon = false,
-      isLoading = true,
-      showStoragePermissionBugCard = false,
-      showFolderAccessBadge = false,
-      showFolderPickerIcon = true,
-      dialog = null,
-    )
+    val Loading =
+      BookOverviewViewState(
+        sections = mapOf(),
+        hero = null,
+        inProgressCount = 0,
+        currentBookId = null,
+        layoutMode = BookOverviewLayoutMode.List,
+        playButtonState = null,
+        showEmptyLibrary = false,
+        showSearchIcon = false,
+        isLoading = true,
+        showStoragePermissionBugCard = false,
+        showFolderAccessBadge = false,
+        showFolderPickerIcon = true,
+        dialog = null,
+      )
   }
 
   enum class PlayButtonState {
@@ -52,6 +72,13 @@ data class BookOverviewViewState(
 }
 
 @Immutable
+data class LibrarySourceViewState(
+  val source: LibrarySource,
+  val name: String,
+  val shown: Boolean,
+)
+
+@Immutable
 sealed interface LibraryItem {
 
   val key: String
@@ -61,13 +88,22 @@ sealed interface LibraryItem {
     val id: BookId,
     val state: State<BookOverviewItemViewState>,
   ) : LibraryItem {
-    override val key: String get() = id.value
+    override val key: String
+      get() = id.value
   }
 
   @Immutable
   data class Series(val series: SeriesStackViewState) : LibraryItem {
     // a book id is a URI or starts with abs:, so this never clashes with one
-    override val key: String get() = "series:${series.key}"
+    override val key: String
+      get() = "series:${series.key}"
+  }
+
+  @Immutable
+  data class Author(val author: AuthorEntryViewState) : LibraryItem {
+    // an author can be in two sections
+    override val key: String
+      get() = "author:${author.category}:${author.key.orEmpty()}"
   }
 }
 
@@ -79,17 +115,46 @@ data class SeriesStackViewState(
   val covers: List<String?>,
   val bookCount: Int,
   val finishedCount: Int,
-  val progress: Float,
-  val category: BookOverviewCategory,
+  val progress: List<Float>,
+  val category: BookCategory,
+  val hidden: Boolean = false,
+  val bookIds: List<BookId> = emptyList(),
 )
 
-internal fun Series.toStackViewState() = SeriesStackViewState(
-  key = key,
-  name = name,
-  author = author,
-  covers = covers,
-  bookCount = books.size,
-  finishedCount = finishedCount,
-  progress = progress,
-  category = category,
+internal fun Series.toStackViewState() =
+  SeriesStackViewState(
+    key = key,
+    name = name,
+    author = author,
+    covers = covers,
+    bookCount = books.size,
+    finishedCount = finishedCount,
+    progress = progress,
+    category = category,
+    hidden = hidden,
+    bookIds = books.map { it.id },
+  )
+
+@Immutable
+data class AuthorEntryViewState(
+  val key: String?,
+  val name: String?,
+  val covers: List<String?>,
+  val seriesCount: Int,
+  val bookCount: Int,
+  val category: BookCategory,
+  val hidden: Boolean = false,
+  val bookIds: List<BookId> = emptyList(),
 )
+
+internal fun AuthorGroup.toEntryViewState(category: BookCategory) =
+  AuthorEntryViewState(
+    key = key,
+    name = name,
+    covers = covers,
+    seriesCount = seriesCount,
+    bookCount = books.size,
+    category = category,
+    hidden = hidden,
+    bookIds = books.map { it.id },
+  )

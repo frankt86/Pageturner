@@ -24,18 +24,20 @@ object AddContentProvider {
 
   @Provides
   @IntoSet
-  fun addContentNavEntryProvider(): NavEntryProvider<*> = NavEntryProvider<Destination.AddContent> { key ->
-    NavEntry(key) {
-      AddContent(origin = key.origin)
+  fun addContentNavEntryProvider(): NavEntryProvider<*> =
+    NavEntryProvider<Destination.AddContent> { key ->
+      NavEntry(key) {
+        AddContent(origin = key.origin)
+      }
     }
-  }
 }
 
 @Composable
 fun AddContent(origin: Origin) {
-  val viewModel = retain(origin.name) {
-    rootGraphAs<AddContentGraph>().viewModelFactory.create(origin)
-  }
+  val viewModel =
+    retain(origin.name) {
+      rootGraphAs<AddContentGraph>().viewModelFactory.create(origin)
+    }
   SelectFolder(
     onBack = {
       viewModel.back()
@@ -45,7 +47,10 @@ fun AddContent(origin: Origin) {
       viewModel.add(uri, folderType)
     },
     onFolderPickerCancel = viewModel::onFolderPickerCancel,
-    onConnectAudiobookshelf = if (viewModel.canConnectAudiobookshelf) viewModel::connectAudiobookshelf else null,
+    onHelpAnswer = viewModel::onHelpAnswer,
+    onOpenLibriVox = viewModel::openLibriVox,
+    onConnectAudiobookshelf =
+      if (viewModel.canConnectAudiobookshelf) viewModel::connectAudiobookshelf else null,
     // the onboarding has no room for a detour through the catalogs
     onOpenCatalogs = if (origin == Origin.Default) viewModel::openCatalogs else null,
   )

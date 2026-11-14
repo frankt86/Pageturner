@@ -36,7 +36,8 @@ class DeleteBookViewModel(
   private val scope = MainScope(dispatcherProvider)
 
   private val _state = mutableStateOf<DeleteBookViewState?>(null)
-  internal val state: State<DeleteBookViewState?> get() = _state
+  internal val state: State<DeleteBookViewState?>
+    get() = _state
 
   override suspend fun items(bookId: BookId): List<BottomSheetItem> {
     // Voice never deletes files on a server
@@ -51,23 +52,24 @@ class DeleteBookViewModel(
     if (item != BottomSheetItem.DeleteBook) return
     val book = repo.get(bookId)
 
-    _state.value = DeleteBookViewState(
-      id = bookId,
-      name = book?.name,
-      cover = book?.coverUrl,
-      fileCount = book?.chapters?.size,
-      deleteCheckBoxChecked = false,
-      fileToDelete = bookId.toUri().pathSegments
-        .let { segments ->
-          val result = segments.lastOrNull()?.removePrefix("primary:")
-          if (result.isNullOrEmpty()) {
-            Logger.w("Could not determine the file name to show (${segments.size} segments)")
-            segments.joinToString(separator = "\"")
-          } else {
-            result
-          }
-        },
-    )
+    _state.value =
+      DeleteBookViewState(
+        id = bookId,
+        name = book?.name,
+        cover = book?.coverUrl,
+        fileCount = book?.chapters?.size,
+        deleteCheckBoxChecked = false,
+        fileToDelete =
+          bookId.toUri().pathSegments.let { segments ->
+            val result = segments.lastOrNull()?.removePrefix("primary:")
+            if (result.isNullOrEmpty()) {
+              Logger.w("Could not determine the file name to show (${segments.size} segments)")
+              segments.joinToString(separator = "\"")
+            } else {
+              result
+            }
+          },
+      )
   }
 
   internal fun onDismiss() {
@@ -83,16 +85,18 @@ class DeleteBookViewModel(
     if (state != null) {
       check(state.confirmButtonEnabled)
       scope.launch {
-        val deleted = withContext(dispatcherProvider.io) {
-          val uri = state.id.toUri()
-          // a book downloaded from a catalog is a folder in the app's own storage
-          val file = if (uri.scheme == ContentResolver.SCHEME_FILE) {
-            DocumentFile.fromFile(uri.toFile())
-          } else {
-            DocumentFile.fromSingleUri(application, uri)
+        val deleted =
+          withContext(dispatcherProvider.io) {
+            val uri = state.id.toUri()
+            // a book downloaded from a catalog is a folder in the app's own storage
+            val file =
+              if (uri.scheme == ContentResolver.SCHEME_FILE) {
+                DocumentFile.fromFile(uri.toFile())
+              } else {
+                DocumentFile.fromSingleUri(application, uri)
+              }
+            file?.delete() == true
           }
-          file?.delete() == true
-        }
         if (deleted) {
           // the player of a deleted book would be left without a book
           navigator.remove(Destination.Playback(state.id))

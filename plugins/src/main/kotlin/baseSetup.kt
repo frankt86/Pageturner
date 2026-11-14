@@ -16,7 +16,10 @@ import org.jetbrains.kotlin.powerassert.gradle.PowerAssertGradleExtension
 
 fun Project.baseSetup() {
   val project = this
-  val libs: VersionCatalog = extensions.getByType(VersionCatalogsExtension::class.java).named("libs")
+  val libs: VersionCatalog =
+    extensions.getByType(VersionCatalogsExtension::class.java).named("libs")
+  pluginManager.apply("dev.zacsweers.metro")
+  pluginManager.apply("org.jetbrains.kotlin.plugin.serialization")
   configurePowerAssert(libs)
 
   val jvmBytecodeVersion = libs.findVersion("jvm-bytecode").get().requiredVersion.toInt()
@@ -37,11 +40,14 @@ fun Project.baseSetup() {
           "kotlinx.coroutines.FlowPreview",
         ),
       )
-      allWarningsAsErrors.set(providers.gradleProperty("voice.warningsAsErrors").map(String::toBooleanStrict))
+      allWarningsAsErrors.set(
+        providers.gradleProperty("voice.warningsAsErrors").map(String::toBooleanStrict),
+      )
     }
   }
   tasks.withType(Test::class.java).configureEach {
-    // run tests in parallel https://docs.gradle.org/current/userguide/performance.html#a_run_tests_in_parallel
+    // run tests in parallel
+    // https://docs.gradle.org/current/userguide/performance.html#a_run_tests_in_parallel
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
   }
   extensions.configure<KotlinProjectExtension> {
@@ -75,6 +81,8 @@ fun Project.baseSetup() {
     add("implementation", platform(libs.findLibrary("firebase-bom").get()))
     add("implementation", libs.findLibrary("coroutines.core").get())
     add("implementation", libs.findLibrary("coroutines.android").get())
+    add("implementation", libs.findLibrary("androidxCore").get())
+    add("implementation", libs.findLibrary("serialization.json").get())
     if (project.path != ":core:logging:api") {
       add("implementation", project(":core:logging:api"))
     }

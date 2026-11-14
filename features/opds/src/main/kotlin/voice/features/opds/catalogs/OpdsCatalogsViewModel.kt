@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.Inject
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.launch
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
@@ -20,7 +21,6 @@ import voice.features.opds.folder.DownloadFolderChooser
 import voice.features.opds.folder.DownloadFolderSheetState
 import voice.navigation.Destination
 import voice.navigation.Navigator
-import kotlin.uuid.Uuid
 
 @Inject
 class OpdsCatalogsViewModel(
@@ -51,11 +51,9 @@ class OpdsCatalogsViewModel(
   }
 
   /** The name of the folder downloads go to, or null while there's none. */
-  @Composable
-  internal fun downloadFolder(): String? = folderChooser.current()?.name
+  @Composable internal fun downloadFolder(): String? = folderChooser.current()?.name
 
-  @Composable
-  internal fun downloadFolderSheet(): DownloadFolderSheetState? = folderChooser.sheet()
+  @Composable internal fun downloadFolderSheet(): DownloadFolderSheetState? = folderChooser.sheet()
 
   internal fun onDownloadFolderClick() {
     folderChooser.show()
@@ -80,15 +78,16 @@ class OpdsCatalogsViewModel(
   internal fun onEdit(id: String) {
     scope.launch {
       val catalog = catalogs.catalog(id) ?: return@launch
-      editor = CatalogEditorState(
-        id = catalog.id,
-        name = catalog.name,
-        url = catalog.url,
-        type = catalog.type,
-        username = catalog.username.orEmpty(),
-        password = catalog.password.orEmpty(),
-        syncProgress = catalog.syncProgress,
-      )
+      editor =
+        CatalogEditorState(
+          id = catalog.id,
+          name = catalog.name,
+          url = catalog.url,
+          type = catalog.type,
+          username = catalog.username.orEmpty(),
+          password = catalog.password.orEmpty(),
+          syncProgress = catalog.syncProgress,
+        )
     }
   }
 
@@ -106,25 +105,28 @@ class OpdsCatalogsViewModel(
     if (state.busy || !state.canSave) return
     editor = state.copy(busy = true, error = null)
     scope.launch {
-      val result = catalogs.save(
-        OpdsCatalog(
-          id = state.id ?: Uuid.random().toString(),
-          name = state.name,
-          url = state.url,
-          type = state.type,
-          username = state.username,
-          password = state.password,
-          syncProgress = state.syncProgress,
-        ),
-      )
+      val result =
+        catalogs.save(
+          OpdsCatalog(
+            id = state.id ?: Uuid.random().toString(),
+            name = state.name,
+            url = state.url,
+            type = state.type,
+            username = state.username,
+            password = state.password,
+            syncProgress = state.syncProgress,
+          ),
+        )
       // closed while the catalog was checked
       val current = editor ?: return@launch
-      editor = when (result) {
-        is FeedResult.Success -> null
-        FeedResult.WrongCredentials -> current.copy(busy = false, error = CatalogError.WrongCredentials)
-        FeedResult.Unreachable -> current.copy(busy = false, error = CatalogError.Unreachable)
-        FeedResult.NotACatalog -> current.copy(busy = false, error = CatalogError.NotACatalog)
-      }
+      editor =
+        when (result) {
+          is FeedResult.Success -> null
+          FeedResult.WrongCredentials ->
+            current.copy(busy = false, error = CatalogError.WrongCredentials)
+          FeedResult.Unreachable -> current.copy(busy = false, error = CatalogError.Unreachable)
+          FeedResult.NotACatalog -> current.copy(busy = false, error = CatalogError.NotACatalog)
+        }
     }
   }
 
@@ -164,7 +166,8 @@ internal data class CatalogEditorState(
   val busy: Boolean = false,
   val error: CatalogError? = null,
 ) {
-  val canSave: Boolean get() = url.isNotBlank()
+  val canSave: Boolean
+    get() = url.isNotBlank()
 }
 
 internal enum class CatalogError {

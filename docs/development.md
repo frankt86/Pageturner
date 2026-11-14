@@ -53,28 +53,34 @@ ANDROID_SERIAL=<serial from adb devices> .agents/skills/emulator/scripts/ui.py o
 
 Agents use this through the emulator skill in `.agents/skills/emulator`, which also gives every agent its own emulator.
 
-## Ktlint
+## Formatting
 
-Pageturner uses **Ktlint** to enforce consistent code formatting.
+Pageturner formats Kotlin with **ktfmt** in its Google style, through Spotless.
 
 - Check for formatting issues:
 
 ```sh
-./gradlew lintKotlin
+./gradlew spotlessCheck
 ```
 
 - Auto-fix formatting:
 
 ```sh
-./gradlew formatKotlin
+./gradlew spotlessApply
 ```
 
-- To make commits fail on formatting errors, set up a pre-commit hook:
+- To format from Android Studio, install the [ktfmt plugin](https://plugins.jetbrains.com/plugin/14912-ktfmt) and choose
+  "Enable for This Project" when it asks. It picks up the project's settings from `.idea/ktfmt.xml`.
+
+- To check the formatting on every commit, turn on the pre-commit hook in `.githooks`. When the check fails, it formats
+  the code and stops the commit, so you can stage the changes and commit again. Claude Code sessions turn it on for you.
+  Otherwise, run this once per clone, it covers all worktrees:
 
 ```sh
-echo "./gradlew lintKotlin" > .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit
+git config core.hooksPath .githooks
 ```
+
+Compose rules come from Slack's [compose-lints](https://slackhq.github.io/compose-lints/) and run as part of Android Lint.
 
 ## Releasing
 
@@ -116,8 +122,7 @@ days later, and IzzyDroid picks up the APK from the published release. Neither h
 draft only once the Play rollout has reached 100%.
 
 A version that turns out broken on Play is never published. Keep its draft until the next release is published: the
-next version is counted from the tags and the drafts, so deleting it earlier hands its version code out again, which
-Play rejects.
+next version name is counted from the tags and the drafts, so deleting it earlier hands its version name out again.
 
 #### Checking on F-Droid
 
@@ -139,7 +144,7 @@ To send a build to testers, trigger the
 [Firebase App Distribution Workflow](https://github.com/frankt86/Pageturner/actions/workflows/firebase_app_distribution.yml)
 on the branch to test. Testers install the build through the Firebase App Tester app.
 
-The workflow builds a `playRelease` APK with the version code of the upcoming release and a version name suffixed
+The workflow builds a `playRelease` APK with a version code below the next release and a version name suffixed
 with the commit, then uploads it with the Firebase CLI. It notifies the `beta-testers` group by default; clear the
 `groups` input to only upload.
 The APK is signed with the GitHub key, which is the app signing key Google Play re-signs with, so tester builds install
@@ -186,22 +191,30 @@ Pageturner, like Voice, uses [calendar versioning (CalVer)](https://calver.org/)
   - `M`: release month (1–12)
   - `RELEASE`: counter for releases within the same month (starting at 1)
 - Tag format (used by CI): `YY.M.RELEASE-CODE`
-  - `CODE` is the numeric Android versionCode derived from the version name using the formula below.
+  - `CODE` is the Android versionCode, see below.
 
 Examples:
 
-- First release in September 2025 → version name `25.9.1`
-- Tag includes version code → `25.9.1-5309001`
+- First release in December 2026 → version name `26.12.1`
+- Built on 2026-12-01 at 09:00 UTC → tag `26.12.1-5436263`
 
 ### Version code
 
-The Android `versionCode` is calculated from the version name with:
+The Android `versionCode` counts the minutes since 2026-11-13 20:00 UTC, starting at `5411003`:
 
-`CODE = (YY + 28)(MM as 2 digits)(RELEASE as 3 digits)`
+`CODE = 5411003 + minutes since 2026-11-13 20:00 UTC`
 
-Example: `25.9.1` → `(25+28)=53`, `MM=09`, `RELEASE=001` → `5309001`.
+So every build gets a higher code than all builds before it. Tester builds and Play internal uploads use the same
+formula, so each later release replaces them on Play. A deleted draft can't hand out its code again.
+`determine_release_tag.main.kts` refuses to run when the clock is before the start or after 2039, because a code from a
+wrong clock can't be taken back on Play.
+
+Before, the code came from the version name, like `5309001` for `25.9.1`. The last of those was `5411002`.
 
 This code is embedded in the git tag by `determine_release_tag.main.kts` and used by CI and Fastlane.
+
+Builds without `-Pvoice.versionCode` take the code of the newest release tag. So a local build installs over that
+release from Play, and Play replaces it with the next release.
 
 ## Pages Deployment
 

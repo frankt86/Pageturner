@@ -14,7 +14,9 @@ import voice.core.datastore.VoiceDataStoreFactory
 public enum class CatalogType {
   Opds,
 
-  /** A Komga server. Its catalog lives at a fixed path, and its own api syncs the reading progress. */
+  /**
+   * A Komga server. Its catalog lives at a fixed path, and its own api syncs the reading progress.
+   */
   Komga,
 }
 
@@ -22,7 +24,10 @@ public enum class CatalogType {
 public data class OpdsCatalog(
   val id: String,
   val name: String,
-  /** What the listener typed: the catalog for [CatalogType.Opds], the server for [CatalogType.Komga]. */
+  /**
+   * What the listener typed: the catalog for [CatalogType.Opds], the server for
+   * [CatalogType.Komga].
+   */
   val url: String,
   val type: CatalogType = CatalogType.Opds,
   val username: String? = null,
@@ -32,14 +37,15 @@ public data class OpdsCatalog(
 ) {
 
   val feedUrl: String
-    get() = when (type) {
-      CatalogType.Opds -> url
-      CatalogType.Komga -> url.trimEnd('/') + "/opds/v1.2/catalog"
-    }
+    get() =
+      when (type) {
+        CatalogType.Opds -> url
+        CatalogType.Komga -> url.trimEnd('/') + "/opds/v1.2/catalog"
+      }
 
   /**
-   * The Basic auth header for [requestUrl]. Only the catalog's own host gets the password, not the image hosts or
-   * download mirrors a feed may link to.
+   * The Basic auth header for [requestUrl]. Only the catalog's own host gets the password, not the
+   * image hosts or download mirrors a feed may link to.
    */
   public fun authorizationFor(requestUrl: String): String? {
     val user = username?.takeIf { it.isNotEmpty() } ?: return null
@@ -49,12 +55,18 @@ public data class OpdsCatalog(
   }
 }
 
-/** The catalogs the listener added. The passwords are kept like the Audiobookshelf login, in the app's own files. */
+/**
+ * The catalogs the listener added. The passwords are kept like the Audiobookshelf login, in the
+ * app's own files.
+ */
 @SingleIn(AppScope::class)
-public class OpdsCatalogStore(store: DataStore<List<OpdsCatalog>>) : DataStore<List<OpdsCatalog>> by store {
+public class OpdsCatalogStore(store: DataStore<List<OpdsCatalog>>) :
+  DataStore<List<OpdsCatalog>> by store {
 
   @Inject
-  public constructor(factory: VoiceDataStoreFactory) : this(
+  public constructor(
+    factory: VoiceDataStoreFactory,
+  ) : this(
     factory.create(
       serializer = ListSerializer(OpdsCatalog.serializer()),
       defaultValue = emptyList(),

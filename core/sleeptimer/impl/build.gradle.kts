@@ -1,6 +1,5 @@
 plugins {
   id("voice.library")
-  alias(libs.plugins.metro)
 }
 
 dependencies {
@@ -8,11 +7,9 @@ dependencies {
   implementation(projects.core.data.api)
   implementation(projects.core.datastore)
   implementation(projects.core.common)
-  implementation(projects.core.playback)
+  implementation(projects.core.playback.api)
   implementation(projects.core.initializer)
-  implementation(projects.core.logging.api)
   implementation(projects.core.analytics.api)
 
-  implementation(libs.androidxCore)
   implementation(libs.appCompat)
 }

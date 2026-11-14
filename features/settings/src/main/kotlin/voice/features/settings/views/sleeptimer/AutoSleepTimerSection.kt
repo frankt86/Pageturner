@@ -2,6 +2,7 @@
 
 package voice.features.settings.views.sleeptimer
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -36,28 +36,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.graphics.shapes.RoundedPolygon
+import java.time.LocalTime
+import voice.core.strings.R as StringsR
 import voice.core.ui.AuroraBackground
 import voice.core.ui.NightTheme
+import voice.core.ui.R as UiR
 import voice.core.ui.ShapedIcon
 import voice.core.ui.ThemeColorScheme
 import voice.core.ui.VoiceTheme
-import voice.core.ui.icons.VoiceIcons
 import voice.core.ui.rememberAnimationClock
 import voice.features.settings.SettingsViewState
-import voice.features.settings.views.IslandShape
 import voice.features.settings.views.IslandSwitchRow
 import voice.features.settings.views.TimePickerDialog
-import java.time.LocalTime
-import voice.core.strings.R as StringsR
 
-/** Turning it on turns the island into a night sky with twinkling stars, whatever the app's theme. */
+/**
+ * Turning it on turns the island into a night sky with twinkling stars, whatever the app's theme.
+ */
 @Composable
 internal fun AutoSleepTimerSection(
   viewState: SettingsViewState.AutoSleepTimerViewState,
@@ -70,16 +71,17 @@ internal fun AutoSleepTimerSection(
   val night = viewState.enabled
   NightTheme(themeColorScheme = themeColorScheme, night = night) {
     // read while drawing, so fading doesn't recompose everything with every frame
-    val skyAlpha = animateFloatAsState(
-      targetValue = if (night) 1F else 0F,
-      animationSpec = tween(durationMillis = 1200),
-      label = "skyAlpha",
-    )
+    val skyAlpha =
+      animateFloatAsState(
+        targetValue = if (night) 1F else 0F,
+        animationSpec = tween(durationMillis = 1200),
+        label = "skyAlpha",
+      )
     val showSky by remember { derivedStateOf { skyAlpha.value > 0F } }
     val clock = rememberAnimationClock(running = night)
     Surface(
       modifier = modifier.fillMaxWidth(),
-      shape = IslandShape,
+      shape = MaterialTheme.shapes.extraLargeIncreased,
       color = MaterialTheme.colorScheme.surfaceContainerHigh,
       contentColor = MaterialTheme.colorScheme.onSurface,
     ) {
@@ -88,9 +90,7 @@ internal fun AutoSleepTimerSection(
           AuroraBackground(
             clock = { clock.value },
             showStars = night,
-            modifier = Modifier
-              .matchParentSize()
-              .graphicsLayer { alpha = skyAlpha.value },
+            modifier = Modifier.matchParentSize().graphicsLayer { alpha = skyAlpha.value },
           )
         }
         Column(Modifier.padding(vertical = 12.dp)) {
@@ -102,7 +102,7 @@ internal fun AutoSleepTimerSection(
             onCheckedChange = onEnabledChange,
             leading = {
               ShapedIcon(
-                icon = VoiceIcons.Bedtime,
+                icon = UiR.drawable.ic_bedtime,
                 shape = MaterialShapes.Cookie7Sided,
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -125,7 +125,7 @@ internal fun AutoSleepTimerSection(
           ) {
             TimeTile(
               modifier = Modifier.weight(1F),
-              icon = VoiceIcons.Bedtime,
+              icon = UiR.drawable.ic_bedtime,
               shape = MaterialShapes.Circle,
               iconContainerColor = MaterialTheme.colorScheme.primaryContainer,
               iconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -136,7 +136,7 @@ internal fun AutoSleepTimerSection(
             )
             TimeTile(
               modifier = Modifier.weight(1F),
-              icon = VoiceIcons.LightMode,
+              icon = UiR.drawable.ic_light_mode,
               shape = MaterialShapes.Sunny,
               iconContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
               iconContentColor = MaterialTheme.colorScheme.onTertiaryContainer,
@@ -158,7 +158,7 @@ internal fun AutoSleepTimerSection(
 
 @Composable
 private fun TimeTile(
-  icon: ImageVector,
+  @DrawableRes icon: Int,
   shape: RoundedPolygon,
   iconContainerColor: Color,
   iconContentColor: Color,
@@ -169,23 +169,25 @@ private fun TimeTile(
   modifier: Modifier = Modifier,
 ) {
   var showTimePicker by remember { mutableStateOf(false) }
-  val alpha by animateFloatAsState(
-    targetValue = if (enabled) 1F else 0.5F,
-    label = "timeTileAlpha",
-  )
+  val alpha by
+    animateFloatAsState(
+      targetValue = if (enabled) 1F else 0.5F,
+      label = "timeTileAlpha",
+    )
   val timeFormatter = rememberLocalTimeFormatter()
   Column(
-    modifier = modifier
-      .graphicsLayer { this.alpha = alpha }
-      .clip(RoundedCornerShape(24.dp))
-      .background(MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.8F))
-      .clickable(
-        enabled = enabled,
-        onClickLabel = label,
-        role = Role.Button,
-        onClick = { showTimePicker = true },
-      )
-      .padding(16.dp),
+    modifier =
+      modifier
+        .graphicsLayer { this.alpha = alpha }
+        .clip(MaterialTheme.shapes.largeIncreased)
+        .background(MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.8F))
+        .clickable(
+          enabled = enabled,
+          onClickLabel = label,
+          role = Role.Button,
+          onClick = { showTimePicker = true },
+        )
+        .padding(16.dp),
   ) {
     ShapedIcon(
       icon = icon,
@@ -228,7 +230,7 @@ private fun ShakeHint() {
   ) {
     Icon(
       modifier = Modifier.size(20.dp),
-      imageVector = VoiceIcons.Vibration,
+      painter = painterResource(UiR.drawable.ic_vibration),
       contentDescription = null,
     )
     Text(

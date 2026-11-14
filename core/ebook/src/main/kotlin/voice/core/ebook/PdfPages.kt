@@ -15,9 +15,9 @@ import java.io.Closeable
 import java.io.IOException
 
 /**
- * The pages of an open PDF. Android's PdfRenderer opens most PDFs. It's a reduced PDFium, so the ones it refuses go
- * to a full PDFium, and whoever shows the pages doesn't need to know which one opened them.
- * Use it from one thread at a time.
+ * The pages of an open PDF. Android's PdfRenderer opens most PDFs. It's a reduced PDFium, so the
+ * ones it refuses go to a full PDFium, and whoever shows the pages doesn't need to know which one
+ * opened them. Use it from one thread at a time.
  */
 interface PdfPages : Closeable {
 
@@ -39,6 +39,7 @@ interface PdfPages : Closeable {
 
 /**
  * Opens the PDF at [uri], unlocked with [password] if it has one.
+ *
  * @throws PdfOpenException with the reason when no engine can open it.
  */
 fun openPdf(
@@ -47,17 +48,18 @@ fun openPdf(
   password: String? = null,
 ): PdfPages {
   // PdfRenderer only takes a password from Android 15 on
-  val rendererFailure = if (password == null || Build.VERSION.SDK_INT >= 35) {
-    val file = openFile(context, uri)
-    try {
-      return AndroidPdfPages(file, password)
-    } catch (e: Exception) {
-      file.close()
-      e
+  val rendererFailure =
+    if (password == null || Build.VERSION.SDK_INT >= 35) {
+      val file = openFile(context, uri)
+      try {
+        return AndroidPdfPages(file, password)
+      } catch (e: Exception) {
+        file.close()
+        e
+      }
+    } else {
+      null
     }
-  } else {
-    null
-  }
   val file = openFile(context, uri)
   try {
     return PdfiumPages(PdfiumCore(context).newDocument(file, password))
@@ -89,27 +91,30 @@ private class AndroidPdfPages(
   password: String?,
 ) : PdfPages {
 
-  private val renderer = if (password != null && Build.VERSION.SDK_INT >= 35) {
-    PdfRenderer(file, LoadParams.Builder().setPassword(password).build())
-  } else {
-    PdfRenderer(file)
-  }
+  private val renderer =
+    if (password != null && Build.VERSION.SDK_INT >= 35) {
+      PdfRenderer(file, LoadParams.Builder().setPassword(password).build())
+    } else {
+      PdfRenderer(file)
+    }
 
   override val pageCount: Int = renderer.pageCount
 
-  override fun aspectRatio(index: Int): Float = renderer.openPage(index).use { page ->
-    page.width.toFloat() / page.height.coerceAtLeast(1)
-  }
+  override fun aspectRatio(index: Int): Float =
+    renderer.openPage(index).use { page ->
+      page.width.toFloat() / page.height.coerceAtLeast(1)
+    }
 
   override fun render(
     index: Int,
     maxWidth: Int,
     maxHeight: Int,
-  ): Bitmap = renderer.openPage(index).use { page ->
-    pageBitmap(page.width, page.height, maxWidth, maxHeight).also { bitmap ->
-      page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+  ): Bitmap =
+    renderer.openPage(index).use { page ->
+      pageBitmap(page.width, page.height, maxWidth, maxHeight).also { bitmap ->
+        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+      }
     }
-  }
 
   override fun text(index: Int): String {
     if (Build.VERSION.SDK_INT < 35) return ""
@@ -130,7 +135,9 @@ private class PdfiumPages(private val document: PdfDocument) : PdfPages {
 
   // PDFium tells the sizes of all pages without opening them
   private val aspectRatios by lazy {
-    document.getPageSizes(POINTS_PER_INCH).map { size -> size.width.toFloat() / size.height.coerceAtLeast(1) }
+    document.getPageSizes(POINTS_PER_INCH).map { size ->
+      size.width.toFloat() / size.height.coerceAtLeast(1)
+    }
   }
 
   override fun aspectRatio(index: Int): Float = aspectRatios.getOrElse(index) { 1F }
@@ -140,9 +147,11 @@ private class PdfiumPages(private val document: PdfDocument) : PdfPages {
     maxWidth: Int,
     maxHeight: Int,
   ): Bitmap {
-    val page = document.openPage(index) ?: throw IOException("Page $index of the PDF couldn't be loaded")
+    val page =
+      document.openPage(index) ?: throw IOException("Page $index of the PDF couldn't be loaded")
     return page.use {
-      pageBitmap(page.getPageWidthPoint(), page.getPageHeightPoint(), maxWidth, maxHeight).also { bitmap ->
+      pageBitmap(page.getPageWidthPoint(), page.getPageHeightPoint(), maxWidth, maxHeight).also {
+        bitmap ->
         page.renderPageBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, renderAnnot = true)
       }
     }
@@ -164,21 +173,29 @@ private class PdfiumPages(private val document: PdfDocument) : PdfPages {
   }
 }
 
-/** A white bitmap of the largest size of a page of [width] by [height] that fits into [maxWidth] by [maxHeight]. */
+/**
+ * A white bitmap of the largest size of a page of [width] by [height] that fits into [maxWidth] by
+ * [maxHeight].
+ */
 private fun pageBitmap(
   width: Int,
   height: Int,
   maxWidth: Int,
   maxHeight: Int,
 ): Bitmap {
-  val scale = minOf(maxWidth.toFloat() / width.coerceAtLeast(1), maxHeight.toFloat() / height.coerceAtLeast(1))
+  val scale =
+    minOf(
+      maxWidth.toFloat() / width.coerceAtLeast(1),
+      maxHeight.toFloat() / height.coerceAtLeast(1),
+    )
   return createBitmap(
-    (width * scale).toInt().coerceAtLeast(1),
-    (height * scale).toInt().coerceAtLeast(1),
-  ).apply {
-    // PDFs expect paper underneath, a transparent page would show the dark theme through
-    eraseColor(Color.WHITE)
-  }
+      (width * scale).toInt().coerceAtLeast(1),
+      (height * scale).toInt().coerceAtLeast(1),
+    )
+    .apply {
+      // PDFs expect paper underneath, a transparent page would show the dark theme through
+      eraseColor(Color.WHITE)
+    }
 }
 
 private const val POINTS_PER_INCH = 72

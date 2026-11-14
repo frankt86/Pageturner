@@ -35,6 +35,7 @@
  */
 package voice.app
 
+import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.CubicBezierEasing
@@ -62,28 +63,25 @@ private val pathForAnimation =
     cubicTo(0.208333f, 0.82f, 0.25f, 1f, 1f, 1f)
   }
 
-@Suppress("ktlint:standard:property-naming")
 private const val DurationMedium1 = 250
 
-@Suppress("ktlint:standard:property-naming")
 private const val DurationMedium2 = 300
 
-@Suppress("ktlint:standard:property-naming")
 private const val DurationLong1 = 450
 
-@Suppress("ktlint:standard:property-naming")
 private const val DurationLong2 = 500
 private val EmphasizedEasing = PathEasing(pathForAnimation)
 private val EmphasizedAccelerateEasing = CubicBezierEasing(0.3f, 0f, 0.8f, 0.15f)
 
-val SharedXAxisEnterTransition: (Density) -> EnterTransition = {
+val SharedXAxisEnterTransition: (windowWidth: Int) -> EnterTransition = { windowWidth ->
   fadeIn(
     animationSpec = tween(durationMillis = DurationLong1, easing = EmphasizedEasing),
   ) +
     slideInHorizontally(
       animationSpec = tween(durationMillis = DurationLong2, easing = EmphasizedEasing),
     ) {
-      it / 2
+      // not the screen's own width: a screen that still loads has no width in its first frame
+      windowWidth / 2
     }
 }
 
@@ -107,7 +105,9 @@ val SharedZAxisEnterTransition =
     )
 
 val SharedZAxisExitTransition =
-  fadeOut(animationSpec = tween(durationMillis = DurationMedium1, easing = EmphasizedAccelerateEasing)) +
+  fadeOut(
+    animationSpec = tween(durationMillis = DurationMedium1, easing = EmphasizedAccelerateEasing),
+  ) +
     scaleOut(
       targetScale = 0.8f,
       transformOrigin = TransformOrigin(0.5f, 1f),
@@ -115,46 +115,71 @@ val SharedZAxisExitTransition =
     )
 
 /**
- * Library, search and player: the cover and play button fly between the screens as shared elements, so the
- * screens themselves only cross-fade. Scaling them as well makes the shared elements chase a moving
- * target and overshoot.
+ * Library, search and player: the cover and play button fly between the screens as shared elements,
+ * so the screens themselves only cross-fade. Scaling them as well makes the shared elements chase a
+ * moving target and overshoot.
  */
 val SharedElementFadeEnterTransition =
   fadeIn(animationSpec = tween(durationMillis = DurationLong1, easing = EmphasizedEasing))
 
 val SharedElementFadeExitTransition =
-  fadeOut(animationSpec = tween(durationMillis = DurationMedium1, easing = EmphasizedAccelerateEasing))
+  fadeOut(
+    animationSpec = tween(durationMillis = DurationMedium1, easing = EmphasizedAccelerateEasing),
+  )
+
+/** The player moves by itself while it's dragged down, in front of the library. */
+internal fun dragDownTransform(): ContentTransform =
+  ContentTransform(
+    targetContentEnter = EnterTransition.None,
+    initialContentExit = ExitTransition.None,
+    targetContentZIndex = -1F,
+  )
 
 internal fun Scene<*>.destination(): Destination.Compose? {
   return entries.lastOrNull()?.metadata?.get(DestinationMetadataKey)
 }
 
 /**
- * Library, search, series and player share the book covers, and the library's search pill grows into the search field.
+ * Library, search, series, author and player share the book covers, and the library's search pill
+ * grows into the search field.
  */
 internal fun isSharedElementTransition(
   initial: Destination.Compose?,
   target: Destination.Compose?,
 ): Boolean {
-  return initial != null && target != null && initial::class != target::class &&
-    initial.sharesElements() && target.sharesElements()
+  return initial != null &&
+    target != null &&
+    initial::class != target::class &&
+    initial.sharesElements() &&
+    target.sharesElements()
 }
 
 private fun Destination.Compose.sharesElements(): Boolean {
   return this == Destination.BookOverview ||
     this == Destination.LibrarySearch ||
     this is Destination.Series ||
+    this is Destination.Author ||
     this is Destination.Playback
 }
 
 /**
- * The library's Continue listening card can show a book of the series, and its cover would fly into the book's row.
- * The stack flies into the series instead.
+ * Only what the listener tapped flies from the library to a series or an author: the stack into the
+ * series, or the author's tile into their photo. The Continue listening card and Current can show
+ * books of the same series or author, and their covers would fly into its rows.
  */
 internal fun sharesCovers(
   initial: Scene<*>,
   target: Scene<*>,
 ): Boolean {
   val destinations = listOf(initial.destination(), target.destination())
-  return Destination.BookOverview !in destinations || destinations.none { it is Destination.Series }
+  return Destination.BookOverview !in destinations ||
+    destinations.none { it is Destination.Series || it is Destination.Author }
+}
+
+internal fun sharesSeriesCovers(
+  initial: Scene<*>,
+  target: Scene<*>,
+): Boolean {
+  val destinations = listOf(initial.destination(), target.destination())
+  return Destination.BookOverview !in destinations || destinations.none { it is Destination.Author }
 }

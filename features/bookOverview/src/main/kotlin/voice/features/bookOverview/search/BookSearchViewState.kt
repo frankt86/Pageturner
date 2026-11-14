@@ -1,9 +1,10 @@
 package voice.features.bookOverview.search
 
 import androidx.compose.runtime.Immutable
+import voice.core.data.BookCategory
 import voice.core.data.BookId
 import voice.core.search.BookSearchField
-import voice.features.bookOverview.overview.BookOverviewCategory
+import voice.features.bookOverview.overview.DownloadBadge
 
 @Immutable
 sealed interface BookSearchViewState {
@@ -39,9 +40,7 @@ sealed interface BookSearchViewState {
     val finishedCount: Int,
   )
 
-  /**
-   * A filter chip. [field] is null for the one that shows all results.
-   */
+  /** A filter chip. [field] is null for the one that shows all results. */
   data class Filter(
     val field: BookSearchField?,
     val count: Int,
@@ -62,11 +61,14 @@ data class SearchResultViewState(
   val title: HighlightedText,
   val author: HighlightedText?,
   val cover: String?,
-  val category: BookOverviewCategory,
+  val category: BookCategory,
   val progress: Float,
   val remainingTime: String,
   /** Why a book matched when it wasn't its title or author, e.g. its series. */
   val matchTag: MatchTag?,
+  val hidden: Boolean = false,
+  val unavailable: Boolean = false,
+  val download: DownloadBadge? = null,
   val isEbook: Boolean = false,
 )
 

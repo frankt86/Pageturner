@@ -9,10 +9,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -23,8 +21,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -40,17 +36,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import voice.core.ui.icons.VoiceIcons
-
-internal val IslandShape = RoundedCornerShape(32.dp)
+import voice.core.ui.R as UiR
 
 /** Content lines up with the title when it keeps [IslandContentPadding] to the island's edges. */
 @Composable
@@ -63,7 +55,7 @@ internal fun SettingsIsland(
 ) {
   Surface(
     modifier = modifier.fillMaxWidth(),
-    shape = IslandShape,
+    shape = MaterialTheme.shapes.extraLargeIncreased,
     color = containerColor,
     contentColor = contentColor,
   ) {
@@ -83,9 +75,7 @@ internal fun IslandTitle(
   modifier: Modifier = Modifier,
 ) {
   Text(
-    modifier = modifier
-      .padding(horizontal = IslandContentPadding)
-      .semantics { heading() },
+    modifier = modifier.padding(horizontal = IslandContentPadding).semantics { heading() },
     text = text,
     style = MaterialTheme.typography.titleLargeEmphasized,
   )
@@ -97,9 +87,7 @@ internal fun IslandLabel(
   modifier: Modifier = Modifier,
 ) {
   Text(
-    modifier = modifier
-      .padding(horizontal = IslandContentPadding)
-      .semantics { heading() },
+    modifier = modifier.padding(horizontal = IslandContentPadding).semantics { heading() },
     text = text,
     style = MaterialTheme.typography.labelLargeEmphasized,
   )
@@ -119,10 +107,11 @@ internal fun IslandRow(
   trailing: @Composable () -> Unit = { Chevron() },
 ) {
   IslandRowLayout(
-    modifier = modifier
-      .padding(horizontal = 12.dp)
-      .clip(RoundedCornerShape(24.dp))
-      .clickable(onClick = onClick),
+    modifier =
+      modifier
+        .padding(horizontal = 12.dp)
+        .clip(MaterialTheme.shapes.largeIncreased)
+        .clickable(onClick = onClick),
     title = title,
     titleStyle = MaterialTheme.typography.titleMedium,
     leading = leading,
@@ -143,10 +132,11 @@ internal fun IslandSwitchRow(
   titleStyle: TextStyle = MaterialTheme.typography.titleMedium,
 ) {
   IslandRowLayout(
-    modifier = modifier
-      .padding(horizontal = 12.dp)
-      .clip(RoundedCornerShape(24.dp))
-      .toggleable(value = checked, role = Role.Switch, onValueChange = onCheckedChange),
+    modifier =
+      modifier
+        .padding(horizontal = 12.dp)
+        .clip(MaterialTheme.shapes.largeIncreased)
+        .toggleable(value = checked, role = Role.Switch, onValueChange = onCheckedChange),
     title = title,
     titleStyle = titleStyle,
     leading = leading,
@@ -158,12 +148,13 @@ internal fun IslandSwitchRow(
         thumbContent = {
           AnimatedVisibility(
             visible = checked,
-            enter = scaleIn(spring(dampingRatio = 0.4F, stiffness = Spring.StiffnessMedium)) + fadeIn(),
+            enter =
+              scaleIn(spring(dampingRatio = 0.4F, stiffness = Spring.StiffnessMedium)) + fadeIn(),
             exit = scaleOut() + fadeOut(),
           ) {
             Icon(
               modifier = Modifier.size(16.dp),
-              imageVector = VoiceIcons.Check,
+              painter = painterResource(UiR.drawable.ic_check),
               contentDescription = null,
             )
           }
@@ -183,10 +174,8 @@ private fun IslandRowLayout(
   modifier: Modifier = Modifier,
 ) {
   Row(
-    modifier = modifier
-      .fillMaxWidth()
-      .heightIn(min = 72.dp)
-      .padding(horizontal = 12.dp, vertical = 8.dp),
+    modifier =
+      modifier.fillMaxWidth().heightIn(min = 72.dp).padding(horizontal = 12.dp, vertical = 8.dp),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(16.dp),
   ) {
@@ -214,10 +203,9 @@ private fun IslandRowLayout(
 
 @Composable
 internal fun Chevron(modifier: Modifier = Modifier) {
-  val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
   Icon(
-    modifier = modifier.graphicsLayer { scaleX = if (rtl) -1F else 1F },
-    imageVector = VoiceIcons.ChevronRight,
+    modifier = modifier,
+    painter = painterResource(UiR.drawable.ic_chevron_right),
     contentDescription = null,
   )
 }

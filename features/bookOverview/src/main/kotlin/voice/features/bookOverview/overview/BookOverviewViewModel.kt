@@ -5,6 +5,7 @@ import android.os.Build
 import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -16,24 +17,37 @@ import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlin.time.Instant
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import voice.core.audiobookshelf.ServerDownloads
 import voice.core.audiobookshelf.ServerLibrary
+import voice.core.audiobookshelf.download.BookDownloadState
 import voice.core.common.AppInfoProvider
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.Book
+import voice.core.data.BookCategory
 import voice.core.data.BookId
 import voice.core.data.Ebook
+import voice.core.data.category
 import voice.core.data.folders.AudiobookFolders
+import voice.core.data.folders.FolderType
+import voice.core.data.isRemote
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.CurrentBookStore
 import voice.core.data.store.EbooksStore
+import voice.core.documentfile.nameWithoutExtension
 import voice.core.kioskmode.DemoAudiobook
 import voice.core.kioskmode.KioskModeDemoData
 import voice.core.kioskmode.KioskModeFeatureFlag
+import voice.core.logging.api.Logger
 import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
 import voice.core.playback.LivePlaybackState
 import voice.core.playback.PlayerController
@@ -45,9 +59,18 @@ import voice.core.ui.GridCount
 import voice.core.ui.GridMode
 import voice.core.ui.GridModeStore
 import voice.features.bookOverview.di.BookOverviewScope
+import voice.features.bookOverview.editBook.nameSuggestions
+import voice.features.bookOverview.hideBook.BookHider
+import voice.features.bookOverview.hideBook.HiddenBooks
+import voice.features.bookOverview.select.BookField
+import voice.features.bookOverview.select.BookSelectionRequests
+import voice.features.bookOverview.select.BooksEdited
+import voice.features.bookOverview.select.SelectedBooksEditor
+import voice.features.bookOverview.select.SelectionEditViewState
+import voice.features.bookOverview.select.SelectionViewState
+import voice.features.bookOverview.select.of
 import voice.navigation.Destination
 import voice.navigation.Navigator
-import kotlin.time.Instant
 
 @SingleIn(BookOverviewScope::class)
 @Inject
@@ -65,17 +88,39 @@ class BookOverviewViewModel(
   private val appInfoProvider: AppInfoProvider,
   private val deviceHasStoragePermissionBug: DeviceHasStoragePermissionBug,
   private val folderPickerInSettingsFeatureFlag: FolderPickerInSettingsFeatureFlag,
-  private val experimentalPlaybackPersistenceFeatureFlag: ExperimentalPlaybackPersistenceFeatureFlag,
+  private val experimentalPlaybackPersistenceFeatureFlag:
+    ExperimentalPlaybackPersistenceFeatureFlag,
   private val kioskModeFeatureFlag: KioskModeFeatureFlag,
-  dispatcherProvider: DispatcherProvider,
+  private val dispatcherProvider: DispatcherProvider,
   private val serverLibrary: ServerLibrary,
   private val serverDownloads: ServerDownloads,
   private val audiobookFolders: AudiobookFolders,
   private val emptyLibraryTracker: EmptyLibraryTracker,
+  private val showHiddenBooksStore: ShowHiddenBooksStore,
+  private val libraryGroupingStore: LibraryGroupingStore,
+  private val showNotDownloadedBooksStore: ShowNotDownloadedBooksStore,
+  private val hiddenSourcesStore: HiddenSourcesStore,
+  private val bookHider: BookHider,
+  private val bookSelectionRequests: BookSelectionRequests,
+  private val selectedBooksEditor: SelectedBooksEditor,
 ) {
 
   private val scope = MainScope(dispatcherProvider)
   private var dialog by mutableStateOf<BookOverviewViewState.Dialog?>(null)
+  private var selection by mutableStateOf<Set<BookId>?>(null)
+  private var selectionEdit by mutableStateOf<SelectionEditViewState?>(null)
+
+  // the books on screen, so Select all takes what the listener sees
+  private var shownBookIds: Set<BookId> = emptySet()
+
+  internal val hiddenBooks: Flow<HiddenBooks>
+    get() = bookHider.hidden
+
+  internal val selectionRequests: Flow<List<BookId>>
+    get() = bookSelectionRequests.requests
+
+  internal val booksEdited: SharedFlow<BooksEdited>
+    field = MutableSharedFlow<BooksEdited>(extraBufferCapacity = 1)
 
   fun attach() {
     mediaScanner.scan()
@@ -87,137 +132,290 @@ class BookOverviewViewModel(
     val kioskMode = remember { kioskModeFeatureFlag.get() }
     if (kioskMode) return kioskModeState()
 
-    val playState = remember { playStateManager.playStateFlow }
-      .collectAsState(initial = PlayStateManager.PlayState.Paused).value
-    val hasStoragePermissionBug = remember { deviceHasStoragePermissionBug.hasBug }
-      .collectAsState().value
+    val playState = remember {
+      playStateManager.playStateFlow
+    }
+      .collectAsState(initial = PlayStateManager.PlayState.Paused)
+      .value
+    val hasStoragePermissionBug = remember {
+      deviceHasStoragePermissionBug.hasBug
+    }
+      .collectAsState()
+      .value
     // Everything shown on the first frame stays loading until known, so the library never shows a
     // half loaded state (e.g. no hero card, or top bar icons that disappear again).
-    val books = remember { repo.flow() }
-      .collectAsState(initial = null).value
-    val ebooks = remember { ebooksStore.data.map { ebooks -> ebooks.filter { it.available && !it.hidden } } }
-      .collectAsState(initial = null).value
-    val currentBook = remember { currentBookStoreDataStore.data.map(::CurrentBook) }
-      .collectAsState(initial = null).value
-    val scanning = remember { mediaScanner.scannerActive }
-      .collectAsState(initial = false).value
+    val library = remember { library() }.collectAsState(initial = null).value
+    val currentBook = remember {
+      currentBookStoreDataStore.data.map(::CurrentBook)
+    }
+      .collectAsState(initial = null)
+      .value
+    val scanning = remember { mediaScanner.scannerActive }.collectAsState(initial = false).value
     val syncing = remember { serverLibrary.syncing }.collectAsState(initial = false).value
     val scannerActive = scanning || syncing
-    val unavailableBooks = remember { serverLibrary.unavailableBooks }
-      .collectAsState(initial = emptySet()).value
-    val downloadStates = remember { serverDownloads.states }
-      .collectAsState(initial = emptyMap()).value
-    val folderPickerMovedDialogShown = remember { folderPickerMovedDialogShownStore.data }
-      .collectAsState(initial = null).value
-    val gridMode = remember { gridModeStore.data }
-      .collectAsState(initial = null).value
+    val serverStates = rememberServerBookStates(serverLibrary, serverDownloads)
+    val downloadStates = serverStates.downloads
+    val folderPickerMovedDialogShown = remember {
+      folderPickerMovedDialogShownStore.data
+    }
+      .collectAsState(initial = null)
+      .value
+    val gridMode = remember { gridModeStore.data }.collectAsState(initial = null).value
     val hasFoldersWithoutAccess = remember {
       audiobookFolders.withoutAccess().map { folders -> folders.values.any { it.isNotEmpty() } }
-    }.collectAsState(initial = null).value
-    if (books == null ||
-      ebooks == null ||
-      currentBook == null ||
-      folderPickerMovedDialogShown == null ||
-      gridMode == null ||
-      hasFoldersWithoutAccess == null
+    }
+      .collectAsState(initial = null)
+      .value
+    val ebooks = remember {
+      ebooksStore.data.map { ebooks -> ebooks.filter { it.available && !it.hidden } }
+    }
+      .collectAsState(initial = null)
+      .value
+    val showHiddenBooks = remember {
+      showHiddenBooksStore.data
+    }
+      .collectAsState(initial = null)
+      .value
+    val showNotDownloadedBooks = remember {
+      showNotDownloadedBooksStore.data
+    }
+      .collectAsState(initial = null)
+      .value
+    val grouping = remember { libraryGroupingStore.data }.collectAsState(initial = null).value
+    if (
+      library == null ||
+        currentBook == null ||
+        folderPickerMovedDialogShown == null ||
+        gridMode == null ||
+        hasFoldersWithoutAccess == null ||
+        ebooks == null ||
+        showHiddenBooks == null ||
+        showNotDownloadedBooks == null ||
+        grouping == null ||
+        // server books would pop in and out of the library while their downloads load
+        (downloadStates == null && library.books.any { it.id.isRemote })
     ) {
       return BookOverviewViewState.Loading
     }
+    // the current book stays, so the library keeps its controls while it plays
+    fun Book.notDownloaded() =
+      id.isRemote &&
+        id != currentBook.id &&
+        downloadStates?.get(id) !is BookDownloadState.Downloaded
+    fun Book.passesHiddenFilter() = showHiddenBooks || !custom.hidden
+    fun Book.passesNotDownloadedFilter() = showNotDownloadedBooks || !notDownloaded()
+    // each count is what its switch changes, with the other switch as it is
+    val hiddenBookCount =
+      library.shownBooks.count { it.custom.hidden && it.passesNotDownloadedFilter() }
+    val notDownloadedBookCount =
+      library.shownBooks.count { it.notDownloaded() && it.passesHiddenFilter() }
+    val books =
+      remember(
+        library,
+        downloadStates,
+        currentBook,
+        showHiddenBooks,
+        showNotDownloadedBooks,
+      ) {
+        library.shownBooks.filter { it.passesHiddenFilter() && it.passesNotDownloadedFilter() }
+      }
     // a deleted book can stay the current one
     val currentBookId = currentBook.id?.takeIf { id -> books.any { it.id == id } }
     val heroBookId = heroBookId(books, ebooks, currentBookId)
+    val bookIds = remember(books) { books.mapTo(mutableSetOf()) { it.id } }
+    SideEffect { shownBookIds = bookIds }
+    // books that leave the library, like hidden ones, leave the selection too, so they don't come
+    // back selected
+    val selected = selection?.intersect(bookIds)?.takeIf { it.isNotEmpty() }
+    LaunchedEffect(bookIds, selection) {
+      selection = selection?.intersect(bookIds)?.takeIf { it.isNotEmpty() }
+    }
 
-    val showEmptyLibrary = !hasStoragePermissionBug && !scannerActive && books.isEmpty() && ebooks.isEmpty()
+    // with every book hidden, the folders still have books, so there's nothing to add
+    val showEmptyLibrary =
+      !hasStoragePermissionBug && !scannerActive && library.books.isEmpty() && ebooks.isEmpty()
     LaunchedEffect(showEmptyLibrary) {
       if (showEmptyLibrary) emptyLibraryTracker.track()
     }
 
-    val layoutMode = when (gridMode) {
-      GridMode.LIST -> BookOverviewLayoutMode.List
-      GridMode.GRID -> BookOverviewLayoutMode.Grid
-      GridMode.FOLLOW_DEVICE -> if (gridCount.useGridAsDefault()) {
-        BookOverviewLayoutMode.Grid
-      } else {
-        BookOverviewLayoutMode.List
+    val layoutMode =
+      when (gridMode) {
+        GridMode.LIST -> BookOverviewLayoutMode.List
+        GridMode.GRID -> BookOverviewLayoutMode.Grid
+        GridMode.FOLLOW_DEVICE ->
+          if (gridCount.useGridAsDefault()) {
+            BookOverviewLayoutMode.Grid
+          } else {
+            BookOverviewLayoutMode.List
+          }
       }
-    }
 
     val experimentalPlaybackPersistence = experimentalPlaybackPersistenceFeatureFlag.get()
-    val livePlaybackState: State<LivePlaybackState?> = if (experimentalPlaybackPersistence && currentBookId != null) {
-      remember(currentBookId) {
-        playerController.livePlaybackStateFlow(currentBookId)
-      }.collectAsState(null)
-    } else {
-      remember { mutableStateOf(null) }
-    }
+    val livePlaybackState: State<LivePlaybackState?> =
+      if (experimentalPlaybackPersistence && currentBookId != null) {
+        remember(currentBookId) {
+            playerController.livePlaybackStateFlow(currentBookId)
+          }
+          .collectAsState(null)
+      } else {
+        remember { mutableStateOf(null) }
+      }
 
     @Composable
-    fun Book.itemState() = itemViewState(
-      currentBookId = currentBookId,
-      livePlaybackState = { livePlaybackState.value },
-      unavailable = id in unavailableBooks,
-      download = downloadStates[id].badge(),
-    )
+    fun Book.itemState() =
+      itemViewState(
+        currentBookId = currentBookId,
+        livePlaybackState = { livePlaybackState.value },
+        unavailable = id in serverStates.unavailable,
+        download = downloadStates?.get(id).badge(),
+      )
 
-    val entries = remember(books, ebooks) { libraryEntries(books, ebooks) }
-    val ebookStates = remember(ebooks) { ebooks.associate { it.bookId to mutableStateOf(it.toItemViewState()) } }
-    val inProgressCount = remember(books, ebooks) {
-      books.count { it.category == BookOverviewCategory.CURRENT } +
-        ebooks.count { it.category == BookOverviewCategory.CURRENT }
-    }
+    val entries =
+      remember(books, ebooks, heroBookId) {
+        // the Continue card shows it
+        libraryEntries(books, ebooks).mapValues { (_, entries) ->
+          entries.filterNot { it is LibraryEntry.Single && it.book.id == heroBookId }
+        }
+      }
+    // grouping by author only covers audiobooks so far, ebooks follow the authors
+    val authors =
+      remember(entries, grouping) {
+        if (grouping == LibraryGrouping.Author) {
+          entries
+            .mapValues { (_, sectionEntries) -> sectionEntries.filterNot { it.hasEbook } }
+            .groupedByAuthor()
+        } else {
+          emptyMap()
+        }
+      }
+    val ebookStates =
+      remember(ebooks) { ebooks.associate { it.bookId to mutableStateOf(it.toItemViewState()) } }
+
+    @Composable
+    fun LibraryEntry.item(): LibraryItem =
+      when (this) {
+        is LibraryEntry.Single ->
+          when (val libraryBook = book) {
+            is LibraryBook.Audiobook ->
+              LibraryItem.Book(libraryBook.id, libraryBook.book.itemState())
+            is LibraryBook.Ebook ->
+              LibraryItem.Book(libraryBook.id, ebookStates.getValue(libraryBook.id))
+          }
+        is LibraryEntry.Stack -> LibraryItem.Series(series.toStackViewState())
+      }
+
+    val inProgressCount =
+      remember(books, ebooks) {
+        books.count { it.category == BookCategory.CURRENT } +
+          ebooks.count { it.category == BookCategory.CURRENT }
+      }
     return BookOverviewViewState(
       layoutMode = layoutMode,
-      sections = BookOverviewCategory.entries
-        .associateWith { category ->
-          entries[category].orEmpty().mapNotNull { entry ->
-            when (entry) {
-              // the Continue card shows it
-              is LibraryEntry.Single -> if (entry.book.id == heroBookId) {
-                null
-              } else {
-                when (val book = entry.book) {
-                  is LibraryBook.Audiobook -> LibraryItem.Book(book.id, book.book.itemState())
-                  is LibraryBook.Ebook -> LibraryItem.Book(book.id, ebookStates.getValue(book.id))
-                }
-              }
-              is LibraryEntry.Stack -> LibraryItem.Series(entry.series.toStackViewState())
+      sections =
+        entries
+          .mapValues { (category, entries) ->
+            val authorGroups = authors[category]
+            if (authorGroups == null) {
+              entries.map { it.item() }
+            } else {
+              authorGroups.map { LibraryItem.Author(it.toEntryViewState(category)) } +
+                entries.filter { it.hasEbook }.map { it.item() }
             }
           }
-        }
-        .filterValues { it.isNotEmpty() },
-      hero = when (heroBookId) {
-        null -> null
-        currentBookId -> books.find { it.id == heroBookId }?.itemState()
-        else -> ebookStates[heroBookId]
-      },
+          .filterValues { it.isNotEmpty() },
+      hero =
+        when (heroBookId) {
+          null -> null
+          currentBookId -> books.find { it.id == heroBookId }?.itemState()
+          else -> ebookStates[heroBookId]
+        },
       inProgressCount = inProgressCount,
       currentBookId = currentBookId,
-      playButtonState = if (playState == PlayStateManager.PlayState.Playing) {
-        BookOverviewViewState.PlayButtonState.Playing
-      } else {
-        BookOverviewViewState.PlayButtonState.Paused
-      }.takeIf { currentBookId != null },
+      playButtonState =
+        if (playState is PlayStateManager.PlayState.Playing) {
+            BookOverviewViewState.PlayButtonState.Playing
+          } else {
+            BookOverviewViewState.PlayButtonState.Paused
+          }
+          .takeIf { currentBookId != null },
       showEmptyLibrary = showEmptyLibrary,
-      showSearchIcon = books.isNotEmpty() || ebooks.isNotEmpty(),
+      showSearchIcon = library.books.isNotEmpty() || ebooks.isNotEmpty(),
+      showFilterIcon = library.books.isNotEmpty(),
       isLoading = scannerActive,
       showStoragePermissionBugCard = hasStoragePermissionBug,
       showFolderAccessBadge = hasFoldersWithoutAccess,
-      showFolderPickerIcon = !folderPickerInSettingsFeatureFlag.get() &&
-        !folderPickerMovedDialogShown &&
-        appInfoProvider.installTime < FolderPickerMigrationInstallTimeCutoff,
+      showFolderPickerIcon =
+        !folderPickerInSettingsFeatureFlag.get() &&
+          !folderPickerMovedDialogShown &&
+          appInfoProvider.installTime < FolderPickerMigrationInstallTimeCutoff,
       dialog = dialog,
+      hiddenBookCount = hiddenBookCount,
+      showHiddenBooks = showHiddenBooks,
+      notDownloadedBookCount = notDownloadedBookCount,
+      showNotDownloadedBooks = showNotDownloadedBooks,
+      sources = library.sources,
+      grouping = grouping,
+      selection =
+        selected?.let { ids ->
+          SelectionViewState(
+            ids = ids,
+            allSelected = ids.size == bookIds.size,
+            allHidden = books.all { it.id !in ids || it.custom.hidden },
+          )
+        },
+      selectionEdit = selectionEdit,
       heroBookId = heroBookId,
     )
+  }
+
+  private fun library(): Flow<SourcedLibrary> {
+    return combine(repo.flow(), sources(), hiddenSourcesStore.data) { books, sources, storedHidden
+        ->
+        if (sources.size < 2) return@combine SourcedLibrary(books, books, emptyList())
+        val folders = sources.mapNotNull { (source) ->
+          (source as? LibrarySource.Folder)?.uri?.toUri()
+        }
+        val sourceOf = books.associate { it.id to it.source(folders) }
+        // a book whose source has no chip, like one from a removed library, always shows
+        val hidden =
+          sources.map { (source) -> source }.filterTo(mutableSetOf()) { it in storedHidden }
+        SourcedLibrary(
+          books = books,
+          shownBooks = books.filter { sourceOf[it.id] !in hidden },
+          sources =
+            sources.map { (source, name) ->
+              LibrarySourceViewState(
+                source = source,
+                name = name,
+                shown = source !in hidden,
+              )
+            },
+        )
+      }
+      .flowOn(dispatcherProvider.io)
+  }
+
+  private fun sources(): Flow<List<Pair<LibrarySource, String>>> {
+    return combine(audiobookFolders.all(), serverLibrary.libraries) { folders, libraries ->
+      // a book that is a folder or a file of its own can be hidden on its own
+      val sourceFolders = folders[FolderType.Root].orEmpty() + folders[FolderType.Author].orEmpty()
+      sourceFolders
+        .map { LibrarySource.Folder(it.uri.toString()) to it.documentFile.nameWithoutExtension() }
+        .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.second }) +
+        libraries.map { LibrarySource.ServerLibrary(it.id) to it.name }
+    }
   }
 
   private fun kioskModeState(): BookOverviewViewState {
     return BookOverviewViewState(
       layoutMode = BookOverviewLayoutMode.List,
-      sections = mapOf(
-        BookOverviewCategory.CURRENT to KioskModeDemoData.demoAudiobooks
-          .filter { it.id != KioskModeDemoData.currentlyPlaying.id }
-          .map { book -> LibraryItem.Book(book.id, mutableStateOf(book.toItemViewState())) },
-      ),
+      sections =
+        mapOf(
+          BookCategory.CURRENT to
+            KioskModeDemoData.demoAudiobooks
+              .filter { it.id != KioskModeDemoData.currentlyPlaying.id }
+              .map { book -> LibraryItem.Book(book.id, mutableStateOf(book.toItemViewState())) },
+        ),
       hero = mutableStateOf(KioskModeDemoData.currentlyPlaying.toItemViewState()),
       inProgressCount = KioskModeDemoData.demoAudiobooks.size,
       currentBookId = KioskModeDemoData.currentlyPlaying.id,
@@ -250,13 +448,145 @@ class BookOverviewViewModel(
   fun onBookLongClick(id: BookId) {
     scope.launch {
       val ebook = ebooksStore.data.first().firstOrNull { it.bookId == id }
-      navigator.goTo(if (ebook != null) Destination.EbookActions(ebook.uri) else Destination.BookActions(id))
+      navigator.goTo(
+        if (ebook != null) Destination.EbookActions(ebook.uri) else Destination.BookActions(id),
+      )
     }
   }
 
   fun onSeriesClick(name: String) {
     navigator.goTo(Destination.Series(name))
   }
+
+  fun onSeriesLongClick(name: String) {
+    navigator.goTo(Destination.SeriesActions(name))
+  }
+
+  fun onAuthorClick(name: String?) {
+    navigator.goTo(Destination.Author(name))
+  }
+
+  fun onAuthorLongClick(author: AuthorEntryViewState) {
+    navigator.goTo(Destination.AuthorActions(author.name, author.bookIds))
+  }
+
+  fun onGroupingChange(grouping: LibraryGrouping) {
+    scope.launch {
+      libraryGroupingStore.updateData { grouping }
+    }
+  }
+
+  fun onShowHiddenBooksChange(show: Boolean) {
+    scope.launch {
+      showHiddenBooksStore.updateData { show }
+    }
+  }
+
+  fun onShowNotDownloadedBooksChange(show: Boolean) {
+    scope.launch {
+      showNotDownloadedBooksStore.updateData { show }
+    }
+  }
+
+  fun onSourceChange(
+    source: LibrarySource,
+    show: Boolean,
+  ) {
+    scope.launch {
+      hiddenSourcesStore.updateData { hidden -> if (show) hidden - source else hidden + source }
+    }
+  }
+
+  internal fun onUndoHide(ids: List<BookId>) {
+    scope.launch {
+      bookHider.show(ids)
+    }
+  }
+
+  internal fun onSelectionStart(ids: List<BookId>) {
+    selection = ids.toSet()
+  }
+
+  internal fun onSelectionToggle(ids: List<BookId>) {
+    val selected = selectedIds()
+    val toggled = if (selected.containsAll(ids)) selected - ids.toSet() else selected + ids
+    selection = toggled.takeIf { it.isNotEmpty() }
+  }
+
+  internal fun onSelectAll() {
+    // the top bar still takes taps while it fades out
+    if (selection != null) selection = shownBookIds
+  }
+
+  internal fun onSelectionClose() {
+    selection = null
+  }
+
+  internal fun onSelectionHide() {
+    val ids = selectedIds().toList()
+    selection = null
+    scope.launch {
+      bookHider.hide(ids)
+    }
+  }
+
+  internal fun onSelectionShow() {
+    val ids = selectedIds().toList()
+    selection = null
+    scope.launch {
+      bookHider.show(ids)
+    }
+  }
+
+  internal fun onSelectionEdit(field: BookField) {
+    scope.launch {
+      val books = repo.all()
+      // while the books load, a second tap or an action that ends selecting can come in
+      val ids = selectedIds()
+      if (ids.isEmpty() || selectionEdit != null) return@launch
+      val selectedBooks = books.filter { it.id in ids }
+      selectionEdit =
+        SelectionEditViewState(
+          field = field,
+          ids = selectedBooks.mapTo(mutableSetOf()) { it.id },
+          // a value all of them share is likely what the listener wants to fix
+          value = selectedBooks.map { field.of(it) }.distinct().singleOrNull().orEmpty(),
+          suggestions = books.nameSuggestions { field.of(it) },
+        )
+    }
+  }
+
+  internal fun onSelectionEditSave(value: String) {
+    val edit = selectionEdit?.takeUnless { it.saving || it.saved } ?: return
+    selectionEdit = edit.copy(saving = true)
+    scope.launch {
+      val edited = selectedBooksEditor.set(edit.field, edit.ids, value)
+      // the books that failed stay selected, so the listener can try again
+      selection = edited.failed.takeIf { it.isNotEmpty() }
+      selectionEdit = selectionEdit?.copy(saving = false, saved = true)
+      Logger.d("Set the ${edit.field} of ${edited.count} books, ${edited.failed.size} failed")
+      booksEdited.emit(edited)
+    }
+  }
+
+  internal fun onSelectionEditDismiss() {
+    selectionEdit = null
+  }
+
+  internal fun onUndoEdit(edited: BooksEdited) {
+    scope.launch {
+      val undone = selectedBooksEditor.undo(edited)
+      if (undone.failed.isNotEmpty()) {
+        Logger.d("Undo of the ${edited.field} failed for ${undone.failed.size} books")
+        // like after a failed edit, so the listener sees which books kept the new value
+        selection = selection.orEmpty() + undone.failed
+        // an undo of the undo would go in circles
+        booksEdited.emit(undone.copy(count = 0, undo = emptyMap()))
+      }
+    }
+  }
+
+  private fun selectedIds(): Set<BookId> = selection.orEmpty() intersect shownBookIds
 
   fun onBookFolderClick() {
     dialog = BookOverviewViewState.Dialog.FolderPickerMovedToSettings
@@ -306,10 +636,11 @@ private fun Book.itemViewState(
     derivedStateOf {
       val livePlayback = currentPlaybackState()
       if (livePlayback != null) {
-        overlay(livePlayback)
-      } else {
-        this
-      }.toItemViewState(unavailable, download)
+          overlay(livePlayback)
+        } else {
+          this
+        }
+        .toItemViewState(unavailable, download)
     }
   }
 }
@@ -319,19 +650,28 @@ private fun heroBookId(
   ebooks: List<Ebook>,
   currentBookId: BookId?,
 ): BookId? {
-  val ebook = ebooks.filter { it.category == BookOverviewCategory.CURRENT }.maxByOrNull { it.lastOpened }
-    ?: return currentBookId
-  val playedAt = books.firstOrNull { it.id == currentBookId }?.content?.lastPlayedAt?.toEpochMilli() ?: 0L
+  val ebook =
+    ebooks.filter { it.category == BookCategory.CURRENT }.maxByOrNull { it.lastOpened }
+      ?: return currentBookId
+  val playedAt =
+    books.firstOrNull { it.id == currentBookId }?.content?.lastPlayedAt?.toEpochMilli() ?: 0L
   return if (ebook.lastOpened > playedAt) ebook.bookId else currentBookId
 }
 
-private fun DemoAudiobook.toItemViewState() = BookOverviewItemViewState(
-  name = title,
-  author = author,
-  cover = coverUrl,
-  progress = progress / 100F,
-  id = id,
-  remainingTime = remaining,
+private fun DemoAudiobook.toItemViewState() =
+  BookOverviewItemViewState(
+    name = title,
+    author = author,
+    cover = coverUrl,
+    progress = progress / 100F,
+    id = id,
+    remainingTime = remaining,
+  )
+
+private class SourcedLibrary(
+  val books: List<Book>,
+  val shownBooks: List<Book>,
+  val sources: List<LibrarySourceViewState>,
 )
 
 /** Distinguishes "no current book" from "not loaded yet". */

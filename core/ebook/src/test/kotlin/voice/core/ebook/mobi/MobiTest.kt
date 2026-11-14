@@ -17,7 +17,16 @@ class MobiTest {
   @Test
   fun `palmdoc copies literals, spaces and back references`() {
     val data =
-      byteArrayOf(0x03, 'a'.code.toByte(), 'b'.code.toByte(), 'c'.code.toByte(), 'd'.code.toByte(), 0xE5.toByte(), 0x80.toByte(), 0x28)
+      byteArrayOf(
+        0x03,
+        'a'.code.toByte(),
+        'b'.code.toByte(),
+        'c'.code.toByte(),
+        'd'.code.toByte(),
+        0xE5.toByte(),
+        0x80.toByte(),
+        0x28,
+      )
     assertEquals("abcd ebcd", palmDocDecompress(data).decodeToString())
   }
 
@@ -56,7 +65,10 @@ class MobiTest {
       }
     }
     val reader = HuffCdic(huff, listOf(cdic))
-    assertEquals("Hello world", reader.decompress(byteArrayOf(255.toByte(), 254.toByte())).decodeToString())
+    assertEquals(
+      "Hello world",
+      reader.decompress(byteArrayOf(255.toByte(), 254.toByte())).decodeToString(),
+    )
   }
 
   @Test
@@ -68,20 +80,22 @@ class MobiTest {
 
   @Test
   fun `headers and exth metadata are read`() {
-    val record = record0(
-      textLength = 10,
-      textRecords = 1,
-      compression = Compression.PALM_DOC,
-      fields = mapOf(108 to 5L, 0xF2 to 3L),
-      exth = listOf(
-        Exth.AUTHOR to string("Mara Quill"),
-        Exth.AUTHOR to string("Ada Lin"),
-        Exth.UPDATED_TITLE to string("The Quiet Orbit"),
-        Exth.ASIN to string("B00TEST"),
-        Exth.COVER_OFFSET to int(2),
-        Exth.LANGUAGE to string("en"),
-      ),
-    )
+    val record =
+      record0(
+        textLength = 10,
+        textRecords = 1,
+        compression = Compression.PALM_DOC,
+        fields = mapOf(108 to 5L, 0xF2 to 3L),
+        exth =
+          listOf(
+            Exth.AUTHOR to string("Mara Quill"),
+            Exth.AUTHOR to string("Ada Lin"),
+            Exth.UPDATED_TITLE to string("The Quiet Orbit"),
+            Exth.ASIN to string("B00TEST"),
+            Exth.COVER_OFFSET to int(2),
+            Exth.LANGUAGE to string("en"),
+          ),
+      )
     val header = MobiHeader(record, start = 0)
     assertEquals(Compression.PALM_DOC, header.compression)
     assertEquals(1, header.textRecordCount)
@@ -101,14 +115,24 @@ class MobiTest {
 
   @Test
   fun `the full name is the title without an updated title`() {
-    val metadata = MobiHeader(record0(textLength = 0, textRecords = 0), start = 0).metadata("Test_Book")
+    val metadata =
+      MobiHeader(record0(textLength = 0, textRecords = 0), start = 0).metadata("Test_Book")
     assertEquals("Full Name", metadata.title)
     assertNull(metadata.author)
   }
 
   @Test
   fun `record indices of a kf8 header count from its own first record`() {
-    val header = MobiHeader(record0(textLength = 0, textRecords = 0, version = 8, fields = mapOf(108 to 4L, 0xC0 to 2L)), start = 10)
+    val header =
+      MobiHeader(
+        record0(
+          textLength = 0,
+          textRecords = 0,
+          version = 8,
+          fields = mapOf(108 to 4L, 0xC0 to 2L),
+        ),
+        start = 10,
+      )
     assertTrue(header.isKf8)
     assertEquals(14, header.firstResource)
     assertEquals(12, header.fdstRecord)
@@ -116,7 +140,8 @@ class MobiTest {
 
   @Test
   fun `encrypted books are refused`() {
-    val book = palmDb(listOf(record0(textLength = 4, textRecords = 1, encryption = 2), "text".toByteArray()))
+    val book =
+      palmDb(listOf(record0(textLength = 4, textRecords = 1, encryption = 2), "text".toByteArray()))
     assertFailsWith<KindleDrmException> { convertKindleToEpub(book, ByteArrayOutputStream()) }
     assertTrue(readKindleMetadata(book.inputStream()).drmProtected)
   }
@@ -145,7 +170,9 @@ class MobiTest {
     val opf = files.getValue("OEBPS/content.opf").decodeToString()
     assertTrue("<dc:title>The Quiet Orbit</dc:title>" in opf)
     assertTrue("<dc:creator>Mara Quill</dc:creator>" in opf)
-    assertTrue("""href="images/image00001.jpg" media-type="image/jpeg" properties="cover-image"""" in opf)
+    assertTrue(
+      """href="images/image00001.jpg" media-type="image/jpeg" properties="cover-image"""" in opf,
+    )
     assertContentEquals(jpeg, files["OEBPS/images/image00001.jpg"])
 
     val first = files.getValue("OEBPS/text/part0000.xhtml").decodeToString()
@@ -156,7 +183,13 @@ class MobiTest {
     assertFalse("mbp:" in first + second)
     val nav = files.getValue("OEBPS/nav.xhtml").decodeToString()
     assertTrue("Launch" in nav && "Drift" in nav)
-    listOf("OEBPS/text/part0000.xhtml", "OEBPS/text/part0001.xhtml", "OEBPS/nav.xhtml", "OEBPS/toc.ncx", "OEBPS/content.opf")
+    listOf(
+        "OEBPS/text/part0000.xhtml",
+        "OEBPS/text/part0001.xhtml",
+        "OEBPS/nav.xhtml",
+        "OEBPS/toc.ncx",
+        "OEBPS/content.opf",
+      )
       .forEach { assertWellFormed(files.getValue(it)) }
   }
 
@@ -171,12 +204,20 @@ class MobiTest {
     assertTrue("""href="../styles/flow0001.css"""" in first)
     assertTrue("""<body>""" in first)
     assertTrue("""<h2 id="aid-5">Chapter two</h2>""" in second)
-    assertEquals("body { background: url(../images/image00001.jpg) }", files.getValue("OEBPS/styles/flow0001.css").decodeToString())
+    assertEquals(
+      "body { background: url(../images/image00001.jpg) }",
+      files.getValue("OEBPS/styles/flow0001.css").decodeToString(),
+    )
     val nav = files.getValue("OEBPS/nav.xhtml").decodeToString()
     assertTrue("""<a href="text/part0000.xhtml#start">Chapter one</a>""" in nav)
     assertTrue("""<a href="text/part0001.xhtml#aid-5">Chapter two</a>""" in nav)
-    assertTrue("<dc:title>Kindle Eight</dc:title>" in files.getValue("OEBPS/content.opf").decodeToString())
-    files.filterKeys { it.endsWith("xhtml") || it.endsWith("opf") || it.endsWith("ncx") }.values.forEach(::assertWellFormed)
+    assertTrue(
+      "<dc:title>Kindle Eight</dc:title>" in files.getValue("OEBPS/content.opf").decodeToString(),
+    )
+    files
+      .filterKeys { it.endsWith("xhtml") || it.endsWith("opf") || it.endsWith("ncx") }
+      .values
+      .forEach(::assertWellFormed)
   }
 
   private fun convert(book: ByteArray): Map<String, ByteArray> {
@@ -200,30 +241,36 @@ class MobiTest {
 }
 
 internal fun mobi6(): ByteArray {
-  val template = "<html><head><guide></guide></head><body><h1>Launch</h1><p>First line with " +
-    "<a filepos=0000000000>a link</a>&nbsp;here.</p><mbp:pagebreak/><mbp:pagebreak/><h1>Drift</h1>" +
-    "<p>Second <img recindex=\"00001\"> line.</p></body></html>"
+  val template =
+    "<html><head><guide></guide></head><body><h1>Launch</h1><p>First line with " +
+      "<a filepos=0000000000>a link</a>&nbsp;here.</p><mbp:pagebreak/><mbp:pagebreak/><h1>Drift</h1>" +
+      "<p>Second <img recindex=\"00001\"> line.</p></body></html>"
   val target = template.indexOf("<h1>Drift")
   val text = template.replace("0000000000", target.toString().padStart(10, '0')).toByteArray()
-  val record0 = record0(
-    textLength = text.size,
-    textRecords = 1,
-    fields = mapOf(108 to 2L),
-    exth = listOf(
-      Exth.AUTHOR to string("Mara Quill"),
-      Exth.UPDATED_TITLE to string("The Quiet Orbit"),
-      Exth.COVER_OFFSET to int(0),
-    ),
-  )
+  val record0 =
+    record0(
+      textLength = text.size,
+      textRecords = 1,
+      fields = mapOf(108 to 2L),
+      exth =
+        listOf(
+          Exth.AUTHOR to string("Mara Quill"),
+          Exth.UPDATED_TITLE to string("The Quiet Orbit"),
+          Exth.COVER_OFFSET to int(0),
+        ),
+    )
   return palmDb(listOf(record0, text, jpeg, "FLIS".toByteArray()))
 }
 
 internal fun kf8(): ByteArray {
-  val head = """<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml"><head><title>T</title>"""
+  val head =
+    """<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml"><head><title>T</title>"""
   val skeleton0 =
-    head + """<link href="kindle:flow:0001?mime=text/css" rel="stylesheet" type="text/css"/></head><body aid="0"></body></html>"""
-  val fragment0 = """<p id="start">Hello <a href="kindle:pos:fid:0001:off:0000000000">next</a></p>""" +
-    """<img src="kindle:embed:0001?mime=image/jpeg"/>"""
+    head +
+      """<link href="kindle:flow:0001?mime=text/css" rel="stylesheet" type="text/css"/></head><body aid="0"></body></html>"""
+  val fragment0 =
+    """<p id="start">Hello <a href="kindle:pos:fid:0001:off:0000000000">next</a></p>""" +
+      """<img src="kindle:embed:0001?mime=image/jpeg"/>"""
   val skeleton1 = "$head</head><body></body></html>"
   val fragment1 = """<h2 aid="5">Chapter two</h2><p>Bye</p>"""
   val css = "body { background: url(kindle:embed:0001?mime=image/jpeg) }"
@@ -240,20 +287,26 @@ internal fun kf8(): ByteArray {
     u32(pages.length.toLong())
     u32(text.size.toLong())
   }
-  val skeletons = index(
-    tags = listOf(Tag(1, 1, 0x03), Tag(6, 2, 0x0C)),
-    entries = listOf(
-      "SKEL0000000000" to entry(0x05, 1, 0, skeleton0.length),
-      "SKEL0000000001" to entry(0x05, 1, skeleton1Start, skeleton1.length),
-    ),
-  )
-  val fragments = index(
-    tags = listOf(Tag(3, 1, 0x01), Tag(4, 1, 0x02), Tag(6, 2, 0x04)),
-    entries = listOf(
-      skeleton0.indexOf("</body>").toString().padStart(10, '0') to entry(0x07, 0, 0, 0, fragment0.length),
-      (skeleton1Start + skeleton1.indexOf("</body>")).toString().padStart(10, '0') to entry(0x07, 1, 1, 0, fragment1.length),
-    ),
-  )
+  val skeletons =
+    index(
+      tags = listOf(Tag(1, 1, 0x03), Tag(6, 2, 0x0C)),
+      entries =
+        listOf(
+          "SKEL0000000000" to entry(0x05, 1, 0, skeleton0.length),
+          "SKEL0000000001" to entry(0x05, 1, skeleton1Start, skeleton1.length),
+        ),
+    )
+  val fragments =
+    index(
+      tags = listOf(Tag(3, 1, 0x01), Tag(4, 1, 0x02), Tag(6, 2, 0x04)),
+      entries =
+        listOf(
+          skeleton0.indexOf("</body>").toString().padStart(10, '0') to
+            entry(0x07, 0, 0, 0, fragment0.length),
+          (skeleton1Start + skeleton1.indexOf("</body>")).toString().padStart(10, '0') to
+            entry(0x07, 1, 1, 0, fragment1.length),
+        ),
+    )
   val labels = listOf("Chapter one", "Chapter two")
   val strings = bytes {
     labels.forEach {
@@ -261,21 +314,24 @@ internal fun kf8(): ByteArray {
       text(it)
     }
   }
-  val ncx = index(
-    tags = listOf(Tag(3, 1, 0x01), Tag(4, 1, 0x02), Tag(6, 2, 0x04)),
-    entries = listOf(
-      "0" to entry(0x07, 0, 0, 0, 0),
-      "1" to entry(0x07, 1 + labels[0].length, 0, 1, 0),
-    ),
-    strings = strings,
-  )
+  val ncx =
+    index(
+      tags = listOf(Tag(3, 1, 0x01), Tag(4, 1, 0x02), Tag(6, 2, 0x04)),
+      entries =
+        listOf(
+          "0" to entry(0x07, 0, 0, 0, 0),
+          "1" to entry(0x07, 1 + labels[0].length, 0, 1, 0),
+        ),
+      strings = strings,
+    )
   // 0 header, 1 text, 2 image, 3 FDST, 4-5 skeletons, 6-7 fragments, 8-10 NCX
-  val record0 = record0(
-    textLength = text.size,
-    textRecords = 1,
-    version = 8,
-    fields = mapOf(108 to 2L, 0xC0 to 3L, 0xFC to 4L, 0xF8 to 6L, 0xF4 to 8L),
-    exth = listOf(Exth.UPDATED_TITLE to string("Kindle Eight"), Exth.COVER_OFFSET to int(0)),
-  )
+  val record0 =
+    record0(
+      textLength = text.size,
+      textRecords = 1,
+      version = 8,
+      fields = mapOf(108 to 2L, 0xC0 to 3L, 0xFC to 4L, 0xF8 to 6L, 0xF4 to 8L),
+      exth = listOf(Exth.UPDATED_TITLE to string("Kindle Eight"), Exth.COVER_OFFSET to int(0)),
+    )
   return palmDb(listOf(record0, text, jpeg, fdst) + skeletons + fragments + ncx)
 }

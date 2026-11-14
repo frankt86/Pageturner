@@ -13,8 +13,9 @@ private const val FOLDER = "converted"
 private val lock = Any()
 
 /**
- * The Kindle book at [uri] as an EPUB, which both book engines open. It's converted once and kept in the app's files,
- * named after the uri and the size and date of the file, so a changed file is converted again.
+ * The Kindle book at [uri] as an EPUB, which both book engines open. It's converted once and kept
+ * in the app's files, named after the uri and the size and date of the file, so a changed file is
+ * converted again.
  */
 fun kindleEpub(
   context: Context,
@@ -25,7 +26,9 @@ fun kindleEpub(
   val file = folder.resolve("$key-${hash(fileVersion(context, uri))}.epub")
   synchronized(lock) {
     if (file.exists()) return file
-    val book = context.contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: throw IOException("Can't read the book")
+    val book =
+      context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+        ?: throw IOException("Can't read the book")
     val partial = folder.resolve("$key.partial")
     try {
       partial.outputStream().buffered().use { convertKindleToEpub(book, it) }
@@ -45,7 +48,8 @@ fun deleteStaleKindleEpubs(
 ) {
   val keys = keep.mapTo(mutableSetOf()) { hash(it.toString()) }
   synchronized(lock) {
-    File(context.filesDir, FOLDER).listFiles()
+    File(context.filesDir, FOLDER)
+      .listFiles()
       ?.filter { it.name.substringBefore('-').substringBefore('.') !in keys }
       ?.forEach { it.delete() }
   }

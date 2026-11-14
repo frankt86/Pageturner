@@ -64,6 +64,7 @@
     <string name="audiobookshelf.status.needs_login">Сервер просит войти снова</string>
     <string name="audiobookshelf.status.offline">Сервер сейчас недоступен. Скачанные книги по-прежнему можно слушать.</string>
     <string name="audiobookshelf.status.syncing">Синхронизация…</string>
+    <string name="author.wikipedia">Подробнее в Википедии</string>
     <string name="book.category.action.mark_completed">Пометить как прослушанную</string>
     <string name="book.category.action.mark_current">Пометить как «Слушаю»</string>
     <string name="book.category.action.mark_not_started">Пометить как непрослушанную</string>
@@ -88,8 +89,11 @@
     <string name="book.edit.server.failed">Не удалось сохранить на вашем сервере. Попробуйте ещё раз.</string>
     <string name="book.edit.server.not_allowed">Ваша учётная запись на сервере не может изменять книги.</string>
     <string name="book.edit.title.label">Название</string>
+    <string name="book.hide">Скрыть из библиотеки</string>
     <string name="book.remove_from_library">Убрать из библиотеки</string>
     <string name="book.remove_from_library.summary">Файл останется на устройстве</string>
+    <string name="book.select">Выбрать</string>
+    <string name="book.show">Показать в библиотеке</string>
     <string name="book.source.device">На этом устройстве</string>
     <string name="book.source.server_downloaded">%s · скачано</string>
     <string name="bookmark.action.add_note">Добавить заметку</string>
@@ -164,8 +168,13 @@
     <string name="folder.add.action.file">Добавить один файл вместо папки</string>
     <string name="folder.add.action.folder">Выбрать папку</string>
     <string name="folder.add.action.opds">Скачать из каталога</string>
+    <string name="folder.add.help.answer.no_files">Аудиокниг пока нет</string>
+    <string name="folder.add.help.answer.not_found">Не могу их найти</string>
+    <string name="folder.add.help.answer.other_app">Они в другом приложении</string>
     <string name="folder.add.help.computer">Книги всё ещё на компьютере? Сначала скопируйте их на телефон, например в папку Audiobooks или Documents.</string>
     <string name="folder.add.help.download">Android не позволяет приложениям открывать саму папку Download. Выберите папку внутри неё.</string>
+    <string name="folder.add.help.no_files">Pageturner воспроизводит файлы аудиокниг с вашего телефона. На LibriVox можно бесплатно скачать тысячи книг.</string>
+    <string name="folder.add.help.other_app">Книги из приложений вроде Audible или Spotify можно слушать только в этих приложениях. Pageturner воспроизводит файлы аудиокниг, например MP3 или M4B.</string>
     <string name="folder.add.help.title">Не нашли свои книги?</string>
     <string name="folder.add.no_picker.message">Pageturner открывает ваши книги через средство выбора файлов Android. Без него Pageturner не может открыть ни папки, ни файлы.</string>
     <string name="folder.add.no_picker.title">На устройстве нет средства выбора файлов</string>
@@ -257,8 +266,16 @@
     <string name="history.source.unplugged">Аудиоустройство отключено</string>
     <string name="history.source.watch">Часы</string>
     <string name="history.source.widget">Виджет</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d серия</item>
+        <item quantity="few">%d серии</item>
+        <item quantity="many">%d серий</item>
+        <item quantity="other">%d серий</item>
+    </plurals>
     <string name="library.book.downloading">Скачивается</string>
     <string name="library.book.ebook">Электронная книга</string>
+    <string name="library.book.hidden">Скрыта</string>
+    <string name="library.book.hidden.message">Книга «%1$s» скрыта</string>
     <string name="library.book.offline">Недоступно офлайн</string>
     <string name="library.category.completed.title">Прослушанные</string>
     <string name="library.category.current.title">Слушаю</string>
@@ -269,9 +286,16 @@
     <string name="library.empty.title">Книги не найдены</string>
     <string name="library.empty.message">Pageturner не находит книг в ваших папках. Проверьте, на месте ли файлы, или добавьте папку.</string>
     <string name="library.empty.action">Показать папки</string>
-    <string name="library.folders.title">Папки с книгами</string>
-    <string name="library.folders.moved.dialog.title">Папки с книгами перенесены</string>
+    <string name="library.filter">Фильтр</string>
+    <string name="library.filter.group_by">Группировка</string>
+    <string name="library.filter.group_by.author">Автор</string>
+    <string name="library.filter.group_by.series">Серия</string>
+    <string name="library.filter.hidden_books">Скрытые книги</string>
+    <string name="library.filter.not_downloaded">Не скачанные</string>
+    <string name="library.filter.show">Показывать</string>
     <string name="library.folders.moved.dialog.message">Теперь папками с книгами можно управлять в настройках.</string>
+    <string name="library.folders.moved.dialog.title">Папки с книгами перенесены</string>
+    <string name="library.folders.title">Папки с книгами</string>
     <string name="library.folders.no_access">Нет доступа</string>
     <string name="library.folders.no_access.action">Разрешить доступ</string>
     <string name="library.folders.no_access.badge">Снова разрешите доступ к своим папкам</string>
@@ -285,6 +309,13 @@
         <item quantity="many">%d книг в процессе</item>
         <item quantity="other">%d книг в процессе</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d скрытая книга</item>
+        <item quantity="few">%d скрытые книги</item>
+        <item quantity="many">%d скрытых книг</item>
+        <item quantity="other">%d скрытых книг</item>
+    </plurals>
+    <string name="library.no_author">Без автора</string>
     <string name="library.search.browse.title">Обзор</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d книга</item>
@@ -322,6 +353,40 @@
     <string name="library.search.recent.clear_all">Очистить всё</string>
     <string name="library.search.recent.remove">Удалить %s</string>
     <string name="library.search.recent.title">Недавние</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">Автор указан для %d книги</item>
+        <item quantity="few">Автор указан для %d книг</item>
+        <item quantity="many">Автор указан для %d книг</item>
+        <item quantity="other">Автор указан для %d книг</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">Выбрано: %d</item>
+        <item quantity="few">Выбрано: %d</item>
+        <item quantity="many">Выбрано: %d</item>
+        <item quantity="other">Выбрано: %d</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d книга скрыта</item>
+        <item quantity="few">%d книги скрыты</item>
+        <item quantity="many">%d книг скрыто</item>
+        <item quantity="other">%d книг скрыто</item>
+    </plurals>
+    <string name="library.selection.hide">Скрыть</string>
+    <string name="library.selection.select_all">Выбрать все</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">Серия указана для %d книги</item>
+        <item quantity="few">Серия указана для %d книг</item>
+        <item quantity="many">Серия указана для %d книг</item>
+        <item quantity="other">Серия указана для %d книг</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">Не удалось сохранить %d книгу на вашем сервере</item>
+        <item quantity="few">Не удалось сохранить %d книги на вашем сервере</item>
+        <item quantity="many">Не удалось сохранить %d книг на вашем сервере</item>
+        <item quantity="other">Не удалось сохранить %d книг на вашем сервере</item>
+    </plurals>
+    <string name="library.selection.show">Показать</string>
+    <string name="library.series.hidden.message">Серия «%1$s» скрыта</string>
     <string name="library.storage_permission_bug.action">Предоставить разрешение</string>
     <string name="library.storage_permission_bug.message">На некоторых устройствах системное приложение не имеет необходимого разрешения для доступа к внешнему хранилищу. Этот доступ необходим для того, чтобы Pageturner мог читать ваши аудиокниги.</string>
     <string name="library.storage_permission_bug.title">Требуется разрешение</string>
@@ -615,6 +680,20 @@
     <string name="reader.word_spacing">Межсловный интервал</string>
     <string name="series.continue">Продолжить</string>
     <string name="series.continue_book">Продолжить книгу %s</string>
+    <string name="series.mark_completed">Пометить как прослушанную</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">Вы потеряете место, где остановились, в %d книге.</item>
+        <item quantity="few">Вы потеряете место, где остановились, в %d книгах.</item>
+        <item quantity="many">Вы потеряете место, где остановились, в %d книгах.</item>
+        <item quantity="other">Вы потеряете место, где остановились, в %d книгах.</item>
+    </plurals>
+    <string name="series.mark_not_started">Пометить как непрослушанную</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">Вы потеряете прогресс в %d книге.</item>
+        <item quantity="few">Вы потеряете прогресс в %d книгах.</item>
+        <item quantity="many">Вы потеряете прогресс в %d книгах.</item>
+        <item quantity="other">Вы потеряете прогресс в %d книгах.</item>
+    </plurals>
     <string name="series.start">Начать</string>
     <string name="series.start_book">Начать книгу %s</string>
     <string name="settings.about.app_version.title">Версия приложения</string>

@@ -22,7 +22,13 @@ class NaturalSpeakersTest {
 
   @Test
   fun `british voices use the british english espeak knows`() {
-    assertEquals(setOf("en"), naturalSpeakers(Locale.UK).filter { it.language == "en-gb" }.map { it.espeakLanguage }.toSet())
+    assertEquals(
+      setOf("en"),
+      naturalSpeakers(Locale.UK)
+        .filter { it.language == "en-gb" }
+        .map { it.espeakLanguage }
+        .toSet(),
+    )
   }
 
   @Test
@@ -37,7 +43,10 @@ class NaturalSpeakersTest {
 
   @Test
   fun `every speaker is listed once`() {
-    val all = listOf("en", "es", "fr", "hi", "it", "ja", "pt", "zh").flatMap { naturalSpeakers(Locale.forLanguageTag(it)) }
+    val all =
+      listOf("en", "es", "fr", "hi", "it", "ja", "pt", "zh").flatMap {
+        naturalSpeakers(Locale.forLanguageTag(it))
+      }
     val ids = all.map { it.id }
     assertEquals(ids.size, ids.distinct().size)
   }

@@ -58,6 +58,7 @@
     <string name="audiobookshelf.status.needs_login">Ο διακομιστής ζητά να συνδεθείτε ξανά</string>
     <string name="audiobookshelf.status.offline">Ο διακομιστής δεν είναι διαθέσιμος αυτήν τη στιγμή. Τα βιβλία που κατεβάσατε παίζουν κανονικά.</string>
     <string name="audiobookshelf.status.syncing">Συγχρονισμός…</string>
+    <string name="author.wikipedia">Περισσότερα στη Βικιπαίδεια</string>
     <string name="book.category.action.mark_completed">Επισήμανση ως ολοκληρωμένο</string>
     <string name="book.category.action.mark_current">Επισήμανση ως τρέχον</string>
     <string name="book.category.action.mark_not_started">Επισήμανση ως μη διαβασμένο</string>
@@ -82,8 +83,11 @@
     <string name="book.edit.server.failed">Δεν ήταν δυνατή η αποθήκευση στον διακομιστή σας. Δοκιμάστε ξανά.</string>
     <string name="book.edit.server.not_allowed">Ο λογαριασμός σας στον διακομιστή δεν μπορεί να αλλάζει βιβλία.</string>
     <string name="book.edit.title.label">Τίτλος</string>
+    <string name="book.hide">Απόκρυψη από τη βιβλιοθήκη</string>
     <string name="book.remove_from_library">Αφαίρεση από τη βιβλιοθήκη</string>
     <string name="book.remove_from_library.summary">Το αρχείο παραμένει στη συσκευή σας</string>
+    <string name="book.select">Επιλογή</string>
+    <string name="book.show">Εμφάνιση στη βιβλιοθήκη</string>
     <string name="book.source.device">Σε αυτή τη συσκευή</string>
     <string name="book.source.server_downloaded">%s · έγινε λήψη</string>
     <string name="bookmark.action.add_note">Προσθήκη σημείωσης</string>
@@ -154,8 +158,13 @@
     <string name="folder.add.action.file">Προσθήκη μεμονωμένου αρχείου</string>
     <string name="folder.add.action.folder">Επιλογή φακέλου</string>
     <string name="folder.add.action.opds">Λήψη από κατάλογο</string>
+    <string name="folder.add.help.answer.no_files">Δεν έχω ακόμα κανένα</string>
+    <string name="folder.add.help.answer.not_found">Δεν τα βρίσκω</string>
+    <string name="folder.add.help.answer.other_app">Είναι σε άλλη εφαρμογή</string>
     <string name="folder.add.help.computer">Τα βιβλία είναι ακόμα στον υπολογιστή σας; Αντιγράψτε τα πρώτα στο τηλέφωνό σας, για παράδειγμα στον φάκελο Audiobooks ή Documents.</string>
     <string name="folder.add.help.download">Το Android δεν επιτρέπει στις εφαρμογές να ανοίγουν απευθείας τον φάκελο Download. Επιλέξτε έναν φάκελο μέσα σε αυτόν.</string>
+    <string name="folder.add.help.no_files">Το Pageturner παίζει αρχεία ηχητικών βιβλίων από το τηλέφωνό σας. Στο LibriVox μπορείτε να κατεβάσετε χιλιάδες δωρεάν.</string>
+    <string name="folder.add.help.other_app">Τα βιβλία από εφαρμογές όπως το Audible ή το Spotify παίζουν μόνο μέσα σε αυτές. Το Pageturner παίζει αρχεία ηχητικών βιβλίων, όπως MP3 ή M4B.</string>
     <string name="folder.add.help.title">Δεν βρήκατε τα βιβλία σας;</string>
     <string name="folder.add.no_picker.message">Το Pageturner ανοίγει τα βιβλία σας μέσω του επιλογέα αρχείων του Android. Χωρίς αυτόν, το Pageturner δεν μπορεί να ανοίξει τους φακέλους ή τα αρχεία σας.</string>
     <string name="folder.add.no_picker.title">Αυτή η συσκευή δεν έχει επιλογέα αρχείων</string>
@@ -231,8 +240,14 @@
     <string name="history.source.unplugged">Αποσύνδεση ήχου</string>
     <string name="history.source.watch">Ρολόι</string>
     <string name="history.source.widget">Γραφικό στοιχείο</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d σειρά</item>
+        <item quantity="other">%d σειρές</item>
+    </plurals>
     <string name="library.book.downloading">Λήψη σε εξέλιξη</string>
     <string name="library.book.ebook">Ηλεκτρονικό βιβλίο</string>
+    <string name="library.book.hidden">Κρυφό</string>
+    <string name="library.book.hidden.message">Το βιβλίο «%1$s» αποκρύφθηκε</string>
     <string name="library.book.offline">Μη διαθέσιμο εκτός σύνδεσης</string>
     <string name="library.category.completed.title">Ολοκληρωμένα</string>
     <string name="library.category.current.title">Τρέχοντα</string>
@@ -243,9 +258,16 @@
     <string name="library.empty.title">Δεν βρέθηκαν βιβλία</string>
     <string name="library.empty.message">Το Pageturner δεν βρίσκει βιβλία στους φακέλους σας. Ελέγξτε αν τα αρχεία βρίσκονται ακόμα εκεί ή προσθέστε έναν φάκελο.</string>
     <string name="library.empty.action">Εμφάνιση φακέλων</string>
-    <string name="library.folders.title">Φάκελοι βιβλίων</string>
-    <string name="library.folders.moved.dialog.title">Οι φάκελοι βιβλίων μετακινήθηκαν</string>
+    <string name="library.filter">Φίλτρο</string>
+    <string name="library.filter.group_by">Ομαδοποίηση κατά</string>
+    <string name="library.filter.group_by.author">Συγγραφέας</string>
+    <string name="library.filter.group_by.series">Σειρά</string>
+    <string name="library.filter.hidden_books">Κρυφά βιβλία</string>
+    <string name="library.filter.not_downloaded">Χωρίς λήψη</string>
+    <string name="library.filter.show">Εμφάνιση</string>
     <string name="library.folders.moved.dialog.message">Μπορείτε πλέον να διαχειρίζεστε τους φακέλους βιβλίων στις Ρυθμίσεις.</string>
+    <string name="library.folders.moved.dialog.title">Οι φάκελοι βιβλίων μετακινήθηκαν</string>
+    <string name="library.folders.title">Φάκελοι βιβλίων</string>
     <string name="library.folders.no_access">Χωρίς πρόσβαση</string>
     <string name="library.folders.no_access.action">Παραχώρηση πρόσβασης</string>
     <string name="library.folders.no_access.badge">Επιτρέψτε ξανά την πρόσβαση στους φακέλους σας</string>
@@ -257,6 +279,11 @@
         <item quantity="one">%d βιβλίο σε εξέλιξη</item>
         <item quantity="other">%d βιβλία σε εξέλιξη</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d κρυφό βιβλίο</item>
+        <item quantity="other">%d κρυφά βιβλία</item>
+    </plurals>
+    <string name="library.no_author">Χωρίς συγγραφέα</string>
     <string name="library.search.browse.title">Περιήγηση</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d βιβλίο</item>
@@ -288,6 +315,30 @@
     <string name="library.search.recent.clear_all">Εκκαθάριση όλων</string>
     <string name="library.search.recent.remove">Αφαίρεση %s</string>
     <string name="library.search.recent.title">Πρόσφατα</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">Ορίστηκε συγγραφέας σε %d βιβλίο</item>
+        <item quantity="other">Ορίστηκε συγγραφέας σε %d βιβλία</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d επιλεγμένο</item>
+        <item quantity="other">%d επιλεγμένα</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d βιβλίο αποκρύφθηκε</item>
+        <item quantity="other">%d βιβλία αποκρύφθηκαν</item>
+    </plurals>
+    <string name="library.selection.hide">Απόκρυψη</string>
+    <string name="library.selection.select_all">Επιλογή όλων</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">Ορίστηκε σειρά σε %d βιβλίο</item>
+        <item quantity="other">Ορίστηκε σειρά σε %d βιβλία</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">Δεν ήταν δυνατή η αποθήκευση %d βιβλίου στον διακομιστή σας</item>
+        <item quantity="other">Δεν ήταν δυνατή η αποθήκευση %d βιβλίων στον διακομιστή σας</item>
+    </plurals>
+    <string name="library.selection.show">Εμφάνιση</string>
+    <string name="library.series.hidden.message">Η σειρά «%1$s» αποκρύφθηκε</string>
     <string name="library.storage_permission_bug.action">Παραχώρηση άδειας</string>
     <string name="library.storage_permission_bug.message">Σε ορισμένες συσκευές, σε μια εφαρμογή συστήματος λείπει η άδεια πρόσβασης στον εξωτερικό αποθηκευτικό χώρο. Το Pageturner τη χρειάζεται για να διαβάζει τα ηχητικά σας βιβλία.</string>
     <string name="library.storage_permission_bug.title">Απαιτείται άδεια</string>
@@ -575,6 +626,16 @@
     <string name="reader.word_spacing">Απόσταση λέξεων</string>
     <string name="series.continue">Συνέχεια</string>
     <string name="series.continue_book">Συνέχεια βιβλίου %s</string>
+    <string name="series.mark_completed">Επισήμανση ως ολοκληρωμένα</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">Θα χάσετε το σημείο σας σε %d βιβλίο.</item>
+        <item quantity="other">Θα χάσετε το σημείο σας σε %d βιβλία.</item>
+    </plurals>
+    <string name="series.mark_not_started">Επισήμανση ως μη διαβασμένα</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">Θα χάσετε την πρόοδό σας σε %d βιβλίο.</item>
+        <item quantity="other">Θα χάσετε την πρόοδό σας σε %d βιβλία.</item>
+    </plurals>
     <string name="series.start">Έναρξη</string>
     <string name="series.start_book">Έναρξη βιβλίου %s</string>
     <string name="settings.about.app_version.title">Έκδοση εφαρμογής</string>

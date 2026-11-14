@@ -1,6 +1,5 @@
 plugins {
   id("voice.library")
-  alias(libs.plugins.metro)
 }
 
 kotlin {
@@ -15,7 +14,6 @@ dependencies {
 
   implementation(libs.slf4j.noop)
   implementation(libs.jebml)
-  implementation(libs.androidxCore)
   implementation(libs.media3.inspector)
   implementation(libs.coroutines.guava)
 

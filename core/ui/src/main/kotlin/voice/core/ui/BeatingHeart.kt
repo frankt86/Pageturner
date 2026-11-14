@@ -14,9 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import voice.core.ui.icons.VoiceIcons
 import kotlin.math.PI
 import kotlin.math.max
 import kotlin.math.sin
@@ -34,20 +34,18 @@ fun BeatingHeart(
     contentAlignment = Alignment.Center,
   ) {
     Box(
-      Modifier
-        .matchParentSize()
+      Modifier.matchParentSize()
         .graphicsLayer { rotationZ = clock.value * 15F }
         .background(containerColor, MaterialShapes.SoftBurst.toShape()),
     )
     Icon(
-      modifier = Modifier
-        .size(size * 0.47F)
-        .graphicsLayer {
+      modifier =
+        Modifier.size(size * 0.47F).graphicsLayer {
           val scale = 1F + 0.15F * heartbeat(clock.value)
           scaleX = scale
           scaleY = scale
         },
-      imageVector = VoiceIcons.Favorite,
+      painter = painterResource(R.drawable.ic_favorite),
       contentDescription = null,
       tint = contentColor,
     )

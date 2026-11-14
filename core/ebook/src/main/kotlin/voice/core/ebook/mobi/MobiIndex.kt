@@ -24,7 +24,9 @@ private class TagDefinition(
   val endFlag: Int,
 )
 
-/** Reads the index whose main INDX record is [index], like the skeleton, fragment and NCX tables. */
+/**
+ * Reads the index whose main INDX record is [index], like the skeleton, fragment and NCX tables.
+ */
 internal fun readIndex(
   db: PalmDb,
   index: Int,
@@ -38,7 +40,9 @@ internal fun readIndex(
 
   val strings = mutableMapOf<Int, ByteArray>()
   for (j in 0 until stringRecords) {
-    readStrings(db.record(index + recordCount + 1 + j)).forEach { (offset, text) -> strings[offset + j * 0x10000] = text }
+    readStrings(db.record(index + recordCount + 1 + j)).forEach { (offset, text) ->
+      strings[offset + j * 0x10000] = text
+    }
   }
 
   var controlByteCount = 0
@@ -85,7 +89,10 @@ private fun readStrings(record: ByteArray): List<Pair<Int, ByteArray>> {
   return strings
 }
 
-/** A number written in 7 bit groups, the last one marked by its high bit. Returns the bytes read and the number. */
+/**
+ * A number written in 7 bit groups, the last one marked by its high bit. Returns the bytes read and
+ * the number.
+ */
 internal fun variableWidthValue(
   data: ByteArray,
   offset: Int,

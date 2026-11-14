@@ -45,26 +45,29 @@ object EbookActionsProvider {
 
   @Provides
   @IntoSet
-  fun ebookActionsNavEntryProvider(): NavEntryProvider<*> = NavEntryProvider<Destination.EbookActions> { key ->
-    NavEntry(key, metadata = OverlayNav.overlay()) {
-      EbookActions(key.uri)
+  fun ebookActionsNavEntryProvider(): NavEntryProvider<*> =
+    NavEntryProvider<Destination.EbookActions> { key ->
+      NavEntry(key, metadata = OverlayNav.overlay()) {
+        EbookActions(key.uri)
+      }
     }
-  }
 }
 
-private val EbookItems = listOf(
-  BottomSheetItem.Edit,
-  BottomSheetItem.InternetCover,
-  BottomSheetItem.FileCover,
-  BottomSheetItem.RemoveFromLibrary,
-)
+private val EbookItems =
+  listOf(
+    BottomSheetItem.Edit,
+    BottomSheetItem.InternetCover,
+    BottomSheetItem.FileCover,
+    BottomSheetItem.RemoveFromLibrary,
+  )
 
 /** Like the menu of an audiobook, it closes once its last sheet is gone. */
 @Composable
 private fun EbookActions(uri: Uri) {
-  val viewModel = retain(uri.toString()) {
-    rootGraphAs<EbookActionsGraph>().ebookActionsViewModelFactory.create(uri)
-  }
+  val viewModel =
+    retain(uri.toString()) {
+      rootGraphAs<EbookActionsGraph>().ebookActionsViewModelFactory.create(uri)
+    }
   val scope = rememberCoroutineScope()
   var showMenu by rememberSaveable { mutableStateOf(true) }
   var pickingCover by rememberSaveable { mutableStateOf(false) }
@@ -77,16 +80,17 @@ private fun EbookActions(uri: Uri) {
     closeIfDone()
   }
 
-  val getContentLauncher = rememberLauncherForActivityResult(
-    contract = ActivityResultContracts.GetContent(),
-    onResult = { image ->
-      pickingCover = false
-      if (image != null) {
-        viewModel.onCoverPicked(image)
-      }
-      closeIfDone()
-    },
-  )
+  val getContentLauncher =
+    rememberLauncherForActivityResult(
+      contract = ActivityResultContracts.GetContent(),
+      onResult = { image ->
+        pickingCover = false
+        if (image != null) {
+          viewModel.onCoverPicked(image)
+        }
+        closeIfDone()
+      },
+    )
 
   val editState = viewModel.editState
   if (editState != null) {
@@ -112,10 +116,11 @@ private fun EbookActions(uri: Uri) {
   val state = viewModel.state()
   if (showMenu && state != null) {
     CoverTheme(cover = state.book.cover) {
-      val sheetState = rememberBottomSheetState(
-        initialValue = Hidden,
-        enabledValues = setOf(Hidden, Expanded),
-      )
+      val sheetState =
+        rememberBottomSheetState(
+          initialValue = Hidden,
+          enabledValues = setOf(Hidden, Expanded),
+        )
       var pendingStatusChange by remember { mutableStateOf<Job?>(null) }
       var closing by remember { mutableStateOf(false) }
       fun hideThen(action: suspend () -> Unit) {
@@ -149,11 +154,12 @@ private fun EbookActions(uri: Uri) {
             when (item) {
               BottomSheetItem.Edit -> hideThen(viewModel::onEdit)
               BottomSheetItem.InternetCover -> hideThen(viewModel::onInternetCover)
-              BottomSheetItem.FileCover -> if (!closing) {
-                pickingCover = true
-                getContentLauncher.launch("image/*")
-                hideThen {}
-              }
+              BottomSheetItem.FileCover ->
+                if (!closing) {
+                  pickingCover = true
+                  getContentLauncher.launch("image/*")
+                  hideThen {}
+                }
               BottomSheetItem.RemoveFromLibrary -> hideThen(viewModel::onRemove)
               else -> Unit
             }

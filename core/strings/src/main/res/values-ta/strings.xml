@@ -58,6 +58,7 @@
     <string name="audiobookshelf.status.needs_login">நீங்கள் மீண்டும் உள்நுழைய வேண்டும் என சர்வர் கேட்கிறது</string>
     <string name="audiobookshelf.status.offline">இப்போது சர்வரை அணுக முடியவில்லை. பதிவிறக்கிய புத்தகங்கள் தொடர்ந்து இயங்கும்.</string>
     <string name="audiobookshelf.status.syncing">ஒத்திசைக்கிறது…</string>
+    <string name="author.wikipedia">விக்கிப்பீடியாவில் மேலும் படிக்கவும்</string>
     <string name="book.category.action.mark_completed">முடித்ததாகக் குறி</string>
     <string name="book.category.action.mark_current">தற்போது கேட்பதாகக் குறி</string>
     <string name="book.category.action.mark_not_started">தொடங்காததாகக் குறி</string>
@@ -82,8 +83,11 @@
     <string name="book.edit.server.failed">உங்கள் சர்வரில் சேமிக்க முடியவில்லை. மீண்டும் முயலவும்.</string>
     <string name="book.edit.server.not_allowed">சர்வரில் உள்ள உங்கள் கணக்கால் புத்தகங்களை மாற்ற முடியாது.</string>
     <string name="book.edit.title.label">தலைப்பு</string>
+    <string name="book.hide">நூலகத்திலிருந்து மறை</string>
     <string name="book.remove_from_library">நூலகத்திலிருந்து அகற்று</string>
     <string name="book.remove_from_library.summary">கோப்பு உங்கள் சாதனத்திலேயே இருக்கும்</string>
+    <string name="book.select">தேர்ந்தெடு</string>
+    <string name="book.show">நூலகத்தில் காட்டு</string>
     <string name="book.source.device">இந்தச் சாதனத்தில்</string>
     <string name="book.source.server_downloaded">%s · பதிவிறக்கப்பட்டது</string>
     <string name="bookmark.action.add_note">குறிப்பைச் சேர்</string>
@@ -154,8 +158,13 @@
     <string name="folder.add.action.file">பதிலாக ஒரு கோப்பை மட்டும் சேர்க்கவும்</string>
     <string name="folder.add.action.folder">கோப்புறையைத் தேர்ந்தெடுக்கவும்</string>
     <string name="folder.add.action.opds">கேட்டலாகிலிருந்து பதிவிறக்கு</string>
+    <string name="folder.add.help.answer.no_files">இன்னும் ஆடியோபுக் இல்லை</string>
+    <string name="folder.add.help.answer.not_found">கண்டுபிடிக்க முடியவில்லை</string>
+    <string name="folder.add.help.answer.other_app">மற்றொரு பயன்பாட்டில் உள்ளன</string>
     <string name="folder.add.help.computer">புத்தகங்கள் இன்னும் உங்கள் கணினியில் உள்ளனவா? முதலில் அவற்றை உங்கள் போனுக்கு நகலெடுக்கவும், எடுத்துக்காட்டாக Audiobooks அல்லது Documents கோப்புறையில்.</string>
     <string name="folder.add.help.download">Download கோப்புறையை நேரடியாகத் திறக்க Android பயன்பாடுகளை அனுமதிக்காது. அதற்குள் உள்ள ஒரு கோப்புறையைத் தேர்ந்தெடுக்கவும்.</string>
+    <string name="folder.add.help.no_files">Pageturner உங்கள் போனில் உள்ள ஆடியோபுக் கோப்புகளை இயக்கும். LibriVox-இல் ஆயிரக்கணக்கான இலவச ஆடியோபுக்குகளைப் பதிவிறக்கலாம்.</string>
+    <string name="folder.add.help.other_app">Audible அல்லது Spotify போன்ற பயன்பாடுகளில் உள்ள புத்தகங்கள் அந்தப் பயன்பாடுகளில் மட்டுமே இயங்கும். Pageturner, MP3 அல்லது M4B போன்ற ஆடியோபுக் கோப்புகளை இயக்கும்.</string>
     <string name="folder.add.help.title">உங்கள் புத்தகங்கள் கிடைக்கவில்லையா?</string>
     <string name="folder.add.no_picker.message">Pageturner உங்கள் புத்தகங்களை Android-இன் கோப்புத் தேர்வுக் கருவி மூலம் திறக்கிறது. அது இல்லாமல், உங்கள் கோப்புறைகளையோ கோப்புகளையோ Pageturner-ஆல் திறக்க முடியாது.</string>
     <string name="folder.add.no_picker.title">இந்தச் சாதனத்தில் கோப்புத் தேர்வுக் கருவி இல்லை</string>
@@ -231,8 +240,14 @@
     <string name="history.source.unplugged">ஆடியோ துண்டிக்கப்பட்டது</string>
     <string name="history.source.watch">கைக்கடிகாரம்</string>
     <string name="history.source.widget">விட்ஜெட்</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d தொடர்</item>
+        <item quantity="other">%d தொடர்கள்</item>
+    </plurals>
     <string name="library.book.downloading">பதிவிறக்குகிறது</string>
     <string name="library.book.ebook">மின்புத்தகம்</string>
+    <string name="library.book.hidden">மறைக்கப்பட்டது</string>
+    <string name="library.book.hidden.message">%1$s மறைக்கப்பட்டது</string>
     <string name="library.book.offline">ஆஃப்லைனில் கிடைக்காது</string>
     <string name="library.category.completed.title">முடித்தவை</string>
     <string name="library.category.current.title">தற்போது கேட்பவை</string>
@@ -243,9 +258,16 @@
     <string name="library.empty.title">புத்தகங்கள் எதுவும் கிடைக்கவில்லை</string>
     <string name="library.empty.message">உங்கள் கோப்புறைகளில் Pageturner-ஆல் எந்தப் புத்தகத்தையும் கண்டறிய முடியவில்லை. கோப்புகள் இன்னும் அங்கே உள்ளனவா எனச் சரிபார்க்கவும், அல்லது ஒரு கோப்புறையைச் சேர்க்கவும்.</string>
     <string name="library.empty.action">கோப்புறைகளைக் காட்டு</string>
-    <string name="library.folders.title">புத்தகக் கோப்புறைகள்</string>
-    <string name="library.folders.moved.dialog.title">புத்தகக் கோப்புறைகள் நகர்த்தப்பட்டன</string>
+    <string name="library.filter">வடிகட்டு</string>
+    <string name="library.filter.group_by">இதன்படி குழுவாக்கு</string>
+    <string name="library.filter.group_by.author">ஆசிரியர்</string>
+    <string name="library.filter.group_by.series">தொடர்</string>
+    <string name="library.filter.hidden_books">மறைக்கப்பட்ட புத்தகங்கள்</string>
+    <string name="library.filter.not_downloaded">பதிவிறக்கப்படாதவை</string>
+    <string name="library.filter.show">காட்டு</string>
     <string name="library.folders.moved.dialog.message">இப்போது புத்தகக் கோப்புறைகளை அமைப்புகளில் நிர்வகிக்கலாம்.</string>
+    <string name="library.folders.moved.dialog.title">புத்தகக் கோப்புறைகள் நகர்த்தப்பட்டன</string>
+    <string name="library.folders.title">புத்தகக் கோப்புறைகள்</string>
     <string name="library.folders.no_access">அணுகல் இல்லை</string>
     <string name="library.folders.no_access.action">அணுகலை அனுமதி</string>
     <string name="library.folders.no_access.badge">உங்கள் கோப்புறைகளுக்கான அணுகலை மீண்டும் அனுமதிக்கவும்</string>
@@ -257,6 +279,11 @@
         <item quantity="one">%d புத்தகம் கேட்கப்படுகிறது</item>
         <item quantity="other">%d புத்தகங்கள் கேட்கப்படுகின்றன</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d மறைக்கப்பட்ட புத்தகம்</item>
+        <item quantity="other">%d மறைக்கப்பட்ட புத்தகங்கள்</item>
+    </plurals>
+    <string name="library.no_author">ஆசிரியர் இல்லை</string>
     <string name="library.search.browse.title">உலாவு</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d புத்தகம்</item>
@@ -288,6 +315,30 @@
     <string name="library.search.recent.clear_all">அனைத்தையும் அழி</string>
     <string name="library.search.recent.remove">%s ஐ அகற்று</string>
     <string name="library.search.recent.title">அண்மையவை</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">%d புத்தகத்திற்கு ஆசிரியர் அமைக்கப்பட்டது</item>
+        <item quantity="other">%d புத்தகங்களுக்கு ஆசிரியர் அமைக்கப்பட்டது</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d தேர்ந்தெடுக்கப்பட்டது</item>
+        <item quantity="other">%d தேர்ந்தெடுக்கப்பட்டன</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d புத்தகம் மறைக்கப்பட்டது</item>
+        <item quantity="other">%d புத்தகங்கள் மறைக்கப்பட்டன</item>
+    </plurals>
+    <string name="library.selection.hide">மறை</string>
+    <string name="library.selection.select_all">அனைத்தையும் தேர்ந்தெடு</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">%d புத்தகத்திற்குத் தொடர் அமைக்கப்பட்டது</item>
+        <item quantity="other">%d புத்தகங்களுக்குத் தொடர் அமைக்கப்பட்டது</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">%d புத்தகத்தை உங்கள் சர்வரில் சேமிக்க முடியவில்லை</item>
+        <item quantity="other">%d புத்தகங்களை உங்கள் சர்வரில் சேமிக்க முடியவில்லை</item>
+    </plurals>
+    <string name="library.selection.show">காட்டு</string>
+    <string name="library.series.hidden.message">%1$s மறைக்கப்பட்டது</string>
     <string name="library.storage_permission_bug.action">அனுமதி வழங்கு</string>
     <string name="library.storage_permission_bug.message">சில சாதனங்களுக்கு, ஒரு கணினி பயன்பாடு வெளிப்புற சேமிப்பிடத்தை அணுக தேவையான அனுமதியைக் காணவில்லை. உங்கள் ஆடியோபுக்குகளைப் படிக்க Pageturner-க்கு இந்த அணுகல் தேவை.</string>
     <string name="library.storage_permission_bug.title">அனுமதி தேவை</string>
@@ -575,6 +626,16 @@
     <string name="reader.word_spacing">சொல் இடைவெளி</string>
     <string name="series.continue">தொடர்க</string>
     <string name="series.continue_book">புத்தகம் %s-ஐத் தொடர்க</string>
+    <string name="series.mark_completed">முடித்ததாகக் குறி</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">%d புத்தகத்தில் நீங்கள் நிறுத்திய இடத்தை இழப்பீர்கள்.</item>
+        <item quantity="other">%d புத்தகங்களில் நீங்கள் நிறுத்திய இடத்தை இழப்பீர்கள்.</item>
+    </plurals>
+    <string name="series.mark_not_started">தொடங்காததாகக் குறி</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">%d புத்தகத்தில் உங்கள் முன்னேற்றத்தை இழப்பீர்கள்.</item>
+        <item quantity="other">%d புத்தகங்களில் உங்கள் முன்னேற்றத்தை இழப்பீர்கள்.</item>
+    </plurals>
     <string name="series.start">தொடங்கு</string>
     <string name="series.start_book">புத்தகம் %s-ஐத் தொடங்கு</string>
     <string name="settings.about.app_version.title">பயன்பாட்டு பதிப்பு</string>

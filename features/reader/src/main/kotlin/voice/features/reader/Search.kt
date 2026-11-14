@@ -20,24 +20,26 @@ internal suspend fun searchBook(
   content: ReaderContent,
   query: String,
   limit: Int = 500,
-): List<SearchResult> = withContext(Dispatchers.Default) {
-  val results = mutableListOf<SearchResult>()
-  if (query.isEmpty()) return@withContext results
-  for (section in 0 until content.sectionCount) {
-    ensureActive()
-    val text = when (content) {
-      is ReaderContent.Epub -> content.chapters[section]
-      is ReaderContent.Pdf -> content.pdf.text(section)
+): List<SearchResult> =
+  withContext(Dispatchers.Default) {
+    val results = mutableListOf<SearchResult>()
+    if (query.isEmpty()) return@withContext results
+    for (section in 0 until content.sectionCount) {
+      ensureActive()
+      val text =
+        when (content) {
+          is ReaderContent.Epub -> content.chapters[section]
+          is ReaderContent.Pdf -> content.pdf.text(section)
+        }
+      var start = text.indexOf(query, ignoreCase = true)
+      while (start != -1) {
+        if (results.size == limit) return@withContext results
+        results += searchResult(text, BookRange(section, start, start + query.length))
+        start = text.indexOf(query, startIndex = start + query.length, ignoreCase = true)
+      }
     }
-    var start = text.indexOf(query, ignoreCase = true)
-    while (start != -1) {
-      if (results.size == limit) return@withContext results
-      results += searchResult(text, BookRange(section, start, start + query.length))
-      start = text.indexOf(query, startIndex = start + query.length, ignoreCase = true)
-    }
+    results
   }
-  results
-}
 
 private fun searchResult(
   text: String,

@@ -31,14 +31,15 @@ internal class DownloadFolderChooser(
     val chosen = current()
     if (!isOpen) return null
     return DownloadFolderSheetState(
-      folders = choices.map { folder ->
-        DownloadFolderItem(
-          uri = folder.uri,
-          name = folder.name,
-          type = folder.type,
-          selected = folder.uri == chosen?.uri,
-        )
-      },
+      folders =
+        choices.map { folder ->
+          DownloadFolderItem(
+            uri = folder.uri,
+            name = folder.name,
+            type = folder.type,
+            selected = folder.uri == chosen?.uri,
+          )
+        },
       failed = failed,
       busy = busy,
     )
@@ -51,7 +52,10 @@ internal class DownloadFolderChooser(
     open(onChosen = null)
   }
 
-  /** Runs [download] right away, or once a folder is chosen when there's none or it can't be used anymore. */
+  /**
+   * Runs [download] right away, or once a folder is chosen when there's none or it can't be used
+   * anymore.
+   */
   fun beforeDownload(download: () -> Unit) {
     scope.launch {
       if (folders.current.first() != null) {

@@ -1,5 +1,10 @@
 package voice.core.opds.komga
 
+import java.net.URLDecoder
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.format.DateTimeParseException
+import kotlin.math.abs
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -9,24 +14,26 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.intOrNull
 import voice.core.data.EbookFormat
-import java.net.URLDecoder
-import java.time.Instant
-import java.time.OffsetDateTime
-import java.time.format.DateTimeParseException
-import kotlin.math.abs
 
 private val fileLink = Regex("/books/([^/?#]+)/file(?:[/?#]|$)")
 private val komgaId = Regex("[A-Za-z0-9]+")
 
 /**
- * Komga links the file of a book at `/opds/v1.2/books/{id}/file/…` or `/api/v1/books/{id}/file`, and its OPDS entries
- * carry the book id too.
+ * Komga links the file of a book at `/opds/v1.2/books/{id}/file/…` or `/api/v1/books/{id}/file`,
+ * and its OPDS entries carry the book id too.
  */
 public fun komgaBookId(
   acquisitionUrl: String,
   entryId: String,
 ): String? {
-  fileLink.find(acquisitionUrl)?.groupValues?.get(1)?.takeIf { komgaId.matches(it) }?.let { return it }
+  fileLink
+    .find(acquisitionUrl)
+    ?.groupValues
+    ?.get(1)
+    ?.takeIf { komgaId.matches(it) }
+    ?.let {
+      return it
+    }
   return entryId.substringAfterLast(':').takeIf { komgaId.matches(it) }
 }
 
@@ -44,10 +51,13 @@ public data class RemotePlace(
   val completed: Boolean,
 )
 
-/** Places closer than this are the same page, so taking them would only move the reader a little. */
+/**
+ * Places closer than this are the same page, so taking them would only move the reader a little.
+ */
 private const val SAME_PLACE = 0.005
 
-public fun RemotePlace.isSamePlaceAs(progress: Float): Boolean = abs(totalProgression - progress) < SAME_PLACE
+public fun RemotePlace.isSamePlaceAs(progress: Float): Boolean =
+  abs(totalProgression - progress) < SAME_PLACE
 
 internal data class KomgaBookProgress(
   /** Counted from 1. */
@@ -68,14 +78,16 @@ internal fun syncAction(
   positionModified: Long,
   syncedPosition: Long,
   remoteModified: Long?,
-): SyncAction = when {
-  remoteModified != null && remoteModified > positionModified -> SyncAction.Pull
-  positionModified > syncedPosition -> SyncAction.Push
-  else -> SyncAction.Nothing
-}
+): SyncAction =
+  when {
+    remoteModified != null && remoteModified > positionModified -> SyncAction.Pull
+    positionModified > syncedPosition -> SyncAction.Push
+    else -> SyncAction.Nothing
+  }
 
 internal sealed interface KomgaUpdate {
   data object Unread : KomgaUpdate
+
   data object Read : KomgaUpdate
 
   /** Counted from 1. */
@@ -89,8 +101,8 @@ internal sealed interface KomgaUpdate {
 }
 
 /**
- * What to tell the server about the place in a book. [readiumLocator] only counts while it's where the reader is, as the
- * old book engine doesn't move it.
+ * What to tell the server about the place in a book. [readiumLocator] only counts while it's where
+ * the reader is, as the old book engine doesn't move it.
  */
 internal fun komgaUpdate(
   format: EbookFormat,
@@ -106,7 +118,8 @@ internal fun komgaUpdate(
     else -> {
       val locator = readiumLocator?.let(::parseObject)
       val locations = locator?.obj("locations")
-      val current = locations?.double("totalProgression")?.let { abs(it - progress) < 0.0001 } == true
+      val current =
+        locations?.double("totalProgression")?.let { abs(it - progress) < 0.0001 } == true
       KomgaUpdate.Progression(
         totalProgression = progress.toDouble(),
         href = locator?.string("href")?.takeIf { current }?.let(::decodeHref),
@@ -117,8 +130,8 @@ internal fun komgaUpdate(
 }
 
 /**
- * The position of the server at or right before [update]. Komga only takes the progressions of its own positions, so
- * the one sent is always one of them.
+ * The position of the server at or right before [update]. Komga only takes the progressions of its
+ * own positions, so the one sent is always one of them.
  */
 internal fun positionAt(
   positions: List<JsonObject>,
@@ -129,7 +142,9 @@ internal fun positionAt(
     val inFile = positions.filter { it.string("href")?.let(::decodeHref) == update.href }
     if (inFile.isNotEmpty()) {
       val progression = update.progression ?: 0.0
-      return inFile.lastOrNull { (it.obj("locations")?.double("progression") ?: 0.0) <= progression } ?: inFile.first()
+      return inFile.lastOrNull {
+        (it.obj("locations")?.double("progression") ?: 0.0) <= progression
+      } ?: inFile.first()
     }
   }
   val index = (update.totalProgression * positions.size).toInt().coerceIn(0, positions.lastIndex)
@@ -143,17 +158,20 @@ internal fun remotePlace(
 ): RemotePlace {
   val locations = locator?.obj("locations")
   val pageCount = book.pageCount.coerceAtLeast(1)
-  val totalProgression = when {
-    book.completed -> 1.0
-    format == EbookFormat.Pdf -> (book.page - 1).toDouble() / (pageCount - 1).coerceAtLeast(1)
-    else -> locations?.double("totalProgression") ?: (book.page.toDouble() / pageCount)
-  }.coerceIn(0.0, 1.0)
+  val totalProgression =
+    when {
+      book.completed -> 1.0
+      format == EbookFormat.Pdf -> (book.page - 1).toDouble() / (pageCount - 1).coerceAtLeast(1)
+      else -> locations?.double("totalProgression") ?: (book.page.toDouble() / pageCount)
+    }.coerceIn(0.0, 1.0)
   return RemotePlace(
     modified = book.modified,
     totalProgression = totalProgression,
-    href = locator?.string("href")?.takeIf { it.isNotEmpty() && !book.completed }?.let(::decodeHref),
+    href =
+      locator?.string("href")?.takeIf { it.isNotEmpty() && !book.completed }?.let(::decodeHref),
     progression = locations?.double("progression")?.takeIf { !book.completed },
-    page = if (format == EbookFormat.Pdf) (if (book.completed) pageCount else book.page) - 1 else null,
+    page =
+      if (format == EbookFormat.Pdf) (if (book.completed) pageCount else book.page) - 1 else null,
     completed = book.completed,
   )
 }
@@ -174,7 +192,9 @@ internal fun parseBookProgress(json: String): KomgaBookProgress? {
 internal fun parseProgressionLocator(json: String): JsonObject? = parseObject(json)?.obj("locator")
 
 internal fun parsePositions(json: String): List<JsonObject> {
-  return (parseObject(json)?.get("positions") as? JsonArray).orEmpty().filterIsInstance<JsonObject>()
+  return (parseObject(json)?.get("positions") as? JsonArray)
+    .orEmpty()
+    .filterIsInstance<JsonObject>()
 }
 
 internal fun parseInstant(text: String): Long? {
@@ -214,7 +234,8 @@ private fun JsonObject.obj(key: String): JsonObject? = get(key) as? JsonObject
 
 private fun JsonObject.primitive(key: String): JsonPrimitive? = get(key) as? JsonPrimitive
 
-private fun JsonObject.string(key: String): String? = primitive(key)?.takeIf { it.isString }?.contentOrNull
+private fun JsonObject.string(key: String): String? =
+  primitive(key)?.takeIf { it.isString }?.contentOrNull
 
 private fun JsonObject.double(key: String): Double? = primitive(key)?.doubleOrNull
 

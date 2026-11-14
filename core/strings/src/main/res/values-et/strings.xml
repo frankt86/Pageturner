@@ -58,6 +58,7 @@
     <string name="audiobookshelf.status.needs_login">Server soovib, et logiksid uuesti sisse</string>
     <string name="audiobookshelf.status.offline">Server pole praegu kättesaadav. Allalaaditud raamatuid saad ikka kuulata.</string>
     <string name="audiobookshelf.status.syncing">Sünkroonimine…</string>
+    <string name="author.wikipedia">Loe edasi Vikipeediast</string>
     <string name="book.category.action.mark_completed">Märgi kuulatuks</string>
     <string name="book.category.action.mark_current">Märgi kuulamisel olevaks</string>
     <string name="book.category.action.mark_not_started">Märgi ootel olevaks</string>
@@ -82,8 +83,11 @@
     <string name="book.edit.server.failed">Serverisse salvestamine ebaõnnestus. Proovi uuesti.</string>
     <string name="book.edit.server.not_allowed">Sinu kontol pole serveris luba raamatuid muuta.</string>
     <string name="book.edit.title.label">Pealkiri</string>
+    <string name="book.hide">Peida raamatukogust</string>
     <string name="book.remove_from_library">Eemalda raamatukogust</string>
     <string name="book.remove_from_library.summary">Fail jääb sinu seadmesse</string>
+    <string name="book.select">Vali</string>
+    <string name="book.show">Näita raamatukogus</string>
     <string name="book.source.device">Selles seadmes</string>
     <string name="book.source.server_downloaded">%s · alla laaditud</string>
     <string name="bookmark.action.add_note">Lisa märkus</string>
@@ -154,8 +158,13 @@
     <string name="folder.add.action.file">Lisa hoopis üksik fail</string>
     <string name="folder.add.action.folder">Vali kaust</string>
     <string name="folder.add.action.opds">Laadi kataloogist alla</string>
+    <string name="folder.add.help.answer.no_files">Pole veel heliraamatuid</string>
+    <string name="folder.add.help.answer.not_found">Ei leia neid</string>
+    <string name="folder.add.help.answer.other_app">Need on teises rakenduses</string>
     <string name="folder.add.help.computer">Kas sinu raamatud on veel arvutis? Kopeeri need kõigepealt telefoni, näiteks kausta Audiobooks või Documents.</string>
     <string name="folder.add.help.download">Android ei luba rakendustel avada kausta Download ennast. Vali kaust selle seest.</string>
+    <string name="folder.add.help.no_files">Pageturner esitab sinu telefonis olevaid heliraamatufaile. LibriVox pakub allalaadimiseks tuhandeid tasuta heliraamatuid.</string>
+    <string name="folder.add.help.other_app">Selliste rakenduste nagu Audible või Spotify raamatuid saab kuulata ainult neis rakendustes. Pageturner esitab heliraamatufaile, näiteks MP3 või M4B.</string>
     <string name="folder.add.help.title">Ei leidnud oma raamatuid?</string>
     <string name="folder.add.no_picker.message">Pageturner avab sinu raamatud Androidi failivalija kaudu. Ilma selleta ei saa Pageturner sinu kaustu ega faile avada.</string>
     <string name="folder.add.no_picker.title">Selles seadmes pole failivalijat</string>
@@ -231,8 +240,14 @@
     <string name="history.source.unplugged">Heliseade lahutatud</string>
     <string name="history.source.watch">Nutikell</string>
     <string name="history.source.widget">Vidin</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d sari</item>
+        <item quantity="other">%d sarja</item>
+    </plurals>
     <string name="library.book.downloading">Laaditakse alla</string>
     <string name="library.book.ebook">E-raamat</string>
+    <string name="library.book.hidden">Peidetud</string>
+    <string name="library.book.hidden.message">%1$s on peidetud</string>
     <string name="library.book.offline">Pole võrguühenduseta saadaval</string>
     <string name="library.category.completed.title">Kuulatud</string>
     <string name="library.category.current.title">Kuulamisel</string>
@@ -243,9 +258,16 @@
     <string name="library.empty.title">Raamatuid ei leitud</string>
     <string name="library.empty.message">Pageturner ei leia sinu kaustadest ühtegi raamatut. Kontrolli, kas failid on veel alles, või lisa kaust.</string>
     <string name="library.empty.action">Näita kaustu</string>
-    <string name="library.folders.title">Raamatute kaustad</string>
-    <string name="library.folders.moved.dialog.title">Raamatute kaustad teisaldati</string>
+    <string name="library.filter">Filtreeri</string>
+    <string name="library.filter.group_by">Rühmita</string>
+    <string name="library.filter.group_by.author">Autor</string>
+    <string name="library.filter.group_by.series">Sari</string>
+    <string name="library.filter.hidden_books">Peidetud raamatud</string>
+    <string name="library.filter.not_downloaded">Alla laadimata</string>
+    <string name="library.filter.show">Näita</string>
     <string name="library.folders.moved.dialog.message">Nüüd saad raamatute kaustu hallata seadetes.</string>
+    <string name="library.folders.moved.dialog.title">Raamatute kaustad teisaldati</string>
+    <string name="library.folders.title">Raamatute kaustad</string>
     <string name="library.folders.no_access">Juurdepääs puudub</string>
     <string name="library.folders.no_access.action">Luba juurdepääs</string>
     <string name="library.folders.no_access.badge">Luba uuesti juurdepääs oma kaustadele</string>
@@ -257,6 +279,11 @@
         <item quantity="one">%d pooleli raamat</item>
         <item quantity="other">%d pooleli raamatut</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d peidetud raamat</item>
+        <item quantity="other">%d peidetud raamatut</item>
+    </plurals>
+    <string name="library.no_author">Autorita</string>
     <string name="library.search.browse.title">Sirvi</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d raamat</item>
@@ -288,6 +315,30 @@
     <string name="library.search.recent.clear_all">Tühjenda kõik</string>
     <string name="library.search.recent.remove">Eemalda %s</string>
     <string name="library.search.recent.title">Hiljutised</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">Autor on määratud %d raamatule</item>
+        <item quantity="other">Autor on määratud %d raamatule</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d valitud</item>
+        <item quantity="other">%d valitud</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d raamat on peidetud</item>
+        <item quantity="other">%d raamatut on peidetud</item>
+    </plurals>
+    <string name="library.selection.hide">Peida</string>
+    <string name="library.selection.select_all">Vali kõik</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">Sari on määratud %d raamatule</item>
+        <item quantity="other">Sari on määratud %d raamatule</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">%d raamatut ei õnnestunud sinu serverisse salvestada</item>
+        <item quantity="other">%d raamatut ei õnnestunud sinu serverisse salvestada</item>
+    </plurals>
+    <string name="library.selection.show">Näita</string>
+    <string name="library.series.hidden.message">%1$s on peidetud</string>
     <string name="library.storage_permission_bug.action">Anna õigused</string>
     <string name="library.storage_permission_bug.message">Mõnedes seadmetes puudub ühel süsteemirakendusel vajalik õigus lugeda andmeid väliselt andmekandjalt. See ligipääs on vajalik, et Pageturner saaks lugeda sinu heliraamatute faile.</string>
     <string name="library.storage_permission_bug.title">Õigused on vajalikud</string>
@@ -575,6 +626,16 @@
     <string name="reader.word_spacing">Sõnavahe</string>
     <string name="series.continue">Jätka</string>
     <string name="series.continue_book">Jätka raamatut %s</string>
+    <string name="series.mark_completed">Märgi kuulatuks</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">Sa kaotad oma järje %d raamatus.</item>
+        <item quantity="other">Sa kaotad oma järje %d raamatus.</item>
+    </plurals>
+    <string name="series.mark_not_started">Märgi ootel olevaks</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">Sa kaotad oma edenemise %d raamatus.</item>
+        <item quantity="other">Sa kaotad oma edenemise %d raamatus.</item>
+    </plurals>
     <string name="series.start">Alusta</string>
     <string name="series.start_book">Alusta raamatut %s</string>
     <string name="settings.about.app_version.title">Rakenduse versioon</string>

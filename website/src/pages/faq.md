@@ -6,6 +6,88 @@ description: Answers to common questions about Voice, the audiobook player for A
 
 # Questions and answers
 
+<h2 id="folders">How does Voice find the books in my folder?</h2>
+
+In Voice, a book is always one folder or one file. All audio files in a book's folder are its chapters, also those in
+folders inside it, in the order of their names.
+
+When you add a folder, Voice guesses how it's organized and shows you the books it found before adding them. If they
+don't look right, tap **Change how books are found**. The three options only differ in how deep the books are:
+
+| Option                     | A book is                            | Example                                |
+|----------------------------|--------------------------------------|----------------------------------------|
+| **One book**               | The folder you picked                | `The Hobbit/01.mp3`                    |
+| **Every folder is a book** | Each folder in the folder you picked | `Audiobooks/The Hobbit/01.mp3`         |
+| **Folders are authors**    | Each folder one level deeper         | `Audiobooks/Tolkien/The Hobbit/01.mp3` |
+
+You can change the option later under **Settings » Library » Audiobook folders** by tapping the folder. Your progress
+and bookmarks stay with your books.
+
+### One book
+
+The folder you picked is one book. Pick this when you add a single book.
+
+```
+Pride and Prejudice/      ← the folder you picked
+├─ CD 1/
+│   ├─ 01.mp3
+│   └─ 02.mp3
+└─ CD 2/
+    └─ 01.mp3
+```
+
+Voice finds one book, `Pride and Prejudice`, with three chapters.
+
+### Every folder is a book
+
+Each folder in the folder you picked is a book. So is each audio file right in it, like an M4B file.
+
+```
+Audiobooks/               ← the folder you picked
+├─ The Hobbit/
+│   ├─ 01.mp3
+│   └─ 02.mp3
+├─ Moby Dick/
+│   ├─ CD 1/
+│   └─ CD 2/
+└─ The Little Prince.m4b
+```
+
+Voice finds three books: `The Hobbit`, `Moby Dick` and `The Little Prince`.
+
+### Folders are authors
+
+Each folder in the folder you picked holds the books of one author, or of one series. Each folder or audio file in it is
+a book.
+
+```
+Audiobooks/               ← the folder you picked
+├─ Tolkien/
+│   ├─ The Hobbit/
+│   │   ├─ 01.mp3
+│   │   └─ 02.mp3
+│   └─ The Silmarillion.m4b
+└─ Woolf/
+    ├─ Mrs Dalloway/
+    └─ To the Lighthouse/
+```
+
+Voice finds four books: `The Hobbit`, `The Silmarillion`, `Mrs Dalloway` and `To the Lighthouse`. The author folders
+only tell Voice where the books are. The name of the author comes from the tags in your files.
+
+### When your books don't look right
+
+- **Several books became one long book**, with all their chapters in a row: your books are one folder deeper. Pick the
+  next option down in the table above.
+- **Every chapter became a book of its own**: your books are one folder higher. Pick the next option up.
+- **"Looks like 7 books"** on a book in the list of books found: the folders in it look like books of their own.
+  The next option down usually fits.
+- **Your books are organized in different ways**, like an author folder with a series folder in it: Voice uses one
+  option for the whole folder. Keep the books that are organized differently in a folder of their own, and add it with
+  the option that fits it.
+
+To add a book that's a single audio file, tap **Add a single file instead**.
+
 ## Does Voice support Android Auto?
 
 Yes, Voice fully supports Android Auto!
@@ -47,6 +129,19 @@ To check your API level, go to **Settings » About » Android version** on your 
 | Android 7.1     | 25              | [8.2.4‑2](https://github.com/PaulWoitaschek/Voice/releases/tag/8.2.4-2) |
 | Android 7.0     | 24              | [6.0.10](https://github.com/PaulWoitaschek/Voice/releases/tag/6.0.10)   |
 
+## How do I verify the Voice APK?
+
+Voice from Google Play, GitHub and IzzyOnDroid is signed with my key. Compare the SHA-256 fingerprint of its signing
+certificate with this one, for example with [AppVerifier](https://github.com/soupslurpr/AppVerifier) or
+`apksigner verify --print-certs`:
+
+```
+de.ph1b.audiobook
+11:A4:CA:EE:0B:A3:EB:5A:35:2D:11:25:AB:D3:29:25:20:9E:89:60:15:A5:D9:CA:0F:D9:F8:2D:AE:20:4F:AA
+```
+
+F-Droid builds Voice from the source code and signs it with its own key, so its fingerprint is different.
+
 ## How do I resume playback after the sleep timer stops?
 
 Before the sleep timer elapses, the sound fades out for a few seconds, then Voice pauses playback. To keep listening,
@@ -61,10 +156,10 @@ On some devices (e.g. Samsung S20fe) shake-to-resume may not work reliably.
 
 ## How do I continue a book on another device?
 
-Voice keeps your place, your playback speed, your bookmarks and the titles and authors you gave your books in a
-hidden `.voice` folder inside each audiobook folder you added. Sync these folders between your devices with a tool of
-your own, like [Syncthing](https://syncthing.net), and when you open Voice on the other device, it picks up where you
-left off.
+Voice keeps your place, your playback speed, your bookmarks, the titles and authors you gave your books and the books
+you hid from your library in a hidden `.voice` folder inside each audiobook folder you added. Sync these folders between
+your devices with a tool of your own, like [Syncthing](https://syncthing.net), and when you open Voice on the other
+device, it picks up where you left off.
 
 - Add the same folder on every device, and the same way, for example as "Every folder is a book" on both. Where the
   folder is on each device doesn't matter.
@@ -74,67 +169,8 @@ left off.
 - Your sync tool has to copy hidden folders.
 - A book that is playing stays where it is.
 
-If you share a folder with your family and don't want each other's place, names and bookmarks, let your sync tool
-ignore `.voice`. In Syncthing, add `.voice` to the folder's ignore patterns.
-
-<h2 id="folders">How does Voice find the books in my folder?</h2>
-
-Pick the folder with your audiobooks. Voice looks at how the files inside are organized and shows you the books it found before
-adding them. If the books don't look right, tap **Change how books are found** and pick one of the three options below. You can
-change this later in the settings under **Audiobook folders** by tapping the folder. Your progress and bookmarks stay with your books.
-
-### Every folder is a book
-
-Each folder within your selected folder is a separate audiobook. Any audio files directly inside the selected folder (not in a
-subfolder) are audiobooks as well.
-
-```
-/Audiobooks
-├─ TheHobbit/
-│   ├─ chapter1.mp3
-│   └─ chapter2.mp3
-├─ MobyDick/
-│   ├─ chapter1.mp3
-│   └─ chapter2.mp3
-└─ LittlePrince.mp3
-```
-
-Voice recognizes three audiobooks: `TheHobbit`, `MobyDick`, and the single-file book `LittlePrince`.
-
-### One book
-
-The selected folder itself is one audiobook, with files inside treated as chapters. This includes files in subfolders, such as
-`CD 1` and `CD 2`.
-
-```
-/PrideAndPrejudice
-├─ Chapter1.mp3
-├─ Chapter2.mp3
-└─ Chapter3.mp3
-```
-
-Voice recognizes one audiobook: `PrideAndPrejudice`.
-
-### Folders are authors
-
-First-level folders represent authors (or series), and their subfolders represent audiobooks.
-
-```
-/Authors
-├─ Woolf/
-│   ├─ MrsDalloway/
-│   │   ├─ chapter1.mp3
-│   │   └─ chapter2.mp3
-│   └─ ToTheLighthouse/
-│       ├─ chapter1.mp3
-│       └─ chapter2.mp3
-└─ Tolkien/
-    └─ TheHobbit/
-        ├─ chapter1.mp3
-        └─ chapter2.mp3
-```
-
-Voice recognizes authors (`Woolf`, `Tolkien`) and their audiobooks (`MrsDalloway`, `ToTheLighthouse`, `TheHobbit`).
+If you share a folder with your family and don't want each other's place, names, hidden books and bookmarks, let your
+sync tool ignore `.voice`. In Syncthing, add `.voice` to the folder's ignore patterns.
 
 ## Didn't find an answer?
 

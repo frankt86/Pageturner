@@ -58,6 +58,7 @@
     <string name="audiobookshelf.status.needs_login">A szerver újbóli bejelentkezést kér</string>
     <string name="audiobookshelf.status.offline">A szerver most nem érhető el. A letöltött könyvek továbbra is lejátszhatók.</string>
     <string name="audiobookshelf.status.syncing">Szinkronizálás…</string>
+    <string name="author.wikipedia">Bővebben a Wikipédián</string>
     <string name="book.category.action.mark_completed">Megjelölés befejezettként</string>
     <string name="book.category.action.mark_current">Megjelölés aktuálisként</string>
     <string name="book.category.action.mark_not_started">Megjelölés még el nem kezdettként</string>
@@ -82,8 +83,11 @@
     <string name="book.edit.server.failed">Nem sikerült menteni a szerverre. Próbálja újra.</string>
     <string name="book.edit.server.not_allowed">A szerveren lévő fiókja nem módosíthat könyveket.</string>
     <string name="book.edit.title.label">Cím</string>
+    <string name="book.hide">Elrejtés a könyvtárból</string>
     <string name="book.remove_from_library">Eltávolítás a könyvtárból</string>
     <string name="book.remove_from_library.summary">A fájl az eszközén marad</string>
+    <string name="book.select">Kijelölés</string>
+    <string name="book.show">Megjelenítés a könyvtárban</string>
     <string name="book.source.device">Ezen az eszközön</string>
     <string name="book.source.server_downloaded">%s · letöltve</string>
     <string name="bookmark.action.add_note">Jegyzet hozzáadása</string>
@@ -154,8 +158,13 @@
     <string name="folder.add.action.file">Inkább egyetlen fájl hozzáadása</string>
     <string name="folder.add.action.folder">Mappa kiválasztása</string>
     <string name="folder.add.action.opds">Letöltés katalógusból</string>
+    <string name="folder.add.help.answer.no_files">Még nincs hangoskönyvem</string>
+    <string name="folder.add.help.answer.not_found">Nem találom őket</string>
+    <string name="folder.add.help.answer.other_app">Másik alkalmazásban vannak</string>
     <string name="folder.add.help.computer">A könyvei még a számítógépén vannak? Másolja át őket előbb a telefonjára, például az Audiobooks vagy a Documents mappába.</string>
     <string name="folder.add.help.download">Az Android nem engedi, hogy az alkalmazások megnyissák magát a Download mappát. Válasszon egy mappát azon belül.</string>
+    <string name="folder.add.help.no_files">A Pageturner a telefonján lévő hangoskönyvfájlokat játssza le. A LibriVoxról ezreket tölthet le ingyen.</string>
+    <string name="folder.add.help.other_app">Az olyan alkalmazások könyvei, mint az Audible vagy a Spotify, csak ezekben az alkalmazásokban játszhatók le. A Pageturner hangoskönyvfájlokat játszik le, például MP3-at vagy M4B-t.</string>
     <string name="folder.add.help.title">Nem találja a könyveit?</string>
     <string name="folder.add.no_picker.message">A Pageturner az Android fájlválasztójával nyitja meg a könyveit. Nélküle a Pageturner sem a mappáit, sem a fájljait nem tudja megnyitni.</string>
     <string name="folder.add.no_picker.title">Ezen az eszközön nincs fájlválasztó</string>
@@ -231,8 +240,14 @@
     <string name="history.source.unplugged">Hangkapcsolat megszakadt</string>
     <string name="history.source.watch">Óra</string>
     <string name="history.source.widget">Widget</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d sorozat</item>
+        <item quantity="other">%d sorozat</item>
+    </plurals>
     <string name="library.book.downloading">Letöltés folyamatban</string>
     <string name="library.book.ebook">E-könyv</string>
+    <string name="library.book.hidden">Rejtett</string>
+    <string name="library.book.hidden.message">„%1$s” elrejtve</string>
     <string name="library.book.offline">Offline nem érhető el</string>
     <string name="library.category.completed.title">Befejezett</string>
     <string name="library.category.current.title">Aktuális</string>
@@ -243,9 +258,16 @@
     <string name="library.empty.title">Nem található könyv</string>
     <string name="library.empty.message">A Pageturner nem talál könyvet a mappáiban. Ellenőrizze, hogy a fájlok még a helyükön vannak-e, vagy adjon hozzá egy mappát.</string>
     <string name="library.empty.action">Mappák megjelenítése</string>
-    <string name="library.folders.title">Könyvmappák</string>
-    <string name="library.folders.moved.dialog.title">Új helyen a könyvmappák</string>
+    <string name="library.filter">Szűrés</string>
+    <string name="library.filter.group_by">Csoportosítás</string>
+    <string name="library.filter.group_by.author">Szerző</string>
+    <string name="library.filter.group_by.series">Sorozat</string>
+    <string name="library.filter.hidden_books">Rejtett könyvek</string>
+    <string name="library.filter.not_downloaded">Nem letöltött</string>
+    <string name="library.filter.show">Megjelenítés</string>
     <string name="library.folders.moved.dialog.message">A könyvmappákat mostantól a Beállításokban kezelheti.</string>
+    <string name="library.folders.moved.dialog.title">Új helyen a könyvmappák</string>
+    <string name="library.folders.title">Könyvmappák</string>
     <string name="library.folders.no_access">Nincs hozzáférés</string>
     <string name="library.folders.no_access.action">Hozzáférés engedélyezése</string>
     <string name="library.folders.no_access.badge">Engedélyezze újra a hozzáférést a mappáihoz</string>
@@ -257,6 +279,11 @@
         <item quantity="one">%d könyv folyamatban</item>
         <item quantity="other">%d könyv folyamatban</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d rejtett könyv</item>
+        <item quantity="other">%d rejtett könyv</item>
+    </plurals>
+    <string name="library.no_author">Szerző nélkül</string>
     <string name="library.search.browse.title">Böngészés</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d könyv</item>
@@ -288,6 +315,30 @@
     <string name="library.search.recent.clear_all">Összes törlése</string>
     <string name="library.search.recent.remove">%s eltávolítása</string>
     <string name="library.search.recent.title">Legutóbbiak</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">%d könyv szerzője beállítva</item>
+        <item quantity="other">%d könyv szerzője beállítva</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d kijelölve</item>
+        <item quantity="other">%d kijelölve</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d könyv elrejtve</item>
+        <item quantity="other">%d könyv elrejtve</item>
+    </plurals>
+    <string name="library.selection.hide">Elrejtés</string>
+    <string name="library.selection.select_all">Összes kijelölése</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">%d könyv sorozata beállítva</item>
+        <item quantity="other">%d könyv sorozata beállítva</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">%d könyvet nem sikerült menteni a szerverre</item>
+        <item quantity="other">%d könyvet nem sikerült menteni a szerverre</item>
+    </plurals>
+    <string name="library.selection.show">Megjelenítés</string>
+    <string name="library.series.hidden.message">„%1$s” elrejtve</string>
     <string name="library.storage_permission_bug.action">Hozzáférés engedélyezése</string>
     <string name="library.storage_permission_bug.message">Egyes eszközökön egy rendszeralkalmazásnak nincs meg a külső tárhely eléréséhez szükséges engedélye. Erre szükség van ahhoz, hogy a Pageturner be tudja olvasni az Ön hangoskönyveit.</string>
     <string name="library.storage_permission_bug.title">Hozzáférés szükséges</string>
@@ -575,6 +626,16 @@
     <string name="reader.word_spacing">Szavak közötti térköz</string>
     <string name="series.continue">Folytatás</string>
     <string name="series.continue_book">%s. könyv folytatása</string>
+    <string name="series.mark_completed">Megjelölés befejezettként</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">%d könyvnél elveszíti, hol tartott.</item>
+        <item quantity="other">%d könyvnél elveszíti, hol tartott.</item>
+    </plurals>
+    <string name="series.mark_not_started">Megjelölés még el nem kezdettként</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">%d könyvnél elveszíti az előrehaladását.</item>
+        <item quantity="other">%d könyvnél elveszíti az előrehaladását.</item>
+    </plurals>
     <string name="series.start">Kezdés</string>
     <string name="series.start_book">%s. könyv elkezdése</string>
     <string name="settings.about.app_version.title">Alkalmazásverzió</string>

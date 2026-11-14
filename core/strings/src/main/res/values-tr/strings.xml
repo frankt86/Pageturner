@@ -58,6 +58,7 @@
     <string name="audiobookshelf.status.needs_login">Sunucu yeniden oturum açmanızı istiyor</string>
     <string name="audiobookshelf.status.offline">Sunucuya şu anda ulaşılamıyor. İndirilen kitaplar yine de oynatılabilir.</string>
     <string name="audiobookshelf.status.syncing">Eşitleniyor…</string>
+    <string name="author.wikipedia">Vikipedi\'de devamını oku</string>
     <string name="book.category.action.mark_completed">Tamamlandı olarak işaretle</string>
     <string name="book.category.action.mark_current">Dinleniyor olarak işaretle</string>
     <string name="book.category.action.mark_not_started">Henüz başlanmadı olarak işaretle</string>
@@ -82,8 +83,11 @@
     <string name="book.edit.server.failed">Sunucunuza kaydedilemedi. Tekrar deneyin.</string>
     <string name="book.edit.server.not_allowed">Sunucudaki hesabınız kitapları değiştiremez.</string>
     <string name="book.edit.title.label">Başlık</string>
+    <string name="book.hide">Kitaplıktan gizle</string>
     <string name="book.remove_from_library">Kitaplıktan kaldır</string>
     <string name="book.remove_from_library.summary">Dosya cihazınızda kalır</string>
+    <string name="book.select">Seç</string>
+    <string name="book.show">Kitaplıkta göster</string>
     <string name="book.source.device">Bu cihazda</string>
     <string name="book.source.server_downloaded">%s · indirildi</string>
     <string name="bookmark.action.add_note">Not ekle</string>
@@ -154,8 +158,13 @@
     <string name="folder.add.action.file">Bunun yerine tek bir dosya ekle</string>
     <string name="folder.add.action.folder">Klasör seç</string>
     <string name="folder.add.action.opds">Katalogdan indir</string>
+    <string name="folder.add.help.answer.no_files">Henüz sesli kitabım yok</string>
+    <string name="folder.add.help.answer.not_found">Bulamıyorum</string>
+    <string name="folder.add.help.answer.other_app">Başka bir uygulamadalar</string>
     <string name="folder.add.help.computer">Kitaplarınız hâlâ bilgisayarınızda mı? Önce onları telefonunuza kopyalayın, örneğin Audiobooks veya Documents klasörüne.</string>
     <string name="folder.add.help.download">Android, uygulamaların Download klasörünü doğrudan açmasına izin vermez. İçindeki bir klasörü seçin.</string>
+    <string name="folder.add.help.no_files">Pageturner, telefonunuzdaki sesli kitap dosyalarını oynatır. LibriVox\'ta indirebileceğiniz binlerce ücretsiz sesli kitap var.</string>
+    <string name="folder.add.help.other_app">Audible veya Spotify gibi uygulamalardaki kitaplar yalnızca o uygulamalarda oynatılabilir. Pageturner ise MP3 veya M4B gibi sesli kitap dosyalarını oynatır.</string>
     <string name="folder.add.help.title">Kitaplarınızı bulamadınız mı?</string>
     <string name="folder.add.no_picker.message">Pageturner, kitaplarınızı Android\'in dosya seçicisiyle açar. Dosya seçici olmadan klasörlerinizi veya dosyalarınızı açamaz.</string>
     <string name="folder.add.no_picker.title">Bu cihazda dosya seçici yok</string>
@@ -231,8 +240,14 @@
     <string name="history.source.unplugged">Ses bağlantısı kesildi</string>
     <string name="history.source.watch">Akıllı saat</string>
     <string name="history.source.widget">Widget</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d seri</item>
+        <item quantity="other">%d seri</item>
+    </plurals>
     <string name="library.book.downloading">İndiriliyor</string>
     <string name="library.book.ebook">E-kitap</string>
+    <string name="library.book.hidden">Gizli</string>
+    <string name="library.book.hidden.message">%1$s gizlendi</string>
     <string name="library.book.offline">Çevrimdışı kullanılamaz</string>
     <string name="library.category.completed.title">Tamamlandı</string>
     <string name="library.category.current.title">Dinleniyor</string>
@@ -243,9 +258,16 @@
     <string name="library.empty.title">Kitap bulunamadı</string>
     <string name="library.empty.message">Pageturner, klasörlerinizde hiç kitap bulamıyor. Dosyaların hâlâ yerinde olup olmadığını kontrol edin veya bir klasör ekleyin.</string>
     <string name="library.empty.action">Klasörleri göster</string>
-    <string name="library.folders.title">Kitap klasörleri</string>
-    <string name="library.folders.moved.dialog.title">Kitap klasörleri taşındı</string>
+    <string name="library.filter">Filtrele</string>
+    <string name="library.filter.group_by">Grupla</string>
+    <string name="library.filter.group_by.author">Yazar</string>
+    <string name="library.filter.group_by.series">Seri</string>
+    <string name="library.filter.hidden_books">Gizli kitaplar</string>
+    <string name="library.filter.not_downloaded">İndirilmemiş</string>
+    <string name="library.filter.show">Göster</string>
     <string name="library.folders.moved.dialog.message">Kitap klasörlerini artık Ayarlar\'da yönetebilirsiniz.</string>
+    <string name="library.folders.moved.dialog.title">Kitap klasörleri taşındı</string>
+    <string name="library.folders.title">Kitap klasörleri</string>
     <string name="library.folders.no_access">Erişim yok</string>
     <string name="library.folders.no_access.action">Erişime izin ver</string>
     <string name="library.folders.no_access.badge">Klasörlerinize yeniden erişim izni verin</string>
@@ -257,6 +279,11 @@
         <item quantity="one">%d kitap devam ediyor</item>
         <item quantity="other">%d kitap devam ediyor</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d gizli kitap</item>
+        <item quantity="other">%d gizli kitap</item>
+    </plurals>
+    <string name="library.no_author">Yazar yok</string>
     <string name="library.search.browse.title">Göz at</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d kitap</item>
@@ -288,6 +315,30 @@
     <string name="library.search.recent.clear_all">Tümünü temizle</string>
     <string name="library.search.recent.remove">Kaldır: %s</string>
     <string name="library.search.recent.title">Son aramalar</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">%d kitabın yazarı güncellendi</item>
+        <item quantity="other">%d kitabın yazarı güncellendi</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d seçildi</item>
+        <item quantity="other">%d seçildi</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d kitap gizlendi</item>
+        <item quantity="other">%d kitap gizlendi</item>
+    </plurals>
+    <string name="library.selection.hide">Gizle</string>
+    <string name="library.selection.select_all">Tümünü seç</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">%d kitabın serisi güncellendi</item>
+        <item quantity="other">%d kitabın serisi güncellendi</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">%d kitap sunucunuza kaydedilemedi</item>
+        <item quantity="other">%d kitap sunucunuza kaydedilemedi</item>
+    </plurals>
+    <string name="library.selection.show">Göster</string>
+    <string name="library.series.hidden.message">%1$s gizlendi</string>
     <string name="library.storage_permission_bug.action">İzin ver</string>
     <string name="library.storage_permission_bug.message">Belirli cihazlarda, bir sistem uygulamasının harici depolamaya erişim için gerekli izni yoktur. Bu erişim, Pageturner\'ın sesli kitaplarınızı okuyabilmesi için gereklidir.</string>
     <string name="library.storage_permission_bug.title">İzin gerekli</string>
@@ -575,6 +626,16 @@
     <string name="reader.word_spacing">Sözcük aralığı</string>
     <string name="series.continue">Devam et</string>
     <string name="series.continue_book">Kitap %s ile devam et</string>
+    <string name="series.mark_completed">Tamamlandı olarak işaretle</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">%d kitapta kaldığınız yeri kaybedersiniz.</item>
+        <item quantity="other">%d kitapta kaldığınız yeri kaybedersiniz.</item>
+    </plurals>
+    <string name="series.mark_not_started">Henüz başlanmadı olarak işaretle</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">%d kitaptaki ilerlemenizi kaybedersiniz.</item>
+        <item quantity="other">%d kitaptaki ilerlemenizi kaybedersiniz.</item>
+    </plurals>
     <string name="series.start">Başla</string>
     <string name="series.start_book">Kitap %s ile başla</string>
     <string name="settings.about.app_version.title">Uygulama sürümü</string>

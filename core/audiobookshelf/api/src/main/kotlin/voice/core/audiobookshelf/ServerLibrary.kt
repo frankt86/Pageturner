@@ -4,9 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import voice.core.data.BookId
 
-/**
- * What the screens around the library need to know about the books on the server.
- */
+/** What the screens around the library need to know about the books on the server. */
 interface ServerLibrary {
 
   val syncing: StateFlow<Boolean>
@@ -16,9 +14,12 @@ interface ServerLibrary {
   /** Server books that can't play right now: not downloaded while the server can't be reached. */
   val unavailableBooks: Flow<Set<BookId>>
 
+  /** The libraries picked in the settings, once a sync got their names. */
+  val libraries: Flow<List<PickedLibrary>>
+
   /**
-   * Syncs with the server, unless there is no server. Without [force], a sync that is running or finished less than a
-   * minute ago is enough.
+   * Syncs with the server, unless there is no server. Without [force], a sync that is running or
+   * finished less than a minute ago is enough.
    */
   fun sync(force: Boolean = false)
 
@@ -28,9 +29,12 @@ interface ServerLibrary {
   ): ServerEdit
 }
 
-/**
- * Whether the server can be reached right now, as far as Voice knows.
- */
+data class PickedLibrary(
+  val id: String,
+  val name: String,
+)
+
+/** Whether the server can be reached right now, as far as Voice knows. */
 enum class ServerReachability {
   Unknown,
   Reachable,
@@ -41,7 +45,10 @@ enum class ServerReachability {
 data class ServerBookEdit(
   val title: String? = null,
   val author: String? = null,
-  /** Replaces the series Voice shows, together with [part]. The other series the book has on the server stay. */
+  /**
+   * Replaces the series Voice shows, together with [part]. The other series the book has on the
+   * server stay.
+   */
   val series: String? = null,
   val part: String? = null,
 )
@@ -49,5 +56,6 @@ data class ServerBookEdit(
 enum class ServerEdit {
   Saved,
   NotAllowed,
+  Unreachable,
   Failed,
 }

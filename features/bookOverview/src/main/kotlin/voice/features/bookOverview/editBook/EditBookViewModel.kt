@@ -27,7 +27,8 @@ class EditBookViewModel(
   private val scope = MainScope()
 
   private val _state = mutableStateOf<EditBookState?>(null)
-  internal val state: State<EditBookState?> get() = _state
+  internal val state: State<EditBookState?>
+    get() = _state
 
   override suspend fun items(bookId: BookId): List<BottomSheetItem> = listOf(BottomSheetItem.Edit)
 
@@ -37,15 +38,16 @@ class EditBookViewModel(
   ) {
     if (item != BottomSheetItem.Edit) return
     val book = repo.get(bookId) ?: return
-    _state.value = EditBookState(
-      title = book.name,
-      author = book.author.orEmpty(),
-      bookId = bookId,
-      cover = book.coverUrl,
-      series = book.series.orEmpty(),
-      part = book.part.orEmpty(),
-      allSeries = seriesOfOtherBooks(repo, ebooksStore, bookId),
-    )
+    _state.value =
+      EditBookState(
+        title = book.name,
+        author = book.author.orEmpty(),
+        bookId = bookId,
+        cover = book.coverUrl,
+        series = book.series.orEmpty(),
+        part = book.part.orEmpty(),
+        allSeries = seriesOfOtherBooks(repo, ebooksStore, bookId),
+      )
   }
 
   internal fun onDismiss() {
@@ -80,9 +82,12 @@ class EditBookViewModel(
       repo.updateCustomMetadata(state.bookId) { custom ->
         var edited = custom
         if (state.title != state.initialTitle) edited = edited.copy(name = state.title.trim())
-        if (state.author != state.initialAuthor) edited = edited.copy(author = state.author.trim().ifEmpty { null })
-        if (state.series != state.initialSeries) edited = edited.copy(series = state.series.trim().ifEmpty { null })
-        if (state.part != state.initialPart) edited = edited.copy(part = state.part.trim().ifEmpty { null })
+        if (state.author != state.initialAuthor)
+          edited = edited.copy(author = state.author.trim().ifEmpty { null })
+        if (state.series != state.initialSeries)
+          edited = edited.copy(series = state.series.trim().ifEmpty { null })
+        if (state.part != state.initialPart)
+          edited = edited.copy(part = state.part.trim().ifEmpty { null })
         edited
       }
     }
@@ -93,12 +98,13 @@ class EditBookViewModel(
     if (state.saving) return
     val seriesChanged = state.series != state.initialSeries || state.part != state.initialPart
     // only what the listener changed, so the rest stays as the server has it
-    val edit = ServerBookEdit(
-      title = state.title.takeIf { it != state.initialTitle },
-      author = state.author.takeIf { it != state.initialAuthor },
-      series = state.series.takeIf { seriesChanged },
-      part = state.part.takeIf { seriesChanged },
-    )
+    val edit =
+      ServerBookEdit(
+        title = state.title.takeIf { it != state.initialTitle },
+        author = state.author.takeIf { it != state.initialAuthor },
+        series = state.series.takeIf { seriesChanged },
+        part = state.part.takeIf { seriesChanged },
+      )
     if (edit == ServerBookEdit()) {
       _state.value = state.copy(serverResult = ServerEdit.Saved)
       return

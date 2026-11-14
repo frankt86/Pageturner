@@ -19,8 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import voice.core.ui.icons.VoiceIcons
 
 @Composable
 fun CheckBadge(
@@ -36,14 +36,14 @@ fun CheckBadge(
     exit = scaleOut() + fadeOut(),
   ) {
     Box(
-      modifier = Modifier
-        .size(24.dp)
-        .background(containerColor, CircleShape)
-        .border(2.dp, outlineColor, CircleShape),
+      modifier =
+        Modifier.size(24.dp)
+          .background(containerColor, CircleShape)
+          .border(2.dp, outlineColor, CircleShape),
       contentAlignment = Alignment.Center,
     ) {
       Icon(
-        imageVector = VoiceIcons.Check,
+        painter = painterResource(R.drawable.ic_check),
         contentDescription = null,
         tint = contentColorFor(containerColor),
         modifier = Modifier.size(16.dp),

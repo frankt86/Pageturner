@@ -58,7 +58,10 @@ import voice.core.data.ReaderSettings
 import voice.core.data.TapAction
 import voice.core.ui.bookText
 
-/** What a tap at [fraction] of the page's width does. A book read from right to left swaps the sides, like left-handed. */
+/**
+ * What a tap at [fraction] of the page's width does. A book read from right to left swaps the
+ * sides, like left-handed.
+ */
 internal fun ReaderSettings.tapActionAt(
   fraction: Float,
   rightToLeft: Boolean,
@@ -72,7 +75,8 @@ internal fun ReaderSettings.tapActionAt(
 }
 
 /**
- * Tells single and double taps apart. With a double tap in use, a single tap waits until no second one can come.
+ * Tells single and double taps apart. With a double tap in use, a single tap waits until no second
+ * one can come.
  */
 @Stable
 internal class Taps(private val scope: CoroutineScope) {
@@ -113,8 +117,8 @@ internal enum class KeyAction {
 }
 
 /**
- * Page keys, arrow keys and the space bar turn the pages, as do the volume keys when [volumeKeys]. Bluetooth page turners
- * send arrow or page keys too.
+ * Page keys, arrow keys and the space bar turn the pages, as do the volume keys when [volumeKeys].
+ * Bluetooth page turners send arrow or page keys too.
  */
 internal fun keyAction(
   keyCode: Int,
@@ -136,8 +140,12 @@ internal fun keyAction(
   return when (keyCode) {
     KeyEvent.KEYCODE_VOLUME_DOWN -> KeyAction.Next.takeIf { volumeKeys }
     KeyEvent.KEYCODE_VOLUME_UP -> KeyAction.Previous.takeIf { volumeKeys }
-    KeyEvent.KEYCODE_PAGE_DOWN, KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_NAVIGATE_NEXT -> KeyAction.Next
-    KeyEvent.KEYCODE_PAGE_UP, KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_NAVIGATE_PREVIOUS -> KeyAction.Previous
+    KeyEvent.KEYCODE_PAGE_DOWN,
+    KeyEvent.KEYCODE_DPAD_DOWN,
+    KeyEvent.KEYCODE_NAVIGATE_NEXT -> KeyAction.Next
+    KeyEvent.KEYCODE_PAGE_UP,
+    KeyEvent.KEYCODE_DPAD_UP,
+    KeyEvent.KEYCODE_NAVIGATE_PREVIOUS -> KeyAction.Previous
     KeyEvent.KEYCODE_DPAD_RIGHT -> right
     KeyEvent.KEYCODE_DPAD_LEFT -> left
     KeyEvent.KEYCODE_SPACE -> if (shift) KeyAction.Previous else KeyAction.Next
@@ -147,17 +155,23 @@ internal fun keyAction(
 }
 
 /**
- * Takes the keys while nothing else has the focus. [onKey] gets the key code, whether Ctrl and Shift are held and whether
- * the key went down, and returns whether it took the key.
+ * Takes the keys while nothing else has the focus. [onKey] gets the key code, whether Ctrl and
+ * Shift are held and whether the key went down, and returns whether it took the key.
  */
 @Composable
-internal fun ReaderKeys(onKey: (keyCode: Int, ctrl: Boolean, shift: Boolean, down: Boolean) -> Boolean) {
+internal fun ReaderKeys(
+  onKey: (keyCode: Int, ctrl: Boolean, shift: Boolean, down: Boolean) -> Boolean,
+) {
   val focusRequester = remember { FocusRequester() }
   val latestOnKey by rememberUpdatedState(onKey)
   Box(
-    Modifier
-      .onPreviewKeyEvent { event ->
-        latestOnKey(event.nativeKeyEvent.keyCode, event.isCtrlPressed, event.isShiftPressed, event.type == KeyEventType.KeyDown)
+    Modifier.onPreviewKeyEvent { event ->
+        latestOnKey(
+          event.nativeKeyEvent.keyCode,
+          event.isCtrlPressed,
+          event.isShiftPressed,
+          event.type == KeyEventType.KeyDown,
+        )
       }
       .focusRequester(focusRequester)
       .focusable(),
@@ -167,62 +181,71 @@ internal fun ReaderKeys(onKey: (keyCode: Int, ctrl: Boolean, shift: Boolean, dow
   }
 }
 
-/** Each step of a mouse wheel calls [onTurn], forward for a positive step, at most a few times a second. */
+/**
+ * Each step of a mouse wheel calls [onTurn], forward for a positive step, at most a few times a
+ * second.
+ */
 internal fun Modifier.wheelTurns(
   enabled: Boolean,
   onTurn: (Int) -> Unit,
-): Modifier = if (!enabled) {
-  this
-} else {
-  pointerInput(onTurn) {
-    var last = 0L
-    awaitPointerEventScope {
-      while (true) {
-        val event = awaitPointerEvent(PointerEventPass.Initial)
-        if (event.type != PointerEventType.Scroll) continue
-        val change = event.changes.firstOrNull() ?: continue
-        val delta = change.scrollDelta.y
-        if (delta == 0F) continue
-        change.consume()
-        if (change.uptimeMillis - last >= WHEEL_TURN_MILLIS) {
-          last = change.uptimeMillis
-          onTurn(if (delta > 0) 1 else -1)
+): Modifier =
+  if (!enabled) {
+    this
+  } else {
+    pointerInput(onTurn) {
+      var last = 0L
+      awaitPointerEventScope {
+        while (true) {
+          val event = awaitPointerEvent(PointerEventPass.Initial)
+          if (event.type != PointerEventType.Scroll) continue
+          val change = event.changes.firstOrNull() ?: continue
+          val delta = change.scrollDelta.y
+          if (delta == 0F) continue
+          change.consume()
+          if (change.uptimeMillis - last >= WHEEL_TURN_MILLIS) {
+            last = change.uptimeMillis
+            onTurn(if (delta > 0) 1 else -1)
+          }
         }
       }
     }
   }
-}
 
 internal const val WHEEL_TURN_MILLIS = 250L
 
-/** Touches that start within [margin] of the left or right edge do nothing, like a palm resting on the screen. */
-internal fun Modifier.ignoreEdgeTouches(margin: Dp): Modifier = if (margin <= 0.dp) {
-  this
-} else {
-  pointerInput(margin) {
-    awaitEachGesture {
-      val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
-      val edge = margin.toPx()
-      if (down.position.x >= edge && down.position.x <= size.width - edge) return@awaitEachGesture
-      down.consume()
-      while (true) {
-        val event = awaitPointerEvent(PointerEventPass.Initial)
-        event.changes.forEach { it.consume() }
-        if (event.changes.none { it.pressed }) break
+/**
+ * Touches that start within [margin] of the left or right edge do nothing, like a palm resting on
+ * the screen.
+ */
+internal fun Modifier.ignoreEdgeTouches(margin: Dp): Modifier =
+  if (margin <= 0.dp) {
+    this
+  } else {
+    pointerInput(margin) {
+      awaitEachGesture {
+        val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+        val edge = margin.toPx()
+        if (down.position.x >= edge && down.position.x <= size.width - edge) return@awaitEachGesture
+        down.consume()
+        while (true) {
+          val event = awaitPointerEvent(PointerEventPass.Initial)
+          event.changes.forEach { it.consume() }
+          if (event.changes.none { it.pressed }) break
+        }
       }
     }
   }
-}
 
 /** Calls [onTouch] when a finger touches the screen, without taking the touch. */
-internal fun Modifier.onAnyTouch(onTouch: () -> Unit): Modifier = pointerInput(onTouch) {
-  awaitPointerEventScope {
-    while (true) {
-      val event = awaitPointerEvent(PointerEventPass.Initial)
-      if (event.type == PointerEventType.Press) onTouch()
+internal fun Modifier.onAnyTouch(onTouch: () -> Unit): Modifier =
+  pointerInput(onTouch) {
+    awaitPointerEventScope {
+      while (true) {
+        val event = awaitPointerEvent(PointerEventPass.Initial)
+        if (event.type == PointerEventType.Press) onTouch()
+      }
     }
   }
-}
 
 /** Makes the bars and sheets [scale] times as large, and leaves the book's text as it is. */
 @Composable
@@ -250,10 +273,7 @@ internal fun PageHeader(
     textAlign = TextAlign.Center,
     maxLines = 1,
     overflow = TextOverflow.Ellipsis,
-    modifier = modifier
-      .fillMaxWidth()
-      .height(PageNumberHeight)
-      .padding(top = 8.dp),
+    modifier = modifier.fillMaxWidth().height(PageNumberHeight).padding(top = 8.dp),
   )
 }
 
@@ -275,9 +295,7 @@ internal fun PageFooter(
       color = MaterialTheme.colorScheme.onSurfaceVariant,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      modifier = Modifier
-        .weight(1F)
-        .padding(end = 12.dp),
+      modifier = Modifier.weight(1F).padding(end = 12.dp),
     )
     if (footer != null) FooterText(footer)
     if (settings.clock) FooterText(clockText(), Modifier.padding(start = 12.dp))
@@ -305,12 +323,13 @@ private fun RowScope.FooterText(
 @Composable
 private fun clockText(): String {
   val context = LocalContext.current
-  val now by produceState(System.currentTimeMillis()) {
-    while (true) {
-      delay(60_000 - System.currentTimeMillis() % 60_000)
-      value = System.currentTimeMillis()
+  val now by
+    produceState(System.currentTimeMillis()) {
+      while (true) {
+        delay(60_000 - System.currentTimeMillis() % 60_000)
+        value = System.currentTimeMillis()
+      }
     }
-  }
   return DateUtils.formatDateTime(context, now, DateUtils.FORMAT_SHOW_TIME)
 }
 
@@ -320,20 +339,22 @@ private fun batteryLevel(): Float? {
   val context = LocalContext.current
   var level by remember { mutableStateOf<Float?>(null) }
   DisposableEffect(context) {
-    val receiver = object : BroadcastReceiver() {
-      override fun onReceive(
-        context: Context,
-        intent: Intent,
-      ) {
-        level = intent.batteryFraction()
+    val receiver =
+      object : BroadcastReceiver() {
+        override fun onReceive(
+          context: Context,
+          intent: Intent,
+        ) {
+          level = intent.batteryFraction()
+        }
       }
-    }
-    val sticky = ContextCompat.registerReceiver(
-      context,
-      receiver,
-      IntentFilter(Intent.ACTION_BATTERY_CHANGED),
-      ContextCompat.RECEIVER_NOT_EXPORTED,
-    )
+    val sticky =
+      ContextCompat.registerReceiver(
+        context,
+        receiver,
+        IntentFilter(Intent.ACTION_BATTERY_CHANGED),
+        ContextCompat.RECEIVER_NOT_EXPORTED,
+      )
     sticky?.batteryFraction()?.let { level = it }
     onDispose { context.unregisterReceiver(receiver) }
   }

@@ -33,14 +33,14 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import kotlin.math.abs
+import kotlin.math.roundToInt
 import voice.core.data.EbookPosition
 import voice.core.data.ProgressBarStyle
 import voice.core.data.ProgressVisibility
 import voice.core.data.ReaderSettings
-import voice.core.ui.bookText
-import kotlin.math.abs
-import kotlin.math.roundToInt
 import voice.core.strings.R as StringsR
+import voice.core.ui.bookText
 
 /** How much of the book is read once the spread holding [index] is. */
 internal fun List<Page>.progressAt(
@@ -79,9 +79,8 @@ internal fun BoxScope.ReaderControls(
       style = state.settings.progressBar,
       chapters = chapters,
       color = state.settings.pageColors()?.ink ?: MaterialTheme.colorScheme.onSurface,
-      modifier = Modifier
-        .align(Alignment.BottomCenter)
-        .padding(horizontal = 16.dp, vertical = 4.dp),
+      modifier =
+        Modifier.align(Alignment.BottomCenter).padding(horizontal = 16.dp, vertical = 4.dp),
     )
   }
   BottomBar(
@@ -100,8 +99,8 @@ internal fun BoxScope.ReaderControls(
 }
 
 /**
- * Shows [content] at the bottom of the book while [visible], at the size of the reader's controls, and above the buttons
- * when they're at the bottom.
+ * Shows [content] at the bottom of the book while [visible], at the size of the reader's controls,
+ * and above the buttons when they're at the bottom.
  */
 @Composable
 internal fun BoxScope.BottomBar(
@@ -115,11 +114,12 @@ internal fun BoxScope.BottomBar(
       visible = visible,
       enter = fadeIn() + slideInVertically { it / 2 },
       exit = fadeOut() + slideOutVertically { it / 2 },
-      modifier = alignment
-        .padding(16.dp)
-        .padding(bottom = if (settings.oneHanded) BottomActionsHeight else 0.dp)
-        .widthIn(max = 560.dp)
-        .fillMaxWidth(),
+      modifier =
+        alignment
+          .padding(16.dp)
+          .padding(bottom = if (settings.oneHanded) BottomActionsHeight else 0.dp)
+          .widthIn(max = 560.dp)
+          .fillMaxWidth(),
     ) {
       content()
     }
@@ -136,22 +136,35 @@ private fun ReaderNavigationBar(
   onJump: (Int) -> Unit,
 ) {
   val content = state.content
-  val marks = if (state.settings.progressMarks) {
-    remember(pages, chapters, state.bookmarks, state.highlights) {
-      BarMarks(
-        chapters = if (content is ReaderContent.Epub) chapters else emptyList(),
-        bookmarks = state.bookmarks.map { fractionOf(pages.indexOfPosition(it), pages.size) },
-        highlights = state.highlights.map { fractionOf(pages.indexOfPosition(EbookPosition(it.section, it.start)), pages.size) },
-      )
+  val marks =
+    if (state.settings.progressMarks) {
+      remember(pages, chapters, state.bookmarks, state.highlights) {
+        BarMarks(
+          chapters = if (content is ReaderContent.Epub) chapters else emptyList(),
+          bookmarks = state.bookmarks.map { fractionOf(pages.indexOfPosition(it), pages.size) },
+          highlights =
+            state.highlights.map {
+              fractionOf(pages.indexOfPosition(EbookPosition(it.section, it.start)), pages.size)
+            },
+        )
+      }
+    } else {
+      null
     }
-  } else {
-    null
-  }
   PageBar(
     pageCount = pages.size,
     currentIndex = currentIndex,
-    chapterTitle = { index -> (content as? ReaderContent.Epub)?.chapterTitle(pages[index].section).orEmpty() },
-    progress = { index -> content.readingProgress(pages, index, if (index == currentIndex) pagesPerSpread else 1, state.pace) },
+    chapterTitle = { index ->
+      (content as? ReaderContent.Epub)?.chapterTitle(pages[index].section).orEmpty()
+    },
+    progress = { index ->
+      content.readingProgress(
+        pages,
+        index,
+        if (index == currentIndex) pagesPerSpread else 1,
+        state.pace,
+      )
+    },
     style = state.settings.progressBar,
     chapters = if (content is ReaderContent.Epub) chapters else emptyList(),
     marks = marks,
@@ -161,8 +174,8 @@ private fun ReaderNavigationBar(
 }
 
 /**
- * The chapter and page of [currentIndex], a slider to go to any page, and how far the reader is in the chapter and the
- * book.
+ * The chapter and page of [currentIndex], a slider to go to any page, and how far the reader is in
+ * the chapter and the book.
  */
 @Composable
 internal fun PageBar(
@@ -194,9 +207,7 @@ internal fun PageBar(
           style = MaterialTheme.typography.labelLarge.bookText(),
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
-          modifier = Modifier
-            .weight(1F)
-            .padding(end = 12.dp),
+          modifier = Modifier.weight(1F).padding(end = 12.dp),
         )
         Text(
           text = stringResource(StringsR.string.reader_page, shown + 1, pageCount),
@@ -206,10 +217,11 @@ internal fun PageBar(
       if (pageCount > 1) {
         // the range is part of the saved state, so a new layout of the pages starts a new slider
         key(pageCount) {
-          val sliderState = rememberSliderState(
-            value = currentIndex.toFloat(),
-            trackRange = 0F..(pageCount - 1).toFloat(),
-          )
+          val sliderState =
+            rememberSliderState(
+              value = currentIndex.toFloat(),
+              trackRange = 0F..(pageCount - 1).toFloat(),
+            )
           LaunchedEffect(currentIndex) {
             if (dragTarget == null) sliderState.value = currentIndex.toFloat()
           }
@@ -268,9 +280,7 @@ internal fun PageBar(
             if (marks != null) {
               ProgressMarks(
                 marks = marks,
-                modifier = Modifier
-                  .matchParentSize()
-                  .padding(horizontal = 2.dp),
+                modifier = Modifier.matchParentSize().padding(horizontal = 2.dp),
               )
             }
           }

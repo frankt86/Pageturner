@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -29,11 +28,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import voice.core.strings.R
+import voice.core.ui.R as UiR
 import voice.core.ui.bookText
-import voice.core.ui.icons.VoiceIcons
 
 @Composable
 internal fun ChapterSwitcher(
@@ -56,16 +56,14 @@ internal fun ChapterSwitcher(
       modifier = Modifier.size(IconButtonDefaults.mediumContainerSize()),
     ) {
       Icon(
-        imageVector = VoiceIcons.SkipPrevious,
+        painter = painterResource(UiR.drawable.ic_skip_previous),
         contentDescription = stringResource(R.string.playback_chapter_previous),
       )
     }
     Surface(
       onClick = onChapterClick,
-      modifier = Modifier
-        .weight(1F)
-        .heightIn(min = 56.dp),
-      shape = RoundedCornerShape(20.dp),
+      modifier = Modifier.weight(1F).heightIn(min = 56.dp),
+      shape = MaterialTheme.shapes.largeIncreased,
       color = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.85F),
     ) {
       Row(
@@ -77,8 +75,10 @@ internal fun ChapterSwitcher(
           targetState = ChapterLabel(chapterNumber, chapterName),
           transitionSpec = {
             val forward = targetState.number >= initialState.number
-            val enter = slideInHorizontally { width -> if (forward) width / 2 else -width / 2 } + fadeIn()
-            val exit = slideOutHorizontally { width -> if (forward) -width / 2 else width / 2 } + fadeOut()
+            val enter =
+              slideInHorizontally { width -> if (forward) width / 2 else -width / 2 } + fadeIn()
+            val exit =
+              slideOutHorizontally { width -> if (forward) -width / 2 else width / 2 } + fadeOut()
             (enter togetherWith exit).using(SizeTransform(clip = false))
           },
           contentAlignment = Alignment.CenterStart,
@@ -100,7 +100,7 @@ internal fun ChapterSwitcher(
         }
         Spacer(Modifier.width(8.dp))
         Icon(
-          imageVector = VoiceIcons.ExpandMore,
+          painter = painterResource(UiR.drawable.ic_expand_more),
           contentDescription = null,
           tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -112,7 +112,7 @@ internal fun ChapterSwitcher(
       modifier = Modifier.size(IconButtonDefaults.mediumContainerSize()),
     ) {
       Icon(
-        imageVector = VoiceIcons.SkipNext,
+        painter = painterResource(UiR.drawable.ic_skip_next),
         contentDescription = stringResource(R.string.playback_chapter_next),
       )
     }

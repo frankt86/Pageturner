@@ -11,6 +11,10 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import java.io.File
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertIs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
@@ -31,59 +35,64 @@ import voice.features.cover.SelectCoverFromInternetViewModel.Results
 import voice.features.cover.api.CoverApi
 import voice.features.cover.api.SearchResponse
 import voice.navigation.Navigator
-import java.io.File
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertIs
 
 @RunWith(AndroidJUnit4::class)
 class SelectCoverFromInternetViewModelTest {
 
   private val bookId = BookId("book")
-  private val cover = SearchResponse.ImageResult(width = 600, height = 600, image = "image", thumbnail = "thumbnail")
+  private val cover =
+    SearchResponse.ImageResult(width = 600, height = 600, image = "image", thumbnail = "thumbnail")
 
-  private val book = mockk<Book> {
-    every { name } returns "Dune"
-    every { author } returns null
-  }
-  private val bookRepository = mockk<BookRepository> {
-    coEvery { get(bookId) } returns book
-  }
+  private val book =
+    mockk<Book> {
+      every { name } returns "Dune"
+      every { author } returns null
+    }
+  private val bookRepository =
+    mockk<BookRepository> {
+      coEvery { get(bookId) } returns book
+    }
   private val coverDownloader = mockk<CoverDownloader>()
   private val navigator = mockk<Navigator>(relaxed = true)
   private val context = ApplicationProvider.getApplicationContext<Context>()
-  private val ebook = Ebook(
-    uri = "content://books/document/book.epub".toUri(),
-    name = "Dune",
-    format = EbookFormat.Epub,
-  )
+  private val ebook =
+    Ebook(
+      uri = "content://books/document/book.epub".toUri(),
+      name = "Dune",
+      format = EbookFormat.Epub,
+    )
   private val ebooksStore = EbooksStore(MemoryDataStore(listOf(ebook)))
 
   private fun viewModel(
     api: CoverApi,
     target: CoverTarget = CoverTarget.ForBook(bookId),
-  ) = SelectCoverFromInternetViewModel(
-    api = api,
-    bookRepository = bookRepository,
-    ebooksStore = ebooksStore,
-    navigator = navigator,
-    context = context,
-    coverDownloader = coverDownloader,
-    dispatcherProvider = DispatcherProvider(Dispatchers.Unconfined, Dispatchers.Unconfined, Dispatchers.Unconfined),
-    target = target,
-  )
+  ) =
+    SelectCoverFromInternetViewModel(
+      api = api,
+      bookRepository = bookRepository,
+      ebooksStore = ebooksStore,
+      navigator = navigator,
+      context = context,
+      coverDownloader = coverDownloader,
+      dispatcherProvider =
+        DispatcherProvider(Dispatchers.Unconfined, Dispatchers.Unconfined, Dispatchers.Unconfined),
+      target = target,
+    )
 
   @Test
   fun `retry loads the covers after the search failed`() = runTest {
-    val api = mockk<CoverApi> {
-      coEvery { token(any()) } returnsMany listOf(null, "token")
-      coEvery { search(any(), any(), any()) } returns SearchResponse(next = null, results = listOf(cover))
-    }
+    val api =
+      mockk<CoverApi> {
+        coEvery { token(any()) } returnsMany listOf(null, "token")
+        coEvery { search(any(), any(), any()) } returns
+          SearchResponse(next = null, results = listOf(cover))
+      }
     val viewModel = viewModel(api)
     val events = MutableSharedFlow<Events>(extraBufferCapacity = 1)
-    val state = backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState(events)
-    }
+    val state =
+      backgroundScope.launchMolecule(RecompositionMode.Immediate) {
+        viewModel.viewState(events)
+      }
     settle()
     assertEquals(Results.Error, state.value.results)
 
@@ -96,16 +105,19 @@ class SelectCoverFromInternetViewModelTest {
 
   @Test
   fun `a cover that can't be downloaded is reported`() = runTest {
-    val api = mockk<CoverApi> {
-      coEvery { token(any()) } returns "token"
-      coEvery { search(any(), any(), any()) } returns SearchResponse(next = null, results = listOf(cover))
-    }
+    val api =
+      mockk<CoverApi> {
+        coEvery { token(any()) } returns "token"
+        coEvery { search(any(), any(), any()) } returns
+          SearchResponse(next = null, results = listOf(cover))
+      }
     coEvery { coverDownloader.download(any()) } returns null
     val viewModel = viewModel(api)
     val events = MutableSharedFlow<Events>(extraBufferCapacity = 1)
-    val state = backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState(events)
-    }
+    val state =
+      backgroundScope.launchMolecule(RecompositionMode.Immediate) {
+        viewModel.viewState(events)
+      }
     settle()
 
     events.emit(Events.CoverClick(cover))
@@ -117,10 +129,12 @@ class SelectCoverFromInternetViewModelTest {
 
   @Test
   fun `a cover picked for an ebook replaces the one picked before`() = runTest {
-    val api = mockk<CoverApi> {
-      coEvery { token(any()) } returns "token"
-      coEvery { search(any(), any(), any()) } returns SearchResponse(next = null, results = listOf(cover))
-    }
+    val api =
+      mockk<CoverApi> {
+        coEvery { token(any()) } returns "token"
+        coEvery { search(any(), any(), any()) } returns
+          SearchResponse(next = null, results = listOf(cover))
+      }
     val coversDir = File(context.filesDir, "ebookCovers").apply { mkdirs() }
     val oldCover = coversDir.resolve("old").apply { writeText("old") }
     val fileCover = coversDir.resolve("file").apply { writeText("file") }
@@ -131,9 +145,10 @@ class SelectCoverFromInternetViewModelTest {
     coEvery { coverDownloader.download(any()) } returns downloaded
     val viewModel = viewModel(api, CoverTarget.ForEbook(ebook.uri))
     val events = MutableSharedFlow<Events>(extraBufferCapacity = 1)
-    val state = backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState(events)
-    }
+    val state =
+      backgroundScope.launchMolecule(RecompositionMode.Immediate) {
+        viewModel.viewState(events)
+      }
     settle()
 
     events.emit(Events.CoverClick(cover))
@@ -151,11 +166,15 @@ class SelectCoverFromInternetViewModelTest {
 
   @Test
   fun `an ebook searches for its title and author`() = runTest {
-    ebooksStore.updateData { ebooks -> ebooks.map { it.copy(author = "Herbert", customAuthor = "Frank Herbert") } }
-    val api = mockk<CoverApi> {
-      coEvery { token(any()) } returns "token"
-      coEvery { search(any(), any(), any()) } returns SearchResponse(next = null, results = listOf(cover))
+    ebooksStore.updateData { ebooks ->
+      ebooks.map { it.copy(author = "Herbert", customAuthor = "Frank Herbert") }
     }
+    val api =
+      mockk<CoverApi> {
+        coEvery { token(any()) } returns "token"
+        coEvery { search(any(), any(), any()) } returns
+          SearchResponse(next = null, results = listOf(cover))
+      }
     val viewModel = viewModel(api, CoverTarget.ForEbook(ebook.uri))
     backgroundScope.launchMolecule(RecompositionMode.Immediate) {
       viewModel.viewState(MutableSharedFlow())
@@ -166,7 +185,8 @@ class SelectCoverFromInternetViewModelTest {
   }
 
   // paging hands its pages to the main looper, which only runs when it is idled.
-  // runCurrent rather than advanceUntilIdle, which skips the background scope the presenter runs in.
+  // runCurrent rather than advanceUntilIdle, which skips the background scope the presenter runs
+  // in.
   private fun TestScope.settle() {
     repeat(5) {
       shadowOf(Looper.getMainLooper()).idle()

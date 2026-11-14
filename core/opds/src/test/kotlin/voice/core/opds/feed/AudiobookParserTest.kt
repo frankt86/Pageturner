@@ -7,11 +7,15 @@ import kotlin.test.assertTrue
 
 class AudiobookParserTest {
 
-  private val opds1 = parseFeed(resource("audiobooks.xml"), "https://books.example.com/opds/audiobooks", null)
-    .publications.associateBy { it.title }
+  private val opds1 =
+    parseFeed(resource("audiobooks.xml"), "https://books.example.com/opds/audiobooks", null)
+      .publications
+      .associateBy { it.title }
 
-  private val opds2 = parseFeed(resource("audiobooks.json"), "https://books.example.com/opds2/audiobooks", null)
-    .publications.associateBy { it.title }
+  private val opds2 =
+    parseFeed(resource("audiobooks.json"), "https://books.example.com/opds2/audiobooks", null)
+      .publications
+      .associateBy { it.title }
 
   @Test
   fun `an entry with an ebook and an audiobook offers both`() {
@@ -19,7 +23,10 @@ class AudiobookParserTest {
     assertEquals(OpdsFormat.Epub, book.preferredAcquisition?.format)
     val audiobook = book.audiobook!!
     assertEquals(AudiobookPackaging.Files, audiobook.packaging)
-    assertEquals(listOf("https://books.example.com/download/persuasion.m4b"), audiobook.files.map { it.url })
+    assertEquals(
+      listOf("https://books.example.com/download/persuasion.m4b"),
+      audiobook.files.map { it.url },
+    )
     assertEquals("M4B", audiobook.format)
     assertEquals(312_000_000L, audiobook.size)
   }
@@ -45,7 +52,10 @@ class AudiobookParserTest {
   @Test
   fun `the same book linked twice is one file, not two chapters`() {
     val audiobook = opds1.getValue("Carmilla").audiobook!!
-    assertEquals(listOf("https://books.example.com/download/carmilla/m4b"), audiobook.files.map { it.url })
+    assertEquals(
+      listOf("https://books.example.com/download/carmilla/m4b"),
+      audiobook.files.map { it.url },
+    )
     assertEquals(250_000_000L, audiobook.size)
   }
 
@@ -61,7 +71,10 @@ class AudiobookParserTest {
   fun `a zip is an audiobook when the entry says so`() {
     val audiobook = opds1.getValue("Frankenstein").audiobook!!
     assertEquals(AudiobookPackaging.Zip, audiobook.packaging)
-    assertEquals("https://books.example.com/download/frankenstein.zip", audiobook.files.single().url)
+    assertEquals(
+      "https://books.example.com/download/frankenstein.zip",
+      audiobook.files.single().url,
+    )
     assertEquals("ZIP", audiobook.format)
 
     val comic = opds1.getValue("Watchmen")
@@ -79,7 +92,10 @@ class AudiobookParserTest {
   @Test
   fun `an m4b labelled as video comes before mp3 files`() {
     val audiobook = opds1.getValue("Middlemarch").audiobook!!
-    assertEquals(listOf("https://books.example.com/download/middlemarch"), audiobook.files.map { it.url })
+    assertEquals(
+      listOf("https://books.example.com/download/middlemarch"),
+      audiobook.files.map { it.url },
+    )
     assertEquals("M4B", audiobook.format)
     assertEquals("m4b", audiobook.files.single().audioExtension)
   }
@@ -91,7 +107,10 @@ class AudiobookParserTest {
     assertEquals(listOf("Edwin A. Abbott"), flatland.authors)
     val audiobook = flatland.audiobook!!
     assertEquals(AudiobookPackaging.Manifest, audiobook.packaging)
-    assertEquals("https://books.example.com/audiobooks/flatland/manifest.json", audiobook.files.single().url)
+    assertEquals(
+      "https://books.example.com/audiobooks/flatland/manifest.json",
+      audiobook.files.single().url,
+    )
   }
 
   @Test
@@ -112,13 +131,18 @@ class AudiobookParserTest {
 
   @Test
   fun `manifest lists the files in reading order`() {
-    val files = parseAudiobookManifest(
-      resource("audiobook-manifest.json"),
-      "https://books.example.com/audiobooks/flatland/manifest.json",
-    )
+    val files =
+      parseAudiobookManifest(
+        resource("audiobook-manifest.json"),
+        "https://books.example.com/audiobooks/flatland/manifest.json",
+      )
     assertEquals(
       listOf(
-        OpdsAcquisition("https://books.example.com/audiobooks/flatland/audio/01.mp3", "audio/mpeg", "Part 1"),
+        OpdsAcquisition(
+          "https://books.example.com/audiobooks/flatland/audio/01.mp3",
+          "audio/mpeg",
+          "Part 1",
+        ),
         OpdsAcquisition("https://cdn.example.com/flatland/02.mp3", "audio/mpeg", "Part 2"),
       ),
       files,
@@ -127,7 +151,12 @@ class AudiobookParserTest {
 
   @Test
   fun `ebooks have no audiobook`() {
-    val feed = parseFeed(resource("standard-ebooks.xml"), "https://standardebooks.org/feeds/opds/new-releases", null)
+    val feed =
+      parseFeed(
+        resource("standard-ebooks.xml"),
+        "https://standardebooks.org/feeds/opds/new-releases",
+        null,
+      )
     assertNull(feed.publications.single().audiobook)
   }
 }

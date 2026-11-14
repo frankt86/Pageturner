@@ -111,6 +111,8 @@
     <string name="audiobookshelf.status.syncing">Syncing…</string>
     <!-- Name of the self-hosted audiobook server. Product name, not translated. -->
     <string name="audiobookshelf.title" translatable="false">Audiobookshelf</string>
+    <!-- Button below the short text about an author on the author's screen. Opens the author's Wikipedia article in the browser. Write Wikipedia the way the language does, e.g. Википедия in Russian. -->
+    <string name="author.wikipedia">Read more on Wikipedia</string>
     <!-- Bottom-sheet action for moving a book to the completed category. -->
     <string name="book.category.action.mark_completed">Mark as Completed</string>
     <!-- Bottom-sheet action for moving a book to the current category. -->
@@ -159,10 +161,16 @@
     <string name="book.edit.server.not_allowed">Your account on the server can\'t change books.</string>
     <!-- Label for the field with the book's title, in the sheet that edits a book. -->
     <string name="book.edit.title.label">Title</string>
+    <!-- Action in the book actions sheet. Takes the book out of the library, Continue listening, the widgets and Android Auto, without deleting its files. Search still finds it. Also in the sheet of a series, where it hides all of its books. -->
+    <string name="book.hide">Hide from library</string>
     <!-- Action in the long-press sheet of an ebook that takes it off the library. The file itself isn't deleted. -->
     <string name="book.remove_from_library">Remove from library</string>
     <!-- Shown under Remove from library in the long-press sheet of an ebook, so the listener knows nothing is deleted. -->
     <string name="book.remove_from_library.summary">The file stays on your device</string>
+    <!-- Action in the sheet of a book, a series or an author in the library. Starts selecting books to change several at once. The book, or all books of the series or author, start selected. -->
+    <string name="book.select">Select</string>
+    <!-- Action in the book actions sheet of a hidden book. Brings it back into the library. Also in the sheet of a series whose books are all hidden, where it brings all of them back. -->
+    <string name="book.show">Show in library</string>
     <!-- Shown under the title in the book actions sheet for a book whose files are on the phone, once a server is connected too. -->
     <string name="book.source.device">On this device</string>
     <!-- Shown under the title in the book actions sheet for a downloaded server book. %s is the address of the server, like audiobooks.example.com. -->
@@ -267,10 +275,20 @@
     <string name="folder.add.action.folder">Choose a folder</string>
     <!-- Button in the screen that adds books. Opens the ebook catalogs (OPDS), online libraries like Calibre-Web or Komga to download ebooks from. -->
     <string name="folder.add.action.opds">Download from a catalog</string>
+    <!-- Answer chip under "Didn't find your audiobooks?" on the add content screen, shown after the system folder picker was closed without a folder. The listener has no audiobook files at all yet. Keep it short. -->
+    <string name="folder.add.help.answer.no_files">No audiobooks yet</string>
+    <!-- Answer chip under "Didn't find your audiobooks?" on the add content screen, shown after the system folder picker was closed without a folder. The listener has audiobooks but couldn't find them in the picker. Keep it short. -->
+    <string name="folder.add.help.answer.not_found">Can\'t find them</string>
+    <!-- Answer chip under "Didn't find your audiobooks?" on the add content screen, shown after the system folder picker was closed without a folder. The listener's audiobooks are in another app, like Audible. Keep it short. -->
+    <string name="folder.add.help.answer.other_app">They\'re in another app</string>
     <!-- Tip on the add content screen after the system folder picker was closed without a folder. Audiobooks and Documents are names of folders on the phone, which are always in English, so keep them untranslated. -->
     <string name="folder.add.help.computer">Books still on your computer? Copy them to your phone first, for example into the Audiobooks or Documents folder.</string>
     <!-- Tip on the add content screen after the system folder picker was closed without a folder. Android 11 and newer don't allow picking the Download folder itself, only folders inside it. Download is the name of the folder on the phone, which is always in English, so keep it untranslated. -->
     <string name="folder.add.help.download">Android doesn\'t let apps open the Download folder itself. Pick a folder inside it.</string>
+    <!-- Tip on the add content screen after the listener answered that they have no audiobooks yet. LibriVox is a website with free public domain audiobooks. The name opens it, so keep it written as LibriVox. -->
+    <string name="folder.add.help.no_files">Pageturner plays audiobook files from your phone. LibriVox has thousands of free ones to download.</string>
+    <!-- Tip on the add content screen after the listener answered that their audiobooks are in another app. Audible and Spotify are app names, keep them. MP3 and M4B are file formats. -->
+    <string name="folder.add.help.other_app">Books from apps like Audible or Spotify only play in those apps. Pageturner plays audiobook files, like MP3 or M4B.</string>
     <!-- Title of the tips on the add content screen, shown after the system folder picker was closed without a folder. -->
     <string name="folder.add.help.title">Didn\'t find your books?</string>
     <!-- Text on the add content screen when the device has no system file picker, so tapping Choose a folder or Add a single file instead can't open anything. Happens on reduced Android builds like bike computers. Use the word Android uses for the system picker that opens files and folders. -->
@@ -380,10 +398,19 @@
     <string name="history.source.unplugged">Audio disconnected</string>
     <string name="history.source.watch">Watch</string>
     <string name="history.source.widget">Widget</string>
+    <!-- Number of series by an author, before their number of books, below an author in the library while it is grouped by author, e.g. "1 series · 4 books". -->
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d series</item>
+        <item quantity="other">%d series</item>
+    </plurals>
     <!-- Read out by screen readers for the progress ring on the cover of a server book that downloads. -->
     <string name="library.book.downloading">Downloading</string>
     <!-- Read out by screen readers for the small book badge on the cover of an ebook in the library, which tells ebooks (EPUB, PDF, MOBI and AZW3) apart from audiobooks. -->
     <string name="library.book.ebook">Ebook</string>
+    <!-- Small label on a hidden book: in search results, on the screen of its series, and in the library while hidden books are shown. Keep it short. -->
+    <string name="library.book.hidden">Hidden</string>
+    <!-- Snackbar message after a book was hidden from the library, with a button to undo it. %1$s is the title of the book. -->
+    <string name="library.book.hidden.message">%1$s is hidden</string>
     <!-- Shown for a server book that isn't downloaded while the server can't be reached: on the icon on its cover, and as a small label in the player. Keep it short. -->
     <string name="library.book.offline">Not available offline</string>
     <!-- Library category header for completed books. -->
@@ -404,12 +431,26 @@
     <string name="library.empty.message">Pageturner can\'t find any books in your folders. Check that the files are still there, or add a folder.</string>
     <!-- Button on the library card shown when no audiobooks were found. Opens the audiobook folders screen. -->
     <string name="library.empty.action">Show folders</string>
-    <!-- Title for screens and rows that manage the folders with audiobooks and ebooks. -->
-    <string name="library.folders.title">Book folders</string>
-    <!-- Title for the one-time dialog shown from the old book folders shortcut. -->
-    <string name="library.folders.moved.dialog.title">Book folders moved</string>
+    <!-- Read out by screen readers for the button in the library's top bar that opens how the library groups its books and which ones it shows. -->
+    <string name="library.filter">Filter</string>
+    <!-- Heading in the library filter sheet, above two buttons, Series and Author, that pick how the books below Current are grouped. -->
+    <string name="library.filter.group_by">Group by</string>
+    <!-- Button in the library filter sheet, below Group by. Each author becomes one entry that holds their books and series. Keep it short, it shares a row with Series. -->
+    <string name="library.filter.group_by.author">Author</string>
+    <!-- Button in the library filter sheet, below Group by. The books of a series become one stack, like the library always was. Keep it short, it shares a row with Author. -->
+    <string name="library.filter.group_by.series">Series</string>
+    <!-- Switch in the library filter sheet that shows the hidden books in the library again, with a "Hidden" label. Below it is how many books are hidden, like "12 books". -->
+    <string name="library.filter.hidden_books">Hidden books</string>
+    <!-- Switch in the library filter sheet that shows the server books that aren't downloaded. Turned off, the library only shows books that play without a connection. Below it is how many books aren't downloaded, like "12 books". -->
+    <string name="library.filter.not_downloaded">Not downloaded</string>
+    <!-- Heading in the library filter sheet, above switches for which books the library shows. -->
+    <string name="library.filter.show">Show</string>
     <!-- Body for the one-time dialog shown from the old book folders shortcut. -->
     <string name="library.folders.moved.dialog.message">You can now manage book folders in Settings.</string>
+    <!-- Title for the one-time dialog shown from the old book folders shortcut. -->
+    <string name="library.folders.moved.dialog.title">Book folders moved</string>
+    <!-- Title for screens and rows that manage the folders with audiobooks and ebooks. -->
+    <string name="library.folders.title">Book folders</string>
     <!-- Label on a row of the audiobook folders screen for a folder or file Pageturner can no longer open, for example after a restore from a backup on a new phone. -->
     <string name="library.folders.no_access">No access</string>
     <!-- Button on a folder row without access. Opens the system picker so Pageturner may open the folder or file again. -->
@@ -429,9 +470,16 @@
         <item quantity="one">%d book in progress</item>
         <item quantity="other">%d books in progress</item>
     </plurals>
+    <!-- Quiet button at the end of the library while books are hidden from it. Opens the sheet with the switch that shows them again. -->
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d hidden book</item>
+        <item quantity="other">%d hidden books</item>
+    </plurals>
+    <!-- Entry at the end of each library section while the library is grouped by author, and the title of its screen. It holds the books that have no author. -->
+    <string name="library.no_author">No author</string>
     <!-- Header above the browse section of the library search, which lists the library by authors, series, narrators or genres. -->
     <string name="library.search.browse.title">Browse</string>
-    <!-- Number of books by an author, in a series, by a narrator or in a genre, in the browse section of the library search. Also below a series in the library, on the screen of a series and below each series suggested while editing a book. -->
+    <!-- Number of books by an author, in a series, by a narrator or in a genre, in the browse section of the library search. Also below a series or an author in the library, on the screen of a series, below each series suggested while editing a book, and below Hidden books in the library filter. Also the header of the sheet that sets the series or author of several selected books. -->
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d book</item>
         <item quantity="other">%d books</item>
@@ -482,6 +530,39 @@
     <string name="library.search.recent.remove">Remove %s</string>
     <!-- Header above the recent searches in the library search. -->
     <string name="library.search.recent.title">Recent</string>
+    <!-- Snackbar after the listener set the author of several selected books at once, with a button to undo it. %d is the number of books. -->
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">Author set for %d book</item>
+        <item quantity="other">Author set for %d books</item>
+    </plurals>
+    <!-- Title of the top bar while the listener selects books in the library. %d is the number of selected books. -->
+    <plurals name="library.selection.count">
+        <item quantity="one">%d selected</item>
+        <item quantity="other">%d selected</item>
+    </plurals>
+    <!-- Snackbar after the listener hid several selected books at once, with a button to undo it. %d is the number of books. -->
+    <plurals name="library.selection.hidden">
+        <item quantity="one">%d book is hidden</item>
+        <item quantity="other">%d books are hidden</item>
+    </plurals>
+    <!-- Short label of a button in the toolbar while selecting books. Takes the selected books out of the library, without deleting their files. -->
+    <string name="library.selection.hide">Hide</string>
+    <!-- Button in the top bar while selecting books. Selects every book the library shows. -->
+    <string name="library.selection.select_all">Select all</string>
+    <!-- Snackbar after the listener set the series of several selected books at once, with a button to undo it. %d is the number of books. -->
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">Series set for %d book</item>
+        <item quantity="other">Series set for %d books</item>
+    </plurals>
+    <!-- Snackbar after the listener set the series or author of several selected books, or undid that. Some of the books are from an Audiobookshelf server, and saving them there failed, for example without a connection. %d is the number of books that didn't change on the server. -->
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">Couldn\'t save %d book on your server</item>
+        <item quantity="other">Couldn\'t save %d books on your server</item>
+    </plurals>
+    <!-- Short label of a button in the toolbar while selecting books that are all hidden. Brings the selected books back into the library. -->
+    <string name="library.selection.show">Show</string>
+    <!-- Snackbar message after a series was hidden from the library, with a button to undo it. %1$s is the name of the series. -->
+    <string name="library.series.hidden.message">%1$s is hidden</string>
     <!-- Button label for granting the storage permission workaround. -->
     <string name="library.storage_permission_bug.action">Grant permission</string>
     <!-- Message explaining why a storage permission workaround is needed. -->
@@ -594,7 +675,7 @@
     <string name="playback.battery_optimization.rationale">Battery optimization might stop playback in the background.</string>
     <!-- Global book progress on the playback screen. The placeholder is a localized percentage, e.g. "72%". -->
     <string name="playback.book_progress.read">%1$s of book</string>
-    <!-- Remaining listening time for the whole book on the playback screen, adjusted for playback speed. The placeholder is a duration like "4:03:15". -->
+    <!-- Remaining listening time for the whole book on the playback screen, adjusted for playback speed. Also shown after the author below a book in Android Auto. The placeholder is a duration like "4:03:15". -->
     <string name="playback.book_progress.remaining">%1$s left</string>
     <!-- Remaining listening time for the whole book when playing faster or slower than normal. Placeholders are a duration like "4:03:15" and a playback speed like "1.5×". -->
     <string name="playback.book_progress.remaining_at_speed">%1$s left at %2$s</string>
@@ -1053,6 +1134,20 @@
     <string name="series.continue">Continue</string>
     <!-- Button on the screen of a series, for a book in progress. %s is its number in the series, e.g. "Continue book 2". It may also be a number like 2.5 or a word. -->
     <string name="series.continue_book">Continue book %s</string>
+    <!-- Action in the sheet of a book series. Marks every book of the series as completed, at the end of each book. -->
+    <string name="series.mark_completed">Mark as completed</string>
+    <!-- Shown in the sheet of a book series after a tap on "Mark as completed", while books of the series are in progress. Each of them jumps to its end, so the listener loses the place they were at. Below it are the buttons "Mark as completed" and "Cancel". -->
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">You lose your place in %d book.</item>
+        <item quantity="other">You lose your place in %d books.</item>
+    </plurals>
+    <!-- Action in the sheet of a book series. Marks every book of the series as not started yet, back at the start of each book. -->
+    <string name="series.mark_not_started">Mark as not started yet</string>
+    <!-- Shown in the sheet of a book series after a tap on "Mark as not started yet". The books in progress and the finished books of the series go back to their start. Below it are the buttons "Mark as not started yet" and "Cancel". -->
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">You lose your progress in %d book.</item>
+        <item quantity="other">You lose your progress in %d books.</item>
+    </plurals>
     <!-- Button on the screen of a series, for the first book not finished yet, when it has no number in the series. Starts listening to it. -->
     <string name="series.start">Start</string>
     <!-- Button on the screen of a series, for the first book not finished yet. %s is its number in the series, e.g. "Start book 3". It may also be a number like 2.5 or a word. -->

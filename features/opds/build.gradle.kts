@@ -1,18 +1,9 @@
-plugins {
-  id("voice.library")
-  id("voice.compose")
-  alias(libs.plugins.metro)
-}
+plugins { id("voice.feature") }
 
 dependencies {
-  implementation(projects.core.common)
   implementation(projects.core.data.api)
   implementation(projects.core.opds)
-  implementation(projects.core.strings)
-  implementation(projects.core.ui)
-  implementation(projects.navigation)
 
-  implementation(libs.androidxCore)
   implementation(libs.coil)
   implementation(libs.navigation3.ui)
 }

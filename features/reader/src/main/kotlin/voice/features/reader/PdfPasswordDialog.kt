@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentType
@@ -28,10 +29,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import voice.core.ui.icons.VoiceIcons
 import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
 
-/** Asks for the password of a locked PDF. [wrongPassword] is set after the last one didn't open it. */
+/**
+ * Asks for the password of a locked PDF. [wrongPassword] is set after the last one didn't open it.
+ */
 @Composable
 internal fun PdfPasswordDialog(
   wrongPassword: Boolean,
@@ -49,44 +52,49 @@ internal fun PdfPasswordDialog(
     title = { Text(stringResource(StringsR.string.reader_password)) },
     text = {
       OutlinedTextField(
-        modifier = Modifier
-          .focusRequester(focus)
-          .semantics { contentType = ContentType.Password },
+        modifier = Modifier.focusRequester(focus).semantics { contentType = ContentType.Password },
         value = password,
         onValueChange = { password = it },
         singleLine = true,
         label = { Text(stringResource(StringsR.string.reader_password_field)) },
-        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation =
+          if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
         trailingIcon = {
           IconButton(onClick = { showPassword = !showPassword }) {
             Icon(
-              imageVector = if (showPassword) VoiceIcons.VisibilityOff else VoiceIcons.Visibility,
-              contentDescription = stringResource(
-                if (showPassword) {
-                  StringsR.string.audiobookshelf_login_password_hide
-                } else {
-                  StringsR.string.audiobookshelf_login_password_show
-                },
-              ),
+              painter =
+                painterResource(
+                  if (showPassword) UiR.drawable.ic_visibility_off else UiR.drawable.ic_visibility,
+                ),
+              contentDescription =
+                stringResource(
+                  if (showPassword) {
+                    StringsR.string.audiobookshelf_login_password_hide
+                  } else {
+                    StringsR.string.audiobookshelf_login_password_show
+                  },
+                ),
             )
           }
         },
         isError = wrongPassword,
-        supportingText = if (wrongPassword) {
-          {
-            Text(
-              modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
-              text = stringResource(StringsR.string.reader_password_wrong),
-            )
-          }
-        } else {
-          null
-        },
-        keyboardOptions = KeyboardOptions(
-          keyboardType = KeyboardType.Password,
-          imeAction = ImeAction.Done,
-          autoCorrectEnabled = false,
-        ),
+        supportingText =
+          if (wrongPassword) {
+            {
+              Text(
+                modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+                text = stringResource(StringsR.string.reader_password_wrong),
+              )
+            }
+          } else {
+            null
+          },
+        keyboardOptions =
+          KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done,
+            autoCorrectEnabled = false,
+          ),
         keyboardActions = KeyboardActions(onDone = { open() }),
       )
     },

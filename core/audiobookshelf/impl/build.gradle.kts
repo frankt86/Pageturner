@@ -1,13 +1,5 @@
 plugins {
   id("voice.library")
-  alias(libs.plugins.kotlin.serialization)
-  alias(libs.plugins.metro)
-}
-
-android {
-  androidResources {
-    enable = true
-  }
 }
 
 dependencies {
@@ -16,13 +8,11 @@ dependencies {
   implementation(projects.core.common)
   implementation(projects.core.data.api)
   implementation(projects.core.initializer)
-  implementation(projects.core.playback)
+  implementation(projects.core.playback.api)
   implementation(projects.core.strings)
 
-  implementation(libs.androidxCore)
   implementation(libs.bundles.retrofit)
   implementation(libs.okhttp)
-  implementation(libs.serialization.json)
   implementation(libs.media3.exoplayer)
   implementation(libs.media3.datasource.okhttp)
 

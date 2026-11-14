@@ -3,9 +3,9 @@ package voice.core.ebook
 import android.net.Uri
 import android.util.Xml
 import androidx.core.text.HtmlCompat
-import org.xmlpull.v1.XmlPullParser
 import java.io.InputStream
 import java.util.zip.ZipInputStream
+import org.xmlpull.v1.XmlPullParser
 
 class EpubBook(
   val title: String?,
@@ -28,28 +28,36 @@ fun parseEpub(
 ): EpubBook {
   val entries = readEntries(input, withText)
   fun text(path: String) = entries[path]?.decodeToString()
-  val opfPath = text("META-INF/container.xml")
-    ?.let { Regex("full-path=\"([^\"]+)\"").find(it)?.groupValues?.get(1) }
-    ?: entries.keys.first { it.endsWith(".opf", ignoreCase = true) }
+  val opfPath =
+    text("META-INF/container.xml")?.let {
+      Regex("full-path=\"([^\"]+)\"").find(it)?.groupValues?.get(1)
+    } ?: entries.keys.first { it.endsWith(".opf", ignoreCase = true) }
   val opf = parseOpf(text(opfPath)!!)
   val opfFolder = opfPath.substringBeforeLast('/', missingDelimiterValue = "")
   fun resolve(href: String) = resolvePath(opfFolder, href)
 
-  val chapters = if (withText) {
-    val titles = opf.tocHref?.let { tocHref ->
-      val tocPath = resolve(tocHref)
-      val tocFolder = tocPath.substringBeforeLast('/', missingDelimiterValue = "")
-      text(tocPath)?.let { toc -> tocTitles(toc).mapKeys { (href, _) -> resolvePath(tocFolder, href) } }
-    }.orEmpty()
-    opf.spine.mapNotNull { href ->
-      val path = resolve(href)
-      text(path)?.let(::htmlToText)
-        ?.takeIf { it.isNotBlank() }
-        ?.let { EpubChapter(title = titles[path], text = it) }
+  val chapters =
+    if (withText) {
+      val titles =
+        opf.tocHref
+          ?.let { tocHref ->
+            val tocPath = resolve(tocHref)
+            val tocFolder = tocPath.substringBeforeLast('/', missingDelimiterValue = "")
+            text(tocPath)?.let { toc ->
+              tocTitles(toc).mapKeys { (href, _) -> resolvePath(tocFolder, href) }
+            }
+          }
+          .orEmpty()
+      opf.spine.mapNotNull { href ->
+        val path = resolve(href)
+        text(path)
+          ?.let(::htmlToText)
+          ?.takeIf { it.isNotBlank() }
+          ?.let { EpubChapter(title = titles[path], text = it) }
+      }
+    } else {
+      emptyList()
     }
-  } else {
-    emptyList()
-  }
   return EpubBook(
     title = opf.title,
     author = opf.author,
@@ -73,12 +81,14 @@ private fun readEntries(
         val entry = zip.nextEntry ?: break
         if (entry.isDirectory) continue
         val extension = entry.name.substringAfterLast('.').lowercase()
-        // the images are most of a book's size, and the reader's text leaves them out, the cover too
-        val wanted = (!withText && extension in imageExtensions) ||
-          extension == "opf" ||
-          extension == "ncx" ||
-          entry.name == "META-INF/container.xml" ||
-          (withText && extension in textExtensions)
+        // the images are most of a book's size, and the reader's text leaves them out, the cover
+        // too
+        val wanted =
+          (!withText && extension in imageExtensions) ||
+            extension == "opf" ||
+            extension == "ncx" ||
+            entry.name == "META-INF/container.xml" ||
+            (withText && extension in textExtensions)
         if (wanted) {
           put(entry.name, zip.readBytes())
         }
@@ -99,7 +109,8 @@ internal class Opf(
 
 internal fun parseOpf(xml: String): Opf {
   val parser = Xml.newPullParser()
-  // tags are matched by their name without a prefix, so a book that forgot to declare one still opens
+  // tags are matched by their name without a prefix, so a book that forgot to declare one still
+  // opens
   parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
   parser.setInput(xml.reader())
   var title: String? = null
@@ -112,7 +123,8 @@ internal fun parseOpf(xml: String): Opf {
   val spine = mutableListOf<String>()
   var calibreSeries: String? = null
   var calibreSeriesIndex: String? = null
-  // EPUB 3 names a collection in one meta and tells its type and position in others that refine it by its id
+  // EPUB 3 names a collection in one meta and tells its type and position in others that refine it
+  // by its id
   val collections = mutableListOf<Pair<String?, String>>()
   val refinements = mutableMapOf<String, MutableMap<String, String>>()
   while (parser.next() != XmlPullParser.END_DOCUMENT) {
@@ -158,13 +170,16 @@ internal fun parseOpf(xml: String): Opf {
     id: String?,
     property: String,
   ) = id?.let { refinements[it]?.get(property) }
-  val collection = collections.firstOrNull { (id, _) -> refinement(id, "collection-type") == "series" }
-  val series = collection?.second ?: calibreSeries
-  val seriesIndex = if (collection != null) {
-    refinement(collection.first, "group-position")
-  } else {
-    calibreSeriesIndex?.takeIf { calibreSeries != null }
+  val collection = collections.firstOrNull { (id, _) ->
+    refinement(id, "collection-type") == "series"
   }
+  val series = collection?.second ?: calibreSeries
+  val seriesIndex =
+    if (collection != null) {
+      refinement(collection.first, "group-position")
+    } else {
+      calibreSeriesIndex?.takeIf { calibreSeries != null }
+    }
   return Opf(
     title = title,
     author = author,
@@ -185,19 +200,31 @@ internal fun seriesPart(index: String): String? {
 
 /** The chapter titles from an EPUB 3 nav document or an EPUB 2 NCX, by the file they point to. */
 internal fun tocTitles(toc: String): Map<String, String> {
-  val links = if (toc.contains("<navMap", ignoreCase = true)) {
-    Regex("<navLabel>\\s*<text>(.*?)</text>\\s*</navLabel>\\s*<content[^>]*src=\"([^\"]+)\"", RegexOption.DOT_MATCHES_ALL)
-      .findAll(toc)
-      .map { it.groupValues[2] to it.groupValues[1] }
-  } else {
-    val nav = Regex("<nav[^>]*toc[^>]*>(.*?)</nav>", RegexOption.DOT_MATCHES_ALL).find(toc)?.groupValues?.get(1) ?: toc
-    Regex("<a[^>]*href=\"([^\"]+)\"[^>]*>(.*?)</a>", RegexOption.DOT_MATCHES_ALL)
-      .findAll(nav)
-      .map { it.groupValues[1] to it.groupValues[2] }
-  }
+  val links =
+    if (toc.contains("<navMap", ignoreCase = true)) {
+      Regex(
+          "<navLabel>\\s*<text>(.*?)</text>\\s*</navLabel>\\s*<content[^>]*src=\"([^\"]+)\"",
+          RegexOption.DOT_MATCHES_ALL,
+        )
+        .findAll(toc)
+        .map { it.groupValues[2] to it.groupValues[1] }
+    } else {
+      val nav =
+        Regex("<nav[^>]*toc[^>]*>(.*?)</nav>", RegexOption.DOT_MATCHES_ALL)
+          .find(toc)
+          ?.groupValues
+          ?.get(1) ?: toc
+      Regex("<a[^>]*href=\"([^\"]+)\"[^>]*>(.*?)</a>", RegexOption.DOT_MATCHES_ALL)
+        .findAll(nav)
+        .map { it.groupValues[1] to it.groupValues[2] }
+    }
   return buildMap {
     links.forEach { (href, label) ->
-      val title = HtmlCompat.fromHtml(label, HtmlCompat.FROM_HTML_MODE_COMPACT).toString().replace(Regex("\\s+"), " ").trim()
+      val title =
+        HtmlCompat.fromHtml(label, HtmlCompat.FROM_HTML_MODE_COMPACT)
+          .toString()
+          .replace(Regex("\\s+"), " ")
+          .trim()
       val file = href.substringBefore('#')
       if (title.isNotEmpty() && file.isNotEmpty() && file !in this) put(file, title)
     }
@@ -212,7 +239,8 @@ internal fun resolvePath(
   val path = if (folder.isEmpty()) href else "$folder/$href"
   Uri.decode(path.substringBefore('#')).split('/').forEach { segment ->
     when (segment) {
-      "", "." -> Unit
+      "",
+      "." -> Unit
       ".." -> segments.removeLastOrNull()
       else -> segments.addLast(segment)
     }
@@ -223,8 +251,10 @@ internal fun resolvePath(
 private fun htmlToText(html: String): String {
   val bodyStart = html.indexOf("<body", ignoreCase = true)
   val body = if (bodyStart == -1) html else html.substring(html.indexOf('>', bodyStart) + 1)
-  val withoutScripts = body.replace(Regex("<(script|style)\\b[\\s\\S]*?</\\1>", RegexOption.IGNORE_CASE), "")
-  return HtmlCompat.fromHtml(withoutScripts, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
+  val withoutScripts =
+    body.replace(Regex("<(script|style)\\b[\\s\\S]*?</\\1>", RegexOption.IGNORE_CASE), "")
+  return HtmlCompat.fromHtml(withoutScripts, HtmlCompat.FROM_HTML_MODE_COMPACT)
+    .toString()
     // the placeholder for images, which the reader leaves out
     .replace("￼", "")
     .lineSequence()

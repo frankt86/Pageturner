@@ -55,6 +55,7 @@
     <string name="audiobookshelf.status.needs_login">Server meminta Anda masuk lagi</string>
     <string name="audiobookshelf.status.offline">Server tidak dapat dijangkau saat ini. Buku yang sudah diunduh tetap bisa diputar.</string>
     <string name="audiobookshelf.status.syncing">Menyinkronkan…</string>
+    <string name="author.wikipedia">Baca selengkapnya di Wikipedia</string>
     <string name="book.category.action.mark_completed">Tandai selesai</string>
     <string name="book.category.action.mark_current">Tandai sedang didengarkan</string>
     <string name="book.category.action.mark_not_started">Tandai belum dimulai</string>
@@ -79,8 +80,11 @@
     <string name="book.edit.server.failed">Tidak dapat menyimpan ke server Anda. Coba lagi.</string>
     <string name="book.edit.server.not_allowed">Akun Anda di server tidak dapat mengubah buku.</string>
     <string name="book.edit.title.label">Judul</string>
+    <string name="book.hide">Sembunyikan dari pustaka</string>
     <string name="book.remove_from_library">Hapus dari pustaka</string>
     <string name="book.remove_from_library.summary">Berkas tetap ada di perangkat Anda</string>
+    <string name="book.select">Pilih</string>
+    <string name="book.show">Tampilkan di pustaka</string>
     <string name="book.source.device">Di perangkat ini</string>
     <string name="book.source.server_downloaded">%s · sudah diunduh</string>
     <string name="bookmark.action.add_note">Tambah catatan</string>
@@ -149,8 +153,13 @@
     <string name="folder.add.action.file">Tambahkan satu berkas saja</string>
     <string name="folder.add.action.folder">Pilih folder</string>
     <string name="folder.add.action.opds">Unduh dari katalog</string>
+    <string name="folder.add.help.answer.no_files">Belum punya buku audio</string>
+    <string name="folder.add.help.answer.not_found">Tidak bisa menemukannya</string>
+    <string name="folder.add.help.answer.other_app">Ada di aplikasi lain</string>
     <string name="folder.add.help.computer">Buku masih ada di komputer Anda? Salin dulu ke ponsel Anda, misalnya ke folder Audiobooks atau Documents.</string>
     <string name="folder.add.help.download">Android tidak mengizinkan aplikasi membuka folder Download secara langsung. Pilih folder di dalamnya.</string>
+    <string name="folder.add.help.no_files">Pageturner memutar berkas buku audio dari ponsel Anda. LibriVox menyediakan ribuan buku audio gratis yang bisa diunduh.</string>
+    <string name="folder.add.help.other_app">Buku dari aplikasi seperti Audible atau Spotify hanya bisa diputar di aplikasi tersebut. Pageturner memutar berkas buku audio, seperti MP3 atau M4B.</string>
     <string name="folder.add.help.title">Buku Anda tidak ditemukan?</string>
     <string name="folder.add.no_picker.message">Pageturner membuka buku Anda melalui pemilih berkas Android. Tanpanya, Pageturner tidak dapat membuka folder atau berkas Anda.</string>
     <string name="folder.add.no_picker.title">Perangkat ini tidak memiliki pemilih berkas</string>
@@ -218,8 +227,13 @@
     <string name="history.source.unplugged">Audio terputus</string>
     <string name="history.source.watch">Jam tangan</string>
     <string name="history.source.widget">Widget</string>
+    <plurals name="library.author.series_count">
+        <item quantity="other">%d seri</item>
+    </plurals>
     <string name="library.book.downloading">Mengunduh</string>
     <string name="library.book.ebook">E-book</string>
+    <string name="library.book.hidden">Tersembunyi</string>
+    <string name="library.book.hidden.message">%1$s disembunyikan</string>
     <string name="library.book.offline">Tidak tersedia offline</string>
     <string name="library.category.completed.title">Selesai</string>
     <string name="library.category.current.title">Sedang didengarkan</string>
@@ -230,9 +244,16 @@
     <string name="library.empty.title">Buku tidak ditemukan</string>
     <string name="library.empty.message">Pageturner tidak dapat menemukan buku apa pun di folder Anda. Pastikan berkasnya masih ada, atau tambahkan folder.</string>
     <string name="library.empty.action">Tampilkan folder</string>
-    <string name="library.folders.title">Folder buku</string>
-    <string name="library.folders.moved.dialog.title">Folder buku dipindahkan</string>
+    <string name="library.filter">Filter</string>
+    <string name="library.filter.group_by">Kelompokkan menurut</string>
+    <string name="library.filter.group_by.author">Penulis</string>
+    <string name="library.filter.group_by.series">Seri</string>
+    <string name="library.filter.hidden_books">Buku tersembunyi</string>
+    <string name="library.filter.not_downloaded">Belum diunduh</string>
+    <string name="library.filter.show">Tampilkan</string>
     <string name="library.folders.moved.dialog.message">Sekarang Anda dapat mengelola folder buku di Setelan.</string>
+    <string name="library.folders.moved.dialog.title">Folder buku dipindahkan</string>
+    <string name="library.folders.title">Folder buku</string>
     <string name="library.folders.no_access">Tidak ada akses</string>
     <string name="library.folders.no_access.action">Izinkan akses</string>
     <string name="library.folders.no_access.badge">Izinkan akses ke folder Anda lagi</string>
@@ -243,6 +264,10 @@
     <plurals name="library.header.in_progress">
         <item quantity="other">%d buku sedang didengarkan</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="other">%d buku tersembunyi</item>
+    </plurals>
+    <string name="library.no_author">Tanpa penulis</string>
     <string name="library.search.browse.title">Jelajahi</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="other">%d buku</item>
@@ -271,6 +296,25 @@
     <string name="library.search.recent.clear_all">Hapus semua</string>
     <string name="library.search.recent.remove">Hapus %s</string>
     <string name="library.search.recent.title">Terbaru</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="other">Penulis %d buku diperbarui</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="other">%d dipilih</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="other">%d buku disembunyikan</item>
+    </plurals>
+    <string name="library.selection.hide">Sembunyikan</string>
+    <string name="library.selection.select_all">Pilih semua</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="other">Seri %d buku diperbarui</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="other">Tidak dapat menyimpan %d buku ke server Anda</item>
+    </plurals>
+    <string name="library.selection.show">Tampilkan</string>
+    <string name="library.series.hidden.message">%1$s disembunyikan</string>
     <string name="library.storage_permission_bug.action">Berikan izin</string>
     <string name="library.storage_permission_bug.message">Untuk perangkat tertentu, aplikasi sistem tidak memiliki izin yang diperlukan untuk mengakses penyimpanan eksternal. Akses ini penting agar Pageturner dapat membaca buku audio Anda.</string>
     <string name="library.storage_permission_bug.title">Izin diperlukan</string>
@@ -555,6 +599,14 @@
     <string name="reader.word_spacing">Spasi kata</string>
     <string name="series.continue">Lanjutkan</string>
     <string name="series.continue_book">Lanjutkan buku %s</string>
+    <string name="series.mark_completed">Tandai selesai</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="other">Anda akan kehilangan posisi terakhir di %d buku.</item>
+    </plurals>
+    <string name="series.mark_not_started">Tandai belum dimulai</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="other">Anda akan kehilangan progres di %d buku.</item>
+    </plurals>
     <string name="series.start">Mulai</string>
     <string name="series.start_book">Mulai buku %s</string>
     <string name="settings.about.app_version.title">Versi aplikasi</string>

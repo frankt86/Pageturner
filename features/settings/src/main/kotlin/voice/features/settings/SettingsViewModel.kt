@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import dev.zacsweers.metro.Inject
+import java.time.LocalTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -39,7 +40,6 @@ import voice.core.ui.ThemeModeStore
 import voice.navigation.Destination
 import voice.navigation.Navigator
 import voice.navigation.Origin
-import java.time.LocalTime
 
 @Inject
 class SettingsViewModel(
@@ -77,43 +77,80 @@ class SettingsViewModel(
   @Composable
   fun viewState(): SettingsViewState? {
     val themeMode = remember { themeModeStore.data }.collectAsState(initial = null).value
-    val themeColorScheme = remember { themeColorSchemeStore.data }.collectAsState(initial = null).value
+    val themeColorScheme = remember {
+      themeColorSchemeStore.data
+    }
+      .collectAsState(initial = null)
+      .value
     val pureBlack = remember { pureBlackStore.data }.collectAsState(initial = null).value
     val coverColors = remember { coverColorsStore.data }.collectAsState(initial = null).value
-    val autoRewindAmount = remember { autoRewindAmountStore.data }.collectAsState(initial = null).value
+    val autoRewindAmount = remember {
+      autoRewindAmountStore.data
+    }
+      .collectAsState(initial = null)
+      .value
     val seekTime = remember { seekTimeStore.data }.collectAsState(initial = null).value
-    val lockScreenSlider = remember { lockScreenSliderStore.data }.collectAsState(initial = null).value
+    val lockScreenSlider = remember {
+      lockScreenSliderStore.data
+    }
+      .collectAsState(initial = null)
+      .value
     val gridMode = remember { gridModeStore.data }.collectAsState(initial = null).value
-    val autoSleepTimer = remember { sleepTimerPreferenceStore.data }.collectAsState(initial = null).value
-    val analyticsEnabled = remember { analyticsConsentStore.data }.collectAsState(initial = null).value
+    val autoSleepTimer = remember {
+      sleepTimerPreferenceStore.data
+    }
+      .collectAsState(initial = null)
+      .value
+    val analyticsEnabled = remember {
+      analyticsConsentStore.data
+    }
+      .collectAsState(initial = null)
+      .value
     // reading the folders and their names asks other processes, so that's kept off the main thread
-    val folderNames = remember { folderNames() }.collectAsState(initial = null, context = dispatcherProvider.io).value
-    val foldersWithoutAccess = remember { foldersWithoutAccess() }.collectAsState(initial = null, context = dispatcherProvider.io).value
-    val showDeveloperMenu = remember { developerMenuUnlockedStore.data }.collectAsState(initial = null).value
+    val folderNames = remember {
+      folderNames()
+    }
+      .collectAsState(initial = null, context = dispatcherProvider.io)
+      .value
+    val foldersWithoutAccess = remember {
+      foldersWithoutAccess()
+    }
+      .collectAsState(initial = null, context = dispatcherProvider.io)
+      .value
+    val showDeveloperMenu = remember {
+      developerMenuUnlockedStore.data
+    }
+      .collectAsState(initial = null)
+      .value
     val audiobookshelfServer = remember {
       serverAccount.serverName.map(::AudiobookshelfServerName)
-    }.collectAsState(initial = null).value
-    val audiobookshelfEnabled = remember { audiobookshelfFeatureFlag.flow.map { it.value } }
-      .collectAsState(initial = null).value
+    }
+      .collectAsState(initial = null)
+      .value
+    val audiobookshelfEnabled = remember {
+      audiobookshelfFeatureFlag.flow.map { it.value }
+    }
+      .collectAsState(initial = null)
+      .value
     val dynamicColorAvailable = remember {
       dynamicColorAvailability.isSupported()
     }
     if (
       themeMode == null ||
-      themeColorScheme == null ||
-      pureBlack == null ||
-      coverColors == null ||
-      autoRewindAmount == null ||
-      seekTime == null ||
-      lockScreenSlider == null ||
-      gridMode == null ||
-      autoSleepTimer == null ||
-      analyticsEnabled == null ||
-      folderNames == null ||
-      foldersWithoutAccess == null ||
-      showDeveloperMenu == null ||
-      audiobookshelfServer == null ||
-      audiobookshelfEnabled == null
+        themeColorScheme == null ||
+        pureBlack == null ||
+        coverColors == null ||
+        autoRewindAmount == null ||
+        seekTime == null ||
+        lockScreenSlider == null ||
+        gridMode == null ||
+        autoSleepTimer == null ||
+        analyticsEnabled == null ||
+        folderNames == null ||
+        foldersWithoutAccess == null ||
+        showDeveloperMenu == null ||
+        audiobookshelfServer == null ||
+        audiobookshelfEnabled == null
     ) {
       return null
     }
@@ -127,16 +164,18 @@ class SettingsViewModel(
       autoRewindInSeconds = autoRewindAmount,
       lockScreenSlider = lockScreenSlider,
       appVersion = appInfoProvider.versionName,
-      useGrid = when (gridMode) {
-        GridMode.LIST -> false
-        GridMode.GRID -> true
-        GridMode.FOLLOW_DEVICE -> gridCount.useGridAsDefault()
-      },
-      autoSleepTimer = SettingsViewState.AutoSleepTimerViewState(
-        enabled = autoSleepTimer.autoSleepTimerEnabled,
-        startTime = autoSleepTimer.autoSleepStartTime,
-        endTime = autoSleepTimer.autoSleepEndTime,
-      ),
+      useGrid =
+        when (gridMode) {
+          GridMode.LIST -> false
+          GridMode.GRID -> true
+          GridMode.FOLLOW_DEVICE -> gridCount.useGridAsDefault()
+        },
+      autoSleepTimer =
+        SettingsViewState.AutoSleepTimerViewState(
+          enabled = autoSleepTimer.autoSleepTimerEnabled,
+          startTime = autoSleepTimer.autoSleepStartTime,
+          endTime = autoSleepTimer.autoSleepEndTime,
+        ),
       analyticsEnabled = analyticsEnabled,
       showAnalyticSetting = appInfoProvider.analyticsIncluded,
       showDeveloperMenu = showDeveloperMenu,
@@ -156,7 +195,8 @@ class SettingsViewModel(
       return flowOf(KioskModeDemoData.folderNames)
     }
     return audiobookFolders.all().map { folders ->
-      folders.values.flatten()
+      folders.values
+        .flatten()
         .map { it.documentFile.nameWithoutExtension() }
         .sortedWith(String.CASE_INSENSITIVE_ORDER)
     }
@@ -166,7 +206,9 @@ class SettingsViewModel(
     if (kioskModeFeatureFlag.get()) {
       return flowOf(false)
     }
-    return audiobookFolders.withoutAccess().map { folders -> folders.values.any { it.isNotEmpty() } }
+    return audiobookFolders.withoutAccess().map { folders ->
+      folders.values.any { it.isNotEmpty() }
+    }
   }
 
   override fun close() {

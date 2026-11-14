@@ -15,8 +15,8 @@ class KindleMetadata(
 )
 
 /**
- * Converts a MOBI, AZW or AZW3 book into an EPUB. A file with both a MOBI 6 and a KF8 part is converted from the KF8
- * part, which keeps more of the book's layout.
+ * Converts a MOBI, AZW or AZW3 book into an EPUB. A file with both a MOBI 6 and a KF8 part is
+ * converted from the KF8 part, which keeps more of the book's layout.
  */
 fun convertKindleToEpub(
   book: ByteArray,
@@ -26,8 +26,10 @@ fun convertKindleToEpub(
   checkType(db.type)
   val first = MobiHeader(db.record(0), start = 0)
   if (first.encryption != 0) throw KindleDrmException()
-  // the KF8 part of a combined file starts at the record the boundary names, right after a BOUNDARY record
-  val boundary = first.exth.int(Exth.KF8_BOUNDARY)?.takeIf { !first.isKf8 && it > 0 && it < db.recordCount }
+  // the KF8 part of a combined file starts at the record the boundary names, right after a BOUNDARY
+  // record
+  val boundary =
+    first.exth.int(Exth.KF8_BOUNDARY)?.takeIf { !first.isKf8 && it > 0 && it < db.recordCount }
   val kf8 = boundary?.let { MobiHeader(db.record(it), start = it) }?.takeIf { it.isKf8 }
   val header = kf8 ?: first
   if (header.encryption != 0) throw KindleDrmException()
@@ -35,15 +37,23 @@ fun convertKindleToEpub(
   val fields = header.metadata(db.name)
   val fallback = first.metadata(db.name)
   val title = fields.title ?: fallback.title ?: "Book"
-  var resources = Resources.read(db, header.firstResource, end = if (kf8 == null && boundary != null) boundary else db.recordCount)
+  var resources =
+    Resources.read(
+      db,
+      header.firstResource,
+      end = if (kf8 == null && boundary != null) boundary else db.recordCount,
+    )
   // the parts of a combined file share the resources before the boundary
   if (kf8 != null && resources.isEmpty()) {
     resources = Resources.read(db, first.firstResource, end = boundary)
   }
-  val text = if (header.isKf8) kf8Content(db, header, resources) else mobi6Content(db, header, title, resources)
-  val cover = (fields.coverOffset ?: fallback.coverOffset)
-    ?.let { resources.byNumber(it + 1) }
-    ?.takeIf { it.mediaType.startsWith("image/") }
+  val text =
+    if (header.isKf8) kf8Content(db, header, resources)
+    else mobi6Content(db, header, title, resources)
+  val cover =
+    (fields.coverOffset ?: fallback.coverOffset)
+      ?.let { resources.byNumber(it + 1) }
+      ?.takeIf { it.mediaType.startsWith("image/") }
   writeEpub(
     EpubContent(
       title = title,
@@ -59,7 +69,10 @@ fun convertKindleToEpub(
   )
 }
 
-/** The title, author and cover from the headers, read without converting or even loading the whole book. */
+/**
+ * The title, author and cover from the headers, read without converting or even loading the whole
+ * book.
+ */
 fun readKindleMetadata(
   input: InputStream,
   withCover: Boolean = true,
@@ -83,11 +96,12 @@ fun readKindleMetadata(
       if (skipped <= 0) throw EOFException()
       toSkip -= skipped
     }
-    val record = if (index + 1 < count) {
-      ByteArray(offsets[index + 1] - start).also { stream.readFully(it) }
-    } else {
-      stream.readBytes()
-    }
+    val record =
+      if (index + 1 < count) {
+        ByteArray(offsets[index + 1] - start).also { stream.readFully(it) }
+      } else {
+        stream.readBytes()
+      }
     position = start + record.size
     return record
   }
@@ -95,12 +109,13 @@ fun readKindleMetadata(
   val header = MobiHeader(read(0), start = 0)
   val name = head.ascii(0, 32).substringBefore('\u0000')
   val fields = header.metadata(name)
-  val cover = fields.coverOffset
-    ?.takeIf { withCover && header.firstResource != NO_INDEX }
-    ?.let { header.firstResource + it }
-    ?.takeIf { it in 1 until count }
-    ?.let(::read)
-    ?.takeIf { resourceType(it) != null }
+  val cover =
+    fields.coverOffset
+      ?.takeIf { withCover && header.firstResource != NO_INDEX }
+      ?.let { header.firstResource + it }
+      ?.takeIf { it in 1 until count }
+      ?.let(::read)
+      ?.takeIf { resourceType(it) != null }
   return KindleMetadata(
     title = fields.title,
     author = fields.author,
@@ -114,14 +129,18 @@ private fun checkType(type: String) {
   if (type != "BOOKMOBI" && type != "TEXtREAd") throw KindleFormatException("Not a MOBI book")
 }
 
-/** The images and fonts of a book, by their number counted from 1, as recindex and kindle:embed links count them. */
+/**
+ * The images and fonts of a book, by their number counted from 1, as recindex and kindle:embed
+ * links count them.
+ */
 internal class Resources(private val files: Map<Int, EpubFile>) {
 
   fun byNumber(number: Int): EpubFile? = files[number]
 
   fun isEmpty(): Boolean = files.isEmpty()
 
-  val all: List<EpubFile> get() = files.values.toList()
+  val all: List<EpubFile>
+    get() = files.values.toList()
 
   companion object {
     fun read(
@@ -136,7 +155,9 @@ internal class Resources(private val files: Map<Int, EpubFile>) {
         val data = db.record(index)
         val name = number.toString().padStart(5, '0')
         if (data.ascii(0, 4) == "FONT") {
-          font(data)?.let { (extension, bytes) -> files[number] = EpubFile("fonts/font$name.$extension", "font/$extension", bytes) }
+          font(data)?.let { (extension, bytes) ->
+            files[number] = EpubFile("fonts/font$name.$extension", "font/$extension", bytes)
+          }
           continue
         }
         val (extension, type) = resourceType(data) ?: continue

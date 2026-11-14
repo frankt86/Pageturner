@@ -13,6 +13,10 @@ import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import java.io.IOException
+import java.util.Locale
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -49,10 +53,6 @@ import voice.core.opds.komga.KomgaSync
 import voice.core.opds.komga.RemotePlace
 import voice.core.opds.komga.isSamePlaceAs
 import voice.navigation.Navigator
-import java.io.IOException
-import java.util.Locale
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 internal sealed interface ReaderContent {
   val title: String
@@ -63,7 +63,9 @@ internal sealed interface ReaderContent {
     val chapters: List<String>,
     val chapterTitles: List<String?>,
   ) : ReaderContent {
-    override val sectionCount: Int get() = chapters.size
+    override val sectionCount: Int
+      get() = chapters.size
+
     val totalLength: Int = chapters.sumOf { it.length }
   }
 
@@ -71,16 +73,19 @@ internal sealed interface ReaderContent {
     override val title: String,
     val pdf: PdfFile,
   ) : ReaderContent {
-    override val sectionCount: Int get() = pdf.pageCount
+    override val sectionCount: Int
+      get() = pdf.pageCount
   }
 }
 
 internal sealed interface ReaderState {
   data object Loading : ReaderState
+
   data class Failed(val failure: ReaderFailure) : ReaderState
 
   /** A PDF that needs a password, [wrongPassword] after the one typed in didn't open it. */
   data class Locked(val wrongPassword: Boolean) : ReaderState
+
   data class Loaded(
     val content: ReaderContent,
     val position: EbookPosition,
@@ -135,8 +140,7 @@ class ReaderViewModel(
   private val navigator: Navigator,
   private val dispatcherProvider: DispatcherProvider,
   private val komgaSync: KomgaSync,
-  @Assisted
-  private val uri: Uri,
+  @Assisted private val uri: Uri,
 ) {
 
   private val scope = MainScope(dispatcherProvider)
@@ -168,6 +172,7 @@ class ReaderViewModel(
   private var speakerId by mutableIntStateOf(-1)
   private val selectedSpeaker: NaturalSpeaker?
     get() = speakers.firstOrNull { it.id == speakerId } ?: speakers.firstOrNull()
+
   private var bookmarks by mutableStateOf(emptyList<EbookPosition>())
   private var highlights by mutableStateOf(emptyList<Highlight>())
   private var searchMatch by mutableStateOf<BookRange?>(null)
@@ -178,7 +183,10 @@ class ReaderViewModel(
   private var lastProgress: Double? = null
   private var lastProgressAt = 0L
 
-  /** Whether the reader moved since the book opened, so a place from the server that comes later doesn't take them away. */
+  /**
+   * Whether the reader moved since the book opened, so a place from the server that comes later
+   * doesn't take them away.
+   */
   private var turnedPage = false
 
   /** The place from the server the book went to, for the new engine when it's switched on later. */
@@ -220,92 +228,106 @@ class ReaderViewModel(
     }
   }
 
-  /** Opens the book, a PDF with [password] if it's locked. [typed] is set when the reader just typed it in. */
+  /**
+   * Opens the book, a PDF with [password] if it's locked. [typed] is set when the reader just typed
+   * it in.
+   */
   private suspend fun open(
     stored: Ebook,
     password: String?,
     typed: Boolean,
   ) {
     val started = SystemClock.elapsedRealtime()
-    // the book shows at the place here right away, a newer one from the server follows when it comes
+    // the book shows at the place here right away, a newer one from the server follows when it
+    // comes
     val newerPlace = scope.async { komgaSync.newerPlace(stored) }
     val epub = stored.format != EbookFormat.Pdf
     if (stored.format.isKindle) {
       // both engines read the EPUB converted from it, made once and kept
-      epubUri = try {
-        withContext(dispatcherProvider.io) { kindleEpubUri(application, uri) }
-      } catch (e: Exception) {
-        Logger.w(e, "Could not convert a ${stored.format}")
-        newerPlace.cancel()
-        failure = readerFailure(e)
-        return
-      }
+      epubUri =
+        try {
+          withContext(dispatcherProvider.io) { kindleEpubUri(application, uri) }
+        } catch (e: Exception) {
+          Logger.w(e, "Could not convert a ${stored.format}")
+          newerPlace.cancel()
+          failure = readerFailure(e)
+          return
+        }
     }
     val newEngine = epub && settingsStore.data.first().newBookEngine
     val book = if (newEngine) openReadium(stored) else null
-    val loaded = if (book == null) {
-      try {
-        withContext(dispatcherProvider.io) { load(stored, password) }
-      } catch (e: PdfOpenException) {
-        newerPlace.cancel()
-        if (e.problem == PdfProblem.Password || e.problem == PdfProblem.WrongPassword) {
-          // a kept password that stopped working isn't one the reader just got wrong
-          locked = ReaderState.Locked(wrongPassword = typed)
-        } else {
+    val loaded =
+      if (book == null) {
+        try {
+          withContext(dispatcherProvider.io) { load(stored, password) }
+        } catch (e: PdfOpenException) {
+          newerPlace.cancel()
+          if (e.problem == PdfProblem.Password || e.problem == PdfProblem.WrongPassword) {
+            // a kept password that stopped working isn't one the reader just got wrong
+            locked = ReaderState.Locked(wrongPassword = typed)
+          } else {
+            Logger.w(e, "Could not open a ${stored.format}")
+            failure = readerFailure(e)
+          }
+          return
+        } catch (e: Exception) {
           Logger.w(e, "Could not open a ${stored.format}")
+          newerPlace.cancel()
           failure = readerFailure(e)
+          return
         }
-        return
-      } catch (e: Exception) {
-        Logger.w(e, "Could not open a ${stored.format}")
-        newerPlace.cancel()
-        failure = readerFailure(e)
-        return
+      } else {
+        null
       }
-    } else {
-      null
-    }
     position = stored.position
     bookmarks = stored.bookmarks
     highlights = stored.highlights
     if (book != null) {
-      textPending = ReaderContent.Epub(
-        title = stored.customName ?: book.publication.metadata.title ?: stored.name,
-        chapters = emptyList(),
-        chapterTitles = emptyList(),
-      )
+      textPending =
+        ReaderContent.Epub(
+          title = stored.customName ?: book.publication.metadata.title ?: stored.name,
+          chapters = emptyList(),
+          chapterTitles = emptyList(),
+        )
     }
     readium = book
     content = loaded
-    Logger.d("Showing the ${stored.format} after ${SystemClock.elapsedRealtime() - started} ms, in the new engine: ${book != null}")
+    Logger.d(
+      "Showing the ${stored.format} after ${SystemClock.elapsedRealtime() - started} ms, in the new engine: ${book != null}",
+    )
     scope.launch {
       store.updateData { ebooks ->
         ebooks.map {
           // the password is kept, so the PDF opens without it next time
-          if (it.uri == uri) it.copy(lastOpened = System.currentTimeMillis(), pdfPassword = password) else it
+          if (it.uri == uri)
+            it.copy(lastOpened = System.currentTimeMillis(), pdfPassword = password)
+          else it
         }
       }
     }
     scope.launch {
-      val place = try {
-        newerPlace.await()
-      } catch (e: CancellationException) {
-        throw e
-      } catch (e: Exception) {
-        Logger.w(e, "Could not take the place from Komga")
-        null
-      }
+      val place =
+        try {
+          newerPlace.await()
+        } catch (e: CancellationException) {
+          throw e
+        } catch (e: Exception) {
+          Logger.w(e, "Could not take the place from Komga")
+          null
+        }
       if (place != null) takeRemotePlace(stored, place)
     }
     if (book != null) {
-      // the new engine shows the book, the text of the old one is for the time left and when switching back
-      content = try {
-        withContext(dispatcherProvider.io) { load(stored, password) }
-      } catch (e: Exception) {
-        Logger.w(e, "Could not read the text of an EPUB")
-        textFailed = true
-        null
-      }
+      // the new engine shows the book, the text of the old one is for the time left and when
+      // switching back
+      content =
+        try {
+          withContext(dispatcherProvider.io) { load(stored, password) }
+        } catch (e: Exception) {
+          Logger.w(e, "Could not read the text of an EPUB")
+          textFailed = true
+          null
+        }
     }
     if (epub && !newEngine) {
       val _ = settingsStore.data.first { it.newBookEngine }
@@ -319,8 +341,11 @@ class ReaderViewModel(
     place: RemotePlace? = null,
   ): ReadiumBook? {
     val started = SystemClock.elapsedRealtime()
-    val book = withContext(dispatcherProvider.io) { openReadiumBook(application, epubUri, ebook, place) }
-    Logger.d("The new engine took ${SystemClock.elapsedRealtime() - started} ms to open the book, opened: ${book != null}")
+    val book =
+      withContext(dispatcherProvider.io) { openReadiumBook(application, epubUri, ebook, place) }
+    Logger.d(
+      "The new engine took ${SystemClock.elapsedRealtime() - started} ms to open the book, opened: ${book != null}",
+    )
     if (book != null) {
       scope.launch {
         val pages = withContext(dispatcherProvider.io) { book.publication.printPages() }
@@ -338,7 +363,8 @@ class ReaderViewModel(
     Logger.d("A newer place from Komga: $action")
     when (action) {
       RemotePlaceAction.Ignore -> Unit
-      RemotePlaceAction.Note, RemotePlaceAction.KeepForNextTime -> {
+      RemotePlaceAction.Note,
+      RemotePlaceAction.KeepForNextTime -> {
         val _ = takePlace(stored, place, content)
       }
       RemotePlaceAction.Jump -> {
@@ -346,9 +372,10 @@ class ReaderViewModel(
         remotePlace = place
         position = ebook.position
         readium?.let { book ->
-          val locator = book.publication.locatorAt(place)
-            ?: book.publication.locateProgression(place.totalProgression)
-            ?: return@let
+          val locator =
+            book.publication.locatorAt(place)
+              ?: book.publication.locateProgression(place.totalProgression)
+              ?: return@let
           // the pages that aren't made yet start there, the ones on screen go there
           book.locator = locator
           readiumJumpChannel.trySend(locator)
@@ -385,14 +412,15 @@ class ReaderViewModel(
     // while the text isn't read yet, the new engine shows the book and the old one's place stays
     val newPosition = if (moved && content != null) place.position(content) else ebook.position
     val progress = if (moved) place.totalProgression.toFloat() else ebook.progress
-    fun Ebook.withPlace() = copy(
-      position = newPosition,
-      progress = progress,
-      // the new book engine finds the place from the server or the progress
-      readiumLocator = if (moved) null else readiumLocator,
-      positionModified = place.modified,
-      opdsSource = opdsSource?.copy(syncedPosition = place.modified),
-    )
+    fun Ebook.withPlace() =
+      copy(
+        position = newPosition,
+        progress = progress,
+        // the new book engine finds the place from the server or the progress
+        readiumLocator = if (moved) null else readiumLocator,
+        positionModified = place.modified,
+        opdsSource = opdsSource?.copy(syncedPosition = place.modified),
+      )
     store.updateData { ebooks -> ebooks.map { if (it.uri == uri) it.withPlace() else it } }
     return ebook.withPlace()
   }
@@ -402,7 +430,9 @@ class ReaderViewModel(
     password: String?,
   ): ReaderContent {
     return when (ebook.format) {
-      EbookFormat.Epub, EbookFormat.Mobi, EbookFormat.Azw3 -> {
+      EbookFormat.Epub,
+      EbookFormat.Mobi,
+      EbookFormat.Azw3 -> {
         val text = bookText()
         ReaderContent.Epub(
           title = ebook.customName ?: text.title ?: ebook.name,
@@ -422,14 +452,20 @@ class ReaderViewModel(
     val folder = bookTextFolder(application)
     val file = bookTextFile(folder, uri.toString())
     val key = bookTextKey(application, uri)
-    key?.let { readBookText(file, it) }?.let { cached ->
-      Logger.d("Read the text of ${cached.chapters.size} chapters from the cache in ${SystemClock.elapsedRealtime() - started} ms")
-      return cached
-    }
+    key
+      ?.let { readBookText(file, it) }
+      ?.let { cached ->
+        Logger.d(
+          "Read the text of ${cached.chapters.size} chapters from the cache in ${SystemClock.elapsedRealtime() - started} ms",
+        )
+        return cached
+      }
     // keyed by the book's own file, which also decides when a Kindle book is converted again
     val epub = application.contentResolver.openInputStream(epubUri)!!.use { parseEpub(it) }
     val text = BookText(epub.title, epub.chapters.map { it.text }, epub.chapters.map { it.title })
-    Logger.d("Read the text of ${text.chapters.size} chapters from the book in ${SystemClock.elapsedRealtime() - started} ms")
+    Logger.d(
+      "Read the text of ${text.chapters.size} chapters from the book in ${SystemClock.elapsedRealtime() - started} ms",
+    )
     if (key != null) {
       try {
         writeBookText(file, key, text)
@@ -451,30 +487,32 @@ class ReaderViewModel(
       failure != null -> ReaderState.Failed(failure)
       locked != null -> locked
       content == null -> ReaderState.Loading
-      else -> ReaderState.Loaded(
-        content = content,
-        position = position,
-        readingAloud = readAloudJob != null,
-        readingRange = readingRange,
-        settings = settings,
-        voice = VoiceState(
-          natural = naturalVoice,
-          naturalReady = naturalReady,
-          downloadProgress = downloadProgress,
-          downloadFailed = downloadFailed,
-          speechRate = speechRate,
-          speakers = speakers,
-          speaker = selectedSpeaker,
-        ),
-        bookmarks = bookmarks,
-        highlights = highlights,
-        searchMatch = searchMatch,
-        readium = readium,
-        pace = pace,
-        fonts = fonts,
-        fontImportFailed = fontImportFailed,
-        themesFileFailed = themesFileFailed,
-      )
+      else ->
+        ReaderState.Loaded(
+          content = content,
+          position = position,
+          readingAloud = readAloudJob != null,
+          readingRange = readingRange,
+          settings = settings,
+          voice =
+            VoiceState(
+              natural = naturalVoice,
+              naturalReady = naturalReady,
+              downloadProgress = downloadProgress,
+              downloadFailed = downloadFailed,
+              speechRate = speechRate,
+              speakers = speakers,
+              speaker = selectedSpeaker,
+            ),
+          bookmarks = bookmarks,
+          highlights = highlights,
+          searchMatch = searchMatch,
+          readium = readium,
+          pace = pace,
+          fonts = fonts,
+          fontImportFailed = fontImportFailed,
+          themesFileFailed = themesFileFailed,
+        )
     }
   }
 
@@ -482,11 +520,12 @@ class ReaderViewModel(
     val book = readium ?: return
     val page = book.locator ?: return
     val onPage = book.bookmarks.filter { book.isOnPage(it, page) }
-    book.bookmarks = if (onPage.isEmpty()) {
-      (book.bookmarks + page).sortedBy { it.locations.totalProgression ?: 0.0 }
-    } else {
-      book.bookmarks - onPage.toSet()
-    }
+    book.bookmarks =
+      if (onPage.isEmpty()) {
+        (book.bookmarks + page).sortedBy { it.locations.totalProgression ?: 0.0 }
+      } else {
+        book.bookmarks - onPage.toSet()
+      }
     saveReadiumBookmarks(book)
   }
 
@@ -506,7 +545,8 @@ class ReaderViewModel(
   ): LocatedHighlight? {
     val book = readium ?: return null
     val highlight = LocatedHighlight(locator, color, note = null)
-    book.highlights = (book.highlights + highlight).sortedBy { it.locator.locations.totalProgression ?: 0.0 }
+    book.highlights =
+      (book.highlights + highlight).sortedBy { it.locator.locations.totalProgression ?: 0.0 }
     saveReadiumHighlights(book)
     return highlight
   }
@@ -517,7 +557,8 @@ class ReaderViewModel(
     note: String?,
   ) {
     val book = readium ?: return
-    book.highlights = book.highlights.map { if (it == old) it.copy(color = color, note = note) else it }
+    book.highlights =
+      book.highlights.map { if (it == old) it.copy(color = color, note = note) else it }
     saveReadiumHighlights(book)
   }
 
@@ -528,7 +569,8 @@ class ReaderViewModel(
   }
 
   private fun saveReadiumHighlights(book: ReadiumBook) {
-    val highlights = book.highlights.map { ReadiumHighlight(it.locator.toJsonString(), it.color, it.note) }
+    val highlights =
+      book.highlights.map { ReadiumHighlight(it.locator.toJsonString(), it.color, it.note) }
     scope.launch {
       store.updateData { ebooks ->
         ebooks.map { if (it.uri == uri) it.copy(readiumHighlights = highlights) else it }
@@ -618,7 +660,10 @@ class ReaderViewModel(
     moveTo(newPosition, pageProgress)
   }
 
-  /** The scrolled book shows [newPosition] at the top. Reading aloud moves the text itself, so it keeps its place. */
+  /**
+   * The scrolled book shows [newPosition] at the top. Reading aloud moves the text itself, so it
+   * keeps its place.
+   */
   internal fun onScrolled(newPosition: EbookPosition) {
     if (readAloudJob != null) return
     // scrolling moves a few lines at a time, the pace is measured over longer stretches
@@ -638,7 +683,13 @@ class ReaderViewModel(
     lastProgressAt = now
     if (previous == null || readAloudJob != null) return
     val characters = (progress - previous) * content.totalLength
-    if (characters <= 0 || characters > MAX_CHARACTERS_PER_TURN || millis < 1_000 || millis > IDLE.inWholeMilliseconds) return
+    if (
+      characters <= 0 ||
+        characters > MAX_CHARACTERS_PER_TURN ||
+        millis < 1_000 ||
+        millis > IDLE.inWholeMilliseconds
+    )
+      return
     scope.launch { paceStore.updateData { it.plus(characters, millis) } }
   }
 
@@ -651,11 +702,12 @@ class ReaderViewModel(
   internal fun onBookmarkClick(visiblePages: List<Page>) {
     val page = visiblePages.firstOrNull() ?: return
     val onPage = bookmarks.filter { bookmark -> visiblePages.any { it.contains(bookmark) } }
-    bookmarks = if (onPage.isEmpty()) {
-      (bookmarks + EbookPosition(page.section, page.start)).sortedWith(positionOrder)
-    } else {
-      bookmarks - onPage.toSet()
-    }
+    bookmarks =
+      if (onPage.isEmpty()) {
+        (bookmarks + EbookPosition(page.section, page.start)).sortedWith(positionOrder)
+      } else {
+        bookmarks - onPage.toSet()
+      }
     saveMarks()
   }
 
@@ -674,8 +726,10 @@ class ReaderViewModel(
     range: BookRange,
     color: HighlightColor,
   ): Highlight {
-    val highlight = Highlight(section = range.section, start = range.start, end = range.end, color = color)
-    highlights = (highlights + highlight).sortedWith(compareBy<Highlight>({ it.section }, { it.start }))
+    val highlight =
+      Highlight(section = range.section, start = range.start, end = range.end, color = color)
+    highlights =
+      (highlights + highlight).sortedWith(compareBy<Highlight>({ it.section }, { it.start }))
     saveMarks()
     return highlight
   }
@@ -715,7 +769,9 @@ class ReaderViewModel(
     val highlights = highlights
     scope.launch {
       store.updateData { ebooks ->
-        ebooks.map { if (it.uri == uri) it.copy(bookmarks = bookmarks, highlights = highlights) else it }
+        ebooks.map {
+          if (it.uri == uri) it.copy(bookmarks = bookmarks, highlights = highlights) else it
+        }
       }
     }
   }
@@ -739,7 +795,8 @@ class ReaderViewModel(
   internal fun onThemesExport(uri: Uri) {
     val themes = settings.savedThemes
     scope.launch {
-      themesFileFailed = !withContext(dispatcherProvider.io) { exportThemes(application, uri, themes) }
+      themesFileFailed =
+        !withContext(dispatcherProvider.io) { exportThemes(application, uri, themes) }
     }
   }
 
@@ -747,7 +804,8 @@ class ReaderViewModel(
     scope.launch {
       val imported = withContext(dispatcherProvider.io) { importThemes(application, uri) }
       themesFileFailed = imported.isEmpty()
-      if (imported.isNotEmpty()) onSettingsChange(settings.copy(savedThemes = settings.savedThemes + imported))
+      if (imported.isNotEmpty())
+        onSettingsChange(settings.copy(savedThemes = settings.savedThemes + imported))
     }
   }
 
@@ -809,14 +867,20 @@ class ReaderViewModel(
     }
   }
 
-  /** Speaks [text] with the natural voice, or the phone's when that fails, and returns false when the phone can't speak. */
+  /**
+   * Speaks [text] with the natural voice, or the phone's when that fails, and returns false when
+   * the phone can't speak.
+   */
   private suspend fun speak(
     text: String,
     next: String?,
     speaker: ReadAloud,
   ): Boolean {
     val naturalSpeaker = selectedSpeaker
-    if (useNaturalVoice && (naturalSpeaker == null || !neuralVoice.speak(text, next, speechRate, naturalSpeaker))) {
+    if (
+      useNaturalVoice &&
+        (naturalSpeaker == null || !neuralVoice.speak(text, next, speechRate, naturalSpeaker))
+    ) {
       useNaturalVoice = false
       messageChannel.trySend(ReaderMessage.NaturalVoiceUnavailable)
     }
@@ -841,13 +905,19 @@ class ReaderViewModel(
         val chunk = nextChunk(text, offset) ?: break
         val spoken = text.substring(chunk)
         // the text around it finds the part of the paragraph to highlight
-        book.readingAloud = element.locator.copy(
-          text = Locator.Text(
-            before = text.substring((chunk.first - 40).coerceAtLeast(0), chunk.first).ifEmpty { null },
-            highlight = spoken,
-            after = text.substring(chunk.last + 1, (chunk.last + 41).coerceAtMost(text.length)).ifEmpty { null },
-          ),
-        )
+        book.readingAloud =
+          element.locator.copy(
+            text =
+              Locator.Text(
+                before =
+                  text.substring((chunk.first - 40).coerceAtLeast(0), chunk.first).ifEmpty { null },
+                highlight = spoken,
+                after =
+                  text
+                    .substring(chunk.last + 1, (chunk.last + 41).coerceAtMost(text.length))
+                    .ifEmpty { null },
+              ),
+          )
         val next = nextChunk(text, chunk.last + 1)?.let { text.substring(it) }
         if (!speak(spoken, next, speaker)) return
         spokeAnything = true
@@ -867,10 +937,11 @@ class ReaderViewModel(
     var offset = position.offset
     var spokeAnything = false
     while (section < content.sectionCount) {
-      val text = when (content) {
-        is ReaderContent.Epub -> content.chapters[section]
-        is ReaderContent.Pdf -> content.pdf.text(section)
-      }
+      val text =
+        when (content) {
+          is ReaderContent.Epub -> content.chapters[section]
+          is ReaderContent.Pdf -> content.pdf.text(section)
+        }
       while (true) {
         val chunk = nextChunk(text, offset) ?: break
         moveTo(EbookPosition(section, chunk.first))
@@ -905,25 +976,31 @@ class ReaderViewModel(
     scope.launch {
       store.updateData { ebooks ->
         ebooks.map { ebook ->
-          if (ebook.uri == uri) ebook.copy(position = newPosition, progress = progress, positionModified = now) else ebook
+          if (ebook.uri == uri)
+            ebook.copy(position = newPosition, progress = progress, positionModified = now)
+          else ebook
         }
       }
     }
   }
 
   private fun progress(position: EbookPosition): Float {
-    val progress = when (val content = content) {
-      null -> 0F
-      is ReaderContent.Epub -> {
-        val read = content.chapters.take(position.section).sumOf { it.length } + position.offset
-        read.toFloat() / content.totalLength.coerceAtLeast(1)
+    val progress =
+      when (val content = content) {
+        null -> 0F
+        is ReaderContent.Epub -> {
+          val read = content.chapters.take(position.section).sumOf { it.length } + position.offset
+          read.toFloat() / content.totalLength.coerceAtLeast(1)
+        }
+        is ReaderContent.Pdf ->
+          position.section.toFloat() / (content.sectionCount - 1).coerceAtLeast(1)
       }
-      is ReaderContent.Pdf -> position.section.toFloat() / (content.sectionCount - 1).coerceAtLeast(1)
-    }
     return progress.coerceIn(0F, 1F)
   }
 
-  /** Called when the reader leaves for good, not when the window changes size, e.g. when unfolding. */
+  /**
+   * Called when the reader leaves for good, not when the window changes size, e.g. when unfolding.
+   */
   fun close() {
     stopReadingAloud()
     readAloud?.shutdown()

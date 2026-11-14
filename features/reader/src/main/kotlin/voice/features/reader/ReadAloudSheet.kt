@@ -53,21 +53,21 @@ internal fun ReadAloudSheet(
           style = MaterialTheme.typography.titleLarge,
         )
         Column(
-          Modifier
-            .padding(vertical = 8.dp)
-            .selectableGroup(),
+          Modifier.padding(vertical = 8.dp).selectableGroup(),
         ) {
           VoiceOption(
             title = stringResource(StringsR.string.reader_voice_natural),
-            summary = when {
-              voice.downloadProgress != null -> stringResource(
-                StringsR.string.reader_voice_natural_downloading,
-                (voice.downloadProgress * 100).toInt(),
-              )
-              voice.downloadFailed -> stringResource(StringsR.string.reader_voice_natural_failed)
-              voice.naturalReady -> null
-              else -> stringResource(StringsR.string.reader_voice_natural_summary)
-            },
+            summary =
+              when {
+                voice.downloadProgress != null ->
+                  stringResource(
+                    StringsR.string.reader_voice_natural_downloading,
+                    (voice.downloadProgress * 100).toInt(),
+                  )
+                voice.downloadFailed -> stringResource(StringsR.string.reader_voice_natural_failed)
+                voice.naturalReady -> null
+                else -> stringResource(StringsR.string.reader_voice_natural_summary)
+              },
             selected = voice.natural,
             progress = voice.downloadProgress,
             onClick = { onVoiceSelect(true) },
@@ -94,7 +94,10 @@ internal fun ReadAloudSheet(
             modifier = Modifier.weight(1F),
           )
           Text(
-            text = NumberFormat.getNumberInstance().apply { maximumFractionDigits = 1 }.format(voice.speechRate) + "×",
+            text =
+              NumberFormat.getNumberInstance()
+                .apply { maximumFractionDigits = 1 }
+                .format(voice.speechRate) + "×",
             style = MaterialTheme.typography.labelLarge,
           )
         }
@@ -110,9 +113,7 @@ internal fun ReadAloudSheet(
           onClick = onStartClick,
           enabled = !voice.natural || voice.naturalReady,
           shapes = ButtonDefaults.shapes(),
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp),
+          modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
         ) {
           Text(stringResource(StringsR.string.reader_voice_start))
         }
@@ -163,17 +164,15 @@ private fun VoiceOption(
   onClick: () -> Unit,
 ) {
   Row(
-    modifier = Modifier
-      .fillMaxWidth()
-      .selectable(selected = selected, onClick = onClick, role = Role.RadioButton)
-      .padding(vertical = 8.dp),
+    modifier =
+      Modifier.fillMaxWidth()
+        .selectable(selected = selected, onClick = onClick, role = Role.RadioButton)
+        .padding(vertical = 8.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     RadioButton(selected = selected, onClick = null)
     Column(
-      Modifier
-        .padding(start = 16.dp)
-        .weight(1F),
+      Modifier.padding(start = 16.dp).weight(1F),
     ) {
       Text(text = title, style = MaterialTheme.typography.titleMedium)
       if (summary != null) {
@@ -186,9 +185,7 @@ private fun VoiceOption(
       if (progress != null) {
         LinearProgressIndicator(
           progress = { progress },
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp),
+          modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
           gapSize = 0.dp,
           drawStopIndicator = {},
         )

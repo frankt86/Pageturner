@@ -58,6 +58,7 @@
     <string name="audiobookshelf.status.needs_login">Su serbidore ti pedit de torrare a atzèdere</string>
     <string name="audiobookshelf.status.offline">Su serbidore como non rispondet. Podes ascurtare su matessi sos libros iscarrigados.</string>
     <string name="audiobookshelf.status.syncing">Sincronizende…</string>
+    <string name="author.wikipedia">Leghe de prus in Wikipedia</string>
     <string name="book.category.action.mark_completed">Marca comente acabbadu</string>
     <string name="book.category.action.mark_current">Marca comente in cursu</string>
     <string name="book.category.action.mark_not_started">Marca comente galu no incumintzadu</string>
@@ -82,8 +83,11 @@
     <string name="book.edit.server.failed">No est istadu possìbile sarvare in su serbidore tuo. Torra a proare.</string>
     <string name="book.edit.server.not_allowed">Su contu tuo in su serbidore non podet cambiare libros.</string>
     <string name="book.edit.title.label">Tìtulu</string>
+    <string name="book.hide">Cua dae sa biblioteca</string>
     <string name="book.remove_from_library">Boga dae sa biblioteca</string>
     <string name="book.remove_from_library.summary">Su documentu abarrat in su dispositivu tuo</string>
+    <string name="book.select">Seletziona</string>
+    <string name="book.show">Mustra in sa biblioteca</string>
     <string name="book.source.device">In custu dispositivu</string>
     <string name="book.source.server_downloaded">%s · iscarrigadu</string>
     <string name="bookmark.action.add_note">Agiunghe una nota</string>
@@ -154,8 +158,13 @@
     <string name="folder.add.action.file">Agiunghe imbetzes unu documentu sìngulu</string>
     <string name="folder.add.action.folder">Issèbera una cartella</string>
     <string name="folder.add.action.opds">Iscàrriga dae unu catàlogu</string>
+    <string name="folder.add.help.answer.no_files">Galu perunu audiolibru</string>
+    <string name="folder.add.help.answer.not_found">No los agato</string>
+    <string name="folder.add.help.answer.other_app">Sunt in un\'àtera aplicatzione</string>
     <string name="folder.add.help.computer">Tenes galu libros in s\'elaboradore? Còpia·los in antis in su telèfonu tuo, pro esèmpiu in sa cartella Audiobooks o Documents.</string>
     <string name="folder.add.help.download">Android non permitit a sas aplicatziones de abèrrere deretu sa cartella Download. Issèbera una cartella a intro de cussa.</string>
+    <string name="folder.add.help.no_files">Pageturner ti faghet ascurtare sos documentos de audiolibros de su telèfonu tuo. LibriVox nde tenet mìgias chi podes iscarrigare de badas.</string>
+    <string name="folder.add.help.other_app">Sos libros de aplicatziones comente Audible o Spotify si podent ascurtare petzi in cussas aplicatziones. Pageturner ti faghet ascurtare documentos de audiolibros, comente MP3 o M4B.</string>
     <string name="folder.add.help.title">No as agatadu sos libros tuos?</string>
     <string name="folder.add.no_picker.message">Pageturner aberit sos libros tuos cun su seletzionadore de documentos de Android. Chene cussu, Pageturner non podet abèrrere sas cartellas o sos documentos tuos.</string>
     <string name="folder.add.no_picker.title">Custu dispositivu non tenet unu seletzionadore de documentos</string>
@@ -231,8 +240,14 @@
     <string name="history.source.unplugged">Àudio disconnètidu</string>
     <string name="history.source.watch">Rellògiu</string>
     <string name="history.source.widget">Trastu</string>
+    <plurals name="library.author.series_count">
+        <item quantity="one">%d sèrie</item>
+        <item quantity="other">%d sèries</item>
+    </plurals>
     <string name="library.book.downloading">Iscarrighende</string>
     <string name="library.book.ebook">Libru eletrònicu</string>
+    <string name="library.book.hidden">Cuadu</string>
+    <string name="library.book.hidden.message">As cuadu %1$s</string>
     <string name="library.book.offline">No a disponimentu chene connessione</string>
     <string name="library.category.completed.title">Acabbadu</string>
     <string name="library.category.current.title">In cursu</string>
@@ -243,9 +258,16 @@
     <string name="library.empty.title">Perunu libru agatadu</string>
     <string name="library.empty.message">Pageturner non agatat perunu libru in sas cartellas tuas. Controlla si sos documentos bi sunt galu o agiunghe una cartella.</string>
     <string name="library.empty.action">Mustra sas cartellas</string>
-    <string name="library.folders.title">Cartellas de sos libros</string>
-    <string name="library.folders.moved.dialog.title">Cartellas de libros tramudadas</string>
+    <string name="library.filter">Filtra</string>
+    <string name="library.filter.group_by">Agrupa pro</string>
+    <string name="library.filter.group_by.author">Autore</string>
+    <string name="library.filter.group_by.series">Sèrie</string>
+    <string name="library.filter.hidden_books">Libros cuados</string>
+    <string name="library.filter.not_downloaded">No iscarrigados</string>
+    <string name="library.filter.show">Mustra</string>
     <string name="library.folders.moved.dialog.message">Como podes manigiare sas cartellas de libros in sas Impostatziones.</string>
+    <string name="library.folders.moved.dialog.title">Cartellas de libros tramudadas</string>
+    <string name="library.folders.title">Cartellas de sos libros</string>
     <string name="library.folders.no_access">Chene atzessu</string>
     <string name="library.folders.no_access.action">Permite s\'atzessu</string>
     <string name="library.folders.no_access.badge">Torra a permìtere s\'atzessu a sas cartellas tuas</string>
@@ -257,6 +279,11 @@
         <item quantity="one">%d libru in cursu</item>
         <item quantity="other">%d libros in cursu</item>
     </plurals>
+    <plurals name="library.hidden_books">
+        <item quantity="one">%d libru cuadu</item>
+        <item quantity="other">%d libros cuados</item>
+    </plurals>
+    <string name="library.no_author">Chene autore</string>
     <string name="library.search.browse.title">Esplora</string>
     <plurals name="library.search.browse.book_count">
         <item quantity="one">%d libru</item>
@@ -288,6 +315,30 @@
     <string name="library.search.recent.clear_all">Isbòida totu</string>
     <string name="library.search.recent.remove">Boga %s</string>
     <string name="library.search.recent.title">Reghentes</string>
+    <plurals name="library.selection.author_saved">
+        <item quantity="one">Autore impostadu pro %d libru</item>
+        <item quantity="other">Autore impostadu pro %d libros</item>
+    </plurals>
+    <plurals name="library.selection.count">
+        <item quantity="one">%d seletzionadu</item>
+        <item quantity="other">%d seletzionados</item>
+    </plurals>
+    <plurals name="library.selection.hidden">
+        <item quantity="one">As cuadu %d libru</item>
+        <item quantity="other">As cuadu %d libros</item>
+    </plurals>
+    <string name="library.selection.hide">Cua</string>
+    <string name="library.selection.select_all">Seletziona totu</string>
+    <plurals name="library.selection.series_saved">
+        <item quantity="one">Sèrie impostada pro %d libru</item>
+        <item quantity="other">Sèrie impostada pro %d libros</item>
+    </plurals>
+    <plurals name="library.selection.server_failed">
+        <item quantity="one">No est istadu possìbile sarvare %d libru in su serbidore tuo</item>
+        <item quantity="other">No est istadu possìbile sarvare %d libros in su serbidore tuo</item>
+    </plurals>
+    <string name="library.selection.show">Mustra</string>
+    <string name="library.series.hidden.message">As cuadu %1$s</string>
     <string name="library.storage_permission_bug.action">Dae su permissu</string>
     <string name="library.storage_permission_bug.message">Pro unos cantos dispositivos, un\'aplicatzione de sistema non tenet s\'autorizatzione netzessària pro atzèdere a sa memòria esterna. Bisòngiat a tènnere custu atzessu pro chi Pageturner potzat lèghere sos audiolibros tuos.</string>
     <string name="library.storage_permission_bug.title">Permissu netzessàriu</string>
@@ -575,6 +626,16 @@
     <string name="reader.word_spacing">Ispàtziu intre sas paràulas</string>
     <string name="series.continue">Sighi</string>
     <string name="series.continue_book">Sighi su libru %s</string>
+    <string name="series.mark_completed">Marca comente acabbada</string>
+    <plurals name="series.mark_completed.confirm">
+        <item quantity="one">As a pèrdere in ue fias in %d libru.</item>
+        <item quantity="other">As a pèrdere in ue fias in %d libros.</item>
+    </plurals>
+    <string name="series.mark_not_started">Marca comente galu no incumintzada</string>
+    <plurals name="series.mark_not_started.confirm">
+        <item quantity="one">As a pèrdere su progressu tuo in %d libru.</item>
+        <item quantity="other">As a pèrdere su progressu tuo in %d libros.</item>
+    </plurals>
     <string name="series.start">Incumintza</string>
     <string name="series.start_book">Incumintza su libru %s</string>
     <string name="settings.about.app_version.title">Versione de s\'aplicatzione</string>

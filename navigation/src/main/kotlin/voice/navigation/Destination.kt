@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import voice.core.common.serialization.UriSerializer
 import voice.core.data.BookId
 import voice.core.data.folders.FolderType
@@ -12,7 +13,8 @@ sealed interface Destination {
 
   @Serializable
   data class Playback(val bookId: BookId) : Compose {
-    override val trackingName: String get() = "Playback"
+    override val trackingName: String
+      get() = "Playback"
   }
 
   @Serializable
@@ -21,44 +23,44 @@ sealed interface Destination {
     /** Opens the editor for this bookmark, e.g. to add a note right after saving it. */
     val editBookmarkId: String? = null,
   ) : Compose {
-    override val trackingName: String get() = "Bookmarks"
+    override val trackingName: String
+      get() = "Bookmarks"
   }
 
   @Serializable
   data class BookActions(val bookId: BookId) : Compose {
-    override val trackingName: String get() = "BookActions"
+    override val trackingName: String
+      get() = "BookActions"
   }
 
   @Serializable
   data class EbookActions(
-    val uri:
-    @Serializable(with = UriSerializer::class)
-    Uri,
+    val uri: @Serializable(with = UriSerializer::class) Uri,
   ) : Compose {
-    override val trackingName: String get() = "EbookActions"
+    override val trackingName: String
+      get() = "EbookActions"
   }
 
   @Serializable
   data class CoverFromInternet(val bookId: BookId) : Compose {
-    override val trackingName: String get() = "CoverFromInternet"
+    override val trackingName: String
+      get() = "CoverFromInternet"
   }
 
   @Serializable
   data class EbookCoverFromInternet(
-    val uri:
-    @Serializable(with = UriSerializer::class)
-    Uri,
+    val uri: @Serializable(with = UriSerializer::class) Uri,
   ) : Compose {
-    override val trackingName: String get() = "EbookCoverFromInternet"
+    override val trackingName: String
+      get() = "EbookCoverFromInternet"
   }
 
   @Serializable
   data class Reader(
-    val uri:
-    @Serializable(with = UriSerializer::class)
-    Uri,
+    val uri: @Serializable(with = UriSerializer::class) Uri,
   ) : Compose {
-    override val trackingName: String get() = "Reader"
+    override val trackingName: String
+      get() = "Reader"
   }
 
   data class Website(val url: String) : Destination
@@ -66,57 +68,82 @@ sealed interface Destination {
   @Serializable
   data class EditCover(
     val bookId: BookId,
-    val cover:
-    @Serializable(with = UriSerializer::class)
-    Uri,
+    val cover: @Serializable(with = UriSerializer::class) Uri,
   ) : Compose {
-    override val trackingName: String get() = "EditCover"
+    override val trackingName: String
+      get() = "EditCover"
   }
 
   data class Activity(val intent: Intent) : Destination
 
   @Serializable
-  sealed interface Compose :
-    Destination,
-    NavKey {
+  sealed interface Compose : Destination, NavKey {
     val trackingName: String
   }
 
   @Serializable
   data object Settings : Compose {
-    override val trackingName: String get() = "Settings"
+    override val trackingName: String
+      get() = "Settings"
   }
 
   @Serializable
   data object DeveloperSettings : Compose {
-    override val trackingName: String get() = "DeveloperSettings"
+    override val trackingName: String
+      get() = "DeveloperSettings"
   }
 
   @Serializable
   data object BookOverview : Compose {
-    override val trackingName: String get() = "BookOverview"
+    override val trackingName: String
+      get() = "BookOverview"
   }
 
   @Serializable
   data object LibrarySearch : Compose {
-    override val trackingName: String get() = "LibrarySearch"
+    override val trackingName: String
+      get() = "LibrarySearch"
   }
 
   @Serializable
   data class Series(val name: String) : Compose {
-    override val trackingName: String get() = "Series"
+    override val trackingName: String
+      get() = "Series"
+  }
+
+  @Serializable
+  data class SeriesActions(val name: String) : Compose {
+    override val trackingName: String
+      get() = "SeriesActions"
+  }
+
+  // null lists the books with no author
+  @Serializable
+  data class Author(val name: String?) : Compose {
+    override val trackingName: String
+      get() = "Author"
+  }
+
+  // an author's entry in the library holds only the books of its section. They can be thousands.
+  // That is too many for the saved state, so after a restore the sheet has no books and closes.
+  @Serializable
+  data class AuthorActions(
+    val name: String?,
+    @Transient val bookIds: List<BookId> = emptyList(),
+  ) : Compose {
+    override val trackingName: String
+      get() = "AuthorActions"
   }
 
   @Serializable
   data object FolderPicker : Compose {
-    override val trackingName: String get() = "FolderPicker"
+    override val trackingName: String
+      get() = "FolderPicker"
   }
 
   @Serializable
   data class SelectFolderType(
-    val uri:
-    @Serializable(with = UriSerializer::class)
-    Uri,
+    val uri: @Serializable(with = UriSerializer::class) Uri,
     val origin: Origin,
     // set when changing the type of a folder that was added before
     val currentType: FolderType? = null,
@@ -126,17 +153,20 @@ sealed interface Destination {
 
   @Serializable
   data object OnboardingWelcome : Compose {
-    override val trackingName: String get() = "OnboardingWelcome"
+    override val trackingName: String
+      get() = "OnboardingWelcome"
   }
 
   @Serializable
   data object OnboardingCompletion : Compose {
-    override val trackingName: String get() = "OnboardingCompletion"
+    override val trackingName: String
+      get() = "OnboardingCompletion"
   }
 
   @Serializable
   data object OnboardingExplanation : Compose {
-    override val trackingName: String get() = "OnboardingExplanation"
+    override val trackingName: String
+      get() = "OnboardingExplanation"
   }
 
   data object BatteryOptimization : Destination
@@ -157,12 +187,14 @@ sealed interface Destination {
 
   @Serializable
   data object AudiobookshelfSettings : Compose {
-    override val trackingName: String get() = "AudiobookshelfSettings"
+    override val trackingName: String
+      get() = "AudiobookshelfSettings"
   }
 
   @Serializable
   data object OpdsCatalogs : Compose {
-    override val trackingName: String get() = "OpdsCatalogs"
+    override val trackingName: String
+      get() = "OpdsCatalogs"
   }
 
   @Serializable
@@ -172,6 +204,7 @@ sealed interface Destination {
     val url: String? = null,
     val title: String? = null,
   ) : Compose {
-    override val trackingName: String get() = "OpdsFeed"
+    override val trackingName: String
+      get() = "OpdsFeed"
   }
 }

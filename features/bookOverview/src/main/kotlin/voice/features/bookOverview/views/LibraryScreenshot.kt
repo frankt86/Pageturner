@@ -3,10 +3,10 @@ package voice.features.bookOverview.views
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.tooling.preview.Preview
+import voice.core.data.BookCategory
 import voice.core.data.BookId
 import voice.core.kioskmode.KioskModeDemoData
 import voice.core.ui.VoiceTheme
-import voice.features.bookOverview.overview.BookOverviewCategory
 import voice.features.bookOverview.overview.BookOverviewItemViewState
 import voice.features.bookOverview.overview.BookOverviewLayoutMode
 import voice.features.bookOverview.overview.BookOverviewViewState
@@ -23,12 +23,25 @@ private fun LibraryScreenshot() {
       onBookClick = {},
       onBookLongClick = {},
       onSeriesClick = {},
+      onSeriesLongClick = {},
+      onAuthorClick = {},
+      onAuthorLongClick = {},
       onBookFolderClick = {},
       onFolderPickerMovedDialogDismiss = {},
       onPlayButtonClick = {},
       onSearchClick = {},
       onPermissionBugCardClick = {},
       onShowFoldersClick = {},
+      onShowHiddenBooksChange = {},
+      onGroupingChange = {},
+      onShowNotDownloadedBooksChange = {},
+      onSourceChange = { _, _ -> },
+      onSelectionToggle = {},
+      onSelectAll = {},
+      onSelectionClose = {},
+      onSelectionEdit = {},
+      onSelectionHide = {},
+      onSelectionShow = {},
     )
   }
 }
@@ -40,31 +53,45 @@ private fun screenshotState(): BookOverviewViewState {
     progress: Float,
     remaining: String,
     ebook: Boolean = false,
-  ) = BookOverviewItemViewState(
-    name = name,
-    author = author,
-    cover = null,
-    progress = progress,
-    id = BookId(name),
-    remainingTime = remaining,
-    isEbook = ebook,
-  )
+  ) =
+    BookOverviewItemViewState(
+      name = name,
+      author = author,
+      cover = null,
+      progress = progress,
+      id = BookId(name),
+      remainingTime = remaining,
+      isEbook = ebook,
+    )
   val echoes = KioskModeDemoData.echoesOfTomorrow
-  val current = listOf(
-    item(echoes.title, echoes.author, echoes.progress / 100F, echoes.remaining),
-    item("The Quiet Orbit", "Mara Quill", 0.4F, "EPUB · 40%", ebook = true),
-    item(KioskModeDemoData.bookshopOnMapleStreet.title, KioskModeDemoData.bookshopOnMapleStreet.author, 0.48F, "4:19:55"),
-  )
-  val notStarted = listOf(
-    item(KioskModeDemoData.beyondTheHorizon.title, KioskModeDemoData.beyondTheHorizon.author, 0F, "11:05:22"),
-    item("Pride and Prejudice", "Jane Austen", 0F, "EPUB · 0%", ebook = true),
-    item("Field Guide to the Stars", "Iris Calder", 0F, "PDF · 0%", ebook = true),
-  )
+  val current =
+    listOf(
+      item(echoes.title, echoes.author, echoes.progress / 100F, echoes.remaining),
+      item("The Quiet Orbit", "Mara Quill", 0.4F, "EPUB · 40%", ebook = true),
+      item(
+        KioskModeDemoData.bookshopOnMapleStreet.title,
+        KioskModeDemoData.bookshopOnMapleStreet.author,
+        0.48F,
+        "4:19:55",
+      ),
+    )
+  val notStarted =
+    listOf(
+      item(
+        KioskModeDemoData.beyondTheHorizon.title,
+        KioskModeDemoData.beyondTheHorizon.author,
+        0F,
+        "11:05:22",
+      ),
+      item("Pride and Prejudice", "Jane Austen", 0F, "EPUB · 0%", ebook = true),
+      item("Field Guide to the Stars", "Iris Calder", 0F, "PDF · 0%", ebook = true),
+    )
   return BookOverviewViewState(
-    sections = mapOf(
-      BookOverviewCategory.CURRENT to current.drop(1).map { LibraryItem.Book(it.id, mutableStateOf(it)) },
-      BookOverviewCategory.NOT_STARTED to notStarted.map { LibraryItem.Book(it.id, mutableStateOf(it)) },
-    ),
+    sections =
+      mapOf(
+        BookCategory.CURRENT to current.drop(1).map { LibraryItem.Book(it.id, mutableStateOf(it)) },
+        BookCategory.NOT_STARTED to notStarted.map { LibraryItem.Book(it.id, mutableStateOf(it)) },
+      ),
     hero = mutableStateOf(current.first()),
     inProgressCount = current.size,
     currentBookId = current.first().id,

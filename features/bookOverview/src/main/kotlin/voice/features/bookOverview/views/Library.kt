@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -17,9 +19,12 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,25 +34,29 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import java.util.Calendar
+import voice.core.data.BookCategory
 import voice.core.data.BookId
 import voice.core.strings.R
 import voice.core.ui.CenteredContent
 import voice.core.ui.HoldSplashScreenWhile
 import voice.core.ui.MaxContentWidth
+import voice.core.ui.R as UiR
 import voice.core.ui.entrance
 import voice.core.ui.rememberEntranceState
-import voice.features.bookOverview.overview.BookOverviewCategory
+import voice.core.ui.segmentedShape
+import voice.features.bookOverview.overview.AuthorEntryViewState
 import voice.features.bookOverview.overview.BookOverviewLayoutMode
 import voice.features.bookOverview.overview.BookOverviewViewState
 import voice.features.bookOverview.overview.LibraryItem
-import java.util.Calendar
 
 /**
- * Opening the app keeps the splash screen up until the library is loaded, then the sections float in
- * one after another. That only happens once, not when coming back from another screen.
+ * Opening the app keeps the splash screen up until the library is loaded, then the sections float
+ * in one after another. That only happens once, not when coming back from another screen.
  */
 @Composable
 internal fun Library(
@@ -56,12 +65,19 @@ internal fun Library(
   onBookClick: (BookId) -> Unit,
   onBookLongClick: (BookId) -> Unit,
   onSeriesClick: (String) -> Unit,
+  onSeriesLongClick: (String) -> Unit,
+  onAuthorClick: (String?) -> Unit,
+  onAuthorLongClick: (AuthorEntryViewState) -> Unit,
   onPlayClick: () -> Unit,
   onPermissionBugCardClick: () -> Unit,
   onShowFoldersClick: () -> Unit,
+  onHiddenBooksClick: () -> Unit,
+  onSelectionToggle: (List<BookId>) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   var entered by rememberSaveable { mutableStateOf(false) }
+  // an author can be in two sections, and only the tapped tile flies
+  var openedAuthor by rememberSaveable { mutableStateOf<String?>(null) }
   // by identity, as a loaded empty library can equal the loading state
   val loading = viewState === BookOverviewViewState.Loading
   HoldSplashScreenWhile(loading = loading)
@@ -71,26 +87,31 @@ internal fun Library(
   val grid = viewState.layoutMode == BookOverviewLayoutMode.Grid
   val heroId = viewState.heroBookId
   val hero = viewState.hero
+  val selection = viewState.selection
+  val selected: (List<BookId>) -> Boolean? = { ids -> selection?.ids?.containsAll(ids) }
+  val onItemClick: (List<BookId>, open: () -> Unit) -> Unit = { ids, open ->
+    if (selection != null) onSelectionToggle(ids) else open()
+  }
 
   CenteredContent(modifier = modifier) { centeredPadding ->
     val horizontalPadding = if (grid) 16.dp else centeredPadding
-    // sections further down join the stagger at the same time, so they don't lag behind when scrolled to
+    // sections further down join the stagger at the same time, so they don't lag behind when
+    // scrolled to
     var nextEntranceIndex = 0
     fun entranceIndex() = nextEntranceIndex++.coerceAtMost(MAX_ENTRANCE_INDEX)
     // in the grid, a card across a wide grid would leave a lot of empty space next to its content
-    val cardWidth = Modifier
-      .wrapContentWidth(Alignment.Start)
-      .widthIn(max = MaxContentWidth)
+    val cardWidth = Modifier.wrapContentWidth(Alignment.Start).widthIn(max = MaxContentWidth)
     LazyVerticalGrid(
       state = gridState,
       columns = if (grid) BookGridCells else GridCells.Fixed(1),
-      contentPadding = PaddingValues(
-        start = horizontalPadding,
-        end = horizontalPadding,
-        top = 8.dp,
-        // room to scroll the last books above the floating play button
-        bottom = if (viewState.playButtonState != null) 104.dp else 24.dp,
-      ),
+      contentPadding =
+        PaddingValues(
+          start = horizontalPadding,
+          end = horizontalPadding,
+          top = 8.dp,
+          // room to scroll the last books above the floating play button or toolbar
+          bottom = if (viewState.playButtonState != null || selection != null) 104.dp else 24.dp,
+        ),
       horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       if (viewState.showStoragePermissionBugCard) {
@@ -103,9 +124,9 @@ internal fun Library(
       item(key = "greeting", span = { GridItemSpan(maxLineSpan) }, contentType = "greeting") {
         LibraryGreeting(
           inProgressCount = viewState.inProgressCount,
-          modifier = Modifier
-            .entrance(entrance, greetingIndex)
-            .padding(top = 16.dp, bottom = 20.dp, start = 4.dp),
+          modifier =
+            Modifier.entrance(entrance, greetingIndex)
+              .padding(top = 16.dp, bottom = 20.dp, start = 4.dp),
         )
       }
       if (viewState.showEmptyLibrary) {
@@ -119,31 +140,34 @@ internal fun Library(
         item(key = HERO_KEY, span = { GridItemSpan(maxLineSpan) }, contentType = "hero") {
           ContinueListeningCard(
             book = hero.value,
-            playing = heroId == viewState.currentBookId &&
-              viewState.playButtonState == BookOverviewViewState.PlayButtonState.Playing,
-            onClick = { onBookClick(hero.value.id) },
+            playing =
+              heroId == viewState.currentBookId &&
+                viewState.playButtonState == BookOverviewViewState.PlayButtonState.Playing,
+            onClick = { onItemClick(listOf(hero.value.id)) { onBookClick(hero.value.id) } },
             onLongClick = { onBookLongClick(hero.value.id) },
-            onPlayClick = if (hero.value.isEbook) {
-              { onBookClick(hero.value.id) }
-            } else {
-              onPlayClick
-            },
+            onPlayClick =
+              if (hero.value.isEbook) {
+                { onBookClick(hero.value.id) }
+              } else {
+                onPlayClick
+              },
+            selected = selected(listOf(hero.value.id)),
             modifier = cardWidth.entrance(entrance, index),
           )
         }
       }
-      BookOverviewCategory.entries.forEach { category ->
+      BookCategory.entries.forEach { category ->
         val items = viewState.sections[category].orEmpty()
         if (items.isEmpty()) return@forEach
-        val finished = category == BookOverviewCategory.FINISHED
+        val finished = category == BookCategory.FINISHED
         val headerIndex = entranceIndex()
         item(key = category, span = { GridItemSpan(maxLineSpan) }, contentType = "header") {
           Header(
-            title = stringResource(category.nameRes),
+            category = category,
             count = items.size,
-            modifier = Modifier
-              .entrance(entrance, headerIndex)
-              .padding(top = 32.dp, bottom = 12.dp, start = 4.dp),
+            modifier =
+              Modifier.entrance(entrance, headerIndex)
+                .padding(top = 32.dp, bottom = 12.dp, start = 4.dp),
           )
         }
         val itemIndexes = items.map { entranceIndex() }
@@ -151,53 +175,124 @@ internal fun Library(
           itemsIndexed(
             items = items,
             key = { _, item -> item.key },
-            contentType = { _, item -> if (item is LibraryItem.Series) "gridSeries" else "gridBook" },
+            contentType = { _, item ->
+              when (item) {
+                is LibraryItem.Book -> "gridBook"
+                is LibraryItem.Series -> "gridSeries"
+                is LibraryItem.Author -> "gridAuthor"
+              }
+            },
           ) { index, item ->
-            val itemModifier = Modifier
-              .entrance(entrance, itemIndexes[index])
-              .padding(bottom = 8.dp)
+            val itemModifier =
+              Modifier.entrance(entrance, itemIndexes[index]).padding(bottom = 8.dp)
             when (item) {
-              is LibraryItem.Book -> GridBook(
-                book = item.state.value,
-                onBookClick = onBookClick,
-                onBookLongClick = onBookLongClick,
-                finished = finished,
-                modifier = itemModifier,
-              )
-              is LibraryItem.Series -> GridSeries(
-                series = item.series,
-                onClick = { onSeriesClick(item.series.name) },
-                modifier = itemModifier,
-              )
+              is LibraryItem.Book ->
+                GridBook(
+                  book = item.state.value,
+                  onBookClick = { id -> onItemClick(listOf(id)) { onBookClick(id) } },
+                  onBookLongClick = onBookLongClick,
+                  finished = finished,
+                  selected = selected(listOf(item.id)),
+                  modifier = itemModifier,
+                )
+              is LibraryItem.Series ->
+                GridSeries(
+                  series = item.series,
+                  onClick = {
+                    onItemClick(item.series.bookIds) { onSeriesClick(item.series.name) }
+                  },
+                  onLongClick = { onSeriesLongClick(item.series.name) },
+                  selected = selected(item.series.bookIds),
+                  modifier = itemModifier,
+                )
+              is LibraryItem.Author ->
+                GridAuthor(
+                  author = item.author,
+                  onClick = {
+                    onItemClick(item.author.bookIds) {
+                      openedAuthor = item.key
+                      onAuthorClick(item.author.name)
+                    }
+                  },
+                  flies = item.key == openedAuthor,
+                  selected = selected(item.author.bookIds),
+                  onLongClick = { onAuthorLongClick(item.author) },
+                  modifier = itemModifier,
+                )
             }
           }
         } else {
           itemsIndexed(
             items = items,
             key = { _, item -> item.key },
-            contentType = { _, item -> if (item is LibraryItem.Series) "listSeries" else "listBook" },
+            contentType = { _, item ->
+              when (item) {
+                is LibraryItem.Book -> "listBook"
+                is LibraryItem.Series -> "listSeries"
+                is LibraryItem.Author -> "listAuthor"
+              }
+            },
           ) { index, item ->
             val shape = segmentedShape(index, items.size)
-            val itemModifier = Modifier
-              .entrance(entrance, itemIndexes[index])
-              .padding(bottom = 2.dp)
+            val itemModifier =
+              Modifier.entrance(entrance, itemIndexes[index]).padding(bottom = 2.dp)
             when (item) {
-              is LibraryItem.Book -> ListBookRow(
-                book = item.state.value,
-                onBookClick = onBookClick,
-                onBookLongClick = onBookLongClick,
-                finished = finished,
-                shape = shape,
-                modifier = itemModifier,
-              )
-              is LibraryItem.Series -> ListSeriesRow(
-                series = item.series,
-                onClick = { onSeriesClick(item.series.name) },
-                shape = shape,
-                modifier = itemModifier,
-              )
+              is LibraryItem.Book ->
+                ListBookRow(
+                  book = item.state.value,
+                  onBookClick = { id -> onItemClick(listOf(id)) { onBookClick(id) } },
+                  onBookLongClick = onBookLongClick,
+                  finished = finished,
+                  shape = shape,
+                  selected = selected(listOf(item.id)),
+                  modifier = itemModifier,
+                )
+              is LibraryItem.Series ->
+                ListSeriesRow(
+                  series = item.series,
+                  onClick = {
+                    onItemClick(item.series.bookIds) { onSeriesClick(item.series.name) }
+                  },
+                  onLongClick = { onSeriesLongClick(item.series.name) },
+                  shape = shape,
+                  selected = selected(item.series.bookIds),
+                  modifier = itemModifier,
+                )
+              is LibraryItem.Author ->
+                ListAuthorRow(
+                  author = item.author,
+                  onClick = {
+                    onItemClick(item.author.bookIds) {
+                      openedAuthor = item.key
+                      onAuthorClick(item.author.name)
+                    }
+                  },
+                  flies = item.key == openedAuthor,
+                  shape = shape,
+                  selected = selected(item.author.bookIds),
+                  onLongClick = { onAuthorLongClick(item.author) },
+                  modifier = itemModifier,
+                )
             }
           }
+        }
+      }
+      // where the books were, so they can still be found weeks later
+      if (viewState.hiddenBookCount > 0 && !viewState.showHiddenBooks) {
+        val index = entranceIndex()
+        item(
+          key = "hiddenBooks",
+          span = { GridItemSpan(maxLineSpan) },
+          contentType = "hiddenBooks",
+        ) {
+          HiddenBooksButton(
+            count = viewState.hiddenBookCount,
+            onClick = onHiddenBooksClick,
+            modifier =
+              Modifier.entrance(entrance, index)
+                .padding(top = 24.dp)
+                .wrapContentWidth(Alignment.CenterHorizontally),
+          )
         }
       }
       item(span = { GridItemSpan(maxLineSpan) }, contentType = "navigationBarSpacer") {
@@ -231,10 +326,37 @@ private fun LibraryGreeting(
     )
     if (inProgressCount > 0) {
       Text(
-        text = pluralStringResource(R.plurals.library_header_in_progress, inProgressCount, inProgressCount),
+        text =
+          pluralStringResource(
+            R.plurals.library_header_in_progress,
+            inProgressCount,
+            inProgressCount,
+          ),
         style = MaterialTheme.typography.titleMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
       )
     }
+  }
+}
+
+@Composable
+private fun HiddenBooksButton(
+  count: Int,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  TextButton(
+    onClick = onClick,
+    modifier = modifier,
+    colors =
+      ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant),
+  ) {
+    Icon(
+      painter = painterResource(UiR.drawable.ic_visibility_off),
+      contentDescription = null,
+      modifier = Modifier.size(ButtonDefaults.IconSize),
+    )
+    Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+    Text(pluralStringResource(R.plurals.library_hidden_books, count, count))
   }
 }

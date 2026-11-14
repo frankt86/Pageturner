@@ -10,8 +10,7 @@ import java.time.Instant
 
 @Entity(tableName = "content2")
 public data class BookContent(
-  @PrimaryKey
-  val id: BookId,
+  @PrimaryKey val id: BookId,
   val playbackSpeed: Float,
   val skipSilence: Boolean,
   val isActive: Boolean,
@@ -20,14 +19,13 @@ public data class BookContent(
   val chapters: List<ChapterId>,
   val currentChapter: ChapterId,
   val positionInChapter: Long,
-  @ColumnInfo(defaultValue = "0")
-  val gain: Float,
-  @Embedded
-  val metadata: BookMetadata,
+  @ColumnInfo(defaultValue = "0") val gain: Float,
+  @Embedded val metadata: BookMetadata,
+  // null for books on the device, and for server books until the next sync
+  val serverLibraryId: String? = null,
 ) {
 
-  @Ignore
-  val currentChapterIndex: Int = chapters.indexOf(currentChapter)
+  @Ignore val currentChapterIndex: Int = chapters.indexOf(currentChapter)
 
   init {
     require(currentChapter in chapters && positionInChapter >= 0) {
@@ -47,6 +45,7 @@ public data class BookMetadata(
   val part: String?,
   val cover: File?,
   // null for books on a server, and for books from before it was stored, which the scan reads again
-  @ColumnInfo(name = "metadataFileLastModified")
-  val fileLastModified: Instant?,
+  @ColumnInfo(name = "metadataFileLastModified") val fileLastModified: Instant?,
+  // back to false when the scan reads changed files again, so it looks for a cover once more
+  @ColumnInfo(defaultValue = "0") val noEmbeddedCover: Boolean = false,
 )

@@ -7,6 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,16 +15,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import voice.core.data.BookId
-import voice.core.ui.AuroraBackground
-import voice.core.ui.CoverTheme
-import voice.core.ui.VoiceTheme
-import voice.core.ui.rememberAnimationClock
-import voice.features.playbackScreen.BookPlayViewState
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import voice.core.data.BookId
+import voice.core.ui.AuroraBackground
+import voice.core.ui.CoverTheme
+import voice.core.ui.LocalSharedTransitionScope
+import voice.core.ui.VoiceTheme
+import voice.core.ui.rememberAnimationClock
+import voice.features.playbackScreen.BookPlayViewState
 
 @Composable
 internal fun BookPlayView(
@@ -43,14 +45,17 @@ internal fun BookPlayView(
   onSkipToPrevious: () -> Unit,
   onCloseClick: () -> Unit,
   onBookActionsClick: () -> Unit,
+  onAuthorClick: (String) -> Unit,
   onCurrentChapterClick: () -> Unit,
   onJumpBack: (id: Long) -> Unit,
   onJumpBackExpire: (id: Long) -> Unit,
   snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
   val clock = rememberAnimationClock(running = viewState.playing)
-  BoxWithConstraints(Modifier.fillMaxSize()) {
-    // split screen panes are often wider than tall, but too narrow or too short for a cover next to the controls
+  val dragDownToClose = rememberDragDownToCloseState()
+  BoxWithConstraints(Modifier.fillMaxSize().dragDownToClose(dragDownToClose)) {
+    // split screen panes are often wider than tall, but too narrow or too short for a cover next to
+    // the controls
     val sideBySide = maxWidth > maxHeight && maxWidth >= 600.dp && maxHeight >= 360.dp
     AuroraBackground(
       clock = { clock.value },
@@ -74,30 +79,37 @@ internal fun BookPlayView(
         }
       },
       content = { contentPadding ->
-        BookPlayContent(
-          contentPadding = contentPadding,
-          viewState = viewState,
-          bookId = bookId,
-          clock = { clock.value },
-          sideBySide = sideBySide,
-          onPlayClick = onPlayClick,
-          onRewindClick = onRewindClick,
-          onFastForwardClick = onFastForwardClick,
-          onSeek = onSeek,
-          onSkipToNext = onSkipToNext,
-          onSkipToPrevious = onSkipToPrevious,
-          onCurrentChapterClick = onCurrentChapterClick,
-          onSleepTimerClick = onSleepTimerClick,
-          onSpeedChangeClick = onSpeedChangeClick,
-          onBookmarkClick = onBookmarkClick,
-          onBookmarkLongClick = onBookmarkLongClick,
-          onSkipSilenceClick = onSkipSilenceClick,
-          onVolumeBoostClick = onVolumeBoostClick,
-          onCloseClick = onCloseClick,
-          onBookActionsClick = onBookActionsClick,
-          onJumpBack = onJumpBack,
-          onJumpBackExpire = onJumpBackExpire,
-        )
+        // the cover and play button slide down with the player instead of flying to the library
+        CompositionLocalProvider(
+          LocalSharedTransitionScope provides
+            LocalSharedTransitionScope.current.takeUnless { dragDownToClose.dragged },
+        ) {
+          BookPlayContent(
+            contentPadding = contentPadding,
+            viewState = viewState,
+            bookId = bookId,
+            clock = { clock.value },
+            sideBySide = sideBySide,
+            onPlayClick = onPlayClick,
+            onRewindClick = onRewindClick,
+            onFastForwardClick = onFastForwardClick,
+            onSeek = onSeek,
+            onSkipToNext = onSkipToNext,
+            onSkipToPrevious = onSkipToPrevious,
+            onCurrentChapterClick = onCurrentChapterClick,
+            onSleepTimerClick = onSleepTimerClick,
+            onSpeedChangeClick = onSpeedChangeClick,
+            onBookmarkClick = onBookmarkClick,
+            onBookmarkLongClick = onBookmarkLongClick,
+            onSkipSilenceClick = onSkipSilenceClick,
+            onVolumeBoostClick = onVolumeBoostClick,
+            onCloseClick = onCloseClick,
+            onBookActionsClick = onBookActionsClick,
+            onAuthorClick = onAuthorClick,
+            onJumpBack = onJumpBack,
+            onJumpBackExpire = onJumpBackExpire,
+          )
+        }
       },
     )
   }
@@ -106,8 +118,7 @@ internal fun BookPlayView(
 @Composable
 @Preview
 private fun BookPlayPreview(
-  @PreviewParameter(BookPlayViewStatePreviewProvider::class)
-  viewState: BookPlayViewState,
+  @PreviewParameter(BookPlayViewStatePreviewProvider::class) viewState: BookPlayViewState,
 ) {
   VoiceTheme {
     CoverTheme(cover = viewState.cover) {
@@ -128,6 +139,7 @@ private fun BookPlayPreview(
         onSkipToPrevious = {},
         onCloseClick = {},
         onBookActionsClick = {},
+        onAuthorClick = {},
         onCurrentChapterClick = {},
         onJumpBack = {},
         onJumpBackExpire = {},
@@ -138,32 +150,34 @@ private fun BookPlayPreview(
 
 private class BookPlayViewStatePreviewProvider : PreviewParameterProvider<BookPlayViewState> {
   override val values = sequence {
-    val initial = BookPlayViewState(
-      chapterName = "The Signal",
-      showPreviousNextButtons = true,
-      cover = null,
-      duration = 42.minutes,
-      playedTime = 17.minutes,
-      playing = true,
-      skipSilence = true,
-      sleepTimerState = BookPlayViewState.SleepTimerViewState.Disabled,
-      title = "Das Ende der Welt",
-      author = "Daniel Hartwell",
-      playbackSpeed = 1.25F,
-      volumeBoostActive = false,
-      chapterNumber = 5,
-      chapterCount = 12,
-      bookPlayedTime = 4.hours + 12.minutes,
-      bookDuration = 9.hours + 30.minutes,
-      chapterSegments = List(12) { 1F / 12 },
-      skipSeconds = 20,
-      jumpBack = BookPlayViewState.JumpBackViewState(
-        id = 1,
-        time = "34:18",
-        chapterNumber = null,
-        elapsed = 3.seconds,
-      ),
-    )
+    val initial =
+      BookPlayViewState(
+        chapterName = "The Signal",
+        showPreviousNextButtons = true,
+        cover = null,
+        duration = 42.minutes,
+        playedTime = 17.minutes,
+        playing = true,
+        skipSilence = true,
+        sleepTimerState = BookPlayViewState.SleepTimerViewState.Disabled,
+        title = "Das Ende der Welt",
+        author = "Daniel Hartwell",
+        playbackSpeed = 1.25F,
+        volumeBoostActive = false,
+        chapterNumber = 5,
+        chapterCount = 12,
+        bookPlayedTime = 4.hours + 12.minutes,
+        bookDuration = 9.hours + 30.minutes,
+        chapterSegments = List(12) { 1F / 12 },
+        skipSeconds = 20,
+        jumpBack =
+          BookPlayViewState.JumpBackViewState(
+            id = 1,
+            time = "34:18",
+            chapterNumber = null,
+            elapsed = 3.seconds,
+          ),
+      )
     yield(initial)
     yield(
       initial.copy(

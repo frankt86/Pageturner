@@ -4,6 +4,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.Qualifier
 import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -14,29 +15,38 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 import voice.core.remoteconfig.api.RemoteConfig
 
+@Qualifier annotation class CoverClient
+
 @BindingContainer
 @ContributesTo(AppScope::class)
 object CoverModule {
 
   @Provides
   @SingleIn(AppScope::class)
-  fun client(remoteConfig: RemoteConfig): OkHttpClient = OkHttpClient.Builder()
-    .addInterceptor { chain ->
-      chain.proceed(
-        chain.request()
-          .newBuilder()
-          .addHeader(
-            name = "User-Agent",
-            value = remoteConfig.string(key = "user_agent", defaultValue = "Mozilla/5.0"),
-          )
-          .build(),
-      )
-    }
-    .build()
+  @CoverClient
+  fun client(
+    client: OkHttpClient,
+    remoteConfig: RemoteConfig,
+  ): OkHttpClient =
+    client
+      .newBuilder()
+      .addInterceptor { chain ->
+        chain.proceed(
+          chain
+            .request()
+            .newBuilder()
+            .header(
+              name = "User-Agent",
+              value = remoteConfig.string(key = "user_agent", defaultValue = "Mozilla/5.0"),
+            )
+            .build(),
+        )
+      }
+      .build()
 
   @Provides
   @SingleIn(AppScope::class)
-  fun internalApi(client: OkHttpClient): InternalCoverApi {
+  fun internalApi(@CoverClient client: OkHttpClient): InternalCoverApi {
     val json = Json {
       ignoreUnknownKeys = true
     }

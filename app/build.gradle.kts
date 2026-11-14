@@ -6,20 +6,35 @@ import java.util.Properties
 plugins {
   id("voice.app")
   id("voice.compose")
-  alias(libs.plugins.kotlin.serialization)
-  alias(libs.plugins.metro)
   alias(libs.plugins.crashlytics) apply false
   alias(libs.plugins.googleServices) apply false
 }
 
 val playGoogleServicesJson = layout.projectDirectory.file("src/play/google-services.json")
+
 if (playGoogleServicesJson.asFile.canRead()) {
   pluginManager.apply(libs.plugins.googleServices.get().pluginId)
   pluginManager.apply(libs.plugins.crashlytics.get().pluginId)
 }
 
-android {
+val releaseCode =
+  providers
+    .exec {
+      commandLine(
+        "git",
+        "for-each-ref",
+        "--count=1",
+        "--sort=-v:refname",
+        "--format=%(refname:short)",
+        "refs/tags/[0-9]*-[0-9]*",
+      )
+      isIgnoreExitValue = true
+    }
+    .standardOutput
+    .asText
+    .map { it.trim().substringAfterLast('-').toIntOrNull() ?: Int.MAX_VALUE }
 
+android {
   namespace = "voice.app"
 
   dependenciesInfo {
@@ -36,7 +51,8 @@ android {
   defaultConfig {
     applicationId = "de.ph1b.audiobook"
     versionName = providers.gradleProperty("voice.versionName").orNull ?: "1.0.0"
-    versionCode = providers.gradleProperty("voice.versionCode").orNull?.toInt() ?: Int.MAX_VALUE
+    // F-Droid replaces the next line with sed, keep it on one line.
+    versionCode = providers.gradleProperty("voice.versionCode").orNull?.toInt() ?: releaseCode.get()
     providers.gradleProperty("voice.applicationIdSuffix").orNull?.let { applicationIdSuffix = it }
   }
 
@@ -61,19 +77,21 @@ android {
   val signingDir = mainCheckoutDir(layout.projectDirectory.dir("..").asFile).resolve("signing")
   val signingPropertiesFile = signingDir.resolve("signing.properties")
   val signingKeystoreFile = signingDir.resolve("signing.keystore")
-  val appSigningConfig = if (signingPropertiesFile.isFile) {
-    val signingProperties = Properties().apply {
-      signingPropertiesFile.inputStream().use(::load)
+  val appSigningConfig =
+    if (signingPropertiesFile.isFile) {
+      val signingProperties =
+        Properties().apply {
+          signingPropertiesFile.inputStream().use(::load)
+        }
+      signingConfigs.create("signing") {
+        storeFile = signingKeystoreFile
+        storePassword = signingProperties.getProperty("STORE_PASSWORD")
+        keyAlias = signingProperties.getProperty("KEY_ALIAS")
+        keyPassword = signingProperties.getProperty("KEY_PASSWORD")
+      }
+    } else {
+      null
     }
-    signingConfigs.create("signing") {
-      storeFile = signingKeystoreFile
-      storePassword = signingProperties.getProperty("STORE_PASSWORD")
-      keyAlias = signingProperties.getProperty("KEY_ALIAS")
-      keyPassword = signingProperties.getProperty("KEY_PASSWORD")
-    }
-  } else {
-    null
-  }
   // a fixed debug key, so a newer test build installs over the last one
   signingConfigs.getByName("debug") {
     storeFile = file("debug.keystore")
@@ -114,7 +132,8 @@ android {
       add("META-INF/atomicfu.kotlin_module")
       add("META-INF/core.kotlin_module")
     }
-    // Like the natural voice, the full PDFium ships for arm64-v8a only. Its other ABIs would add about 13 MB to the APK.
+    // Like the natural voice, the full PDFium ships for arm64-v8a only. Its other ABIs would add
+    // about 13 MB to the APK.
     // On those phones, PDFs open with Android's PdfRenderer alone.
     listOf("armeabi-v7a", "x86", "x86_64").forEach { abi ->
       jniLibs.excludes += "**/$abi/libpdfium.so"
@@ -127,30 +146,34 @@ android {
   }
 }
 
-val validatePlayGoogleServices = tasks.register("validatePlayGoogleServices") {
-  val playGoogleServicesJsonPath = playGoogleServicesJson.asFile.absolutePath
+val validatePlayGoogleServices =
+  tasks.register("validatePlayGoogleServices") {
+    val playGoogleServicesJsonPath = playGoogleServicesJson.asFile.absolutePath
 
-  doLast {
-    check(File(playGoogleServicesJsonPath).canRead()) {
-      "app/src/play/google-services.json is required for Play builds. " +
-        "Use the free variant for F-Droid/GitHub builds."
+    doLast {
+      check(File(playGoogleServicesJsonPath).canRead()) {
+        "app/src/play/google-services.json is required for Play builds. " +
+          "Use the free variant for F-Droid/GitHub builds."
+      }
     }
   }
-}
 
-tasks.matching { it.name in setOf("prePlayDebugBuild", "prePlayReleaseBuild") }.configureEach {
-  dependsOn(validatePlayGoogleServices)
-}
+tasks
+  .matching { it.name in setOf("prePlayDebugBuild", "prePlayReleaseBuild") }
+  .configureEach {
+    dependsOn(validatePlayGoogleServices)
+  }
 
-tasks.matching {
-  val isPlayTask = it.name.contains("Play")
-  !isPlayTask && (
-    it.name.startsWith("process") && it.name.endsWith("GoogleServices") ||
-      it.name.startsWith("injectCrashlytics")
-    )
-}.configureEach {
-  enabled = false
-}
+tasks
+  .matching {
+    val isPlayTask = it.name.contains("Play")
+    !isPlayTask &&
+      (it.name.startsWith("process") && it.name.endsWith("GoogleServices") ||
+        it.name.startsWith("injectCrashlytics"))
+  }
+  .configureEach {
+    enabled = false
+  }
 
 dependencies {
   coreLibraryDesugaring(libs.desugarJdkLibs)
@@ -161,7 +184,8 @@ dependencies {
   implementation(projects.core.data.api)
   implementation(projects.core.data.impl)
   implementation(projects.core.datastore)
-  implementation(projects.core.playback)
+  implementation(projects.core.playback.api)
+  implementation(projects.core.playback.impl)
   implementation(projects.core.scanner)
   implementation(projects.core.featureflag)
   implementation(projects.core.kioskmode)
@@ -193,8 +217,6 @@ dependencies {
 
   implementation(libs.navigation3.ui)
 
-  implementation(libs.serialization.json)
-
   implementation(libs.coil)
 
   add("playImplementation", libs.firebase.crashlytics)
@@ -211,15 +233,14 @@ dependencies {
 
   debugImplementation(projects.core.logging.debug)
 
-  implementation(libs.androidxCore)
-
   implementation(libs.media3.exoplayer)
   implementation(libs.media3.session)
 
   testImplementation(kotlin("reflect"))
 }
 
-// Git worktrees sign with the main checkout's keys, so the release key isn't copied into every worktree.
+// Git worktrees sign with the main checkout's keys, so the release key isn't copied into every
+// worktree.
 fun mainCheckoutDir(rootDir: File): File {
   val dotGit = rootDir.resolve(".git")
   if (!dotGit.isFile) return rootDir
