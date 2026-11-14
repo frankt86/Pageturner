@@ -84,8 +84,6 @@
     <string name="book.edit.server.not_allowed">Dein Konto auf dem Server darf keine Bücher ändern.</string>
     <string name="book.edit.title.label">Titel</string>
     <string name="book.hide">Aus der Bibliothek ausblenden</string>
-    <string name="book.remove_from_library">Aus der Bibliothek entfernen</string>
-    <string name="book.remove_from_library.summary">Die Datei bleibt auf Deinem Gerät</string>
     <string name="book.select">Auswählen</string>
     <string name="book.show">In der Bibliothek anzeigen</string>
     <string name="book.source.device">Auf diesem Gerät</string>

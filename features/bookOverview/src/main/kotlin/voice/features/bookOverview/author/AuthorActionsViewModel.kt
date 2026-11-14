@@ -9,11 +9,12 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesTo
-import voice.core.data.category
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
 import voice.features.bookOverview.overview.AuthorEntryViewState
 import voice.features.bookOverview.overview.AuthorGroup
 import voice.features.bookOverview.overview.authorKey
+import voice.features.bookOverview.overview.libraryBooks
 import voice.features.bookOverview.overview.libraryEntries
 import voice.features.bookOverview.overview.toEntryViewState
 import voice.features.bookOverview.select.BookSelectionRequests
@@ -23,6 +24,7 @@ import voice.navigation.Navigator
 @AssistedInject
 class AuthorActionsViewModel(
   private val repo: BookRepository,
+  private val ebooksStore: EbooksStore,
   private val bookSelectionRequests: BookSelectionRequests,
   private val navigator: Navigator,
   @Assisted private val destination: Destination.AuthorActions,
@@ -30,7 +32,9 @@ class AuthorActionsViewModel(
 
   @Composable
   internal fun state(): AuthorEntryViewState? {
-    val books = remember { repo.flow() }.collectAsState(initial = null).value ?: return null
+    val books =
+      remember { libraryBooks(repo, ebooksStore) }.collectAsState(initial = null).value
+        ?: return null
     val author =
       remember(books) {
         val ids = destination.bookIds.toSet()

@@ -116,7 +116,6 @@ internal sealed interface LibraryBook {
     override val lastActiveAt: Instant
       get() = Instant.ofEpochMilli(ebook.lastOpened)
 
-    // hidden ebooks don't come into the library
     override val hidden: Boolean
       get() = ebook.hidden
 
@@ -139,9 +138,6 @@ internal class Series(
   val name: String,
   val books: List<LibraryBook>,
 ) {
-
-  /** The audiobooks of the series, for what only works for them so far, like hiding. */
-  val audiobooks: List<Book> = books.filterIsInstance<LibraryBook.Audiobook>().map { it.book }
 
   val author: String? = books.mapNotNull { it.author }.mostCommon()
 
@@ -211,12 +207,13 @@ internal sealed interface LibraryEntry {
   data class Stack(val series: Series) : LibraryEntry
 }
 
-internal val LibraryEntry.hasEbook: Boolean
-  get() =
-    when (this) {
-      is LibraryEntry.Single -> book is LibraryBook.Ebook
-      is LibraryEntry.Stack -> series.books.any { it is LibraryBook.Ebook }
-    }
+@JvmName("libraryBookEntries")
+internal fun libraryEntries(books: List<LibraryBook>): Map<BookCategory, List<LibraryEntry>> {
+  return libraryEntries(
+    books.filterIsInstance<LibraryBook.Audiobook>().map { it.book },
+    books.filterIsInstance<LibraryBook.Ebook>().map { it.ebook },
+  )
+}
 
 // a started series stays one stack too, so none of its books disappears from the library
 internal fun libraryEntries(

@@ -15,6 +15,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
@@ -27,11 +28,16 @@ import voice.core.data.BookCategory
 import voice.core.data.BookId
 import voice.core.data.CustomMetadata
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
+import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
+import voice.features.bookOverview.ebook
 import voice.features.bookOverview.editBookCategory.BookCategoryChanger
 import voice.features.bookOverview.hideBook.BookHider
 import voice.features.bookOverview.hideBook.HiddenBooks
+import voice.features.bookOverview.overview.bookId
+import voice.features.bookOverview.overview.category
 import voice.features.bookOverview.select.BookSelectionRequests
 import voice.navigation.Destination
 import voice.navigation.Navigator
@@ -53,12 +59,14 @@ class SeriesActionsViewModelTest {
       coEvery { all() } answers { books.value }
       coEvery { updateCustomMetadata(any(), any()) } just runs
     }
-  private val bookHider = BookHider(repo)
+  private val ebooks = EbooksStore(MemoryDataStore(emptyList()))
+  private val bookHider = BookHider(repo, ebooks)
   private val bookCategoryChanger = mockk<BookCategoryChanger>(relaxUnitFun = true)
   private val bookSelectionRequests = BookSelectionRequests()
   private val viewModel =
     SeriesActionsViewModel(
       repo,
+      ebooks,
       bookHider,
       bookCategoryChanger,
       navigator,
@@ -234,6 +242,52 @@ class SeriesActionsViewModelTest {
       actual = requests.single().toSet(),
     )
   }
+
+  @Test
+  fun `a series of only ebooks has the sheet, and is completed and hidden`() = runTest {
+    val reading = ebook(series = "Tales", part = "1", progress = 0.5F, lastOpened = 1)
+    val notStarted = ebook(series = "tales", part = "2")
+    ebooks.updateData { listOf(reading, notStarted) }
+    val viewModel = seriesActions("Tales")
+
+    backgroundScope
+      .launchMolecule(RecompositionMode.Immediate) {
+        viewModel.state()
+      }
+      .test {
+        assertEquals(expected = null, actual = awaitItem())
+        assertEquals(expected = 2, actual = awaitItem()!!.series.bookCount)
+      }
+
+    viewModel.onItemClick(BottomSheetItem.BookCategoryMarkAsCompleted)
+    assertEquals(
+      expected = listOf(BookCategory.FINISHED, BookCategory.FINISHED),
+      actual = ebooks.data.first().map { it.category },
+    )
+
+    bookHider.hidden.test {
+      viewModel.onItemClick(BottomSheetItem.Hide)
+
+      assertEquals(
+        expected = HiddenBooks(listOf(reading.bookId, notStarted.bookId), "Tales", series = true),
+        actual = awaitItem(),
+      )
+    }
+    assertEquals(expected = listOf(true, true), actual = ebooks.data.first().map { it.hidden })
+    coVerify(exactly = 0) { bookCategoryChanger.change(any(), any()) }
+  }
+
+  private fun seriesActions(name: String) =
+    SeriesActionsViewModel(
+      repo,
+      ebooks,
+      bookHider,
+      bookCategoryChanger,
+      navigator,
+      bookSelectionRequests,
+      dispatcherProvider,
+      name,
+    )
 
   private fun TestScope.statuses(): Flow<List<SeriesActionsViewState.Status>?> =
     backgroundScope

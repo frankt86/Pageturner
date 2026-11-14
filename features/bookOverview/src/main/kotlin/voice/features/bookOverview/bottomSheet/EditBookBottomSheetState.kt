@@ -51,7 +51,6 @@ enum class BottomSheetItem(
   RetryDownload(StringsR.string.book_download_retry, UiR.drawable.ic_replay),
   RemoveDownload(StringsR.string.book_download_remove, UiR.drawable.ic_delete),
   DeleteBook(StringsR.string.book_delete_bottom_sheet_title, UiR.drawable.ic_delete),
-  RemoveFromLibrary(StringsR.string.book_remove_from_library, UiR.drawable.ic_visibility_off),
   BookCategoryMarkAsNotStarted(
     StringsR.string.book_category_action_mark_not_started,
     UiR.drawable.ic_hourglass_empty,

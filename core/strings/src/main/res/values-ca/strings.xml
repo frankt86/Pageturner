@@ -87,8 +87,6 @@
     <string name="book.edit.server.not_allowed">El vostre compte del servidor no pot canviar llibres.</string>
     <string name="book.edit.title.label">Títol</string>
     <string name="book.hide">Amaga de la biblioteca</string>
-    <string name="book.remove_from_library">Treu de la biblioteca</string>
-    <string name="book.remove_from_library.summary">El fitxer es queda al dispositiu</string>
     <string name="book.select">Selecciona</string>
     <string name="book.show">Mostra a la biblioteca</string>
     <string name="book.source.device">En aquest dispositiu</string>

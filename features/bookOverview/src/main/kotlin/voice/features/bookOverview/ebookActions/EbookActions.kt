@@ -53,14 +53,6 @@ object EbookActionsProvider {
     }
 }
 
-private val EbookItems =
-  listOf(
-    BottomSheetItem.Edit,
-    BottomSheetItem.InternetCover,
-    BottomSheetItem.FileCover,
-    BottomSheetItem.RemoveFromLibrary,
-  )
-
 /** Like the menu of an audiobook, it closes once its last sheet is gone. */
 @Composable
 private fun EbookActions(uri: Uri) {
@@ -149,7 +141,7 @@ private fun EbookActions(uri: Uri) {
           download = null,
           bookSize = 0,
           category = state.category,
-          items = EbookItems,
+          items = state.items,
           onItemClick = { item ->
             when (item) {
               BottomSheetItem.Edit -> hideThen(viewModel::onEdit)
@@ -160,7 +152,9 @@ private fun EbookActions(uri: Uri) {
                   getContentLauncher.launch("image/*")
                   hideThen {}
                 }
-              BottomSheetItem.RemoveFromLibrary -> hideThen(viewModel::onRemove)
+              BottomSheetItem.Hide -> hideThen(viewModel::onHide)
+              BottomSheetItem.Show -> hideThen(viewModel::onShow)
+              BottomSheetItem.Select -> hideThen(viewModel::onSelect)
               else -> Unit
             }
           },

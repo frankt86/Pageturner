@@ -24,15 +24,19 @@ import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.BookCategory
 import voice.core.data.Ebook
-import voice.core.data.EbookPosition
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.EbooksStore
 import voice.core.logging.api.Logger
+import voice.features.bookOverview.bottomSheet.BottomSheetItem
 import voice.features.bookOverview.editBook.EditBookState
 import voice.features.bookOverview.editBook.seriesOfOtherBooks
+import voice.features.bookOverview.hideBook.BookHider
 import voice.features.bookOverview.overview.BookOverviewItemViewState
+import voice.features.bookOverview.overview.bookId
 import voice.features.bookOverview.overview.category
 import voice.features.bookOverview.overview.toItemViewState
+import voice.features.bookOverview.overview.withCategory
+import voice.features.bookOverview.select.BookSelectionRequests
 import voice.navigation.Destination
 import voice.navigation.Navigator
 
@@ -43,6 +47,8 @@ class EbookActionsViewModel(
   private val application: Application,
   private val navigator: Navigator,
   private val dispatcherProvider: DispatcherProvider,
+  private val bookHider: BookHider,
+  private val bookSelectionRequests: BookSelectionRequests,
   @Assisted private val uri: Uri,
 ) {
 
@@ -55,9 +61,19 @@ class EbookActionsViewModel(
   @Composable
   internal fun state(): EbookActionsState? {
     val ebook = remember { ebook() }.collectAsState(initial = null).value ?: return null
+    val canSelect =
+      remember { bookSelectionRequests.canSelect }.collectAsState(null).value ?: return null
     return EbookActionsState(
       book = ebook.toItemViewState(),
       category = ebook.category,
+      items =
+        listOfNotNull(
+          BottomSheetItem.Select.takeIf { canSelect },
+          BottomSheetItem.Edit,
+          BottomSheetItem.InternetCover,
+          BottomSheetItem.FileCover,
+          if (ebook.hidden) BottomSheetItem.Show else BottomSheetItem.Hide,
+        ),
     )
   }
 
@@ -141,30 +157,7 @@ class EbookActionsViewModel(
 
   internal fun onStatusChange(category: BookCategory) {
     val now = System.currentTimeMillis()
-    update { ebook ->
-      when (category) {
-        BookCategory.NOT_STARTED ->
-          ebook.copy(
-            position = EbookPosition(),
-            progress = 0F,
-            lastOpened = 0,
-            positionModified = now,
-          )
-        // a finished book starts over
-        BookCategory.CURRENT ->
-          if (ebook.category == BookCategory.FINISHED) {
-            ebook.copy(
-              position = EbookPosition(),
-              progress = 0F,
-              lastOpened = now,
-              positionModified = now,
-            )
-          } else {
-            ebook.copy(lastOpened = now)
-          }
-        BookCategory.FINISHED -> ebook.copy(progress = 1F, lastOpened = now, positionModified = now)
-      }
-    }
+    update { it.withCategory(category, now) }
   }
 
   internal fun onCoverPicked(image: Uri) {
@@ -197,8 +190,16 @@ class EbookActionsViewModel(
     navigator.goTo(Destination.EbookCoverFromInternet(uri))
   }
 
-  internal fun onRemove() {
-    update { it.copy(hidden = true) }
+  internal fun onHide() {
+    scope.launch { bookHider.hide(listOf(ebook().first().bookId)) }
+  }
+
+  internal fun onShow() {
+    scope.launch { bookHider.show(listOf(ebook().first().bookId)) }
+  }
+
+  internal suspend fun onSelect() {
+    bookSelectionRequests.select(listOf(ebook().first().bookId))
   }
 
   internal fun onClose() {
@@ -222,4 +223,5 @@ class EbookActionsViewModel(
 internal data class EbookActionsState(
   val book: BookOverviewItemViewState,
   val category: BookCategory,
+  val items: List<BottomSheetItem>,
 )

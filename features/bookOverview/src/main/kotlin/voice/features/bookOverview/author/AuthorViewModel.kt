@@ -13,8 +13,10 @@ import java.io.IOException
 import java.util.Locale
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
 import voice.core.audiobookshelf.ServerDownloads
 import voice.core.audiobookshelf.ServerLibrary
@@ -22,12 +24,15 @@ import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.BookCategory
 import voice.core.data.BookId
-import voice.core.data.category
+import voice.core.data.Ebook
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
 import voice.core.logging.api.Logger
 import voice.features.bookOverview.overview.LibraryEntry
 import voice.features.bookOverview.overview.authorKey
+import voice.features.bookOverview.overview.bookId
 import voice.features.bookOverview.overview.byAuthor
+import voice.features.bookOverview.overview.libraryBooks
 import voice.features.bookOverview.overview.libraryEntries
 import voice.features.bookOverview.overview.mostCommon
 import voice.features.bookOverview.overview.rememberServerBookStates
@@ -39,6 +44,7 @@ import voice.navigation.Navigator
 @AssistedInject
 class AuthorViewModel(
   private val repo: BookRepository,
+  private val ebooksStore: EbooksStore,
   private val navigator: Navigator,
   private val serverLibrary: ServerLibrary,
   private val serverDownloads: ServerDownloads,
@@ -59,7 +65,9 @@ class AuthorViewModel(
 
   @Composable
   internal fun viewState(): AuthorViewState? {
-    val books = remember { repo.flow() }.collectAsState(initial = null).value ?: return null
+    val books =
+      remember { libraryBooks(repo, ebooksStore) }.collectAsState(initial = null).value
+        ?: return null
     val serverStates = rememberServerBookStates(serverLibrary, serverDownloads)
     val authorInfo = info.collectAsState().value
     val authorBooks = remember(books) { books.byAuthor(name) }
@@ -110,12 +118,23 @@ class AuthorViewModel(
   }
 
   internal fun onBookClick(id: BookId) {
-    navigator.goTo(Destination.Playback(id))
+    scope.launch {
+      val ebook = ebook(id)
+      navigator.goTo(if (ebook != null) Destination.Reader(ebook.uri) else Destination.Playback(id))
+    }
   }
 
   internal fun onBookLongClick(id: BookId) {
-    navigator.goTo(Destination.BookActions(id))
+    scope.launch {
+      val ebook = ebook(id)
+      navigator.goTo(
+        if (ebook != null) Destination.EbookActions(ebook.uri) else Destination.BookActions(id),
+      )
+    }
   }
+
+  private suspend fun ebook(id: BookId): Ebook? =
+    ebooksStore.data.first().firstOrNull { it.bookId == id }
 
   internal fun onSeriesClick(name: String) {
     navigator.goTo(Destination.Series(name))

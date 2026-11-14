@@ -23,7 +23,7 @@ public data class Ebook(
   val metadataRead: Boolean = false,
   /** The name the listener gave the book, which wins over the one from the file. */
   val customName: String? = null,
-  /** Removed from the library by the listener, while the file stays. */
+  /** Hidden from the library by the listener, like an audiobook. The file stays. */
   val hidden: Boolean = false,
   val bookmarks: List<EbookPosition> = emptyList(),
   val highlights: List<Highlight> = emptyList(),

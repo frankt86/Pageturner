@@ -8,6 +8,7 @@ import kotlin.test.assertNull
 import voice.core.data.Book
 import voice.core.data.BookCategory
 import voice.features.bookOverview.book
+import voice.features.bookOverview.ebook
 
 class LibraryAuthorsTest {
 
@@ -145,10 +146,11 @@ class LibraryAuthorsTest {
   fun `the books of an author include those with a different spelling`() {
     val books =
       listOf(
-        notStarted(author = "Lena Morgan"),
-        notStarted(author = "lena morgan"),
-        notStarted(author = "Nora Whitfield"),
-      )
+          notStarted(author = "Lena Morgan"),
+          notStarted(author = "lena morgan"),
+          notStarted(author = "Nora Whitfield"),
+        )
+        .map(LibraryBook::Audiobook)
 
     assertEquals(expected = books.take(2), actual = books.byAuthor("LENA MORGAN"))
   }
@@ -157,11 +159,12 @@ class LibraryAuthorsTest {
   fun `the books of an author include the whole series they have most books of`() {
     val books =
       listOf(
-        notStarted(series = "Saga", author = "Lena Morgan"),
-        notStarted(series = "Saga", author = "Lena Morgan"),
-        notStarted(series = "Saga", author = "Nora Whitfield"),
-        notStarted(series = "Other", author = "Nora Whitfield"),
-      )
+          notStarted(series = "Saga", author = "Lena Morgan"),
+          notStarted(series = "Saga", author = "Lena Morgan"),
+          notStarted(series = "Saga", author = "Nora Whitfield"),
+          notStarted(series = "Other", author = "Nora Whitfield"),
+        )
+        .map(LibraryBook::Audiobook)
 
     assertEquals(expected = books.take(3), actual = books.byAuthor("Lena Morgan"))
     assertEquals(expected = books.drop(2), actual = books.byAuthor("Nora Whitfield"))
@@ -169,10 +172,34 @@ class LibraryAuthorsTest {
 
   @Test
   fun `no author and a placeholder both find the books with no author`() {
-    val books = listOf(notStarted(author = null), notStarted(author = "Unknown"), notStarted())
+    val books =
+      listOf(notStarted(author = null), notStarted(author = "Unknown"), notStarted())
+        .map(LibraryBook::Audiobook)
 
     assertEquals(expected = books.take(2), actual = books.byAuthor(null))
     assertEquals(expected = books.take(2), actual = books.byAuthor("<unknown>"))
+  }
+
+  @Test
+  fun `ebooks are with the audiobooks of the author they show`() {
+    val audiobook = LibraryBook.Audiobook(notStarted(author = "Lena Morgan"))
+    val edited = LibraryBook.Ebook(ebook(author = "Someone").copy(customAuthor = "Lena Morgan"))
+    val other = LibraryBook.Ebook(ebook(author = "Nora Whitfield"))
+    val books = listOf(audiobook, edited, other)
+
+    assertEquals(expected = listOf(audiobook, edited), actual = books.byAuthor("Lena Morgan"))
+    val authors =
+      libraryEntries(books).groupedByAuthor().getValue(BookCategory.NOT_STARTED).map { group ->
+        group.name to group.books.map { it.id }
+      }
+    assertEquals(
+      expected =
+        listOf(
+          "Lena Morgan" to listOf(audiobook.id, edited.id),
+          "Nora Whitfield" to listOf(other.id),
+        ),
+      actual = authors,
+    )
   }
 
   private fun groups(vararg books: Book): Map<BookCategory, List<AuthorGroup>> =

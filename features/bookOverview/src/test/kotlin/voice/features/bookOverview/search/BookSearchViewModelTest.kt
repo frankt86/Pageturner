@@ -363,6 +363,17 @@ class BookSearchViewModelTest {
   }
 
   @Test
+  fun `browse author click opens the author of only ebooks`() = runTest {
+    ebooks.updateData { listOf(misery.copy(customAuthor = "Annie Wilkes")) }
+    val viewModel = viewModel()
+
+    viewModel.onBrowseEntryClick(BrowseCategory.Authors, "Annie Wilkes")
+
+    verify { navigator.goTo(Destination.Author("Annie Wilkes")) }
+    assertEquals(expected = "", actual = viewModel.query.text.toString())
+  }
+
+  @Test
   fun `book click saves the search and opens the book`() = runTest {
     val viewModel = viewModel()
     viewModel.query.edit { replace(0, length, " king ") }
@@ -399,8 +410,14 @@ class BookSearchViewModelTest {
   }
 
   @Test
-  fun `ebooks are browsed with the audiobooks`() = runTest {
-    ebooks.updateData { listOf(misery, misery.copy(uri = mockk(), hidden = true)) }
+  fun `ebooks are browsed with the audiobooks, hidden ones too`() = runTest {
+    ebooks.updateData {
+      listOf(
+        misery,
+        misery.copy(uri = mockk(), hidden = true),
+        misery.copy(uri = mockk(), available = false),
+      )
+    }
     val viewModel = viewModel()
 
     testState(viewModel) {
@@ -409,9 +426,9 @@ class BookSearchViewModelTest {
         expected =
           BookSearchViewState.BrowseEntry(
             name = "Stephen King",
-            bookCount = 3,
+            bookCount = 4,
             inProgressCount = 2,
-            finishedCount = 1,
+            finishedCount = 2,
           ),
         actual = browse.entries.single { it.name == "Stephen King" },
       )
@@ -478,6 +495,7 @@ class BookSearchViewModelTest {
       repo =
         mockk<BookRepository> {
           every { flow() } returns MutableStateFlow(listOf(shining, carrie, kingkiller))
+          coEvery { all() } returns listOf(shining, carrie, kingkiller)
         },
       search = search,
       recentBookSearchRepo = recentBookSearchRepo,

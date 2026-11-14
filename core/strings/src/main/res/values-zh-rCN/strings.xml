@@ -81,8 +81,6 @@
     <string name="book.edit.server.not_allowed">您在服务器上的账号无权修改书籍。</string>
     <string name="book.edit.title.label">书名</string>
     <string name="book.hide">从书库中隐藏</string>
-    <string name="book.remove_from_library">从书库中移除</string>
-    <string name="book.remove_from_library.summary">文件仍保留在您的设备上</string>
     <string name="book.select">选择</string>
     <string name="book.show">在书库中显示</string>
     <string name="book.source.device">在本设备上</string>

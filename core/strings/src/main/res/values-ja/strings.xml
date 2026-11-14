@@ -81,8 +81,6 @@
     <string name="book.edit.server.not_allowed">このアカウントには、サーバー上の本を変更する権限がありません。</string>
     <string name="book.edit.title.label">タイトル</string>
     <string name="book.hide">ライブラリで非表示</string>
-    <string name="book.remove_from_library">ライブラリから削除</string>
-    <string name="book.remove_from_library.summary">ファイルはデバイスに残ります</string>
     <string name="book.select">選択</string>
     <string name="book.show">ライブラリに表示</string>
     <string name="book.source.device">この端末</string>

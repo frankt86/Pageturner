@@ -53,6 +53,7 @@ import voice.core.search.BookSearchResult
 import voice.features.bookOverview.di.BookOverviewScope
 import voice.features.bookOverview.overview.BookOverviewItemViewState
 import voice.features.bookOverview.overview.ServerBookStates
+import voice.features.bookOverview.overview.allLibraryBooks
 import voice.features.bookOverview.overview.bookId
 import voice.features.bookOverview.overview.byAuthor
 import voice.features.bookOverview.overview.category
@@ -216,8 +217,8 @@ class BookSearchViewModel(
     ) + fieldFilters
   }
 
-  private fun libraryEbooks() =
-    ebooksStore.data.map { ebooks -> ebooks.filter { it.available && !it.hidden } }
+  // hidden ones too, like the audiobooks
+  private fun libraryEbooks() = ebooksStore.data.map { ebooks -> ebooks.filter { it.available } }
 
   private fun browse(
     books: List<Book>,
@@ -299,8 +300,7 @@ class BookSearchViewModel(
   ) {
     if (category == BrowseCategory.Authors) {
       scope.launch {
-        // the author screen only lists audiobooks so far, so an author of only ebooks is searched
-        if (repo.flow().first().byAuthor(name).isNotEmpty()) {
+        if (allLibraryBooks(repo, ebooksStore).byAuthor(name).isNotEmpty()) {
           navigator.goTo(Destination.Author(name))
         } else {
           searchFor(category, name)

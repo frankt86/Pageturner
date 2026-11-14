@@ -90,8 +90,6 @@
     <string name="book.edit.server.not_allowed">Twoje konto na serwerze nie może zmieniać książek.</string>
     <string name="book.edit.title.label">Tytuł</string>
     <string name="book.hide">Ukryj w bibliotece</string>
-    <string name="book.remove_from_library">Usuń z biblioteki</string>
-    <string name="book.remove_from_library.summary">Plik zostanie na urządzeniu</string>
     <string name="book.select">Zaznacz</string>
     <string name="book.show">Pokaż w bibliotece</string>
     <string name="book.source.device">Na tym urządzeniu</string>

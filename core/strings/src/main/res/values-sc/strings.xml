@@ -84,8 +84,6 @@
     <string name="book.edit.server.not_allowed">Su contu tuo in su serbidore non podet cambiare libros.</string>
     <string name="book.edit.title.label">Tìtulu</string>
     <string name="book.hide">Cua dae sa biblioteca</string>
-    <string name="book.remove_from_library">Boga dae sa biblioteca</string>
-    <string name="book.remove_from_library.summary">Su documentu abarrat in su dispositivu tuo</string>
     <string name="book.select">Seletziona</string>
     <string name="book.show">Mustra in sa biblioteca</string>
     <string name="book.source.device">In custu dispositivu</string>

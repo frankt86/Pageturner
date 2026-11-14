@@ -84,8 +84,6 @@
     <string name="book.edit.server.not_allowed">A szerveren lévő fiókja nem módosíthat könyveket.</string>
     <string name="book.edit.title.label">Cím</string>
     <string name="book.hide">Elrejtés a könyvtárból</string>
-    <string name="book.remove_from_library">Eltávolítás a könyvtárból</string>
-    <string name="book.remove_from_library.summary">A fájl az eszközén marad</string>
     <string name="book.select">Kijelölés</string>
     <string name="book.show">Megjelenítés a könyvtárban</string>
     <string name="book.source.device">Ezen az eszközön</string>

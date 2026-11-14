@@ -84,8 +84,6 @@
     <string name="book.edit.server.not_allowed">Tililläsi ei ole palvelimella oikeutta muuttaa kirjoja.</string>
     <string name="book.edit.title.label">Nimi</string>
     <string name="book.hide">Piilota kirjastosta</string>
-    <string name="book.remove_from_library">Poista kirjastosta</string>
-    <string name="book.remove_from_library.summary">Tiedosto jää laitteellesi</string>
     <string name="book.select">Valitse</string>
     <string name="book.show">Näytä kirjastossa</string>
     <string name="book.source.device">Tällä laitteella</string>

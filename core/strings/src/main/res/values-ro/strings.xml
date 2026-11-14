@@ -87,8 +87,6 @@
     <string name="book.edit.server.not_allowed">Contul tău de pe server nu poate modifica cărți.</string>
     <string name="book.edit.title.label">Titlu</string>
     <string name="book.hide">Ascunde din bibliotecă</string>
-    <string name="book.remove_from_library">Elimină din bibliotecă</string>
-    <string name="book.remove_from_library.summary">Fișierul rămâne pe dispozitiv</string>
     <string name="book.select">Selectează</string>
     <string name="book.show">Afișează în bibliotecă</string>
     <string name="book.source.device">Pe acest dispozitiv</string>

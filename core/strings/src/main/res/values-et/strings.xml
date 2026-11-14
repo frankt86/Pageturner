@@ -84,8 +84,6 @@
     <string name="book.edit.server.not_allowed">Sinu kontol pole serveris luba raamatuid muuta.</string>
     <string name="book.edit.title.label">Pealkiri</string>
     <string name="book.hide">Peida raamatukogust</string>
-    <string name="book.remove_from_library">Eemalda raamatukogust</string>
-    <string name="book.remove_from_library.summary">Fail jääb sinu seadmesse</string>
     <string name="book.select">Vali</string>
     <string name="book.show">Näita raamatukogus</string>
     <string name="book.source.device">Selles seadmes</string>

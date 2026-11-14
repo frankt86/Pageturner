@@ -261,28 +261,34 @@ class SeriesViewModelTest {
   }
 
   @Test
-  fun `the ebooks of the series are listed with the audiobooks, by part`() = runTest {
-    val first = book(name = "First", series = "Saga", part = "1", author = "Author", time = 0)
-    val second = ebook(name = "Second", series = "saga", part = "2")
-    val third = book(name = "Third", series = "Saga", part = "3", author = "Author", time = 0)
-    val hidden = ebook(series = "Saga").copy(hidden = true)
-    books.value = listOf(third, first)
-    ebooks.updateData { listOf(hidden, second) }
+  fun `the ebooks of the series are listed with the audiobooks, by part, hidden ones too`() =
+    runTest {
+      val first = book(name = "First", series = "Saga", part = "1", author = "Author", time = 0)
+      val second = ebook(name = "Second", series = "saga", part = "2")
+      val third = book(name = "Third", series = "Saga", part = "3", author = "Author", time = 0)
+      val hidden = ebook(name = "Zz", series = "Saga").copy(hidden = true)
+      val missing = ebook(series = "Saga").copy(available = false)
+      books.value = listOf(third, first)
+      ebooks.updateData { listOf(hidden, second, missing) }
 
-    testState {
-      val state = awaitItem()!!
-      assertEquals(expected = 3, actual = state.bookCount)
-      assertEquals(
-        expected = listOf(first.id, second.bookId, third.id),
-        actual = state.books.map { it.book.id },
-      )
-      assertEquals(
-        expected = listOf(false, true, false),
-        actual = state.books.map { it.book.isEbook },
-      )
-      assertEquals(expected = listOf("1", "2", "3"), actual = state.books.map { it.part })
+      testState {
+        val state = awaitItem()!!
+        assertEquals(expected = 4, actual = state.bookCount)
+        assertEquals(
+          expected = listOf(first.id, second.bookId, third.id, hidden.bookId),
+          actual = state.books.map { it.book.id },
+        )
+        assertEquals(
+          expected = listOf(false, true, false, true),
+          actual = state.books.map { it.book.isEbook },
+        )
+        assertEquals(
+          expected = listOf(false, false, false, true),
+          actual = state.books.map { it.book.hidden },
+        )
+        assertEquals(expected = listOf("1", "2", "3", null), actual = state.books.map { it.part })
+      }
     }
-  }
 
   @Test
   fun `the button continues an ebook read last`() = runTest {

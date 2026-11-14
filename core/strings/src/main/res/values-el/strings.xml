@@ -84,8 +84,6 @@
     <string name="book.edit.server.not_allowed">Ο λογαριασμός σας στον διακομιστή δεν μπορεί να αλλάζει βιβλία.</string>
     <string name="book.edit.title.label">Τίτλος</string>
     <string name="book.hide">Απόκρυψη από τη βιβλιοθήκη</string>
-    <string name="book.remove_from_library">Αφαίρεση από τη βιβλιοθήκη</string>
-    <string name="book.remove_from_library.summary">Το αρχείο παραμένει στη συσκευή σας</string>
     <string name="book.select">Επιλογή</string>
     <string name="book.show">Εμφάνιση στη βιβλιοθήκη</string>
     <string name="book.source.device">Σε αυτή τη συσκευή</string>

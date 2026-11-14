@@ -58,8 +58,9 @@ class SeriesViewModel(
   @Composable
   internal fun viewState(): SeriesViewState? {
     val books = remember { repo.flow() }.collectAsState(initial = null).value
+    // hidden ones too, like the audiobooks
     val ebooks = remember {
-      ebooksStore.data.map { ebooks -> ebooks.filter { it.available && !it.hidden } }
+      ebooksStore.data.map { ebooks -> ebooks.filter { it.available } }
     }
       .collectAsState(initial = null)
       .value

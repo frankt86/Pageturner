@@ -99,6 +99,7 @@ class BookOverviewViewModelTest {
       every { withoutAccess() } returns flowOf(emptyMap())
     }
   private val emptyLibraryTracker = mockk<EmptyLibraryTracker>(relaxUnitFun = true)
+  private val emptyEbooks = EbooksStore(MemoryDataStore(emptyList()))
 
   @Test
   fun `state updates the current book item from live playback`() = runTest {
@@ -125,7 +126,7 @@ class BookOverviewViewModelTest {
         folderPickerMovedDialogShownStore =
           FolderPickerMovedDialogShownStore(MemoryDataStore(false)),
         gridModeStore = GridModeStore(MemoryDataStore(GridMode.LIST)),
-        ebooksStore = EbooksStore(MemoryDataStore(emptyList())),
+        ebooksStore = emptyEbooks,
         gridCount =
           mockk<GridCount> {
             every { useGridAsDefault() } returns false
@@ -150,9 +151,9 @@ class BookOverviewViewModelTest {
         libraryGroupingStore = LibraryGroupingStore(MemoryDataStore(LibraryGrouping.Series)),
         showNotDownloadedBooksStore = ShowNotDownloadedBooksStore(MemoryDataStore(true)),
         hiddenSourcesStore = HiddenSourcesStore(MemoryDataStore(emptySet())),
-        bookHider = BookHider(mockk()),
+        bookHider = BookHider(mockk(), emptyEbooks),
         bookSelectionRequests = BookSelectionRequests(),
-        selectedBooksEditor = SelectedBooksEditor(mockk(), serverLibrary),
+        selectedBooksEditor = SelectedBooksEditor(mockk(), serverLibrary, emptyEbooks),
       )
 
     backgroundScope
@@ -211,7 +212,7 @@ class BookOverviewViewModelTest {
         folderPickerMovedDialogShownStore =
           FolderPickerMovedDialogShownStore(MemoryDataStore(false)),
         gridModeStore = GridModeStore(MemoryDataStore(GridMode.LIST)),
-        ebooksStore = EbooksStore(MemoryDataStore(emptyList())),
+        ebooksStore = emptyEbooks,
         gridCount =
           mockk<GridCount> {
             every { useGridAsDefault() } returns false
@@ -236,9 +237,9 @@ class BookOverviewViewModelTest {
         libraryGroupingStore = LibraryGroupingStore(MemoryDataStore(LibraryGrouping.Series)),
         showNotDownloadedBooksStore = ShowNotDownloadedBooksStore(MemoryDataStore(true)),
         hiddenSourcesStore = HiddenSourcesStore(MemoryDataStore(emptySet())),
-        bookHider = BookHider(mockk()),
+        bookHider = BookHider(mockk(), emptyEbooks),
         bookSelectionRequests = BookSelectionRequests(),
-        selectedBooksEditor = SelectedBooksEditor(mockk(), serverLibrary),
+        selectedBooksEditor = SelectedBooksEditor(mockk(), serverLibrary, emptyEbooks),
       )
 
     backgroundScope
@@ -372,6 +373,7 @@ class BookOverviewViewModelTest {
     val repo =
       mockk<BookRepository> {
         every { flow() } returns MutableStateFlow(emptyList())
+        coEvery { all() } returns listOf(book)
         coEvery { updateCustomMetadata(book.id, any()) } just Runs
       }
     val viewModel = viewModel(repo = repo)
@@ -1172,13 +1174,14 @@ class BookOverviewViewModelTest {
     }
 
   @Test
-  fun `in the author grouping ebooks follow the authors`() = runTest {
+  fun `in the author grouping ebooks are with the audiobooks of their author`() = runTest {
     val book = book(name = "Listened", author = "Lena Morgan", time = 0)
-    val ebook = ebook(lastOpened = 0, progress = 0F)
+    val ebook = ebook(lastOpened = 0, progress = 0F).copy(customAuthor = "lena morgan")
+    val other = ebook(lastOpened = 0, progress = 0F).copy(author = "Nora Whitfield")
     val viewModel =
       viewModel(
         books = listOf(book),
-        ebooks = listOf(ebook),
+        ebooks = listOf(ebook, other),
         libraryGroupingStore = MemoryDataStore(LibraryGrouping.Author),
       )
 
@@ -1188,13 +1191,90 @@ class BookOverviewViewModelTest {
       }
       .test {
         assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        val items = awaitItem().sections.getValue(BookCategory.NOT_STARTED)
+        val authors =
+          awaitItem().sections.getValue(BookCategory.NOT_STARTED).map {
+            (it as LibraryItem.Author).author
+          }
         assertEquals(
-          expected = listOf(false, true),
-          actual = items.map { it is LibraryItem.Book },
+          expected = listOf("Lena Morgan", "Nora Whitfield"),
+          actual = authors.map { it.name },
         )
-        assertEquals(expected = ebook.bookId, actual = (items.last() as LibraryItem.Book).id)
+        assertEquals(
+          expected = listOf(listOf(book.id, ebook.bookId), listOf(other.bookId)),
+          actual = authors.map { it.bookIds },
+        )
       }
+  }
+
+  @Test
+  fun `hidden ebooks leave the library, count for the filter and come back with a label`() =
+    runTest {
+      val hidden = ebook(lastOpened = 0, progress = 0F).copy(hidden = true)
+      val visible = ebook(lastOpened = 0, progress = 0F)
+      val viewModel = viewModel(ebooks = listOf(hidden, visible))
+      val state = viewModel.stateIn(backgroundScope)
+
+      val filtered = state.first { it.sections.isNotEmpty() }
+      assertEquals(
+        expected = listOf(visible.bookId.value),
+        actual = filtered.keys(BookCategory.NOT_STARTED),
+      )
+      assertEquals(expected = 1, actual = filtered.hiddenBookCount)
+      assertEquals(expected = true, actual = filtered.showFilterIcon)
+
+      viewModel.onShowHiddenBooksChange(true)
+
+      val shown = state.first { it.showHiddenBooks }
+      assertEquals(expected = true, actual = shown.book(hidden.bookId).hidden)
+      assertEquals(expected = false, actual = shown.book(visible.bookId).hidden)
+    }
+
+  @Test
+  fun `ebooks are selected and hidden with the audiobooks`() = runTest {
+    val book = book(time = 0)
+    val ebook = ebook(lastOpened = 0, progress = 0F)
+    val ebooksStore = EbooksStore(MemoryDataStore(listOf(ebook)))
+    val viewModel = viewModel(repo = libraryRepo(book), ebooksStore = ebooksStore)
+    val state = viewModel.stateIn(backgroundScope)
+    val hidden = mutableListOf<HiddenBooks>()
+    backgroundScope.launch(testDispatcher) { viewModel.hiddenBooks.collect { hidden += it } }
+    state.first { it.sections.isNotEmpty() }
+
+    viewModel.onSelectionStart(listOf(ebook.bookId))
+    viewModel.onSelectAll()
+    assertEquals(
+      expected = setOf(book.id, ebook.bookId),
+      actual = state.first { it.selection?.allSelected == true }.selection?.ids,
+    )
+    viewModel.onSelectionHide()
+
+    state.first { it.selection == null && it.hiddenBookCount == 2 }
+    assertEquals(expected = true, actual = ebooksStore.data.first().single().hidden)
+    assertEquals(
+      expected = listOf(HiddenBooks(listOf(book.id, ebook.bookId), name = null, series = false)),
+      actual = hidden,
+    )
+  }
+
+  @Test
+  fun `the series of a selected ebook is set with the audiobooks`() = runTest {
+    val book = book(series = "Saga", time = 0)
+    val ebook = ebook(lastOpened = 0, progress = 0F)
+    val ebooksStore = EbooksStore(MemoryDataStore(listOf(ebook)))
+    val viewModel = viewModel(repo = libraryRepo(book), ebooksStore = ebooksStore)
+    val state = viewModel.stateIn(backgroundScope)
+    state.first { it.sections.isNotEmpty() }
+
+    viewModel.onSelectionStart(listOf(ebook.bookId))
+    viewModel.onSelectionEdit(BookField.Series)
+    val edit = state.first { it.selectionEdit != null }.selectionEdit
+    assertEquals(expected = setOf(ebook.bookId), actual = edit?.ids)
+    assertEquals(expected = listOf("Saga"), actual = edit?.suggestions?.map { it.name })
+
+    viewModel.onSelectionEditSave("Saga")
+
+    state.first { it.selectionEdit?.saved == true }
+    assertEquals(expected = "Saga", actual = ebooksStore.data.first().single().customSeries)
   }
 
   @Test
@@ -1614,6 +1694,7 @@ class BookOverviewViewModelTest {
       every { flow() } returns MutableStateFlow(books)
     },
     bookSelectionRequests: BookSelectionRequests = BookSelectionRequests(),
+    ebooksStore: EbooksStore = EbooksStore(MemoryDataStore(ebooks)),
   ): BookOverviewViewModel {
     return BookOverviewViewModel(
       repo = repo,
@@ -1628,7 +1709,7 @@ class BookOverviewViewModelTest {
       folderPickerMovedDialogShownStore =
         FolderPickerMovedDialogShownStore(folderPickerMovedDialogShownStore),
       gridModeStore = GridModeStore(MemoryDataStore(GridMode.LIST)),
-      ebooksStore = EbooksStore(MemoryDataStore(ebooks)),
+      ebooksStore = ebooksStore,
       gridCount =
         mockk<GridCount> {
           every { useGridAsDefault() } returns false
@@ -1656,9 +1737,9 @@ class BookOverviewViewModelTest {
       libraryGroupingStore = LibraryGroupingStore(libraryGroupingStore),
       showNotDownloadedBooksStore = ShowNotDownloadedBooksStore(showNotDownloadedBooksStore),
       hiddenSourcesStore = HiddenSourcesStore(hiddenSourcesStore),
-      bookHider = BookHider(repo),
+      bookHider = BookHider(repo, ebooksStore),
       bookSelectionRequests = bookSelectionRequests,
-      selectedBooksEditor = SelectedBooksEditor(repo, serverLibrary),
+      selectedBooksEditor = SelectedBooksEditor(repo, serverLibrary, ebooksStore),
     )
   }
 

@@ -84,8 +84,6 @@
     <string name="book.edit.server.not_allowed">Sunucudaki hesabınız kitapları değiştiremez.</string>
     <string name="book.edit.title.label">Başlık</string>
     <string name="book.hide">Kitaplıktan gizle</string>
-    <string name="book.remove_from_library">Kitaplıktan kaldır</string>
-    <string name="book.remove_from_library.summary">Dosya cihazınızda kalır</string>
     <string name="book.select">Seç</string>
     <string name="book.show">Kitaplıkta göster</string>
     <string name="book.source.device">Bu cihazda</string>

@@ -28,7 +28,8 @@ class BookSearch(
     val terms = SearchText(query).words.map { it.text }.distinct()
     if (terms.isEmpty()) return emptyList()
     val allBooks = repo.all()
-    val allEbooks = ebooksStore.data.first().filter { it.available && !it.hidden }
+    // hidden ones too, like the audiobooks
+    val allEbooks = ebooksStore.data.first().filter { it.available }
     return withContext(dispatcherProvider.default) {
       val previousWords = wordsByText
       val words = HashMap<String, List<SearchText.Word>>()

@@ -2,7 +2,6 @@ package voice.features.bookOverview.overview
 
 import java.time.Instant
 import voice.core.common.comparator.NaturalOrderComparator
-import voice.core.data.Book
 import voice.core.data.BookCategory
 
 // files often name one of these in place of an empty author tag
@@ -12,14 +11,11 @@ internal fun authorKey(author: String?): String? {
   return author?.let(::nameKey)?.takeIf { it !in PlaceholderAuthors }
 }
 
-internal val Book.authorKey: String?
-  get() = authorKey(author)
-
 internal val LibraryBook.authorKey: String?
   get() = authorKey(author)
 
 // the whole series too, like in the library
-internal fun List<Book>.byAuthor(name: String?): List<Book> {
+internal fun List<LibraryBook>.byAuthor(name: String?): List<LibraryBook> {
   val key = authorKey(name)
   val series =
     series()

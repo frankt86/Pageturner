@@ -84,8 +84,6 @@
     <string name="book.edit.server.not_allowed">Вашата сметка на серверот нема дозвола да менува книги.</string>
     <string name="book.edit.title.label">Наслов</string>
     <string name="book.hide">Скриј од библиотеката</string>
-    <string name="book.remove_from_library">Отстрани од библиотеката</string>
-    <string name="book.remove_from_library.summary">Датотеката останува на вашиот уред</string>
     <string name="book.select">Избери</string>
     <string name="book.show">Прикажи во библиотеката</string>
     <string name="book.source.device">На овој уред</string>

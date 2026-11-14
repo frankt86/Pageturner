@@ -6,13 +6,18 @@ import io.mockk.mockk
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import voice.core.audiobookshelf.ServerEdit
 import voice.core.audiobookshelf.ServerLibrary
 import voice.core.data.Book
 import voice.core.data.BookId
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
+import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
+import voice.features.bookOverview.ebook
+import voice.features.bookOverview.overview.bookId
 
 class SelectedBooksEditorTest {
 
@@ -45,9 +50,33 @@ class SelectedBooksEditorTest {
     }
   }
 
-  private fun editor(vararg books: Book): SelectedBooksEditor {
+  @Test
+  fun `an ebook takes the name, and the undo lets it follow its file again`() = runTest {
+    val ebook = ebook(series = "Sagaa").copy(customAuthor = "Mine")
+    val store = EbooksStore(MemoryDataStore(listOf(ebook)))
+    val editor = editor(ebooks = store)
+
+    val series = editor.set(BookField.Series, listOf(ebook.bookId), " Saga ")
+    assertEquals(expected = 1, actual = series.count)
+    assertEquals(expected = "Saga", actual = store.data.first().single().shownSeries)
+
+    editor.undo(series)
+    assertEquals(expected = null, actual = store.data.first().single().customSeries)
+
+    val author = editor.set(BookField.Author, listOf(ebook.bookId), "Author")
+    // the author of the file, so the book follows the file again
+    assertEquals(expected = null, actual = store.data.first().single().customAuthor)
+
+    editor.undo(author)
+    assertEquals(expected = "Mine", actual = store.data.first().single().customAuthor)
+  }
+
+  private fun editor(
+    vararg books: Book,
+    ebooks: EbooksStore = EbooksStore(MemoryDataStore(emptyList())),
+  ): SelectedBooksEditor {
     val repo = mockk<BookRepository> { coEvery { all() } returns books.toList() }
-    return SelectedBooksEditor(repo, serverLibrary)
+    return SelectedBooksEditor(repo, serverLibrary, ebooks)
   }
 
   private fun serverBook(): Book = book(id = BookId("abs://item/${Uuid.random()}"))

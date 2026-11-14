@@ -381,11 +381,11 @@ class BookSearchTest {
   }
 
   @Test
-  fun `hidden and missing ebooks aren't found`() {
+  fun `hidden ebooks are found like hidden audiobooks, missing ones aren't`() {
     val hidden = ebook(name = "Dune").copy(hidden = true)
     val missing = ebook(name = "Dune Messiah").copy(available = false)
     test(ebooks = listOf(hidden, missing)) {
-      expectSearchResult("dune")
+      expectSearchResult("dune", hidden)
     }
   }
 
