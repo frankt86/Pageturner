@@ -38,8 +38,7 @@ Every change to the code also makes a test build:
 [debug release page](https://github.com/frankt86/Pageturner/releases/tag/debug). It can have new features before a
 stable release, and it can have new bugs.
 
-The test app and the stable app are two different apps. You can install both side by side. Each one has its own library,
+The stable app and the test app are two different apps. You can install both side by side. Each one has its own library,
 settings and places in your books. An update of one never changes the other.
 
-The stable app has the same app id as Voice. If Voice from Google Play or F-Droid is on your phone, Android does not
-install the stable Pageturner. The test app installs next to Voice.
+Both also install next to Voice from Google Play or F-Droid, and do not touch its library.

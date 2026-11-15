@@ -17,8 +17,8 @@ It adds ebooks, a full reader, reading aloud and ebook catalogs on top.
 ## Download
 
 **[Download Pageturner](https://frankt86.github.io/Pageturner/pageturner.apk)** on your phone, open the file and tap
-**Install**. It's the newest stable release. See [Install](docs/install.md) for the steps, for updates with Obtainium,
-and for the test app, which installs next to Voice from Google Play or F-Droid.
+**Install**. It's the newest stable release, and installs next to Voice from Google Play or F-Droid without touching
+its library. See [Install](docs/install.md) for the steps, for updates with Obtainium, and for the test app.
 
 ## Features
 

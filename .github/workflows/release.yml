@@ -73,6 +73,7 @@ jobs:
           GITHUB_SIGNING_KEY_PASSWORD: ${{ secrets.GH_SIGNING_KEY_PASSWORD }}
         run: |
           ./gradlew :app:assembleFreeRelease \
+            -Pvoice.applicationId=io.github.frankt86.pageturner \
             -Pvoice.versionName="$VERSION_NAME" \
             -Pvoice.versionCode="$VERSION_CODE" \
             -Pandroid.injected.signing.store.file="$PWD/signing/free/signing.keystore" \

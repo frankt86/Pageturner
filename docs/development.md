@@ -86,7 +86,7 @@ Compose rules come from Slack's [compose-lints](https://slackhq.github.io/compos
 
 Every push to `main` builds a test APK with the debug app id (`.debug` suffix) and the debug key. CI publishes it to the
 [debug release](https://github.com/frankt86/Pageturner/releases/tag/debug) and, as `pageturner-debug.apk`, next to the
-website. It installs next to the stable app.
+website. Its app id is `de.ph1b.audiobook.debug`, so it installs next to the stable app and next to Voice.
 
 Stable releases are signed with the release key and published on
 [GitHub Releases](https://github.com/frankt86/Pageturner/releases). The website's `pageturner.apk` is the latest stable
@@ -102,8 +102,9 @@ release. Until the first stable release exists, it is the debug build.
 
 The workflow picks the version name and code, and takes the release notes from the changelog section of that version. If
 the section is missing, it stops before the build and names the heading it expects. Then it builds `freeRelease` with
-the real app id, signs it with the release key, and publishes a release marked as latest. The release has the tag
-`YY.M.RELEASE-CODE` and two copies of the APK: `pageturner-<version>.apk` and `pageturner.apk`. So
+the app id `io.github.frankt86.pageturner` (`-Pvoice.applicationId`), signs it with the release key, and publishes a
+release marked as latest. The release has the tag `YY.M.RELEASE-CODE` and two copies of the APK:
+`pageturner-<version>.apk` and `pageturner.apk`. So
 `https://github.com/frankt86/Pageturner/releases/latest/download/pageturner.apk` always gives the latest stable APK.
 After the release, the website deploys again with the new APK.
 
