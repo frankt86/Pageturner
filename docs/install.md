@@ -36,7 +36,15 @@ book stay.
 Each release has two APK files, `pageturner-<version>.apk` and `pageturner.apk`. They are the same file. If Obtainium
 asks which one to install, select either one.
 
-Obtainium gets only the stable releases. It gets the test app only when you turn on **Include prereleases**.
+Keep **Include prereleases** off for the stable app. The test builds are a separate app, with their own app id.
+
+To get the test app with Obtainium, add the same URL a second time and set:
+
+- **Include prereleases**: on.
+- **Filter release titles by regular expression**: `Test build`.
+
+Each test build is a prerelease named `Test build <number>`, so Obtainium sees each one as an update. The five newest
+test builds stay on the releases page.
 
 ## The test app
 

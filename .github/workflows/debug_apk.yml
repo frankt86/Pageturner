@@ -23,6 +23,7 @@ jobs:
       - name: Build
         run: |
           ./gradlew :app:assembleFreeRelease \
+            -Pvoice.versionName="test-${{ github.run_number }}" \
             -Pvoice.applicationIdSuffix=.debug \
             -Pandroid.injected.signing.store.file="$PWD/app/debug.keystore" \
             -Pandroid.injected.signing.store.password=android \
@@ -33,7 +34,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           cp app/build/outputs/apk/free/release/app-free-release.apk app-free-debug.apk
-          notes="Latest debug build of main (${GITHUB_SHA::7}). Installs next to the store version of Voice."
+          notes="Latest test build of main (${GITHUB_SHA::7}). Installs next to the stable app and Voice."
           # replaces the file in place, so the download link never goes missing while a new build is published
           if gh release view debug > /dev/null 2>&1; then
             gh release upload debug app-free-debug.apk --clobber
@@ -41,3 +42,17 @@ jobs:
           else
             gh release create debug app-free-debug.apk --prerelease --target "$GITHUB_SHA" --title "Debug build" --notes "$notes"
           fi
+      # Obtainium sees a new version only under a new tag, so each test build also gets its own prerelease.
+      - name: Publish a numbered test release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="test-${{ github.run_number }}"
+          cp app-free-debug.apk "pageturner-$tag.apk"
+          gh release create "$tag" "pageturner-$tag.apk" --prerelease --latest=false --target "$GITHUB_SHA" \
+            --title "Test build ${{ github.run_number }}" \
+            --notes "Test build of main (${GITHUB_SHA::7}). A separate app from the stable release."
+          # keeps the five newest test releases
+          gh release list --limit 100 --json tagName,createdAt \
+            --jq '[.[] | select(.tagName | startswith("test-"))] | sort_by(.createdAt) | reverse | .[5:] | .[].tagName' |
+            while read -r old; do gh release delete "$old" --yes --cleanup-tag; done
