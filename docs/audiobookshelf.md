@@ -8,7 +8,7 @@ There is no Pageturner account and no Pageturner server in between. Pageturner o
 
 ## Connecting your server
 
-1. Open **Settings » Library » Audiobookshelf**. During the first start, tap **Connect Audiobookshelf** instead of picking a folder.
+1. Open **Settings > Library > Audiobookshelf**. During the first start, tap **Connect Audiobookshelf** instead of picking a folder.
 2. Type the address of your server, the way you open its web app: `audiobooks.example.com`, `192.168.1.10:13378` or
    `https://example.com/audiobookshelf`. Pageturner finds the server on its own, with or without `https://`.
 3. Sign in with your Audiobookshelf username and password.
@@ -23,6 +23,8 @@ Pageturner needs Audiobookshelf 2.26 or newer.
   the download. Downloads wait for Wi-Fi unless you turn on **Download over mobile data** in the Audiobookshelf settings, which also list
   your downloads with their size. Remove a download the same way. Pageturner never deletes anything on your server.
 - **Offline**: When Pageturner can't reach your server, books that aren't downloaded show a crossed out cloud. Downloaded books play as usual.
+- **In the library**: turn off **Not downloaded** in the library filter to show only the books on your phone. The chip of
+  each Audiobookshelf library shows or hides its books.
 
 Speed, skip silence, volume boost, the sleep timer, bookmarks, Android Auto and the widgets work the same as for the books on your
 device. Names, authors and covers come from your server, so you edit them there.
@@ -46,13 +48,13 @@ Many servers are only reachable at home. Pageturner works with:
 - plain `http://` addresses in your network,
 - VPNs like Tailscale or WireGuard,
 - reverse proxies with a subfolder, like `https://example.com/audiobookshelf`,
-- self-signed certificates, once you install your certificate authority in the Android settings under **Security » Encryption &
-  credentials » Install a certificate**.
+- self-signed certificates, once you install your certificate authority in the Android settings under **Security > Encryption &
+  credentials > Install a certificate**.
 
 ## FAQ
 
 ??? question "Can I sign in with single sign-on (OpenID)?"
-    Not yet. If your server only allows single sign-on, ask whoever runs it to also allow signing in with a password for your account.
+    No. If your server only allows single sign-on, ask whoever runs it to also allow signing in with a password for your account.
 
 ??? question "Does Pageturner support podcasts or ebooks from Audiobookshelf?"
     No, Pageturner is an audiobook player. Podcast libraries don't show up.
@@ -62,4 +64,4 @@ Many servers are only reachable at home. Pageturner works with:
     sign in again.
 
 ??? question "I already download my books into a folder that Pageturner scans."
-    Then those books show up twice. Remove that folder under **Settings » Library » Book folders** to keep the server books only.
+    Then those books show up twice. Remove that folder under **Settings > Library > Book folders** to keep the server books only.

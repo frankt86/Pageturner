@@ -1,7 +1,7 @@
 # Ebook catalogs (OPDS)
 
 Many ebook servers share their books as a catalog in a standard format called OPDS. Calibre-Web, Komga, Kavita, the
-Calibre content server and sites like Standard Ebooks all have one. Add a catalog to Pageturner, look through it and
+Calibre content server and free libraries like Project Gutenberg all have one. Add a catalog to Pageturner, look through it and
 download its EPUB, PDF and Kindle (MOBI and AZW3) books and its audiobooks into your library.
 
 There is no Pageturner account and no Pageturner server in between. Pageturner only talks to the catalogs you add.
@@ -24,7 +24,7 @@ Open Library also lists books you can only borrow with an account. Pageturner on
 
 ## Adding a catalog
 
-1. Open **Settings » Library » Ebook catalogs**. You also find it on the screen where you add books, under
+1. Open **Settings > Library > Ebook catalogs**. You also find it on the screen where you add books, under
    **Download from a catalog**.
 2. Tap **Add catalog**.
 3. Pick the kind of server:
@@ -97,12 +97,12 @@ Downloaded books go into a folder of your library, your **download folder**. The
 you copied yourself, so you can see them in your file manager, back them up or move them to another device.
 
 The first time you download a book, Pageturner asks which folder to use. It lists the folders of your library that hold
-several books, under **Settings » Library » Book folders**. Or tap **Choose another folder** to pick a new one with
-Android's folder picker. A new folder joins your library as a folder where every folder or file is a book.
+several books, under **Settings > Library > Book folders**. Or tap **Choose another folder** to pick another one with
+Android's folder picker. That folder joins your library as a folder where every folder or file is a book.
 
-To change the download folder later, open **Settings » Library » Ebook catalogs** and tap **Download folder** at the top.
+To change the download folder later, open **Settings > Library > Ebook catalogs** and tap **Download folder** at the top.
 Books you already downloaded stay where they are. When the download folder leaves your library, or Pageturner can't
-reach it anymore, Pageturner asks again on the next download.
+reach it, Pageturner asks again on the next download.
 
 In the download folder:
 
@@ -113,10 +113,8 @@ When the folders in your download folder are authors, each book goes into the fo
 `Jane Austen/Persuasion.epub`. When a book with the same name is already there, the new one gets a number, like
 `Persuasion (2).epub`. A book only shows up in the folder once it's completely downloaded.
 
-Pageturner then looks through your library, finds the new book like any other, and gives it the title, author and cover
+Pageturner then looks through your library, finds the downloaded book like any other, and gives it the title, author and cover
 from the catalog. The tick in the catalog and the progress sync with Komga keep working for it.
-
-Books you downloaded before there was a download folder stay in Pageturner's own storage and keep working as before.
 
 To remove an ebook, long press it in the library and tap **Hide from library**. Its file stays in the download folder.
 Download it again and the book comes back, with your place in it.
@@ -132,8 +130,8 @@ open the book in Komga's own reader on your computer, and it opens where you sto
 - **Opening a book:** Pageturner asks Komga where you are. When Komga has a newer place, the book opens there. Without a
   connection, the book opens where you left it in Pageturner.
 - **While you read:** a few seconds after you turn a page, and when you close the book, Pageturner tells Komga your place.
-- **Finished and Not started:** marking a book **Finished**, or reading to the end, marks it read in Komga too. **Not
-  started** marks it unread.
+- **Completed and Not started yet:** marking a book **Completed**, or reading to the end, marks it read in Komga too.
+  **Not started yet** marks it unread.
 - **Your library:** when you open Pageturner, it takes the progress of your Komga books, so the books you read in Komga
   show how far you got.
 

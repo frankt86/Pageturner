@@ -1,11 +1,11 @@
-# Ebooks
+# Ebooks and the Reader
 
-Pageturner also reads EPUB, PDF and Kindle (MOBI and AZW3) books, and can read them aloud.
+Pageturner reads EPUB, PDF and Kindle (MOBI and AZW3) books, and can read them aloud.
 
 ## Adding ebooks
 
-Put `.epub`, `.pdf`, `.mobi`, `.azw3`, `.azw` or `.prc` files in any folder you added under **Settings > Book folders**. A folder can hold only ebooks, only
-audiobooks, or both. Pageturner finds them when it scans your library, with their cover, title and author, and puts them next
+Put `.epub`, `.pdf`, `.mobi`, `.azw3`, `.azw` or `.prc` files in any folder you added under **Settings > Library > Book folders**. A folder can hold only ebooks,
+only audiobooks, or both. Pageturner finds them when it scans your library, with their cover, title and author, and puts them next
 to your audiobooks: in **Current** while you read them, **Not started yet** before you open them, and **Completed** once you
 reach the end. A small book badge on the cover tells ebooks and audiobooks apart.
 
@@ -17,7 +17,7 @@ of the type series. PDF and Kindle books have no series of their own, but you ca
 
 Long-press an ebook to:
 
-- mark it **Not started**, **Current** or **Finished**. For a book from Komga, this also marks it read or unread in Komga,
+- mark it **Not started yet**, **Current** or **Completed**. For a book from Komga, this also marks it read or unread in Komga,
   see [Ebook catalogs](opds.md#syncing-your-progress-with-komga),
 - **Edit** its title, author, series and part. Only what you change stops following the book's file. Clearing the author,
   series or part, or typing the one from the file again, brings back the one from the file. While you type a series, the
@@ -26,7 +26,7 @@ Long-press an ebook to:
 - set a **Cover from the Internet** (searched by title and author) or a **Cover from the file system**,
 - **Hide from library**, like an audiobook. The file stays on your phone. The library offers **Undo**, and a small badge
   marks the book when **Hidden books** is on in the library filter. Search still finds it, and **Show in library** brings
-  it back. Ebooks you removed from the library in an older version are hidden books now,
+  it back,
 - **Select** it, to change several books at once, see below.
 
 ## In the library
@@ -102,7 +102,7 @@ The **Display** button holds:
 - **Page turn:** the page curls over like paper, slides sideways, or the next one shows at once. Only for pages.
 - **Time per page**, for turning pages by themselves, from 10 seconds to 2 minutes.
 - **Scrolling** and **Scrolling speed**, in the scroll mode, see below.
-- **New book engine (beta)**, for EPUB books, see below.
+- **New book engine (beta)** turns on the Readium engine for EPUB books, see below.
 
 Under **Layout**:
 
@@ -144,12 +144,12 @@ work as with pages; reading aloud scrolls along when the passage it reads leaves
 
 **Colors and themes**, under the themes in **Display**, holds:
 
-- **Custom:** pick the **Background**, **Text** and **Selection** colors, and in the new book engine the **Links** color.
+- **Custom:** pick the **Background**, **Text** and **Selection** colors, and in the Readium engine the **Links** color.
   Tap a color to pick from a few to start with, with **Hue**, **Saturation** and **Brightness** sliders, or type its
   **HEX code**. Changing a color switches to the Custom theme, starting from the colors on screen. Links and selection can
   stay **Auto**, the theme's own.
 - **Text contrast** shows how well the text stands out from the page, like 12.6:1, and warns below 4.5:1.
-- **Images on dark pages:** **Original**, **Dimmed** or **Inverted**, for pictures in the new book engine and for PDF pages.
+- **Images on dark pages:** **Original**, **Dimmed** or **Inverted**, for pictures in the Readium engine and for PDF pages.
   Light pages always show them as they are.
 - **Paper texture** lays a fine grain like paper under the text, from none to strong.
 - **Day and night:** **Switch themes by the time of day** uses one theme **By day** and another **At night**, from **Night
@@ -212,7 +212,7 @@ encryption, opens with a full PDFium instead, on 64-bit phones.
 A PDF locked with a password asks for it when you open it. Pageturner keeps the password, so the book opens without asking
 next time. If a PDF still can't be opened, the reader tells you why: the file is damaged, it uses a protection or format
 Pageturner can't open, or Pageturner can't reach the file. That happens when it was moved or deleted, or when the folder
-needs to be chosen again under **Settings > Book folders**.
+needs to be chosen again under **Settings > Library > Book folders**.
 
 ### Bookmarks, highlights and notes
 
@@ -239,10 +239,12 @@ Set the speed, then tap **Start reading**. Pageturner reads a sentence or two at
 highlights the passage it's reading. Turning a page yourself, jumping elsewhere, tapping the button again or leaving the book
 stops it. While it reads, the volume keys change the volume instead of turning pages.
 
-## New book engine (beta)
+## The Readium engine
 
-Turn on **New book engine (beta)** under **Display** to show EPUB books the way they were made: with their pictures, headings,
-bold and italic text, tables, links and footnotes. It's built on [Readium](https://readium.org).
+Pageturner has two engines for EPUB books. The built-in engine shows the text of the book with a page curl. The
+Readium engine, a beta built on [Readium](https://readium.org), shows EPUB books the way they were made: with their
+pictures, headings, bold and italic text, tables, links and footnotes. To use it, turn on **New book engine (beta)**
+under **Display**.
 
 - Your theme, font, text size, spacing and margins carry over. Hyphenation follows the book's language.
 - Link and selection colors and **Highlight strength** take a moment to show, as the pages are made anew. Readium has no
@@ -272,15 +274,15 @@ bold and italic text, tables, links and footnotes. It's built on [Readium](https
   go on to the next one. Scrolling automatically goes on to the next chapter by itself. **By screen** isn't there, so a
   swipe scrolls freely. Books with fixed pages keep turning their pages.
 - Bookmarks and highlights made with one engine don't show in the other.
-- The new engine keeps its own place in the book. When you first turn it on, it opens about where you were.
+- The Readium engine keeps its own place in the book. When you first turn it on, it opens about where you were.
 
 ## Good to know
 
-- Without the new book engine, EPUB books show their text only. Pictures and text styling, like bold or headings, are left
+- In the built-in engine, EPUB books show their text only. Pictures and text styling, like bold or headings, are left
   out, and so are links, print page numbers and **Count only the main text**.
 - PDF books show their pages without chapters or reading time.
 - PDF pages show exactly as they're printed. Searching or reading a PDF aloud needs Android 15 or newer, except for the
-  PDFs that open with PDFium, and a PDF made of scanned pages has no text. Highlights work in EPUB books only.
+  PDFs that open with PDFium, and a PDF made of scanned pages has no text. Highlights work in EPUB and Kindle books only.
 - A PDF locked with a password has no cover in the library.
 - Kindle books with DRM, and Topaz and KFX books, can't be opened.
 - The natural voice needs a 64-bit phone, which nearly every phone from the last years is. On older phones it may pause briefly
@@ -289,7 +291,7 @@ bold and italic text, tables, links and footnotes. It's built on [Readium](https
 
 ## Not yet
 
-These aren't in Pageturner yet:
+Pageturner can't do these things:
 
 - Controls for reading aloud on the lock screen and in the notifications.
 - Your own title, author, series and part for an ebook syncing to your other devices through the library folder, like

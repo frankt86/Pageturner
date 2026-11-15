@@ -4,7 +4,7 @@
 
 To run the project, open it in the latest Version of Android Studio and build the project as usual.
 The default local development variant is `freeDebug`, which does not require Google services credentials.
-Play variants include Firebase, Crashlytics, Remote Config, and Play review dependencies.
+Play variants include Firebase, Crashlytics, Remote Config and Analytics. Pageturner publishes only the free variant.
 Play builds require `app/src/play/google-services.json`.
 
 By default, there is not enough memory configured for gradle. You can fix this by running.
@@ -40,7 +40,7 @@ To unlock it:
 
 1. Open `Settings`.
 2. Tap the app version entry 13 times.
-3. Open the newly visible developer menu from `Settings`.
+3. Open the developer menu from `Settings`.
 
 ## Opening a Screen Directly
 
@@ -90,7 +90,7 @@ website. Its app id is `de.ph1b.audiobook.debug`, so it installs next to the sta
 
 Stable releases are signed with the release key and published on
 [GitHub Releases](https://github.com/frankt86/Pageturner/releases). The website's `pageturner.apk` is the latest stable
-release. Until the first stable release exists, it is the debug build.
+release. When GitHub has no stable release, the site serves the debug build under both names.
 
 ### Cutting a release
 
@@ -106,7 +106,7 @@ the app id `io.github.frankt86.pageturner` (`-Pvoice.applicationId`), signs it w
 release marked as latest. The release has the tag `YY.M.RELEASE-CODE` and two copies of the APK:
 `pageturner-<version>.apk` and `pageturner.apk`. So
 `https://github.com/frankt86/Pageturner/releases/latest/download/pageturner.apk` always gives the latest stable APK.
-After the release, the website deploys again with the new APK.
+After the release, the website deploys again with that APK.
 
 The workflow does not start from a pushed tag. It makes the tag itself, because the tag holds the version code.
 
@@ -138,7 +138,7 @@ Use:
 The generator uses:
 
 - `artwork/public/logo.svg` for the Play Store icon.
-- `artwork/public/raw/phone/*.png` for raw app screenshots, captured at 1080×2424 on a Pixel 9 emulator with the
+- `artwork/public/raw/phone/*.png` for raw app screenshots, captured at 1080x2424 on a Pixel 9 emulator with the
   system UI demo mode on.
 - `artwork/public/raw/feature/1.png` for the phone in the feature graphic.
 - `artwork/src/templates/` and `artwork/src/styles/` for the rendered Play Store images. `PHONE_TONES` in
@@ -158,16 +158,16 @@ The `artwork/package-lock.json` file is intentionally not checked in. CI and loc
 Pageturner, like Voice, uses [calendar versioning (CalVer)](https://calver.org/).
 
 - Version name format: `YY.M.RELEASE`
-  - `YY`: release year, last 2 digits (2025 → 25)
-  - `M`: release month (1–12)
+  - `YY`: release year, last 2 digits (2025 -> 25)
+  - `M`: release month (1-12)
   - `RELEASE`: counter for releases within the same month (starting at 1)
 - Tag format (used by CI): `YY.M.RELEASE-CODE`
   - `CODE` is the Android versionCode, see below.
 
 Examples:
 
-- First release in December 2026 → version name `26.12.1`
-- Built on 2026-12-01 at 09:00 UTC → tag `26.12.1-5436263`
+- First release in December 2026 -> version name `26.12.1`
+- Built on 2026-12-01 at 09:00 UTC -> tag `26.12.1-5436263`
 
 ### Version code
 
@@ -193,6 +193,6 @@ that touches `docs/`, after each debug APK build and after each release. It puts
 as `pageturner.apk`, and the debug APK as `pageturner-debug.apk`.
 To deploy it by hand, dispatch the workflow manually.
 
-[👉 Dispatch Workflow](https://github.com/frankt86/Pageturner/actions/workflows/deploy_pages.yml)
+[Dispatch the workflow](https://github.com/frankt86/Pageturner/actions/workflows/deploy_pages.yml)
 
 The `website/` folder holds upstream Voice's Astro website. Pageturner doesn't build or deploy it.

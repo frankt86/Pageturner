@@ -22,7 +22,7 @@ At a high level:
 ### Core (Shared Logic)
 
 `:core:*` modules hold reusable services and abstractions: data and storage, playback, scanning, search, logging, analytics, remote config,
-feature flags, localized strings, and shared Compose UI and theming. Pageturner adds `:core:ebook`, which reads EPUB and PDF
+feature flags, localized strings, and shared Compose UI and theming. Pageturner adds `:core:ebook`, which reads EPUB, PDF and Kindle
 files, and `:core:opds`, which talks to OPDS catalogs and Komga.
 
 ### Features
@@ -49,7 +49,7 @@ The build fails when a module breaks these rules, see `plugins/src/main/kotlin/c
 This ensures **unidirectional dependency flow**:
 
 ```
-:app → Features → :navigation → Core
+:app -> Features -> :navigation -> Core
 ```
 
 ## Diagram
@@ -86,8 +86,9 @@ flowchart LR
 * **Room**: Persistent storage
 * **Kotlin Serialization**: JSON parsing and object serialization
 * **Coil**: Efficient image loading
-* **Readium**: The new book engine for EPUB books in the reader
+* **Readium**: The Readium engine for EPUB books in the reader (the **New book engine (beta)** switch)
 * **Sherpa-ONNX with Kokoro**: The offline natural voice for reading aloud
+* **PDFium**: Opens the PDFs that the PDF reader of Android refuses
 
 ## Module Lifecycle
 
