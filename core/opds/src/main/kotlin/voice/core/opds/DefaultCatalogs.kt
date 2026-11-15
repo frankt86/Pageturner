@@ -25,6 +25,11 @@ internal val defaultCatalogs: List<OpdsCatalog> =
       url = "https://www.gutenberg.org/ebooks.opds/",
     ),
     OpdsCatalog(
+      id = "default-internet-archive",
+      name = "Internet Archive",
+      url = "https://archive.org/services/opds",
+    ),
+    OpdsCatalog(
       id = "default-open-library",
       name = "Open Library",
       url = "https://openlibrary.org/opds/",

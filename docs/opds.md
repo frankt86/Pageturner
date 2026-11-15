@@ -13,6 +13,7 @@ Pageturner comes with these free catalogs. They need no account.
 | Catalog | Books | Address |
 |---------|-------|---------|
 | Project Gutenberg | Over 70,000 classics, mostly in English | `https://www.gutenberg.org/ebooks.opds/` |
+| Internet Archive | Over 21,000 LibriVox audiobooks in MP3, and public domain ebooks | `https://archive.org/services/opds` |
 | Open Library | Free books from the Internet Archive | `https://openlibrary.org/opds/` |
 | Wolne Lektury | Classics and school reading in Polish, as ebooks and as audiobooks | `https://wolnelektury.pl/opds/` |
 | Unglue.it | Free books with open licenses, like Creative Commons | `https://unglue.it/api/opds/` |
