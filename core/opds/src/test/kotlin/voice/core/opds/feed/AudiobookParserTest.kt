@@ -32,6 +32,35 @@ class AudiobookParserTest {
   }
 
   @Test
+  fun `an epub and a single mp3 download either way`() {
+    val book =
+      OpdsPublication(
+        id = "1",
+        title = "Pan Tadeusz",
+        authors = emptyList(),
+        summary = null,
+        coverUrl = null,
+        thumbnailUrl = null,
+        acquisitions =
+          listOf(
+            OpdsAcquisition(
+              "https://wolnelektury.pl/media/book/epub/pan-tadeusz.epub",
+              "application/epub+zip",
+            ),
+            OpdsAcquisition("https://wolnelektury.pl/media/book/mp3/pan-tadeusz.mp3", "audio/mpeg"),
+          ),
+      )
+    assertEquals(OpdsFormat.Epub, book.preferredAcquisition?.format)
+    val audiobook = book.audiobook!!
+    assertEquals(AudiobookPackaging.Files, audiobook.packaging)
+    assertEquals(
+      listOf("https://wolnelektury.pl/media/book/mp3/pan-tadeusz.mp3"),
+      audiobook.files.map { it.url },
+    )
+    assertEquals("MP3", audiobook.format)
+  }
+
+  @Test
   fun `one file per chapter is one book in the order of the feed`() {
     val audiobook = opds1.getValue("The Time Machine").audiobook!!
     assertEquals(AudiobookPackaging.Files, audiobook.packaging)

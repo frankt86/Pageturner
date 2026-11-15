@@ -8,15 +8,14 @@ There is no Pageturner account and no Pageturner server in between. Pageturner o
 
 ## Free catalogs
 
-Pageturner comes with these free catalogs of public domain books. They need no account.
+Pageturner comes with these free catalogs. They need no account.
 
 | Catalog | Books | Address |
 |---------|-------|---------|
 | Project Gutenberg | Over 70,000 classics, mostly in English | `https://www.gutenberg.org/ebooks.opds/` |
 | Open Library | Free books from the Internet Archive | `https://openlibrary.org/opds/` |
-| Gallica | Books of the French national library, in French | `https://gallica.bnf.fr/opds` |
-| Wolne Lektury | School reading and classics, in Polish | `https://wolnelektury.pl/opds/` |
-| textos.info | Classics in Spanish | `https://textos.info/opds` |
+| Wolne Lektury | Classics and school reading in Polish, as ebooks and as audiobooks | `https://wolnelektury.pl/opds/` |
+| Unglue.it | Free books with open licenses, like Creative Commons | `https://unglue.it/api/opds/` |
 
 Pageturner adds each of them once. When you already have one of them, it isn't added again. Remove the ones you don't
 need: they don't come back.

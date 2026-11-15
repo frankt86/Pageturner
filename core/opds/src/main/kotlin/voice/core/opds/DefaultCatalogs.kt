@@ -30,19 +30,14 @@ internal val defaultCatalogs: List<OpdsCatalog> =
       url = "https://openlibrary.org/opds/",
     ),
     OpdsCatalog(
-      id = "default-gallica",
-      name = "Gallica",
-      url = "https://gallica.bnf.fr/opds",
-    ),
-    OpdsCatalog(
       id = "default-wolne-lektury",
       name = "Wolne Lektury",
       url = "https://wolnelektury.pl/opds/",
     ),
     OpdsCatalog(
-      id = "default-textos-info",
-      name = "textos.info",
-      url = "https://textos.info/opds",
+      id = "default-unglue-it",
+      name = "Unglue.it",
+      url = "https://unglue.it/api/opds/",
     ),
   )
 
