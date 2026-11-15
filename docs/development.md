@@ -92,6 +92,20 @@ Stable releases are signed with the release key and published on
 [GitHub Releases](https://github.com/frankt86/Pageturner/releases). The website's `pageturner.apk` is the latest stable
 release. When GitHub has no stable release, the site serves the debug build under both names.
 
+### Baseline profile
+
+Before they build, the Debug APK and Release workflows generate a baseline profile on an emulator, so the app starts
+faster. The generator adds a book, completes the onboarding, and records the library and playback screens. It reads the
+app id from the build, so it works with the `.debug` suffix and with `-Pvoice.applicationId`. The profile is not
+checked in. A build without it works, but the app starts slower. When the generation fails, the workflow stops and
+publishes nothing.
+
+To generate the profile locally, run:
+
+```sh
+./gradlew :app:generateFreeReleaseBaselineProfile
+```
+
 ### Cutting a release
 
 1. Find the next version name. It is `YY.M.RELEASE` (see [Versioning](#versioning)), for example `26.11.1` for the
@@ -183,8 +197,11 @@ Codes below `5411003` came from the version name, like `5309001` for `25.9.1`.
 
 `determine_release_tag.main.kts` puts this code in the git tag, and the Release workflow builds with it.
 
-Builds without `-Pvoice.versionCode` take the code of the newest release tag. So a local build installs over that
-release, and the next release replaces it.
+Builds without `-Pvoice.versionCode` take the minute code of the end of the current UTC day. So a local build
+installs over every stable release so far, and a release from a later day replaces it.
+
+Test builds pass `-Pvoice.versionCode=2147483647`, the highest code that fits. All earlier test builds have this code,
+so each test build installs over the last one.
 
 ## Pages Deployment
 
