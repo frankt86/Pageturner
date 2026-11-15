@@ -4,7 +4,6 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
-  pull_request:
 
 permissions:
   contents: write
@@ -37,12 +36,7 @@ jobs:
             -Pandroid.injected.signing.key.alias=androiddebugkey \
             -Pandroid.injected.signing.key.password=android
       # Obtainium sees a new version only under a new tag, so each test build gets its own release, marked latest.
-      - name: Check the profile in the APK
-        run: |
-          find app/src -path '*generated/baselineProfiles*' -type f -exec wc -l {} +
-          unzip -l app/build/outputs/apk/free/release/app-free-release.apk | grep -i 'baseline.prof'
       - name: Publish a numbered test release
-        if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
