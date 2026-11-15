@@ -1,5 +1,7 @@
 package voice.core.opds.feed
 
+import kotlin.time.Duration
+
 public data class OpdsFeed(
   val title: String?,
   val navigation: List<OpdsNavigation>,
@@ -26,6 +28,9 @@ public data class OpdsPublication(
   val acquisitions: List<OpdsAcquisition>,
   /** The feed says that this is an audiobook, which is what makes a plain zip one. */
   val isAudiobook: Boolean = false,
+  /** How long the audiobook plays, when the catalog tells it. */
+  val duration: Duration? = null,
+  val narrators: List<String> = emptyList(),
 ) {
 
   /**

@@ -91,6 +91,7 @@ internal fun catalogUrlCandidates(
 ): List<String> {
   val trimmed = input.trim()
   if (trimmed.isEmpty()) return emptyList()
+  if (type == CatalogType.LibriVox) return listOf(trimmed)
   val withSchemes =
     if ("://" in trimmed) {
       listOf(trimmed)
@@ -125,7 +126,8 @@ internal fun normalizeCatalogUrl(
   val trimmed = input.trim()
   val withScheme = if ("://" in trimmed) trimmed else "https://$trimmed"
   return when (type) {
-    CatalogType.Opds -> withScheme
+    CatalogType.Opds,
+    CatalogType.LibriVox -> withScheme
     // people paste the catalog address that Komga shows, instead of the one of the server
     CatalogType.Komga ->
       withScheme
