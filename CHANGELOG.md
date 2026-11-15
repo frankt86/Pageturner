@@ -100,3 +100,6 @@ Pageturner includes the updates of Voice up to November 2026:
 - Tablet layouts, a calmer player, and a switch to turn off cover colors.
 - A sleep timer that starts again when you shake or press play right after it pauses.
 - Traditional Chinese, and many fixes for the player, the scanner and Android Auto.
+- Next in the last chapter finishes the book, a skip from the widget keeps a paused book paused, the automatic sleep
+  timer starts with the minutes you chose last, a pause keeps your place when auto rewind is off, and the app starts
+  faster.

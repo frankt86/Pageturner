@@ -26,3 +26,4 @@ testResults
 /plugins/.idea/workspace.xml
 /features/reader/src/main/jniLibs/
 /.claude/worktrees/
+/app/src/*/generated

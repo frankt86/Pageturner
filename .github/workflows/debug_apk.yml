@@ -15,15 +15,21 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/build_setup
+      - uses: ./.github/actions/generate_baseline_profile
+        timeout-minutes: 30
+        with:
+          task: :app:generateFreeReleaseBaselineProfile -Pvoice.applicationIdSuffix=.debug
       # a shrunk release build, small enough to download on a phone, with the debug app id and key
+      # Earlier test builds have the highest version code, so every test build must have it too.
       - name: Build
         run: |
           ./gradlew :app:assembleFreeRelease \
             -Pvoice.versionName="test-${{ github.run_number }}" \
+            -Pvoice.versionCode=2147483647 \
             -Pvoice.applicationIdSuffix=.debug \
             -Pandroid.injected.signing.store.file="$PWD/app/debug.keystore" \
             -Pandroid.injected.signing.store.password=android \
