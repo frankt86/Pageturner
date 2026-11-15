@@ -5,8 +5,9 @@ description: Writing the GitHub release notes for a Pageturner release. Use when
 
 # Release notes
 
-The release workflow creates a draft release from `.github/release_notes_template.md`. Fill in its title and its
-`## What's New`.
+The Release workflow takes the notes from the version's section in `CHANGELOG.md`, with a heading like
+`## [26.11.1] - 2026-11-20`, and publishes the release. Write the notes in that section before the release. After the
+release, edit its title and notes on GitHub.
 
 Find the changes with `git log <previous tag>..<tag>` and read the pull requests behind them.
 
@@ -40,10 +41,8 @@ outdated by a later pull request. For a very important change without a fitting 
 emulator skill. `gh release edit` can't upload images, so attach it to that change's pull request with
 `gh pr edit <number> --attach ./image.png` and use the uploaded URL from its body.
 
-## Updating the draft
+## Editing a release
 
 ```sh
 gh release edit <tag> --title "…" --notes-file notes.md
 ```
-
-Don't publish the release. The maintainer does that.

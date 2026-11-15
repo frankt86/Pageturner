@@ -5,7 +5,7 @@
 To run the project, open it in the latest Version of Android Studio and build the project as usual.
 The default local development variant is `freeDebug`, which does not require Google services credentials.
 Play variants include Firebase, Crashlytics, Remote Config, and Play review dependencies.
-Play builds require `app/src/play/google-services.json`; CI writes this file from the release secret.
+Play builds require `app/src/play/google-services.json`.
 
 By default, there is not enough memory configured for gradle. You can fix this by running.
 
@@ -84,75 +84,46 @@ Compose rules come from Slack's [compose-lints](https://slackhq.github.io/compos
 
 ## Releasing
 
-Every push to `main` builds a release APK with the debug app id and key and publishes it to the
-[debug release](https://github.com/frankt86/Pageturner/releases/tag/debug) and, as `pageturner.apk`, next to the website.
-That's the build people install. It installs next to Voice from the stores.
+Every push to `main` builds a test APK with the debug app id (`.debug` suffix) and the debug key. CI publishes it to the
+[debug release](https://github.com/frankt86/Pageturner/releases/tag/debug) and, as `pageturner-debug.apk`, next to the
+website. Its app id is `de.ph1b.audiobook.debug`, so it installs next to the stable app and next to Voice.
 
-The rest of this section is the store release process that comes from upstream Voice.
+Stable releases are signed with the release key and published on
+[GitHub Releases](https://github.com/frankt86/Pageturner/releases). The website's `pageturner.apk` is the latest stable
+release. Until the first stable release exists, it is the debug build.
 
-To release a new version, trigger the [Release Workflow](https://github.com/frankt86/Pageturner/actions/workflows/release.yml)
+### Cutting a release
 
-This creates a draft GitHub release with the APK and keeps the Play AAB as a workflow artifact. With `submit_to_stores` enabled,
-it also uploads the AAB to the Play Store’s internal track and promotes it to a 0.1% production rollout.
+1. Find the next version name. It is `YY.M.RELEASE` (see [Versioning](#versioning)), for example `26.11.1` for the
+   first release in November 2026, or `26.11.2` when `26.11.1` exists.
+2. In `CHANGELOG.md`, add a section for that version below `## [Unreleased]`, with the heading
+   `## [26.11.1] - 2026-11-20`. Move the notes from `[Unreleased]` into it. Merge this change into `main`.
+3. Dispatch the [Release Workflow](https://github.com/frankt86/Pageturner/actions/workflows/release.yml) on `main`.
 
-The release workflow uses the protected `release` GitHub environment. CI signs through Gradle's injected signing properties,
-keeps keystores as base64 file secrets, and passes store passwords, key aliases, and key passwords as environment variables;
-no checked-in or generated signing properties files are required.
+The workflow picks the version name and code, and takes the release notes from the changelog section of that version. If
+the section is missing, it stops before the build and names the heading it expects. Then it builds `freeRelease` with
+the app id `io.github.frankt86.pageturner` (`-Pvoice.applicationId`), signs it with the release key, and publishes a
+release marked as latest. The release has the tag `YY.M.RELEASE-CODE` and two copies of the APK:
+`pageturner-<version>.apk` and `pageturner.apk`. So
+`https://github.com/frankt86/Pageturner/releases/latest/download/pageturner.apk` always gives the latest stable APK.
+After the release, the website deploys again with the new APK.
 
-The `release` environment requires these secrets:
+The workflow does not start from a pushed tag. It makes the tag itself, because the tag holds the version code.
 
-| Secret                                      | Purpose                                                         |
-|---------------------------------------------|-----------------------------------------------------------------|
-| `PLAY_SERVICE_ACCOUNT`                      | Google Play service account JSON, base64 encoded.               |
-| `GOOGLE_SERVICES`                           | Play flavor `google-services.json`, base64 encoded.             |
-| `PLAY_SIGNING_KEYSTORE`                     | Play release keystore, base64 encoded.                          |
-| `PLAY_SIGNING_STORE_PASSWORD`               | Play release keystore password.                                 |
-| `PLAY_SIGNING_KEY_ALIAS`                    | Play release key alias.                                         |
-| `PLAY_SIGNING_KEY_PASSWORD`                 | Play release key password.                                      |
-| `GH_SIGNING_KEYSTORE`                       | GitHub/free release keystore, base64 encoded.                   |
-| `GH_SIGNING_STORE_PASSWORD`                 | GitHub/free release keystore password.                          |
-| `GH_SIGNING_KEY_ALIAS`                      | GitHub/free release key alias.                                  |
-| `GH_SIGNING_KEY_PASSWORD`                   | GitHub/free release key password.                               |
-| `FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT` | Firebase App Distribution service account JSON, base64 encoded. |
+The release needs these repository secrets. If one is missing, the workflow stops at its first step and names it.
 
-### Releasing to F-Droid, IzzyDroid and GitHub
+| Secret                      | Purpose                                     |
+|-----------------------------|---------------------------------------------|
+| `GH_SIGNING_KEYSTORE`       | Release keystore (PKCS12), base64 encoded.  |
+| `GH_SIGNING_STORE_PASSWORD` | Release keystore password.                  |
+| `GH_SIGNING_KEY_ALIAS`      | Release key alias (`pageturner`).           |
+| `GH_SIGNING_KEY_PASSWORD`   | Release key password.                       |
 
-The draft gets its git tag only when it's published. F-Droid builds every tag that matches `^[\d.]+-\d+$`, usually a few
-days later, and IzzyDroid picks up the APK from the published release. Neither has a staged rollout, so publish the
-draft only once the Play rollout has reached 100%.
+CI signs through Gradle's injected signing properties. `scripts/ci_signing_setup.sh free` writes the keystore from
+`GH_SIGNING_KEYSTORE`. The script also takes `play` and `google_services` for the Play build, which no workflow of
+Pageturner does.
 
-A version that turns out broken on Play is never published. Keep its draft until the next release is published: the
-next version name is counted from the tags and the drafts, so deleting it earlier hands its version name out again.
-
-#### Checking on F-Droid
-
-F-Droid takes a release in three steps:
-
-1. **Picked up:** the checkupdates bot adds the new tag to
-   [Voice's build recipe](https://gitlab.com/fdroid/fdroiddata/-/commits/master/metadata/de.ph1b.audiobook.yml) with
-   the commit `bot: Update Voice to <versionCode>`. It only takes the newest tag, so a release that already has a
-   successor when the bot runs is never built.
-2. **Built:** the [last build cycle](https://monitor.f-droid.org/builds/build) shows when it ran and lists the
-   successful and failed builds. The build log of a version, failed or not, is at
-   `https://monitor.f-droid.org/builds/log/de.ph1b.audiobook/<versionCode>`.
-3. **Published:** [Voice on F-Droid](https://f-droid.org/packages/de.ph1b.audiobook/) lists each version with the
-   day it was added.
-
-### Tester Builds
-
-To send a build to testers, trigger the
-[Firebase App Distribution Workflow](https://github.com/frankt86/Pageturner/actions/workflows/firebase_app_distribution.yml)
-on the branch to test. Testers install the build through the Firebase App Tester app.
-
-The workflow builds a `playRelease` APK with a version code below the next release and a version name suffixed
-with the commit, then uploads it with the Firebase CLI. It notifies the `beta-testers` group by default; clear the
-`groups` input to only upload.
-The APK is signed with the GitHub key, which is the app signing key Google Play re-signs with, so tester builds install
-over the Play Store version.
-App Distribution is not part of the Gradle build, so the free flavor and F-Droid builds don't depend on it.
-
-It runs in the `release` environment and needs `FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT`: a service account with the
-Firebase App Distribution Admin role in the Firebase project of the Play `google-services.json`.
+Keep the release key safe. Android only installs an update that has the same key as the installed app.
 
 ## Play Store Artwork
 
@@ -204,22 +175,22 @@ The Android `versionCode` counts the minutes since 2026-11-13 20:00 UTC, startin
 
 `CODE = 5411003 + minutes since 2026-11-13 20:00 UTC`
 
-So every build gets a higher code than all builds before it. Tester builds and Play internal uploads use the same
-formula, so each later release replaces them on Play. A deleted draft can't hand out its code again.
+So every release gets a higher code than all releases before it, and Android installs it as an update.
 `determine_release_tag.main.kts` refuses to run when the clock is before the start or after 2039, because a code from a
-wrong clock can't be taken back on Play.
+wrong clock can't be taken back.
 
-Before, the code came from the version name, like `5309001` for `25.9.1`. The last of those was `5411002`.
+Codes below `5411003` came from the version name, like `5309001` for `25.9.1`.
 
-This code is embedded in the git tag by `determine_release_tag.main.kts` and used by CI and Fastlane.
+`determine_release_tag.main.kts` puts this code in the git tag, and the Release workflow builds with it.
 
 Builds without `-Pvoice.versionCode` take the code of the newest release tag. So a local build installs over that
-release from Play, and Play replaces it with the next release.
+release, and the next release replaces it.
 
 ## Pages Deployment
 
 The [website](https://frankt86.github.io/Pageturner/) uses GitHub Pages and MkDocs and deploys on every push to `main`
-that touches `docs/`, and whenever a new debug APK is built (the APK is published next to the site as `pageturner.apk`).
+that touches `docs/`, after each debug APK build and after each release. It puts the latest stable APK next to the site
+as `pageturner.apk`, and the debug APK as `pageturner-debug.apk`.
 To deploy it by hand, dispatch the workflow manually.
 
 [👉 Dispatch Workflow](https://github.com/frankt86/Pageturner/actions/workflows/deploy_pages.yml)

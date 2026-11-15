@@ -1,4 +1,5 @@
 name: "Pre Build"
+description: "Sets up the JDK, Gradle and the native libraries for a build."
 runs:
   using: "composite"
   steps:

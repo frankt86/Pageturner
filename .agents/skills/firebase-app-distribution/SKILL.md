@@ -1,6 +1,6 @@
 ---
 name: firebase-app-distribution
-description: Uploading a Play release build of Voice to Firebase App Distribution, locally or with the GitHub workflow. Use when asked to distribute, upload, or send a tester or beta build to Firebase or to testers.
+description: Uploading a Play release build of Voice to Firebase App Distribution from the local machine. Use when asked to distribute, upload, or send a tester or beta build to Firebase or to testers.
 ---
 
 # Firebase App Distribution
@@ -25,15 +25,6 @@ It builds the working tree. With uncommitted changes, the commit in the version 
 
 When it's done, post the tester link, the URL after `Share this release with testers who have access`. Testers open it
 on their phone to install the build.
-
-## GitHub workflow
-
-Otherwise, ask first. Say that it builds the pushed branch, so uncommitted or unpushed changes need to be committed and
-pushed first.
-
-```sh
-gh workflow run firebase_app_distribution.yml --ref <branch> -f groups=beta-testers -f release_notes="<what the build changes>"
-```
 
 ## Errors
 
