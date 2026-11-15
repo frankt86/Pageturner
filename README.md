@@ -85,7 +85,9 @@ See [Ebooks and the Reader](docs/ebooks.md).
 
 - Browse and search OPDS catalogs like Calibre-Web, Komga and Kavita. Download EPUB, PDF, AZW3 and MOBI books and
   audiobooks into a folder of your library.
-- Project Gutenberg, Open Library, Wolne Lektury and Unglue.it come with the app. See [Ebook catalogs](docs/opds.md).
+- Free English catalogs come with the app: Project Gutenberg, Internet Archive (with over 21,000 LibriVox audiobooks),
+  Open Library, Wikisource, Unglue.it, OAPEN Library and the Directory of Open Access Books. See
+  [Ebook catalogs](docs/opds.md).
 - Your reading progress syncs both ways with Komga.
 - Stream and download audiobooks from [Audiobookshelf](docs/audiobookshelf.md), with your position and bookmarks in
   sync.
