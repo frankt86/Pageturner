@@ -39,6 +39,8 @@ jobs:
           gh release create "$tag" "pageturner-$tag.apk" --prerelease --latest=false --target "$GITHUB_SHA" \
             --title "Test build ${{ github.run_number }}" \
             --notes "Test build of main (${GITHUB_SHA::7}). A separate app from the stable release."
+          # the old unnumbered debug release has no version, so Obtainium falls back to it
+          if gh release view debug > /dev/null 2>&1; then gh release delete debug --yes --cleanup-tag; fi
           # keeps the five newest test releases
           gh release list --limit 100 --json tagName,createdAt \
             --jq '[.[] | select(.tagName | startswith("test-"))] | sort_by(.createdAt) | reverse | .[5:] | .[].tagName' |
