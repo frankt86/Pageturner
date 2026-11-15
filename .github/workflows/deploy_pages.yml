@@ -11,7 +11,7 @@ on:
       - Pipfile
   # puts each new APK on the site, a plain file that downloads on phones without GitHub's redirects
   workflow_run:
-    workflows: [ "Debug APK" ]
+    workflows: [ "Debug APK", "Release" ]
     types: [ completed ]
   workflow_dispatch:
     inputs:
@@ -41,8 +41,16 @@ jobs:
       - run: pip install pipenv
       - run: pipenv install
       - run: pipenv run mkdocs build --strict
-      - name: Add the newest APK
-        run: curl --fail --location --output site/pageturner.apk https://github.com/${{ github.repository }}/releases/download/debug/app-free-debug.apk
+      - name: Add the APKs
+        env:
+          RELEASES: https://github.com/${{ github.repository }}/releases
+        run: |
+          curl --fail --location --output site/pageturner-debug.apk "$RELEASES/download/debug/app-free-debug.apk"
+          # the debug build stands in until there is a stable release
+          if ! curl --fail --location --output site/pageturner.apk "$RELEASES/latest/download/pageturner.apk"; then
+            echo "No stable release yet, so pageturner.apk is the debug build."
+            cp site/pageturner-debug.apk site/pageturner.apk
+          fi
       - uses: actions/upload-pages-artifact@v5
         with:
           path: site/
