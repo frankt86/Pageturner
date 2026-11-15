@@ -4,7 +4,6 @@ import dev.zacsweers.metro.Inject
 import java.io.IOException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Request
@@ -36,7 +35,6 @@ private const val MAX_SKIPPED_PAGES = 4
 public class OpdsClient(
   private val http: ServerHttpClient,
   private val libriVox: LibriVoxClient,
-  private val englishOnly: EnglishOnlyStore,
 ) {
 
   public suspend fun feed(
@@ -44,8 +42,8 @@ public class OpdsClient(
     url: String = catalog.feedUrl,
   ): FeedResult {
     val result = load(catalog, url)
-    if (result !is FeedResult.Success || !englishOnly.data.first()) return result
-    var feed = result.feed.inEnglish()
+    if (result !is FeedResult.Success) return result
+    var feed = result.feed.inEnglish(keepUntagged = isEnglishOnServer(url))
     var skipped = 0
     while (
       feed.publications.isEmpty() && feed.navigation.isEmpty() && skipped < MAX_SKIPPED_PAGES
@@ -54,7 +52,7 @@ public class OpdsClient(
       val page = load(catalog, next) as? FeedResult.Success ?: break
       feed =
         feed.copy(
-          publications = page.feed.inEnglish().publications,
+          publications = page.feed.inEnglish(keepUntagged = isEnglishOnServer(next)).publications,
           nextUrl = page.feed.nextUrl?.takeIf { it != next },
         )
       skipped++
@@ -114,7 +112,6 @@ public class OpdsClient(
         is OpdsSearch.Description -> openSearchTemplate(catalog, search.url)
       }
     template ?: return null
-    if (!englishOnly.data.first()) return expandSearchTemplate(template, query)
     return expandSearchTemplate(template, englishSearchQuery(template, query), language = "en")
   }
 
@@ -149,10 +146,27 @@ internal fun englishSearchQuery(
   val host = template.substringAfter("://").substringBefore('/').substringBefore('{')
   return when (host.removePrefix("www.").removePrefix("m.")) {
     "gutenberg.org" -> "l.en ${query.trim()}"
-    "archive.org" -> "(${query.trim()}) AND language:(eng OR English)"
+    "archive.org" -> "(${query.trim()}) $IA_ENGLISH"
     else -> query
   }
 }
+
+/**
+ * Whether the catalog itself only sends books in English to [url], so a book without a language is
+ * in English too.
+ */
+internal fun isEnglishOnServer(url: String): Boolean {
+  val httpUrl = url.toHttpUrlOrNull() ?: return false
+  val query = httpUrl.queryParameter("query").orEmpty()
+  return when (httpUrl.host.removePrefix("www.").removePrefix("m.")) {
+    "gutenberg.org" -> "l.en" in query.split(' ')
+    "archive.org" -> query.endsWith(IA_ENGLISH)
+    "ws-export.wmcloud.org" -> httpUrl.encodedPath.startsWith("/opds/en/")
+    else -> false
+  }
+}
+
+private const val IA_ENGLISH = "AND language:(eng OR English)"
 
 internal fun request(
   catalog: OpdsCatalog,

@@ -397,8 +397,6 @@
     <string name="opds.download_folder.new">Scegli un\'altra cartella</string>
     <string name="opds.download_folder.none">Non ancora scelta</string>
     <string name="opds.download_folder.title">Cartella dei download</string>
-    <string name="opds.english_only.summary">Nascondi i libri in altre lingue</string>
-    <string name="opds.english_only.title">Solo libri in inglese</string>
     <string name="opds.entry.download">Scarica %s</string>
     <string name="opds.entry.download_audiobook">Scarica l\'audiolibro</string>
     <string name="opds.entry.downloaded">Nella tua libreria</string>

@@ -639,10 +639,6 @@
     <string name="opds.download_folder.none">Not chosen yet</string>
     <!-- Title of the setting, and of its sheet, that chooses the folder of the library that books downloaded from a catalog go into. -->
     <string name="opds.download_folder.title">Download folder</string>
-    <!-- Shown under the setting in the list of catalogs that hides the books of a catalog in languages other than English. Books without a language stay. -->
-    <string name="opds.english_only.summary">Hide books in other languages</string>
-    <!-- Title of the switch in the list of catalogs that only shows the books in English. It is on by default. -->
-    <string name="opds.english_only.title">English books only</string>
     <!-- Button that downloads a book from a catalog into the library. %s is the file format, like EPUB or PDF. -->
     <string name="opds.entry.download">Download %s</string>
     <!-- Button that downloads the audio of a book from a catalog into the library, to listen to it. Shown next to the ebook download when a book comes as both. -->

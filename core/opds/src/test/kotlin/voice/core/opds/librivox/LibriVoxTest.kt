@@ -35,7 +35,7 @@ class LibriVoxTest {
     assertEquals(listOf("dutch"), dutch.toPublication()?.languages)
     assertEquals(
       listOf("Absolute Evil", "Ophelia, the Rose of Elsinore"),
-      feed.inEnglish().publications.map { it.title },
+      feed.inEnglish(keepUntagged = false).publications.map { it.title },
     )
     assertEquals(listOf("en"), dutch.copy(language = "English").toPublication()?.languages)
   }

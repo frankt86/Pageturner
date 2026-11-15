@@ -397,8 +397,6 @@
     <string name="opds.download_folder.new">Tria una altra carpeta</string>
     <string name="opds.download_folder.none">Encara sense triar</string>
     <string name="opds.download_folder.title">Carpeta de baixades</string>
-    <string name="opds.english_only.summary">Amaga els llibres en altres llengües</string>
-    <string name="opds.english_only.title">Només llibres en anglès</string>
     <string name="opds.entry.download">Baixa %s</string>
     <string name="opds.entry.download_audiobook">Baixa l\'audiollibre</string>
     <string name="opds.entry.downloaded">A la vostra biblioteca</string>

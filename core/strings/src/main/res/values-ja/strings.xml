@@ -349,8 +349,6 @@
     <string name="opds.download_folder.new">別のフォルダーを選択</string>
     <string name="opds.download_folder.none">まだ選択されていません</string>
     <string name="opds.download_folder.title">ダウンロード先フォルダー</string>
-    <string name="opds.english_only.summary">ほかの言語の本を表示しない</string>
-    <string name="opds.english_only.title">英語の本のみ</string>
     <string name="opds.entry.download">%s をダウンロード</string>
     <string name="opds.entry.download_audiobook">オーディオブックをダウンロード</string>
     <string name="opds.entry.downloaded">ライブラリにあります</string>

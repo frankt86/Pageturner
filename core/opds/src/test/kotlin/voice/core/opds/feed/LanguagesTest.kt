@@ -79,7 +79,7 @@ class LanguagesTest {
   }
 
   @Test
-  fun `english keeps books in english and without a language and drops the others`() {
+  fun `english keeps books in english and drops the others and those without a language`() {
     val navigation =
       OpdsNavigation(title = "Shelf", url = "https://example.com/shelf", summary = null)
     val feed =
@@ -97,11 +97,15 @@ class LanguagesTest {
         search = null,
       )
 
-    val english = feed.inEnglish()
+    val english = feed.inEnglish(keepUntagged = false)
 
-    assertEquals(listOf("english", "unknown", "both"), english.publications.map { it.id })
+    assertEquals(listOf("english", "both"), english.publications.map { it.id })
     assertEquals(listOf(navigation), english.navigation)
     assertEquals(feed.nextUrl, english.nextUrl)
+    assertEquals(
+      listOf("english", "unknown", "both"),
+      feed.inEnglish(keepUntagged = true).publications.map { it.id },
+    )
   }
 
   @Test

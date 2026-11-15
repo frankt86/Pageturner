@@ -373,8 +373,6 @@
     <string name="opds.download_folder.new">Избери друг фолдер</string>
     <string name="opds.download_folder.none">Сè уште не е избран</string>
     <string name="opds.download_folder.title">Фолдер за преземања</string>
-    <string name="opds.english_only.summary">Скриј ги книгите на други јазици</string>
-    <string name="opds.english_only.title">Само книги на англиски</string>
     <string name="opds.entry.download">Преземи %s</string>
     <string name="opds.entry.download_audiobook">Преземи аудио книга</string>
     <string name="opds.entry.downloaded">Во вашата библиотека</string>

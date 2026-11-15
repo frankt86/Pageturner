@@ -31,11 +31,12 @@ catalog it added to the address above. A Wolne Lektury you added yourself, or a 
 
 ### Books in English
 
-**English books only**, in the list of catalogs, is on by default. It applies to every catalog, its pages and its search
-results:
+Every catalog shows books in English only, on its pages and in its search results:
 
 - A book in another language doesn't show. A book in English and other languages shows.
-- A book without a language shows, as many catalogs don't tell the language.
+- A book without a language doesn't show either, as Pageturner can't tell that it is in English. The exception is a
+  page that the catalog itself limits to English: the Gutenberg pages with `l.en`, the English Wikisource
+  (`/opds/en/`) and the Internet Archive search results. There, a book without a language shows.
 - Shelves, authors and other links stay.
 - When a whole page has no books in English, Pageturner loads the next pages, up to four.
 - The search of Project Gutenberg, the Internet Archive and Open Library asks the catalog for books in English only.
@@ -43,17 +44,15 @@ results:
 Pageturner reads the language from `dc:language` and `dcterms:language` in OPDS 1, and from `metadata.language` in
 OPDS 2. `en`, `eng`, `en-US`, `en-GB` and `English` all mean English.
 
-Turn **English books only** off to see the books in all languages, in LibriVox too.
-
 ### LibriVox
 
 LibriVox has no OPDS catalog, so Pageturner reads it through the LibriVox API. Its catalog opens with the newest
 audiobooks first, and more load as you scroll. The search finds books by the start of their title, like
 `Count of Monte`, and by the last name of the author, like `Austen`.
 
-Pageturner only shows the books that LibriVox finished, and only the ones in English while **English books only** is
-on. A book's page shows its description, author, readers, length and the cover from the Internet Archive.
-**Download audiobook** downloads the MP3 file of each section, in order, as one audiobook. Each section is a chapter.
+Pageturner only shows the books in English that LibriVox finished. A book's page shows its description, author, readers,
+length and the cover from the Internet Archive. **Download audiobook** downloads the MP3 file of each section, in order,
+as one audiobook. Each section is a chapter.
 
 You can't add LibriVox yourself or change its address. When you remove it, it doesn't come back.
 

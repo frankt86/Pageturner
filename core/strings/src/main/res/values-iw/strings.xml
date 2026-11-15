@@ -397,8 +397,6 @@
     <string name="opds.download_folder.new">בחירת תיקייה אחרת</string>
     <string name="opds.download_folder.none">עדיין לא נבחרה</string>
     <string name="opds.download_folder.title">תיקיית הורדות</string>
-    <string name="opds.english_only.summary">הסתרת ספרים בשפות אחרות</string>
-    <string name="opds.english_only.title">רק ספרים באנגלית</string>
     <string name="opds.entry.download">הורדת %s</string>
     <string name="opds.entry.download_audiobook">הורדת הקולספר</string>
     <string name="opds.entry.downloaded">בספרייה שלכם</string>

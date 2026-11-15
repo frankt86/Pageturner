@@ -373,8 +373,6 @@
     <string name="opds.download_folder.new">Valitse toinen kansio</string>
     <string name="opds.download_folder.none">Ei vielä valittu</string>
     <string name="opds.download_folder.title">Latauskansio</string>
-    <string name="opds.english_only.summary">Piilota muunkieliset kirjat</string>
-    <string name="opds.english_only.title">Vain englanninkieliset kirjat</string>
     <string name="opds.entry.download">Lataa %s</string>
     <string name="opds.entry.download_audiobook">Lataa äänikirja</string>
     <string name="opds.entry.downloaded">Kirjastossasi</string>
