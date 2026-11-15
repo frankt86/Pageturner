@@ -6,6 +6,6 @@
     <intent
       android:action="playCurrent"
       android:targetClass="voice.app.MainActivity"
-      android:targetPackage="${applicationId}" />
+      android:targetPackage="@string/shortcut_target_package" />
   </shortcut>
 </shortcuts>

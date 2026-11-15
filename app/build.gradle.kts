@@ -48,13 +48,20 @@ android {
     isCoreLibraryDesugaringEnabled = true
   }
 
+  // The stable GitHub release passes its own id, so it installs next to Voice and the test build.
+  val baseApplicationId =
+    providers.gradleProperty("voice.applicationId").orNull ?: "de.ph1b.audiobook"
+  val extraApplicationIdSuffix =
+    providers.gradleProperty("voice.applicationIdSuffix").orNull.orEmpty()
+
   defaultConfig {
-    // The stable GitHub release passes its own id, so it installs next to Voice and the test build.
-    applicationId = providers.gradleProperty("voice.applicationId").orNull ?: "de.ph1b.audiobook"
+    applicationId = baseApplicationId
     versionName = providers.gradleProperty("voice.versionName").orNull ?: "1.0.0"
     // F-Droid replaces the next line with sed, keep it on one line.
     versionCode = providers.gradleProperty("voice.versionCode").orNull?.toInt() ?: releaseCode.get()
-    providers.gradleProperty("voice.applicationIdSuffix").orNull?.let { applicationIdSuffix = it }
+    if (extraApplicationIdSuffix.isNotEmpty()) applicationIdSuffix = extraApplicationIdSuffix
+    // Shortcut intents need the package of the installed app.
+    resValue("string", "shortcut_target_package", baseApplicationId + extraApplicationIdSuffix)
   }
 
   val distributionFlavor = "distribution"
@@ -107,6 +114,11 @@ android {
       isMinifyEnabled = false
       // installs next to the store version, so trying it doesn't touch the library
       applicationIdSuffix = ".debug"
+      resValue(
+        "string",
+        "shortcut_target_package",
+        "$baseApplicationId$extraApplicationIdSuffix.debug",
+      )
     }
     all {
       if (appSigningConfig != null) {
@@ -144,33 +156,8 @@ android {
 
   buildFeatures {
     buildConfig = true
+    resValues = true
   }
-}
-
-// Shortcut intents need the literal package, which changes with the app id of each variant.
-abstract class GenerateShortcuts : DefaultTask() {
-  @get:Input abstract val applicationId: Property<String>
-
-  @get:InputFile
-  @get:PathSensitive(PathSensitivity.NONE)
-  abstract val template: RegularFileProperty
-
-  @get:OutputDirectory abstract val outputDir: DirectoryProperty
-
-  @TaskAction
-  fun generate() {
-    val xml = template.get().asFile.readText().replace("\${applicationId}", applicationId.get())
-    outputDir.get().asFile.resolve("xml").apply { mkdirs() }.resolve("shortcuts.xml").writeText(xml)
-  }
-}
-
-androidComponents.onVariants { variant ->
-  val generateShortcuts =
-    tasks.register<GenerateShortcuts>("generate${variant.name.replaceFirstChar(Char::uppercase)}Shortcuts") {
-      applicationId.set(variant.applicationId)
-      template.set(layout.projectDirectory.file("shortcuts.xml"))
-    }
-  variant.sources.res?.addGeneratedSourceDirectory(generateShortcuts, GenerateShortcuts::outputDir)
 }
 
 val validatePlayGoogleServices =
