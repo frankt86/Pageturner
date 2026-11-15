@@ -373,6 +373,8 @@
     <string name="opds.download_folder.new">Vali teine kaust</string>
     <string name="opds.download_folder.none">Veel valimata</string>
     <string name="opds.download_folder.title">Allalaadimiste kaust</string>
+    <string name="opds.english_only.summary">Peida teistes keeltes raamatud</string>
+    <string name="opds.english_only.title">Ainult ingliskeelsed raamatud</string>
     <string name="opds.entry.download">Laadi alla %s</string>
     <string name="opds.entry.download_audiobook">Laadi alla heliraamat</string>
     <string name="opds.entry.downloaded">Sinu raamatukogus</string>

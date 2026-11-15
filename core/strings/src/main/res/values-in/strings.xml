@@ -349,6 +349,8 @@
     <string name="opds.download_folder.new">Pilih folder lain</string>
     <string name="opds.download_folder.none">Belum dipilih</string>
     <string name="opds.download_folder.title">Folder unduhan</string>
+    <string name="opds.english_only.summary">Sembunyikan buku dalam bahasa lain</string>
+    <string name="opds.english_only.title">Hanya buku bahasa Inggris</string>
     <string name="opds.entry.download">Unduh %s</string>
     <string name="opds.entry.download_audiobook">Unduh buku audio</string>
     <string name="opds.entry.downloaded">Di perpustakaan Anda</string>

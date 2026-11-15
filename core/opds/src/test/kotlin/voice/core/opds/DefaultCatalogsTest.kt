@@ -11,7 +11,7 @@ class DefaultCatalogsTest {
     OpdsCatalog(
       id = "default-gutenberg",
       name = "Project Gutenberg",
-      url = "https://www.gutenberg.org/ebooks.opds/",
+      url = GUTENBERG_URL,
     )
   private val library =
     OpdsCatalog(id = "default-library", name = "Library", url = "https://library.example.org/opds")
@@ -24,7 +24,7 @@ class DefaultCatalogsTest {
     defaults.add(listOf(gutenberg, library))
 
     assertEquals(listOf(gutenberg, library), catalogStore.data.first())
-    assertEquals(listOf(gutenberg.id, library.id), seededStore.data.first())
+    assertEquals(listOf(ENGLISH_MIGRATION, gutenberg.id, library.id), seededStore.data.first())
   }
 
   @Test
@@ -55,7 +55,7 @@ class DefaultCatalogsTest {
     defaults.add(listOf(gutenberg, library))
 
     assertEquals(listOf(own, library), catalogStore.data.first())
-    assertEquals(listOf(gutenberg.id, library.id), seededStore.data.first())
+    assertEquals(listOf(ENGLISH_MIGRATION, gutenberg.id, library.id), seededStore.data.first())
   }
 
   @Test
@@ -65,6 +65,50 @@ class DefaultCatalogsTest {
     defaults.add(listOf(gutenberg, library))
 
     assertEquals(listOf(gutenberg, library), catalogStore.data.first())
+  }
+
+  @Test
+  fun `the seeded Wolne Lektury is removed once`() = runTest {
+    val seededWolne =
+      OpdsCatalog(
+        id = WOLNE_LEKTURY_ID,
+        name = "Wolne Lektury",
+        url = "https://wolnelektury.pl/opds/",
+      )
+    val ownWolne =
+      OpdsCatalog(id = "1", name = "Wolne Lektury", url = "https://wolnelektury.pl/opds/")
+    catalogStore.updateData { listOf(seededWolne, ownWolne) }
+    seededStore.updateData { listOf(WOLNE_LEKTURY_ID) }
+
+    defaults.add(emptyList())
+
+    assertEquals(listOf(ownWolne), catalogStore.data.first())
+
+    catalogStore.updateData { listOf(seededWolne) }
+    defaults.add(emptyList())
+
+    assertEquals(listOf(seededWolne), catalogStore.data.first())
+  }
+
+  @Test
+  fun `the seeded Gutenberg moves to the books in English`() = runTest {
+    catalogStore.updateData { listOf(gutenberg.copy(url = GUTENBERG_OLD_URL)) }
+    seededStore.updateData { listOf(gutenberg.id) }
+
+    defaults.add(listOf(gutenberg))
+
+    assertEquals(listOf(gutenberg), catalogStore.data.first())
+  }
+
+  @Test
+  fun `a Gutenberg address the user changed stays`() = runTest {
+    val changed = gutenberg.copy(url = "https://www.gutenberg.org/ebooks/search.opds/?query=l.de")
+    catalogStore.updateData { listOf(changed) }
+    seededStore.updateData { listOf(gutenberg.id) }
+
+    defaults.add(listOf(gutenberg))
+
+    assertEquals(listOf(changed), catalogStore.data.first())
   }
 
   @Test

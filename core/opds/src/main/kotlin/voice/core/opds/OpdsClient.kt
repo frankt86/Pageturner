@@ -4,6 +4,7 @@ import dev.zacsweers.metro.Inject
 import java.io.IOException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Request
@@ -13,6 +14,7 @@ import voice.core.opds.feed.OpdsFeed
 import voice.core.opds.feed.OpdsParseException
 import voice.core.opds.feed.OpdsSearch
 import voice.core.opds.feed.expandSearchTemplate
+import voice.core.opds.feed.inEnglish
 import voice.core.opds.feed.parseFeed
 import voice.core.opds.feed.parseOpenSearchTemplate
 import voice.core.opds.librivox.LibriVoxClient
@@ -27,15 +29,42 @@ public sealed interface FeedResult {
   public data object NotACatalog : FeedResult
 }
 
+// a page of books in other languages only would look like the end of the catalog
+private const val MAX_SKIPPED_PAGES = 4
+
 @Inject
 public class OpdsClient(
   private val http: ServerHttpClient,
   private val libriVox: LibriVoxClient,
+  private val englishOnly: EnglishOnlyStore,
 ) {
 
   public suspend fun feed(
     catalog: OpdsCatalog,
     url: String = catalog.feedUrl,
+  ): FeedResult {
+    val result = load(catalog, url)
+    if (result !is FeedResult.Success || !englishOnly.data.first()) return result
+    var feed = result.feed.inEnglish()
+    var skipped = 0
+    while (
+      feed.publications.isEmpty() && feed.navigation.isEmpty() && skipped < MAX_SKIPPED_PAGES
+    ) {
+      val next = feed.nextUrl ?: break
+      val page = load(catalog, next) as? FeedResult.Success ?: break
+      feed =
+        feed.copy(
+          publications = page.feed.inEnglish().publications,
+          nextUrl = page.feed.nextUrl?.takeIf { it != next },
+        )
+      skipped++
+    }
+    return FeedResult.Success(feed)
+  }
+
+  private suspend fun load(
+    catalog: OpdsCatalog,
+    url: String,
   ): FeedResult {
     if (catalog.type == CatalogType.LibriVox) return libriVox.feed(url)
     return withContext(Dispatchers.IO) {
@@ -84,7 +113,9 @@ public class OpdsClient(
         is OpdsSearch.Template -> search.template
         is OpdsSearch.Description -> openSearchTemplate(catalog, search.url)
       }
-    return template?.let { expandSearchTemplate(it, query) }
+    template ?: return null
+    if (!englishOnly.data.first()) return expandSearchTemplate(template, query)
+    return expandSearchTemplate(template, englishSearchQuery(template, query), language = "en")
   }
 
   private suspend fun openSearchTemplate(
@@ -105,6 +136,22 @@ public class OpdsClient(
         null
       }
     }
+}
+
+/**
+ * The search terms that find books in English only, for the catalogs that take a language in the
+ * terms.
+ */
+internal fun englishSearchQuery(
+  template: String,
+  query: String,
+): String {
+  val host = template.substringAfter("://").substringBefore('/').substringBefore('{')
+  return when (host.removePrefix("www.").removePrefix("m.")) {
+    "gutenberg.org" -> "l.en ${query.trim()}"
+    "archive.org" -> "(${query.trim()}) AND language:(eng OR English)"
+    else -> query
+  }
 }
 
 internal fun request(

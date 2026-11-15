@@ -100,6 +100,14 @@ private fun JsonObject.toPublication(base: String): OpdsPublication? {
     thumbnailUrl = images.filter { it.width != null }.minByOrNull { it.width!! }?.href,
     acquisitions = acquisitions.map { it.toAcquisition() },
     isAudiobook = metadata.isAudiobook(),
+    languages =
+      languageCodes(
+        when (val language = metadata["language"]) {
+          is JsonPrimitive -> listOfNotNull(language.contentOrNull)
+          is JsonArray -> language.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
+          else -> emptyList()
+        },
+      ),
   )
 }
 

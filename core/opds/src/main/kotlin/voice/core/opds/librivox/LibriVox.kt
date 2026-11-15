@@ -26,13 +26,13 @@ import voice.core.opds.feed.OpdsFeed
 import voice.core.opds.feed.OpdsPublication
 import voice.core.opds.feed.OpdsSearch
 import voice.core.opds.feed.htmlToText
+import voice.core.opds.feed.languageCodes
 
 internal const val LIBRIVOX_URL = "https://librivox.org/"
 internal const val LIBRIVOX_PAGE_SIZE = 50
 
 private const val API = "https://librivox.org/api/feed/audiobooks"
 private const val SEARCH = "search"
-private const val LANGUAGE = "English"
 
 private fun apiUrl(): HttpUrl.Builder =
   API.toHttpUrl()
@@ -188,11 +188,10 @@ internal data class LibriVoxReader(
 )
 
 /**
- * The book as a publication, with one MP3 per section. Null for a book that isn't in English or
- * that has a section without its recording yet.
+ * The book as a publication, with one MP3 per section. Null for a book that has a section without
+ * its recording yet.
  */
 internal fun LibriVoxBook.toPublication(): OpdsPublication? {
-  if (language != LANGUAGE) return null
   val title = title?.trim()?.takeIf { it.isNotEmpty() } ?: return null
   if (sections.isEmpty() || sections.any { it.listenUrl.isNullOrBlank() }) return null
   val ordered = sections.sortedBy { it.number?.trim()?.toIntOrNull() ?: Int.MAX_VALUE }
@@ -229,6 +228,7 @@ internal fun LibriVoxBook.toPublication(): OpdsPublication? {
         .flatMap { section -> section.readers.mapNotNull { it.name?.trim() } }
         .filter { it.isNotEmpty() }
         .distinct(),
+    languages = languageCodes(listOfNotNull(language)),
   )
 }
 

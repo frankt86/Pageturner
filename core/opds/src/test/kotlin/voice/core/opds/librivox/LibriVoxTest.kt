@@ -8,6 +8,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import voice.core.opds.CatalogType
 import voice.core.opds.OpdsCatalog
 import voice.core.opds.feed.AudiobookPackaging
+import voice.core.opds.feed.inEnglish
 import voice.core.opds.feed.resource
 
 class LibriVoxTest {
@@ -21,20 +22,22 @@ class LibriVoxTest {
   }
 
   @Test
-  fun `only finished books in English are listed`() {
+  fun `only finished books are listed`() {
     assertEquals(
-      listOf("Absolute Evil", "Ophelia, the Rose of Elsinore"),
+      listOf("Absolute Evil", "Kabouters in het Bosch", "Ophelia, the Rose of Elsinore"),
       feed.publications.map { it.title },
     )
   }
 
   @Test
-  fun `a book in another language is left out`() {
+  fun `a book in another language is left out of the books in English`() {
     val dutch = books.single { it.id == "22889" }
-    assertEquals("Dutch", dutch.language)
-    assertNull(dutch.toPublication())
-    assertNull(dutch.copy(language = "english").toPublication())
-    assertEquals("22889", dutch.copy(language = "English").toPublication()?.id)
+    assertEquals(listOf("dutch"), dutch.toPublication()?.languages)
+    assertEquals(
+      listOf("Absolute Evil", "Ophelia, the Rose of Elsinore"),
+      feed.inEnglish().publications.map { it.title },
+    )
+    assertEquals(listOf("en"), dutch.copy(language = "English").toPublication()?.languages)
   }
 
   @Test

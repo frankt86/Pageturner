@@ -373,6 +373,8 @@
     <string name="opds.download_folder.new">Vælg en anden mappe</string>
     <string name="opds.download_folder.none">Ikke valgt endnu</string>
     <string name="opds.download_folder.title">Downloadmappe</string>
+    <string name="opds.english_only.summary">Skjul bøger på andre sprog</string>
+    <string name="opds.english_only.title">Kun engelske bøger</string>
     <string name="opds.entry.download">Download %s</string>
     <string name="opds.entry.download_audiobook">Download lydbog</string>
     <string name="opds.entry.downloaded">I dit bibliotek</string>

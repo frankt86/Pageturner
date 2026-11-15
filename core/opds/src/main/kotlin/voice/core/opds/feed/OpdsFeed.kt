@@ -31,6 +31,8 @@ public data class OpdsPublication(
   /** How long the audiobook plays, when the catalog tells it. */
   val duration: Duration? = null,
   val narrators: List<String> = emptyList(),
+  /** The languages of the book as codes like `en`, empty when the feed doesn't tell them. */
+  val languages: List<String> = emptyList(),
 ) {
 
   /**

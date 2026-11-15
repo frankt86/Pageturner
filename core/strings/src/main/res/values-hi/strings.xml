@@ -373,6 +373,8 @@
     <string name="opds.download_folder.new">दूसरा फ़ोल्डर चुनें</string>
     <string name="opds.download_folder.none">अभी तक नहीं चुना गया</string>
     <string name="opds.download_folder.title">डाउनलोड फ़ोल्डर</string>
+    <string name="opds.english_only.summary">दूसरी भाषाओं की पुस्तकें छिपाएँ</string>
+    <string name="opds.english_only.title">सिर्फ़ अंग्रेज़ी पुस्तकें</string>
     <string name="opds.entry.download">%s डाउनलोड करें</string>
     <string name="opds.entry.download_audiobook">ऑडियोबुक डाउनलोड करें</string>
     <string name="opds.entry.downloaded">आपकी लाइब्रेरी में</string>
