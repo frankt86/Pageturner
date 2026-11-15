@@ -29,14 +29,14 @@ jobs:
             -Pandroid.injected.signing.store.password=android \
             -Pandroid.injected.signing.key.alias=androiddebugkey \
             -Pandroid.injected.signing.key.password=android
-      # Obtainium sees a new version only under a new tag, so each test build gets its own prerelease.
+      # Obtainium sees a new version only under a new tag, so each test build gets its own release, marked latest.
       - name: Publish a numbered test release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           tag="test-${{ github.run_number }}"
           cp app/build/outputs/apk/free/release/app-free-release.apk "pageturner-$tag.apk"
-          gh release create "$tag" "pageturner-$tag.apk" --prerelease --latest=false --target "$GITHUB_SHA" \
+          gh release create "$tag" "pageturner-$tag.apk" --latest --target "$GITHUB_SHA" \
             --title "Test build ${{ github.run_number }}" \
             --notes "Test build of main (${GITHUB_SHA::7}). A separate app from the stable release."
           # the old unnumbered debug release has no version, so Obtainium falls back to it

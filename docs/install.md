@@ -33,18 +33,8 @@ book stay.
 3. In **App Source URL**, enter `https://github.com/frankt86/Pageturner`.
 4. Tap **Add**, then **Install**. If Android asks, let Obtainium install unknown apps.
 
-Each release has two APK files, `pageturner-<version>.apk` and `pageturner.apk`. They are the same file. If Obtainium
-asks which one to install, select either one.
-
-Keep **Include prereleases** off for the stable app. The test builds are a separate app, with their own app id.
-
-To get the test app with Obtainium, add the same URL a second time and set:
-
-- **Include prereleases**: on.
-- **Filter release titles by regular expression**: `Test build`.
-
-Each test build is a prerelease named `Test build <number>`, so Obtainium sees each one as an update. The five newest
-test builds stay on the releases page.
+Obtainium installs the newest release, a numbered test build named `Test build <number>`, and offers each new one as
+an update. It needs no other settings. The five newest test builds stay on the releases page.
 
 ## The test app
 
