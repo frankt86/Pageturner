@@ -6,6 +6,23 @@ download its EPUB, PDF and Kindle (MOBI and AZW3) books and its audiobooks into 
 
 There is no Pageturner account and no Pageturner server in between. Pageturner only talks to the catalogs you add.
 
+## Free catalogs
+
+Pageturner comes with these free catalogs of public domain books. They need no account.
+
+| Catalog | Books | Address |
+|---------|-------|---------|
+| Project Gutenberg | Over 70,000 classics, mostly in English | `https://www.gutenberg.org/ebooks.opds/` |
+| Open Library | Free books from the Internet Archive | `https://openlibrary.org/opds/` |
+| Gallica | Books of the French national library, in French | `https://gallica.bnf.fr/opds` |
+| Wolne Lektury | School reading and classics, in Polish | `https://wolnelektury.pl/opds/` |
+| textos.info | Classics in Spanish | `https://textos.info/opds` |
+
+Pageturner adds each of them once. When you already have one of them, it isn't added again. Remove the ones you don't
+need: they don't come back.
+
+Open Library also lists books you can only borrow with an account. Pageturner only shows the books you can download.
+
 ## Adding a catalog
 
 1. Open **Settings » Library » Ebook catalogs**. You also find it on the screen where you add books, under
