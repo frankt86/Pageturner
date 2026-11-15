@@ -44,8 +44,12 @@ jobs:
       - name: Add the APKs
         env:
           RELEASES: https://github.com/${{ github.repository }}/releases
+          GH_TOKEN: ${{ github.token }}
         run: |
-          curl --fail --location --output site/pageturner-debug.apk "$RELEASES/download/debug/app-free-debug.apk"
+          # the newest numbered test build
+          tag=$(gh release list --repo "${{ github.repository }}" --limit 100 --json tagName,createdAt \
+            --jq '[.[] | select(.tagName | startswith("test-"))] | sort_by(.createdAt) | last | .tagName')
+          curl --fail --location --output site/pageturner-debug.apk "$RELEASES/download/$tag/pageturner-$tag.apk"
           # the debug build stands in until there is a stable release
           if ! curl --fail --location --output site/pageturner.apk "$RELEASES/latest/download/pageturner.apk"; then
             echo "No stable release yet, so pageturner.apk is the debug build."
