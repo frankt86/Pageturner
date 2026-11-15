@@ -29,26 +29,13 @@ jobs:
             -Pandroid.injected.signing.store.password=android \
             -Pandroid.injected.signing.key.alias=androiddebugkey \
             -Pandroid.injected.signing.key.password=android
-      - name: Publish to the debug release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          cp app/build/outputs/apk/free/release/app-free-release.apk app-free-debug.apk
-          notes="Latest test build of main (${GITHUB_SHA::7}). Installs next to the stable app and Voice."
-          # replaces the file in place, so the download link never goes missing while a new build is published
-          if gh release view debug > /dev/null 2>&1; then
-            gh release upload debug app-free-debug.apk --clobber
-            gh release edit debug --notes "$notes"
-          else
-            gh release create debug app-free-debug.apk --prerelease --target "$GITHUB_SHA" --title "Debug build" --notes "$notes"
-          fi
-      # Obtainium sees a new version only under a new tag, so each test build also gets its own prerelease.
+      # Obtainium sees a new version only under a new tag, so each test build gets its own prerelease.
       - name: Publish a numbered test release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           tag="test-${{ github.run_number }}"
-          cp app-free-debug.apk "pageturner-$tag.apk"
+          cp app/build/outputs/apk/free/release/app-free-release.apk "pageturner-$tag.apk"
           gh release create "$tag" "pageturner-$tag.apk" --prerelease --latest=false --target "$GITHUB_SHA" \
             --title "Test build ${{ github.run_number }}" \
             --notes "Test build of main (${GITHUB_SHA::7}). A separate app from the stable release."

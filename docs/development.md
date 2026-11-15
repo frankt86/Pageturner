@@ -85,7 +85,7 @@ Compose rules come from Slack's [compose-lints](https://slackhq.github.io/compos
 ## Releasing
 
 Every push to `main` builds a test APK with the debug app id (`.debug` suffix) and the debug key. CI publishes it to the
-[debug release](https://github.com/frankt86/Pageturner/releases/tag/debug) and, as `pageturner-debug.apk`, next to the
+numbered `test-<number>` prerelease and, as `pageturner-debug.apk`, next to the
 website. Its app id is `de.ph1b.audiobook.debug`, so it installs next to the stable app and next to Voice.
 
 Stable releases are signed with the release key and published on

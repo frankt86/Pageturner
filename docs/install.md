@@ -50,7 +50,7 @@ test builds stay on the releases page.
 
 Every change to the code makes a test build:
 [pageturner-debug.apk](https://frankt86.github.io/Pageturner/pageturner-debug.apk). It is also on the
-[debug release page](https://github.com/frankt86/Pageturner/releases/tag/debug). It can have features before a stable
+[releases page](https://github.com/frankt86/Pageturner/releases), as the newest "Test build". It can have features before a stable
 release, and it can have bugs.
 
 ## Side by side
