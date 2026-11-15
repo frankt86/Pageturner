@@ -71,7 +71,8 @@ library. See [Install](docs/install.md) for the steps.
 ### Catalogs and servers
 
 - Browse and search OPDS catalogs like Calibre-Web, Komga and Kavita, and download EPUB, PDF, AZW3 and MOBI books and
-  audiobooks into a download folder of your library. See [Ebook catalogs](docs/opds.md).
+  audiobooks into a download folder of your library. Project Gutenberg, Open Library and other free catalogs
+  come with the app. See [Ebook catalogs](docs/opds.md).
 - Your reading progress syncs both ways with Komga.
 - Stream and download audiobooks from [Audiobookshelf](docs/audiobookshelf.md), with your position and bookmarks in sync.
 
