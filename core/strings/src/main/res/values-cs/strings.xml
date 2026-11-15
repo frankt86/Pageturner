@@ -421,6 +421,8 @@
     <string name="opds.download_folder.new">Vybrat jinou složku</string>
     <string name="opds.download_folder.none">Zatím nevybrána</string>
     <string name="opds.download_folder.title">Složka pro stahování</string>
+    <string name="opds.english_only.summary">Skrýt knihy v jiných jazycích</string>
+    <string name="opds.english_only.title">Jen knihy v angličtině</string>
     <string name="opds.entry.download">Stáhnout %s</string>
     <string name="opds.entry.download_audiobook">Stáhnout audioknihu</string>
     <string name="opds.entry.downloaded">Ve vaší knihovně</string>

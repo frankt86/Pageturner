@@ -130,6 +130,7 @@ icon swap_horiz
 icon sync
 icon title
 icon touch_app
+icon translate
 icon undo mirrored
 icon vibration
 icon view_list mirrored

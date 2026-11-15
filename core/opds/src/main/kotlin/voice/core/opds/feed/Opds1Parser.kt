@@ -57,6 +57,7 @@ internal fun parseOpds1(
               OpdsAcquisition(url = it.href!!, type = it.type, title = it.title, length = it.length)
             },
           isAudiobook = entry.isAudiobook(),
+          languages = languageCodes(entry.children("language").map { it.text() }),
         )
     } else {
       val target =

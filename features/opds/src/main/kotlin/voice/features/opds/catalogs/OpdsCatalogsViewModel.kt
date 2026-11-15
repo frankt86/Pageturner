@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.opds.CatalogType
+import voice.core.opds.EnglishOnlyStore
 import voice.core.opds.FeedResult
 import voice.core.opds.OpdsCatalog
 import voice.core.opds.OpdsCatalogs
@@ -26,6 +27,7 @@ import voice.navigation.Navigator
 class OpdsCatalogsViewModel(
   private val catalogs: OpdsCatalogs,
   private val navigator: Navigator,
+  private val englishOnlyStore: EnglishOnlyStore,
   downloadFolders: OpdsDownloadFolders,
   dispatcherProvider: DispatcherProvider,
 ) {
@@ -48,6 +50,16 @@ class OpdsCatalogsViewModel(
         type = catalog.type,
       )
     }
+  }
+
+  @Composable
+  internal fun englishOnly(): Boolean {
+    val englishOnly = remember { englishOnlyStore.data }
+    return englishOnly.collectAsState(initial = true).value
+  }
+
+  internal fun onEnglishOnlyChange(englishOnly: Boolean) {
+    scope.launch { englishOnlyStore.updateData { englishOnly } }
   }
 
   /** The name of the folder downloads go to, or null while there's none. */

@@ -12,7 +12,7 @@ Pageturner comes with these free English catalogs. They need no account.
 
 | Catalog | Books | Address |
 |---------|-------|---------|
-| Project Gutenberg | Over 70,000 classics, mostly in English | `https://www.gutenberg.org/ebooks.opds/` |
+| Project Gutenberg | The most downloaded classics in English | `https://www.gutenberg.org/ebooks/search.opds/?query=l.en&sort_order=downloads` |
 | Internet Archive | Over 21,000 LibriVox audiobooks in MP3, and public domain ebooks | `https://archive.org/services/opds` |
 | Open Library | Free books from the Internet Archive | `https://openlibrary.org/opds/` |
 | Unglue.it | Free books with open licenses, like Creative Commons | `https://unglue.it/api/opds/` |
@@ -26,15 +26,34 @@ need: they don't come back.
 
 Open Library also lists books you can only borrow with an account. Pageturner only shows the books you can download.
 
+On an update, Pageturner removes the Polish catalog Wolne Lektury that it added itself, once, and moves the Gutenberg
+catalog it added to the address above. A Wolne Lektury you added yourself, or a Gutenberg address you changed, stays.
+
+### Books in English
+
+**English books only**, in the list of catalogs, is on by default. It applies to every catalog, its pages and its search
+results:
+
+- A book in another language doesn't show. A book in English and other languages shows.
+- A book without a language shows, as many catalogs don't tell the language.
+- Shelves, authors and other links stay.
+- When a whole page has no books in English, Pageturner loads the next pages, up to four.
+- The search of Project Gutenberg, the Internet Archive and Open Library asks the catalog for books in English only.
+
+Pageturner reads the language from `dc:language` and `dcterms:language` in OPDS 1, and from `metadata.language` in
+OPDS 2. `en`, `eng`, `en-US`, `en-GB` and `English` all mean English.
+
+Turn **English books only** off to see the books in all languages, in LibriVox too.
+
 ### LibriVox
 
 LibriVox has no OPDS catalog, so Pageturner reads it through the LibriVox API. Its catalog opens with the newest
 audiobooks first, and more load as you scroll. The search finds books by the start of their title, like
 `Count of Monte`, and by the last name of the author, like `Austen`.
 
-Pageturner only shows the books in English that LibriVox finished. A book's page shows its description, author, readers,
-length and the cover from the Internet Archive. **Download audiobook** downloads the MP3 file of each section, in order,
-as one audiobook. Each section is a chapter.
+Pageturner only shows the books that LibriVox finished, and only the ones in English while **English books only** is
+on. A book's page shows its description, author, readers, length and the cover from the Internet Archive.
+**Download audiobook** downloads the MP3 file of each section, in order, as one audiobook. Each section is a chapter.
 
 You can't add LibriVox yourself or change its address. When you remove it, it doesn't come back.
 

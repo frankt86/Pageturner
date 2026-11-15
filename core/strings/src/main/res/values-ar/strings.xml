@@ -469,6 +469,8 @@
     <string name="opds.download_folder.new">اختيار مجلد آخر</string>
     <string name="opds.download_folder.none">لم يتم الاختيار بعد</string>
     <string name="opds.download_folder.title">مجلد التنزيلات</string>
+    <string name="opds.english_only.summary">إخفاء الكتب بلغات أخرى</string>
+    <string name="opds.english_only.title">الكتب الإنجليزية فقط</string>
     <string name="opds.entry.download">تنزيل %s</string>
     <string name="opds.entry.download_audiobook">تنزيل الكتاب الصوتي</string>
     <string name="opds.entry.downloaded">في مكتبتك</string>

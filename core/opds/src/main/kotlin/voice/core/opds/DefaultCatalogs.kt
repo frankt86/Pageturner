@@ -18,12 +18,23 @@ import voice.core.datastore.VoiceDataStoreFactory
 import voice.core.initializer.AppInitializer
 import voice.core.opds.librivox.LIBRIVOX_URL
 
+private const val GUTENBERG_ID = "default-gutenberg"
+internal const val GUTENBERG_OLD_URL = "https://www.gutenberg.org/ebooks.opds/"
+
+// the most downloaded books in English, as the start page of Gutenberg mixes all languages
+internal const val GUTENBERG_URL =
+  "https://www.gutenberg.org/ebooks/search.opds/?query=l.en&sort_order=downloads"
+internal const val WOLNE_LEKTURY_ID = "default-wolne-lektury"
+
+// marks in the seeded ids that the catalogs of earlier versions were brought up to English
+internal const val ENGLISH_MIGRATION = "migration-english-catalogs"
+
 internal val defaultCatalogs: List<OpdsCatalog> =
   listOf(
     OpdsCatalog(
-      id = "default-gutenberg",
+      id = GUTENBERG_ID,
       name = "Project Gutenberg",
-      url = "https://www.gutenberg.org/ebooks.opds/",
+      url = GUTENBERG_URL,
     ),
     OpdsCatalog(
       id = "default-internet-archive",
@@ -89,6 +100,7 @@ public class DefaultCatalogs(
 ) {
 
   internal suspend fun add(defaults: List<OpdsCatalog> = defaultCatalogs) {
+    migrateToEnglish()
     val seeded = seededStore.data.first().toSet()
     val missing = defaults.filter { it.id !in seeded }
     if (missing.isEmpty()) return
@@ -97,6 +109,20 @@ public class DefaultCatalogs(
       catalogs + missing.filter { it.site() !in sites }
     }
     seededStore.updateData { it + missing.map(OpdsCatalog::id) }
+  }
+
+  // earlier versions added the Polish Wolne Lektury and the Gutenberg start page in all languages
+  private suspend fun migrateToEnglish() {
+    if (ENGLISH_MIGRATION in seededStore.data.first()) return
+    catalogStore.updateData { catalogs ->
+      catalogs
+        .filterNot { it.id == WOLNE_LEKTURY_ID }
+        .map {
+          if (it.id == GUTENBERG_ID && it.url == GUTENBERG_OLD_URL) it.copy(url = GUTENBERG_URL)
+          else it
+        }
+    }
+    seededStore.updateData { it + ENGLISH_MIGRATION }
   }
 }
 

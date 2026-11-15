@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -28,6 +29,7 @@ import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -40,6 +42,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -100,6 +103,8 @@ private fun OpdsCatalogsScreen() {
     onEditorDismiss = viewModel::onEditorDismiss,
     downloadFolder = viewModel.downloadFolder(),
     onDownloadFolderClick = viewModel::onDownloadFolderClick,
+    englishOnly = viewModel.englishOnly(),
+    onEnglishOnlyChange = viewModel::onEnglishOnlyChange,
     downloadFolderSheet = viewModel.downloadFolderSheet(),
     onDownloadFolderChoose = viewModel::onDownloadFolderChoose,
     onDownloadFolderPick = viewModel::onDownloadFolderPick,
@@ -121,6 +126,8 @@ private fun OpdsCatalogsScreen(
   onEditorDismiss: () -> Unit,
   downloadFolder: String?,
   onDownloadFolderClick: () -> Unit,
+  englishOnly: Boolean,
+  onEnglishOnlyChange: (Boolean) -> Unit,
   downloadFolderSheet: DownloadFolderSheetState?,
   onDownloadFolderChoose: (Uri) -> Unit,
   onDownloadFolderPick: (Uri) -> Unit,
@@ -174,9 +181,12 @@ private fun OpdsCatalogsScreen(
             verticalArrangement = Arrangement.spacedBy(2.dp),
           ) {
             item(key = "downloadFolder") {
-              DownloadFolderRow(
-                name = downloadFolder,
-                onClick = onDownloadFolderClick,
+              DownloadFolderRow(name = downloadFolder, onClick = onDownloadFolderClick)
+            }
+            item(key = "englishOnly") {
+              EnglishOnlyRow(
+                checked = englishOnly,
+                onCheckedChange = onEnglishOnlyChange,
                 modifier = Modifier.padding(bottom = 14.dp),
               )
             }
@@ -220,7 +230,7 @@ private fun DownloadFolderRow(
   modifier: Modifier = Modifier,
 ) {
   val colors = MaterialTheme.colorScheme
-  val shape = segmentedShape(0, 1)
+  val shape = segmentedShape(0, 2)
   val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
   Row(
     modifier =
@@ -262,6 +272,48 @@ private fun DownloadFolderRow(
       contentDescription = null,
       tint = colors.onSurfaceVariant,
     )
+  }
+}
+
+@Composable
+private fun EnglishOnlyRow(
+  checked: Boolean,
+  onCheckedChange: (Boolean) -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  val colors = MaterialTheme.colorScheme
+  val shape = segmentedShape(1, 2)
+  Row(
+    modifier =
+      modifier
+        .fillMaxWidth()
+        .clip(shape)
+        .background(colors.surfaceContainer, shape)
+        .toggleable(value = checked, role = Role.Switch, onValueChange = onCheckedChange)
+        .heightIn(min = 72.dp)
+        .padding(horizontal = 16.dp, vertical = 12.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    ShapedIcon(
+      icon = UiR.drawable.ic_translate,
+      shape = MaterialShapes.Clover4Leaf,
+      containerColor = colors.tertiaryContainer,
+      contentColor = colors.onTertiaryContainer,
+    )
+    Spacer(Modifier.width(16.dp))
+    Column(Modifier.weight(1F)) {
+      Text(
+        text = stringResource(StringsR.string.opds_english_only_title),
+        style = MaterialTheme.typography.titleMedium,
+      )
+      Text(
+        text = stringResource(StringsR.string.opds_english_only_summary),
+        style = MaterialTheme.typography.bodyMedium,
+        color = colors.onSurfaceVariant,
+      )
+    }
+    Spacer(Modifier.width(8.dp))
+    Switch(checked = checked, onCheckedChange = null)
   }
 }
 
@@ -413,6 +465,8 @@ private fun OpdsCatalogsPreview() {
       onEditorDismiss = {},
       downloadFolder = "Books",
       onDownloadFolderClick = {},
+      englishOnly = true,
+      onEnglishOnlyChange = {},
       downloadFolderSheet = null,
       onDownloadFolderChoose = {},
       onDownloadFolderPick = {},
@@ -438,6 +492,8 @@ private fun OpdsCatalogsEmptyPreview() {
       onEditorDismiss = {},
       downloadFolder = "Books",
       onDownloadFolderClick = {},
+      englishOnly = true,
+      onEnglishOnlyChange = {},
       downloadFolderSheet = null,
       onDownloadFolderChoose = {},
       onDownloadFolderPick = {},

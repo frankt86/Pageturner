@@ -373,6 +373,8 @@
     <string name="opds.download_folder.new">Välj en annan mapp</string>
     <string name="opds.download_folder.none">Inte vald än</string>
     <string name="opds.download_folder.title">Mapp för nedladdningar</string>
+    <string name="opds.english_only.summary">Dölj böcker på andra språk</string>
+    <string name="opds.english_only.title">Bara engelska böcker</string>
     <string name="opds.entry.download">Ladda ned %s</string>
     <string name="opds.entry.download_audiobook">Ladda ned ljudbok</string>
     <string name="opds.entry.downloaded">I ditt bibliotek</string>

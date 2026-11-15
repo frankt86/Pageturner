@@ -373,6 +373,8 @@
     <string name="opds.download_folder.new">Επιλογή άλλου φακέλου</string>
     <string name="opds.download_folder.none">Δεν έχει επιλεγεί ακόμα</string>
     <string name="opds.download_folder.title">Φάκελος λήψεων</string>
+    <string name="opds.english_only.summary">Απόκρυψη βιβλίων σε άλλες γλώσσες</string>
+    <string name="opds.english_only.title">Μόνο αγγλικά βιβλία</string>
     <string name="opds.entry.download">Λήψη %s</string>
     <string name="opds.entry.download_audiobook">Λήψη ηχητικού βιβλίου</string>
     <string name="opds.entry.downloaded">Στη βιβλιοθήκη σας</string>

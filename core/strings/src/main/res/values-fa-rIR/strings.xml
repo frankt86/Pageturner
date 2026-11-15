@@ -373,6 +373,8 @@
     <string name="opds.download_folder.new">انتخاب پوشهٔ دیگر</string>
     <string name="opds.download_folder.none">هنوز انتخاب نشده</string>
     <string name="opds.download_folder.title">پوشهٔ دانلودها</string>
+    <string name="opds.english_only.summary">پنهان کردن کتاب‌ها به زبان‌های دیگر</string>
+    <string name="opds.english_only.title">فقط کتاب‌های انگلیسی</string>
     <string name="opds.entry.download">دانلود %s</string>
     <string name="opds.entry.download_audiobook">دانلود کتاب صوتی</string>
     <string name="opds.entry.downloaded">در کتابخانهٔ شما</string>

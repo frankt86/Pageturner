@@ -88,6 +88,8 @@ See [Ebooks and the Reader](docs/ebooks.md).
 - Free English catalogs come with the app: Project Gutenberg, Internet Archive (with over 21,000 LibriVox audiobooks),
   Open Library, Wikisource, Unglue.it, OAPEN Library and the Directory of Open Access Books. See
   [Ebook catalogs](docs/opds.md).
+- Catalogs show books in English only, and books without a language. A switch in the list of catalogs shows all
+  languages.
 - LibriVox comes with the app too: browse the newest English audiobooks, search them by title or author, and download
   them as MP3 audiobooks with a chapter for each section.
 - Your reading progress syncs both ways with Komga.

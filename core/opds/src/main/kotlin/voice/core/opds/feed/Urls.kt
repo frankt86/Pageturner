@@ -37,11 +37,13 @@ internal fun resolveTemplate(
 /**
  * Fills a search template: the OpenSearch kind of OPDS 1.2, like
  * `/search?q={searchTerms}&page={startPage?}`, and the URI templates of OPDS 2.0, like
- * `/search{?query,author}`. Placeholders other than the search terms stay empty.
+ * `/search{?query,author}`. A [language] goes into a language placeholder, like the one of Open
+ * Library. Other placeholders stay empty.
  */
 public fun expandSearchTemplate(
   template: String,
   query: String,
+  language: String? = null,
 ): String {
   val encoded = URLEncoder.encode(query.trim(), "UTF-8").replace("+", "%20")
   return templateVariable.replace(template) { match ->
@@ -49,15 +51,21 @@ public fun expandSearchTemplate(
     val operator = expression.firstOrNull()?.takeIf { it == '?' || it == '&' }
     if (operator != null) {
       val names = expression.drop(1).split(',').map { it.trim() }
-      val name = names.firstOrNull { it.isSearchTerms() } ?: return@replace ""
-      "$operator$name=$encoded"
+      val terms = names.firstOrNull { it.isSearchTerms() }?.let { "$it=$encoded" }
+      val lang = language?.let { names.firstOrNull { it.isLanguage() }?.let { "$it=$language" } }
+      val pairs = listOfNotNull(terms, lang)
+      if (pairs.isEmpty()) "" else operator + pairs.joinToString("&")
     } else if (expression.isSearchTerms()) {
       encoded
+    } else if (language != null && expression.isLanguage()) {
+      language
     } else {
       ""
     }
   }
 }
+
+private fun String.isLanguage(): Boolean = removeSuffix("?").substringAfterLast(':') == "language"
 
 private fun String.isSearchTerms(): Boolean {
   val name = removeSuffix("?").substringAfterLast(':')

@@ -373,6 +373,8 @@
     <string name="opds.download_folder.new">Başka klasör seç</string>
     <string name="opds.download_folder.none">Henüz seçilmedi</string>
     <string name="opds.download_folder.title">İndirme klasörü</string>
+    <string name="opds.english_only.summary">Diğer dillerdeki kitapları gizle</string>
+    <string name="opds.english_only.title">Yalnızca İngilizce kitaplar</string>
     <string name="opds.entry.download">%s indir</string>
     <string name="opds.entry.download_audiobook">Sesli kitabı indir</string>
     <string name="opds.entry.downloaded">Kitaplığınızda</string>
