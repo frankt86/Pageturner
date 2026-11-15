@@ -35,11 +35,6 @@ internal val defaultCatalogs: List<OpdsCatalog> =
       url = "https://openlibrary.org/opds/",
     ),
     OpdsCatalog(
-      id = "default-wolne-lektury",
-      name = "Wolne Lektury",
-      url = "https://wolnelektury.pl/opds/",
-    ),
-    OpdsCatalog(
       id = "default-unglue-it",
       name = "Unglue.it",
       url = "https://unglue.it/api/opds/",
@@ -50,9 +45,14 @@ internal val defaultCatalogs: List<OpdsCatalog> =
       url = "https://ws-export.wmcloud.org/opds/en/Ready_for_export.xml",
     ),
     OpdsCatalog(
-      id = "default-ebooks-libres-et-gratuits",
-      name = "Ebooks libres et gratuits",
-      url = "https://www.ebooksgratuits.com/opds/",
+      id = "default-oapen",
+      name = "OAPEN Library",
+      url = "https://library.oapen.org/opds",
+    ),
+    OpdsCatalog(
+      id = "default-doab",
+      name = "Directory of Open Access Books",
+      url = "https://directory.doabooks.org/opds",
     ),
   )
 
