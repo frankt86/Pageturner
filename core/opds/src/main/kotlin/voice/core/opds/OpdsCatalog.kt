@@ -9,6 +9,7 @@ import kotlinx.serialization.builtins.ListSerializer
 import okhttp3.Credentials
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import voice.core.datastore.VoiceDataStoreFactory
+import voice.core.opds.librivox.libriVoxLatestUrl
 
 @Serializable
 public enum class CatalogType {
@@ -18,6 +19,9 @@ public enum class CatalogType {
    * A Komga server. Its catalog lives at a fixed path, and its own api syncs the reading progress.
    */
   Komga,
+
+  /** LibriVox, which has its own api instead of an OPDS catalog. */
+  LibriVox,
 }
 
 @Serializable
@@ -41,6 +45,7 @@ public data class OpdsCatalog(
       when (type) {
         CatalogType.Opds -> url
         CatalogType.Komga -> url.trimEnd('/') + "/opds/v1.2/catalog"
+        CatalogType.LibriVox -> libriVoxLatestUrl()
       }
 
   /**

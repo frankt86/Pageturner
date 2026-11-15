@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import kotlin.time.Duration
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import voice.core.common.DispatcherProvider
@@ -290,6 +291,8 @@ private fun OpdsPublication.toViewState(
         else -> null
       },
     audiobookId = audiobookDownloaded,
+    duration = duration,
+    narrators = narrators.joinToString(", ").ifEmpty { null },
   )
 }
 
@@ -336,6 +339,9 @@ internal data class PublicationViewState(
   val readUri: Uri? = null,
   val audiobook: EntryDownload? = null,
   val audiobookId: BookId? = null,
+  /** How long the audiobook plays, when the catalog tells it. */
+  val duration: Duration? = null,
+  val narrators: String? = null,
 ) {
 
   val isDownloaded: Boolean

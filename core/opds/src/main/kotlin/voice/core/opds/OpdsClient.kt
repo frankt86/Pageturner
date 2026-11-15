@@ -15,6 +15,7 @@ import voice.core.opds.feed.OpdsSearch
 import voice.core.opds.feed.expandSearchTemplate
 import voice.core.opds.feed.parseFeed
 import voice.core.opds.feed.parseOpenSearchTemplate
+import voice.core.opds.librivox.LibriVoxClient
 
 public sealed interface FeedResult {
   public data class Success(val feed: OpdsFeed) : FeedResult
@@ -27,13 +28,17 @@ public sealed interface FeedResult {
 }
 
 @Inject
-public class OpdsClient(private val http: ServerHttpClient) {
+public class OpdsClient(
+  private val http: ServerHttpClient,
+  private val libriVox: LibriVoxClient,
+) {
 
   public suspend fun feed(
     catalog: OpdsCatalog,
     url: String = catalog.feedUrl,
-  ): FeedResult =
-    withContext(Dispatchers.IO) {
+  ): FeedResult {
+    if (catalog.type == CatalogType.LibriVox) return libriVox.feed(url)
+    return withContext(Dispatchers.IO) {
       try {
         http.client
           .newCall(request(catalog, url) ?: return@withContext FeedResult.NotACatalog)
@@ -66,6 +71,7 @@ public class OpdsClient(private val http: ServerHttpClient) {
         FeedResult.Unreachable
       }
     }
+  }
 
   /** The url of the results for [query], or null when the catalog didn't say how it searches. */
   public suspend fun searchUrl(

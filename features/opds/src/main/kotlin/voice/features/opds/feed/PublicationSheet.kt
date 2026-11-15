@@ -2,6 +2,9 @@
 
 package voice.features.opds.feed
 
+import android.icu.text.MeasureFormat
+import android.icu.util.Measure
+import android.icu.util.MeasureUnit
 import android.net.Uri
 import android.text.format.Formatter
 import androidx.compose.foundation.layout.Arrangement
@@ -32,9 +35,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,6 +49,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import java.text.NumberFormat
+import kotlin.time.Duration
 import voice.core.data.BookId
 import voice.core.strings.R as StringsR
 import voice.core.ui.R as UiR
@@ -96,6 +102,15 @@ internal fun PublicationSheet(
           textAlign = TextAlign.Center,
         )
       }
+      publication.narrators?.let { narrators ->
+        Spacer(Modifier.height(4.dp))
+        Text(
+          text = stringResource(StringsR.string.library_search_match_narrator, narrators),
+          style = MaterialTheme.typography.bodyMedium,
+          color = colors.onSurfaceVariant,
+          textAlign = TextAlign.Center,
+        )
+      }
       Spacer(Modifier.height(24.dp))
       Column(
         modifier = Modifier.fillMaxWidth(),
@@ -126,6 +141,7 @@ internal fun PublicationSheet(
                 listOfNotNull(
                     available.format,
                     available.size?.let { Formatter.formatShortFileSize(context, it) },
+                    publication.duration?.let { formatDuration(it) },
                   )
                   .joinToString(" · ")
               },
@@ -256,6 +272,24 @@ private fun DownloadAction(
       }
     }
   }
+}
+
+// "2 hr, 5 min" in the listener's language, without own translations
+@Composable
+private fun formatDuration(duration: Duration): String {
+  val locale = LocalConfiguration.current.locales[0]
+  val format =
+    remember(locale) { MeasureFormat.getInstance(locale, MeasureFormat.FormatWidth.SHORT) }
+  val hours = duration.inWholeHours
+  val minutes = duration.inWholeMinutes % 60
+  val measures =
+    when {
+      hours > 0 && minutes > 0 ->
+        listOf(Measure(hours, MeasureUnit.HOUR), Measure(minutes, MeasureUnit.MINUTE))
+      hours > 0 -> listOf(Measure(hours, MeasureUnit.HOUR))
+      else -> listOf(Measure(minutes.coerceAtLeast(1), MeasureUnit.MINUTE))
+    }
+  return format.formatMeasures(*measures.toTypedArray())
 }
 
 @Composable

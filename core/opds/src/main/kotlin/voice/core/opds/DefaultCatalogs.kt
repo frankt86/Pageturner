@@ -16,6 +16,7 @@ import kotlinx.serialization.builtins.serializer
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import voice.core.datastore.VoiceDataStoreFactory
 import voice.core.initializer.AppInitializer
+import voice.core.opds.librivox.LIBRIVOX_URL
 
 internal val defaultCatalogs: List<OpdsCatalog> =
   listOf(
@@ -53,6 +54,12 @@ internal val defaultCatalogs: List<OpdsCatalog> =
       id = "default-doab",
       name = "Directory of Open Access Books",
       url = "https://directory.doabooks.org/opds",
+    ),
+    OpdsCatalog(
+      id = "default-librivox",
+      name = "LibriVox",
+      url = LIBRIVOX_URL,
+      type = CatalogType.LibriVox,
     ),
   )
 

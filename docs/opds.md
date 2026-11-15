@@ -19,11 +19,24 @@ Pageturner comes with these free English catalogs. They need no account.
 | Wikisource | Proofread English texts from Wikisource | `https://ws-export.wmcloud.org/opds/en/Ready_for_export.xml` |
 | OAPEN Library | Open access academic books | `https://library.oapen.org/opds` |
 | Directory of Open Access Books | Open access academic books from many publishers | `https://directory.doabooks.org/opds` |
+| LibriVox | Public domain audiobooks read by volunteers, in English | `https://librivox.org/` |
 
 Pageturner adds each of them once. When you already have one of them, it isn't added again. Remove the ones you don't
 need: they don't come back.
 
 Open Library also lists books you can only borrow with an account. Pageturner only shows the books you can download.
+
+### LibriVox
+
+LibriVox has no OPDS catalog, so Pageturner reads it through the LibriVox API. Its catalog opens with the newest
+audiobooks first, and more load as you scroll. The search finds books by the start of their title, like
+`Count of Monte`, and by the last name of the author, like `Austen`.
+
+Pageturner only shows the books in English that LibriVox finished. A book's page shows its description, author, readers,
+length and the cover from the Internet Archive. **Download audiobook** downloads the MP3 file of each section, in order,
+as one audiobook. Each section is a chapter.
+
+You can't add LibriVox yourself or change its address. When you remove it, it doesn't come back.
 
 ## Adding a catalog
 

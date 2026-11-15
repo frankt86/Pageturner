@@ -97,42 +97,47 @@ internal fun CatalogEditorSheet(
         style = MaterialTheme.typography.headlineSmallEmphasized,
         textAlign = TextAlign.Center,
       )
-      TypeChoice(
-        selected = state.type,
-        enabled = !state.busy,
-        onSelect = { onChange(state.copy(type = it)) },
-      )
-      OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = state.url,
-        onValueChange = { onChange(state.copy(url = it)) },
-        enabled = !state.busy,
-        singleLine = true,
-        label = { Text(stringResource(StringsR.string.opds_catalog_url)) },
-        placeholder = {
-          Text(
-            stringResource(
-              when (state.type) {
-                CatalogType.Opds -> StringsR.string.opds_catalog_url_placeholder
-                CatalogType.Komga -> StringsR.string.opds_catalog_url_placeholder_komga
-              },
-            ),
-          )
-        },
-        supportingText =
-          if (state.type == CatalogType.Komga) {
-            { Text(stringResource(StringsR.string.opds_catalog_komga_hint)) }
-          } else {
-            null
+      // LibriVox has a fixed address and needs no sign in, so only its name changes
+      val libriVox = state.type == CatalogType.LibriVox
+      if (!libriVox) {
+        TypeChoice(
+          selected = state.type,
+          enabled = !state.busy,
+          onSelect = { onChange(state.copy(type = it)) },
+        )
+        OutlinedTextField(
+          modifier = Modifier.fillMaxWidth(),
+          value = state.url,
+          onValueChange = { onChange(state.copy(url = it)) },
+          enabled = !state.busy,
+          singleLine = true,
+          label = { Text(stringResource(StringsR.string.opds_catalog_url)) },
+          placeholder = {
+            Text(
+              stringResource(
+                if (state.type == CatalogType.Komga) {
+                  StringsR.string.opds_catalog_url_placeholder_komga
+                } else {
+                  StringsR.string.opds_catalog_url_placeholder
+                },
+              ),
+            )
           },
-        keyboardOptions =
-          KeyboardOptions(
-            keyboardType = KeyboardType.Uri,
-            imeAction = ImeAction.Next,
-            autoCorrectEnabled = false,
-            capitalization = KeyboardCapitalization.None,
-          ),
-      )
+          supportingText =
+            if (state.type == CatalogType.Komga) {
+              { Text(stringResource(StringsR.string.opds_catalog_komga_hint)) }
+            } else {
+              null
+            },
+          keyboardOptions =
+            KeyboardOptions(
+              keyboardType = KeyboardType.Uri,
+              imeAction = ImeAction.Next,
+              autoCorrectEnabled = false,
+              capitalization = KeyboardCapitalization.None,
+            ),
+        )
+      }
       OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = state.name,
@@ -146,28 +151,30 @@ internal fun CatalogEditorSheet(
             capitalization = KeyboardCapitalization.Words,
           ),
       )
-      OutlinedTextField(
-        modifier = Modifier.fillMaxWidth().semantics { contentType = ContentType.Username },
-        value = state.username,
-        onValueChange = { onChange(state.copy(username = it)) },
-        enabled = !state.busy,
-        singleLine = true,
-        label = { Text(stringResource(StringsR.string.audiobookshelf_login_username)) },
-        supportingText = { Text(stringResource(StringsR.string.opds_catalog_credentials_hint)) },
-        keyboardOptions =
-          KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Next,
-            autoCorrectEnabled = false,
-            capitalization = KeyboardCapitalization.None,
-          ),
-      )
-      PasswordField(
-        password = state.password,
-        enabled = !state.busy,
-        onPasswordChange = { onChange(state.copy(password = it)) },
-        onDone = onSave,
-      )
+      if (!libriVox) {
+        OutlinedTextField(
+          modifier = Modifier.fillMaxWidth().semantics { contentType = ContentType.Username },
+          value = state.username,
+          onValueChange = { onChange(state.copy(username = it)) },
+          enabled = !state.busy,
+          singleLine = true,
+          label = { Text(stringResource(StringsR.string.audiobookshelf_login_username)) },
+          supportingText = { Text(stringResource(StringsR.string.opds_catalog_credentials_hint)) },
+          keyboardOptions =
+            KeyboardOptions(
+              keyboardType = KeyboardType.Text,
+              imeAction = ImeAction.Next,
+              autoCorrectEnabled = false,
+              capitalization = KeyboardCapitalization.None,
+            ),
+        )
+        PasswordField(
+          password = state.password,
+          enabled = !state.busy,
+          onPasswordChange = { onChange(state.copy(password = it)) },
+          onDone = onSave,
+        )
+      }
       if (state.type == CatalogType.Komga) {
         SyncProgressRow(
           checked = state.syncProgress,
@@ -228,7 +235,7 @@ private fun TypeChoice(
   enabled: Boolean,
   onSelect: (CatalogType) -> Unit,
 ) {
-  val options = CatalogType.entries
+  val options = listOf(CatalogType.Opds, CatalogType.Komga)
   Row(
     modifier = Modifier.fillMaxWidth().selectableGroup(),
     horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
@@ -251,6 +258,7 @@ private fun TypeChoice(
             when (option) {
               CatalogType.Opds -> StringsR.string.opds_catalog_type_opds
               CatalogType.Komga -> StringsR.string.opds_catalog_type_komga
+              CatalogType.LibriVox -> StringsR.string.opds_catalog_type_opds
             },
           ),
         )

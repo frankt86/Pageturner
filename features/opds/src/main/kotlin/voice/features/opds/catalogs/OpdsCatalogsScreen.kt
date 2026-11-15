@@ -334,6 +334,14 @@ private fun CatalogIcon(
         containerColor = colors.tertiary,
         contentColor = colors.onTertiary,
       )
+    CatalogType.LibriVox ->
+      ShapedIcon(
+        modifier = modifier,
+        icon = UiR.drawable.ic_headphones,
+        shape = MaterialShapes.Sunny,
+        containerColor = colors.primary,
+        contentColor = colors.onPrimary,
+      )
   }
 }
 

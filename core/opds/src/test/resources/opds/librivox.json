@@ -1,0 +1,441 @@
+{
+  "books": [
+    {
+      "id": "22824",
+      "title": "Absolute Evil",
+      "description": "A descendant of New England witches, Boston socialite Martha Klemm finds herself drawn to the occult. She hypothesizes that while there is evil in this world its presence is as natural as good and it cannot be absolute. She supposes that a solitary get away to a \"haunted\" island will facilitate her meditation on the notion of evil. - Summary by Brian Fullen",
+      "url_text_source": "https://babel.hathitrust.org/cgi/pt?id=nyp.33433085009805&seq=42",
+      "language": "English",
+      "copyright_year": "1918",
+      "num_sections": "5",
+      "url_rss": "https://librivox.org/rss/22824",
+      "url_zip_file": "https://archive.org/compress/absoluteevil_2608_librivox/formats=64KBPS MP3&file=/absoluteevil_2608_librivox.zip",
+      "url_project": "",
+      "url_librivox": "https://librivox.org/absolute-evil-by-julian-hawthorne/",
+      "url_other": "",
+      "totaltime": "01:20:11",
+      "totaltimesecs": 4811,
+      "authors": [
+        {
+          "id": "60",
+          "first_name": "Julian",
+          "last_name": "Hawthorne",
+          "dob": "1846",
+          "dod": "1934"
+        }
+      ],
+      "url_iarchive": "https://archive.org/details/absoluteevil_2608_librivox",
+      "sections": [
+        {
+          "id": "709835",
+          "section_number": "1",
+          "title": "Chapters I thru IV",
+          "listen_url": "https://www.archive.org/download/absoluteevil_2608_librivox/absoluteevil_01_hawthorne_64kb.mp3",
+          "language": "English",
+          "playtime": "944",
+          "file_name": "absoluteevil_01_hawthorne_128kb.mp3",
+          "readers": [
+            {
+              "reader_id": "20556",
+              "display_name": "Patty H"
+            }
+          ]
+        },
+        {
+          "id": "709836",
+          "section_number": "2",
+          "title": "Chapters V and VI",
+          "listen_url": "https://www.archive.org/download/absoluteevil_2608_librivox/absoluteevil_02_hawthorne_64kb.mp3",
+          "language": "English",
+          "playtime": "888",
+          "file_name": "absoluteevil_02_hawthorne_128kb.mp3",
+          "readers": [
+            {
+              "reader_id": "4583",
+              "display_name": "Jersey City Frankie"
+            }
+          ]
+        },
+        {
+          "id": "709837",
+          "section_number": "3",
+          "title": "Chapters VII and VIII",
+          "listen_url": "https://www.archive.org/download/absoluteevil_2608_librivox/absoluteevil_03_hawthorne_64kb.mp3",
+          "language": "English",
+          "playtime": "1088",
+          "file_name": "absoluteevil_03_hawthorne_128kb.mp3",
+          "readers": [
+            {
+              "reader_id": "19486",
+              "display_name": "Rohit Gokhale"
+            }
+          ]
+        },
+        {
+          "id": "709838",
+          "section_number": "4",
+          "title": "Chapter IX",
+          "listen_url": "https://www.archive.org/download/absoluteevil_2608_librivox/absoluteevil_04_hawthorne_64kb.mp3",
+          "language": "English",
+          "playtime": "766",
+          "file_name": "absoluteevil_04_hawthorne_128kb.mp3",
+          "readers": [
+            {
+              "reader_id": "16764",
+              "display_name": "dc"
+            }
+          ]
+        },
+        {
+          "id": "709839",
+          "section_number": "5",
+          "title": "Chapter X",
+          "listen_url": "https://www.archive.org/download/absoluteevil_2608_librivox/absoluteevil_05_hawthorne_64kb.mp3",
+          "language": "English",
+          "playtime": "1125",
+          "file_name": "absoluteevil_05_hawthorne_128kb.mp3",
+          "readers": [
+            {
+              "reader_id": "16209",
+              "display_name": "Christine Rottger"
+            }
+          ]
+        }
+      ],
+      "genres": [
+        {
+          "id": "16",
+          "name": "Horror & Supernatural Fiction"
+        },
+        {
+          "id": "54",
+          "name": "Published 1900 onward"
+        }
+      ],
+      "translators": []
+    },
+    {
+      "id": "22889",
+      "title": "Kabouters in het Bosch",
+      "description": "Avonturen van kabouters Gnoom en Kobold samen met de andere wezens in het bos. Wie zich misdraagt wordt een lesje geleerd. De vijf hoofdstukken vormen een doorgaande verhaallijn, maar zijn evt. ook los van elkaar te lezen.",
+      "url_text_source": "https://www.gutenberg.org/ebooks/46263",
+      "language": "Dutch",
+      "copyright_year": "1906",
+      "num_sections": "5",
+      "url_rss": "https://librivox.org/rss/22889",
+      "url_zip_file": "https://archive.org/compress/kaboutersinhetbosch_2608_librivox/formats=64KBPS MP3&file=/kaboutersinhetbosch_2608_librivox.zip",
+      "url_project": "",
+      "url_librivox": "https://librivox.org/kabouters-in-het-bosch-by-kees-valkenstein/",
+      "url_other": "",
+      "totaltime": "01:17:39",
+      "totaltimesecs": 4659,
+      "authors": [
+        {
+          "id": "19798",
+          "first_name": "Kees",
+          "last_name": "Valkenstein",
+          "dob": "1862",
+          "dod": "1952"
+        }
+      ],
+      "url_iarchive": "https://archive.org/details/kaboutersinhetbosch_2608_librivox",
+      "sections": [
+        {
+          "id": "712857",
+          "section_number": "1",
+          "title": "Het sprookje van de twee Kabouters",
+          "listen_url": "https://www.archive.org/download/kaboutersinhetbosch_2608_librivox/kaboutersinhetbosch_01_valkenstein_64kb.mp3",
+          "language": "English",
+          "playtime": "768",
+          "file_name": "kaboutersinhetbosch_01_valkenstein_128kb.mp3",
+          "readers": [
+            {
+              "reader_id": "20944",
+              "display_name": "Wiggert Loonstra"
+            }
+          ]
+        },
+        {
+          "id": "712858",
+          "section_number": "2",
+          "title": "De Avonturen van Kobold en Gnoom op Sinterklaasavond",
+          "listen_url": "https://www.archive.org/download/kaboutersinhetbosch_2608_librivox/kaboutersinhetbosch_02_valkenstein_64kb.mp3",
+          "language": "English",
+          "playtime": "1058",
+          "file_name": "kaboutersinhetbosch_02_valkenstein_128kb.mp3",
+          "readers": [
+            {
+              "reader_id": "20944",
+              "display_name": "Wiggert Loonstra"
+            }
+          ]
+        },
+        {
+          "id": "712859",
+          "section_number": "3",
+          "title": "Koning Droom",
+          "listen_url": "https://www.archive.org/download/kaboutersinhetbosch_2608_librivox/kaboutersinhetbosch_03_valkenstein_64kb.mp3",
+          "language": "English",
+          "playtime": "832",
+          "file_name": "kaboutersinhetbosch_03_valkenstein_128kb.mp3",
+          "readers": [
+            {
+              "reader_id": "20944",
+              "display_name": "Wiggert Loonstra"
+            }
+          ]
+        },
+        {
+          "id": "712860",
+          "section_number": "4",
+          "title": "De Kabouters en de City-bag",
+          "listen_url": "https://www.archive.org/download/kaboutersinhetbosch_2608_librivox/kaboutersinhetbosch_04_valkenstein_64kb.mp3",
+          "language": "English",
+          "playtime": "997",
+          "file_name": "kaboutersinhetbosch_04_valkenstein_128kb.mp3",
+          "readers": [
+            {
+              "reader_id": "20944",
+              "display_name": "Wiggert Loonstra"
+            }
+          ]
+        },
+        {
+          "id": "712861",
+          "section_number": "5",
+          "title": "Schipper Troll",
+          "listen_url": "https://www.archive.org/download/kaboutersinhetbosch_2608_librivox/kaboutersinhetbosch_05_valkenstein_64kb.mp3",
+          "language": "English",
+          "playtime": "1004",
+          "file_name": "kaboutersinhetbosch_05_valkenstein_128kb.mp3",
+          "readers": [
+            {
+              "reader_id": "20944",
+              "display_name": "Wiggert Loonstra"
+            }
+          ]
+        }
+      ],
+      "genres": [
+        {
+          "id": "39",
+          "name": "Myths, Legends & Fairy Tales"
+        }
+      ],
+      "translators": []
+    },
+    {
+      "id": "23016",
+      "title": "Relation of Christianity to the Freedom of Human Thought and Action",
+      "description": "",
+      "url_text_source": "https://archive.org/details/lecturesdelivere05youn/page/119/mode/1up",
+      "language": "English",
+      "copyright_year": "1846",
+      "num_sections": "2",
+      "url_rss": "https://librivox.org/rss/23016",
+      "url_zip_file": "",
+      "url_project": "",
+      "url_librivox": "",
+      "url_other": "",
+      "totaltime": "",
+      "totaltimesecs": 0,
+      "authors": [
+        {
+          "id": "19896",
+          "first_name": "Asa",
+          "last_name": "Mahan",
+          "dob": "1799",
+          "dod": "1889"
+        }
+      ],
+      "url_iarchive": "",
+      "sections": [
+        {
+          "id": "716341",
+          "section_number": "1",
+          "title": "Part 1",
+          "listen_url": null,
+          "language": "English",
+          "playtime": "0",
+          "file_name": null,
+          "readers": [
+            {
+              "reader_id": "21001",
+              "display_name": "Philip Fackler"
+            }
+          ]
+        },
+        {
+          "id": "716342",
+          "section_number": "2",
+          "title": "Part 2",
+          "listen_url": null,
+          "language": "English",
+          "playtime": "0",
+          "file_name": null,
+          "readers": [
+            {
+              "reader_id": "21001",
+              "display_name": "Philip Fackler"
+            }
+          ]
+        }
+      ],
+      "genres": [
+        {
+          "id": "84",
+          "name": "Essays & Short Works"
+        },
+        {
+          "id": "126",
+          "name": "Modern"
+        },
+        {
+          "id": "130",
+          "name": "Christianity - Other"
+        }
+      ],
+      "translators": []
+    },
+    {
+      "id": "3650",
+      "title": "Ophelia, the Rose of Elsinore",
+      "description": "This story is from Mary Cowden Clarke's multi-volume work The Girlhood of Shakespeare's Heroines, in which she imagined the early lives of characters from Portia to Beatrice to Lady Macbeth.  In her revision of Ophelia from Hamlet, she creates a backstory for Shakespeare's tragic heroine, from her infancy to just before the action of Hamlet begins.(Summary by Elizabeth Klett)",
+      "url_text_source": "https://www.archive.org/stream/girlhoodshakesp03clargoog#page/n188/mode/2up",
+      "language": "English",
+      "copyright_year": "1850",
+      "num_sections": "7",
+      "url_rss": "https://librivox.org/rss/3650",
+      "url_zip_file": "https://archive.org/compress/ophelia_rose_of_elsinore_0911_librivox/formats=64KBPS MP3&file=/ophelia_rose_of_elsinore_0911_librivox.zip",
+      "url_project": "",
+      "url_librivox": "https://librivox.org/ophelia-the-rose-of-elsinore-by-mary-cowden-clarke/",
+      "url_other": "",
+      "totaltime": "2:50:23",
+      "totaltimesecs": 10223,
+      "authors": [
+        {
+          "id": "5370",
+          "first_name": " Mary Cowden",
+          "last_name": "Clarke",
+          "dob": "1809",
+          "dod": "1898"
+        }
+      ],
+      "url_iarchive": "https://www.archive.org/details/ophelia_rose_of_elsinore_0911_librivox",
+      "sections": [
+        {
+          "id": "190849",
+          "section_number": "1",
+          "title": null,
+          "listen_url": "https://www.archive.org/download/ophelia_rose_of_elsinore_0911_librivox/roseofelsinore_1_clarke_64kb.mp3",
+          "language": "English",
+          "playtime": "1196",
+          "file_name": null,
+          "readers": [
+            {
+              "reader_id": "1259",
+              "display_name": "Elizabeth Klett"
+            }
+          ]
+        },
+        {
+          "id": "190850",
+          "section_number": "2",
+          "title": null,
+          "listen_url": "https://www.archive.org/download/ophelia_rose_of_elsinore_0911_librivox/roseofelsinore_2_clarke_64kb.mp3",
+          "language": "English",
+          "playtime": "1374",
+          "file_name": null,
+          "readers": [
+            {
+              "reader_id": "1259",
+              "display_name": "Elizabeth Klett"
+            }
+          ]
+        },
+        {
+          "id": "190851",
+          "section_number": "3",
+          "title": null,
+          "listen_url": "https://www.archive.org/download/ophelia_rose_of_elsinore_0911_librivox/roseofelsinore_3_clarke_64kb.mp3",
+          "language": "English",
+          "playtime": "1336",
+          "file_name": null,
+          "readers": [
+            {
+              "reader_id": "1259",
+              "display_name": "Elizabeth Klett"
+            }
+          ]
+        },
+        {
+          "id": "190852",
+          "section_number": "4",
+          "title": null,
+          "listen_url": "https://www.archive.org/download/ophelia_rose_of_elsinore_0911_librivox/roseofelsinore_4_clarke_64kb.mp3",
+          "language": "English",
+          "playtime": "1321",
+          "file_name": null,
+          "readers": [
+            {
+              "reader_id": "1259",
+              "display_name": "Elizabeth Klett"
+            }
+          ]
+        },
+        {
+          "id": "190853",
+          "section_number": "5",
+          "title": null,
+          "listen_url": "https://www.archive.org/download/ophelia_rose_of_elsinore_0911_librivox/roseofelsinore_5_clarke_64kb.mp3",
+          "language": "English",
+          "playtime": "2227",
+          "file_name": null,
+          "readers": [
+            {
+              "reader_id": "1259",
+              "display_name": "Elizabeth Klett"
+            }
+          ]
+        },
+        {
+          "id": "190854",
+          "section_number": "6",
+          "title": null,
+          "listen_url": "https://www.archive.org/download/ophelia_rose_of_elsinore_0911_librivox/roseofelsinore_6_clarke_64kb.mp3",
+          "language": "English",
+          "playtime": "1491",
+          "file_name": null,
+          "readers": [
+            {
+              "reader_id": "1259",
+              "display_name": "Elizabeth Klett"
+            }
+          ]
+        },
+        {
+          "id": "190855",
+          "section_number": "7",
+          "title": null,
+          "listen_url": "https://www.archive.org/download/ophelia_rose_of_elsinore_0911_librivox/roseofelsinore_7_clarke_64kb.mp3",
+          "language": "English",
+          "playtime": "1278",
+          "file_name": null,
+          "readers": [
+            {
+              "reader_id": "1259",
+              "display_name": "Elizabeth Klett"
+            }
+          ]
+        }
+      ],
+      "genres": [
+        {
+          "id": "15",
+          "name": "General Fiction"
+        }
+      ],
+      "translators": []
+    }
+  ]
+}

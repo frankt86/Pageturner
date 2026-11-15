@@ -508,7 +508,7 @@
     <string name="library.search.hint">Search your library</string>
     <!-- Tag on a library search result that matched by its genre. %s is the genre. -->
     <string name="library.search.match.genre">Genre · %s</string>
-    <!-- Tag on a library search result that matched by its narrator. %s is the narrator. -->
+    <!-- Tag on a library search result that matched by its narrator. Also below the author of an audiobook on its page in a catalog, like LibriVox. %s is the narrator, or several narrators separated by commas. -->
     <string name="library.search.match.narrator">Narrated by %s</string>
     <!-- Tag on a library search result that matched by its series. %s is the series, followed by the part, e.g. "Harry Potter 1". -->
     <string name="library.search.match.series">Series · %s</string>
