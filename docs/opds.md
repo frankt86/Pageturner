@@ -16,6 +16,8 @@ Pageturner comes with these free catalogs. They need no account.
 | Open Library | Free books from the Internet Archive | `https://openlibrary.org/opds/` |
 | Wolne Lektury | Classics and school reading in Polish, as ebooks and as audiobooks | `https://wolnelektury.pl/opds/` |
 | Unglue.it | Free books with open licenses, like Creative Commons | `https://unglue.it/api/opds/` |
+| Wikisource | Proofread English texts from Wikisource | `https://ws-export.wmcloud.org/opds/en/Ready_for_export.xml` |
+| Ebooks libres et gratuits | Classics in French | `https://www.ebooksgratuits.com/opds/` |
 
 Pageturner adds each of them once. When you already have one of them, it isn't added again. Remove the ones you don't
 need: they don't come back.

@@ -61,7 +61,8 @@ Pageturner adds to Voice.
 #### Catalogs and sync
 
 - Browse and search OPDS 1 and OPDS 2 catalogs, like Calibre-Web, Komga and Kavita.
-- Project Gutenberg, Open Library, Wolne Lektury and Unglue.it come with the app.
+- Project Gutenberg, Open Library, Wikisource, Unglue.it, Wolne Lektury (with audiobooks) and Ebooks libres et gratuits
+  come with the app.
 - Download EPUB, PDF, AZW3 and MOBI books, and audiobooks, into a download folder of your library.
 - Your reading progress syncs both ways with Komga, and Completed and Not started yet mark books read or unread in Komga.
 - Catalogs and Komga servers at home work with plain http, VPNs and the usual catalog paths.

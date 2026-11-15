@@ -39,6 +39,16 @@ internal val defaultCatalogs: List<OpdsCatalog> =
       name = "Unglue.it",
       url = "https://unglue.it/api/opds/",
     ),
+    OpdsCatalog(
+      id = "default-wikisource",
+      name = "Wikisource",
+      url = "https://ws-export.wmcloud.org/opds/en/Ready_for_export.xml",
+    ),
+    OpdsCatalog(
+      id = "default-ebooks-libres-et-gratuits",
+      name = "Ebooks libres et gratuits",
+      url = "https://www.ebooksgratuits.com/opds/",
+    ),
   )
 
 /**
