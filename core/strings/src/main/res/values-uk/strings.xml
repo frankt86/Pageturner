@@ -421,8 +421,6 @@
     <string name="opds.download_folder.new">Вибрати іншу папку</string>
     <string name="opds.download_folder.none">Ще не вибрано</string>
     <string name="opds.download_folder.title">Папка для завантажень</string>
-    <string name="opds.english_only.summary">Приховувати книги іншими мовами</string>
-    <string name="opds.english_only.title">Лише книги англійською</string>
     <string name="opds.entry.download">Завантажити %s</string>
     <string name="opds.entry.download_audiobook">Завантажити аудіокнигу</string>
     <string name="opds.entry.downloaded">У вашій бібліотеці</string>

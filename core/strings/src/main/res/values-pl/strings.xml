@@ -421,8 +421,6 @@
     <string name="opds.download_folder.new">Wybierz inny folder</string>
     <string name="opds.download_folder.none">Jeszcze nie wybrano</string>
     <string name="opds.download_folder.title">Folder pobierania</string>
-    <string name="opds.english_only.summary">Ukryj książki w innych językach</string>
-    <string name="opds.english_only.title">Tylko książki po angielsku</string>
     <string name="opds.entry.download">Pobierz %s</string>
     <string name="opds.entry.download_audiobook">Pobierz audiobook</string>
     <string name="opds.entry.downloaded">W twojej bibliotece</string>

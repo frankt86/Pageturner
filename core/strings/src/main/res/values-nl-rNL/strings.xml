@@ -373,8 +373,6 @@
     <string name="opds.download_folder.new">Andere map kiezen</string>
     <string name="opds.download_folder.none">Nog niet gekozen</string>
     <string name="opds.download_folder.title">Downloadmap</string>
-    <string name="opds.english_only.summary">Boeken in andere talen verbergen</string>
-    <string name="opds.english_only.title">Alleen Engelse boeken</string>
     <string name="opds.entry.download">%s downloaden</string>
     <string name="opds.entry.download_audiobook">Luisterboek downloaden</string>
     <string name="opds.entry.downloaded">In je bibliotheek</string>

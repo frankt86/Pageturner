@@ -373,8 +373,6 @@
     <string name="opds.download_folder.new">வேறு கோப்புறையைத் தேர்ந்தெடுக்கவும்</string>
     <string name="opds.download_folder.none">இன்னும் தேர்ந்தெடுக்கவில்லை</string>
     <string name="opds.download_folder.title">பதிவிறக்கக் கோப்புறை</string>
-    <string name="opds.english_only.summary">பிற மொழிப் புத்தகங்களை மறை</string>
-    <string name="opds.english_only.title">ஆங்கிலப் புத்தகங்கள் மட்டும்</string>
     <string name="opds.entry.download">%s பதிவிறக்கு</string>
     <string name="opds.entry.download_audiobook">ஆடியோபுக்கைப் பதிவிறக்கு</string>
     <string name="opds.entry.downloaded">உங்கள் நூலகத்தில் உள்ளது</string>

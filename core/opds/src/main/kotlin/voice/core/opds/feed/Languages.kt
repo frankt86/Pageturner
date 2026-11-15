@@ -20,10 +20,13 @@ internal fun languageCodes(languages: List<String>): List<String> =
   languages.mapNotNull(::languageCode).distinct()
 
 /**
- * Only the books in English and the ones without a language, as many feeds don't tell it. Shelves
- * and other links stay.
+ * Only the books in English. A book without a language only stays when [keepUntagged] says that the
+ * catalog sent books in English only. Shelves and other links stay.
  */
-internal fun OpdsFeed.inEnglish(): OpdsFeed =
+internal fun OpdsFeed.inEnglish(keepUntagged: Boolean): OpdsFeed =
   copy(
-    publications = publications.filter { it.languages.isEmpty() || ENGLISH in it.languages },
+    publications =
+      publications.filter {
+        if (it.languages.isEmpty()) keepUntagged else ENGLISH in it.languages
+      },
   )
