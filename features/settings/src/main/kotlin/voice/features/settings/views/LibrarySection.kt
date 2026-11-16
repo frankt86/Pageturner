@@ -71,11 +71,8 @@ import voice.core.ui.VoiceTheme
 internal fun LibrarySection(
   folderNames: List<String>,
   foldersWithoutAccess: Boolean,
-  audiobookshelfServer: String?,
-  showAudiobookshelf: Boolean,
   useGrid: Boolean,
   onFoldersClick: () -> Unit,
-  onAudiobookshelfClick: () -> Unit,
   onOpdsClick: () -> Unit,
   onUseGridChange: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
@@ -112,9 +109,6 @@ internal fun LibrarySection(
       },
       summary = { FolderNames(folderNames) },
     )
-    if (showAudiobookshelf) {
-      AudiobookshelfRow(audiobookshelfServer, onAudiobookshelfClick)
-    }
     OpdsRow(onOpdsClick)
     Spacer(Modifier.height(12.dp))
     Row(
@@ -363,36 +357,6 @@ private fun DrawScope.drawMiniList(
 }
 
 @Composable
-private fun AudiobookshelfRow(
-  server: String?,
-  onClick: () -> Unit,
-) {
-  IslandRow(
-    title = stringResource(StringsR.string.audiobookshelf_title),
-    onClick = onClick,
-    leading = {
-      ShapedIcon(
-        icon = UiR.drawable.ic_dns,
-        shape = MaterialShapes.Cookie9Sided,
-        containerColor = MaterialTheme.colorScheme.tertiary,
-        contentColor = MaterialTheme.colorScheme.onTertiary,
-      )
-    },
-    summary = {
-      if (server != null) {
-        Text(
-          text = server,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-        )
-      } else {
-        Text(stringResource(StringsR.string.settings_library_audiobookshelf_summary))
-      }
-    },
-  )
-}
-
-@Composable
 private fun OpdsRow(onClick: () -> Unit) {
   IslandRow(
     title = stringResource(StringsR.string.opds_title),
@@ -416,11 +380,8 @@ private fun LibrarySectionFoldersWithoutAccessPreview() {
     LibrarySection(
       folderNames = listOf("Audiobooks"),
       foldersWithoutAccess = true,
-      audiobookshelfServer = null,
-      showAudiobookshelf = false,
       useGrid = false,
       onFoldersClick = {},
-      onAudiobookshelfClick = {},
       onOpdsClick = {},
       onUseGridChange = {},
     )

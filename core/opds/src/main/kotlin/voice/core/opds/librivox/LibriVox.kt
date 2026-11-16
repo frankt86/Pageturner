@@ -18,7 +18,6 @@ import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Request
-import voice.core.audiobookshelf.http.ServerHttpClient
 import voice.core.logging.api.Logger
 import voice.core.opds.FeedResult
 import voice.core.opds.feed.OpdsAcquisition
@@ -27,6 +26,7 @@ import voice.core.opds.feed.OpdsPublication
 import voice.core.opds.feed.OpdsSearch
 import voice.core.opds.feed.htmlToText
 import voice.core.opds.feed.languageCodes
+import voice.core.opds.http.OpdsHttpClient
 
 internal const val LIBRIVOX_URL = "https://librivox.org/"
 internal const val LIBRIVOX_PAGE_SIZE = 50
@@ -71,7 +71,7 @@ internal fun libriVoxSearchUrls(query: String): List<String> {
 
 /** Reads LibriVox through its own api, as LibriVox has no OPDS catalog. */
 @Inject
-public class LibriVoxClient internal constructor(private val http: ServerHttpClient) {
+public class LibriVoxClient internal constructor(private val http: OpdsHttpClient) {
 
   internal suspend fun feed(url: String): FeedResult =
     withContext(Dispatchers.IO) {

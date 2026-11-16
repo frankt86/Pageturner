@@ -26,9 +26,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import voice.core.audiobookshelf.ServerDownloads
-import voice.core.audiobookshelf.ServerLibrary
-import voice.core.audiobookshelf.download.BookDownloadState
 import voice.core.common.AppInfoProvider
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
@@ -39,7 +36,6 @@ import voice.core.data.Ebook
 import voice.core.data.category
 import voice.core.data.folders.AudiobookFolders
 import voice.core.data.folders.FolderType
-import voice.core.data.isRemote
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.CurrentBookStore
 import voice.core.data.store.EbooksStore
@@ -92,13 +88,10 @@ class BookOverviewViewModel(
     ExperimentalPlaybackPersistenceFeatureFlag,
   private val kioskModeFeatureFlag: KioskModeFeatureFlag,
   private val dispatcherProvider: DispatcherProvider,
-  private val serverLibrary: ServerLibrary,
-  private val serverDownloads: ServerDownloads,
   private val audiobookFolders: AudiobookFolders,
   private val emptyLibraryTracker: EmptyLibraryTracker,
   private val showHiddenBooksStore: ShowHiddenBooksStore,
   private val libraryGroupingStore: LibraryGroupingStore,
-  private val showNotDownloadedBooksStore: ShowNotDownloadedBooksStore,
   private val hiddenSourcesStore: HiddenSourcesStore,
   private val bookHider: BookHider,
   private val bookSelectionRequests: BookSelectionRequests,
@@ -124,7 +117,6 @@ class BookOverviewViewModel(
 
   fun attach() {
     mediaScanner.scan()
-    serverLibrary.sync()
   }
 
   @Composable
@@ -150,11 +142,11 @@ class BookOverviewViewModel(
     }
       .collectAsState(initial = null)
       .value
-    val scanning = remember { mediaScanner.scannerActive }.collectAsState(initial = false).value
-    val syncing = remember { serverLibrary.syncing }.collectAsState(initial = false).value
-    val scannerActive = scanning || syncing
-    val serverStates = rememberServerBookStates(serverLibrary, serverDownloads)
-    val downloadStates = serverStates.downloads
+    val scannerActive = remember {
+      mediaScanner.scannerActive
+    }
+      .collectAsState(initial = false)
+      .value
     val folderPickerMovedDialogShown = remember {
       folderPickerMovedDialogShownStore.data
     }
@@ -171,11 +163,6 @@ class BookOverviewViewModel(
     }
       .collectAsState(initial = null)
       .value
-    val showNotDownloadedBooks = remember {
-      showNotDownloadedBooksStore.data
-    }
-      .collectAsState(initial = null)
-      .value
     val grouping = remember { libraryGroupingStore.data }.collectAsState(initial = null).value
     if (
       library == null ||
@@ -184,36 +171,15 @@ class BookOverviewViewModel(
         gridMode == null ||
         hasFoldersWithoutAccess == null ||
         showHiddenBooks == null ||
-        showNotDownloadedBooks == null ||
-        grouping == null ||
-        // server books would pop in and out of the library while their downloads load
-        (downloadStates == null && library.books.any { it.id.isRemote })
+        grouping == null
     ) {
       return BookOverviewViewState.Loading
     }
-    // the current book stays, so the library keeps its controls while it plays
-    fun Book.notDownloaded() =
-      id.isRemote &&
-        id != currentBook.id &&
-        downloadStates?.get(id) !is BookDownloadState.Downloaded
-    fun Book.passesHiddenFilter() = showHiddenBooks || !custom.hidden
-    fun Book.passesNotDownloadedFilter() = showNotDownloadedBooks || !notDownloaded()
-    // each count is what its switch changes, with the other switch as it is. Ebooks are on the
-    // device, so the switch for books that aren't downloaded leaves them.
     val hiddenBookCount =
-      library.shownBooks.count { it.custom.hidden && it.passesNotDownloadedFilter() } +
-        library.shownEbooks.count { it.hidden }
-    val notDownloadedBookCount =
-      library.shownBooks.count { it.notDownloaded() && it.passesHiddenFilter() }
+      library.shownBooks.count { it.custom.hidden } + library.shownEbooks.count { it.hidden }
     val books =
-      remember(
-        library,
-        downloadStates,
-        currentBook,
-        showHiddenBooks,
-        showNotDownloadedBooks,
-      ) {
-        library.shownBooks.filter { it.passesHiddenFilter() && it.passesNotDownloadedFilter() }
+      remember(library, showHiddenBooks) {
+        library.shownBooks.filter { showHiddenBooks || !it.custom.hidden }
       }
     val ebooks =
       remember(library, showHiddenBooks) {
@@ -269,8 +235,6 @@ class BookOverviewViewModel(
       itemViewState(
         currentBookId = currentBookId,
         livePlaybackState = { livePlaybackState.value },
-        unavailable = id in serverStates.unavailable,
-        download = downloadStates?.get(id).badge(),
       )
 
     val entries =
@@ -343,8 +307,6 @@ class BookOverviewViewModel(
       dialog = dialog,
       hiddenBookCount = hiddenBookCount,
       showHiddenBooks = showHiddenBooks,
-      notDownloadedBookCount = notDownloadedBookCount,
-      showNotDownloadedBooks = showNotDownloadedBooks,
       sources = library.sources,
       grouping = grouping,
       selection =
@@ -399,13 +361,12 @@ class BookOverviewViewModel(
   }
 
   private fun sources(): Flow<List<Pair<LibrarySource, String>>> {
-    return combine(audiobookFolders.all(), serverLibrary.libraries) { folders, libraries ->
+    return audiobookFolders.all().map { folders ->
       // a book that is a folder or a file of its own can be hidden on its own
       val sourceFolders = folders[FolderType.Root].orEmpty() + folders[FolderType.Author].orEmpty()
       sourceFolders
         .map { LibrarySource.Folder(it.uri.toString()) to it.documentFile.nameWithoutExtension() }
-        .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.second }) +
-        libraries.map { LibrarySource.ServerLibrary(it.id) to it.name }
+        .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.second })
     }
   }
 
@@ -485,12 +446,6 @@ class BookOverviewViewModel(
     }
   }
 
-  fun onShowNotDownloadedBooksChange(show: Boolean) {
-    scope.launch {
-      showNotDownloadedBooksStore.updateData { show }
-    }
-  }
-
   fun onSourceChange(
     source: LibrarySource,
     show: Boolean,
@@ -564,10 +519,9 @@ class BookOverviewViewModel(
     selectionEdit = edit.copy(saving = true)
     scope.launch {
       val edited = selectedBooksEditor.set(edit.field, edit.ids, value)
-      // the books that failed stay selected, so the listener can try again
-      selection = edited.failed.takeIf { it.isNotEmpty() }
+      selection = null
       selectionEdit = selectionEdit?.copy(saving = false, saved = true)
-      Logger.d("Set the ${edit.field} of ${edited.count} books, ${edited.failed.size} failed")
+      Logger.d("Set the ${edit.field} of ${edited.count} books")
       booksEdited.emit(edited)
     }
   }
@@ -578,14 +532,7 @@ class BookOverviewViewModel(
 
   internal fun onUndoEdit(edited: BooksEdited) {
     scope.launch {
-      val undone = selectedBooksEditor.undo(edited)
-      if (undone.failed.isNotEmpty()) {
-        Logger.d("Undo of the ${edited.field} failed for ${undone.failed.size} books")
-        // like after a failed edit, so the listener sees which books kept the new value
-        selection = selection.orEmpty() + undone.failed
-        // an undo of the undo would go in circles
-        booksEdited.emit(undone.copy(count = 0, undo = emptyMap()))
-      }
+      val _ = selectedBooksEditor.undo(edited)
     }
   }
 
@@ -628,14 +575,12 @@ private val FolderPickerMigrationInstallTimeCutoff = Instant.parse("2026-06-17T0
 private fun Book.itemViewState(
   currentBookId: BookId?,
   livePlaybackState: () -> LivePlaybackState?,
-  unavailable: Boolean,
-  download: DownloadBadge?,
 ): State<BookOverviewItemViewState> {
   if (id != currentBookId) {
-    return rememberUpdatedState(toItemViewState(unavailable, download))
+    return rememberUpdatedState(toItemViewState())
   }
   val currentPlaybackState by rememberUpdatedState(livePlaybackState)
-  return remember(this, currentBookId, unavailable, download) {
+  return remember(this, currentBookId) {
     derivedStateOf {
       val livePlayback = currentPlaybackState()
       if (livePlayback != null) {
@@ -643,7 +588,7 @@ private fun Book.itemViewState(
         } else {
           this
         }
-        .toItemViewState(unavailable, download)
+        .toItemViewState()
     }
   }
 }

@@ -60,10 +60,7 @@ public data class OpdsCatalog(
   }
 }
 
-/**
- * The catalogs the listener added. The passwords are kept like the Audiobookshelf login, in the
- * app's own files.
- */
+/** The catalogs the listener added. The passwords are kept in the app's own files. */
 @SingleIn(AppScope::class)
 public class OpdsCatalogStore(store: DataStore<List<OpdsCatalog>>) :
   DataStore<List<OpdsCatalog>> by store {

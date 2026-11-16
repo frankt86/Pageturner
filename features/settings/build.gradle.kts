@@ -12,5 +12,4 @@ dependencies {
   implementation(projects.core.sleeptimer.api)
   implementation(projects.core.analytics.api)
   implementation(projects.core.documentfile)
-  implementation(projects.core.audiobookshelf.api)
 }

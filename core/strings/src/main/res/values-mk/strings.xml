@@ -1,63 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="audiobookshelf.download.notification.books">
-        <item quantity="one">Се презема %d книга</item>
-        <item quantity="other">Се преземаат %d книги</item>
-    </plurals>
-    <string name="audiobookshelf.download.notification.done">Може да се слуша без интернет</string>
-    <string name="audiobookshelf.download.notification.retry">Пробај повторно</string>
-    <string name="audiobookshelf.download.notification.stop">Запри</string>
-    <string name="audiobookshelf.download.notification.title">Се презема…</string>
-    <string name="audiobookshelf.downloads.channel">Преземања</string>
-    <string name="audiobookshelf.login.address.action">Продолжи</string>
-    <string name="audiobookshelf.login.address.label">Адреса на серверот</string>
-    <string name="audiobookshelf.login.address.subtitle">Слушајте ги книгите од вашиот сервер. Pageturner го усогласува местото каде што застанавте со другите ваши уреди.</string>
-    <string name="audiobookshelf.login.address.title">Поврзете го Audiobookshelf</string>
-    <string name="audiobookshelf.login.credentials.action">Најави се</string>
-    <string name="audiobookshelf.login.credentials.no_password">Овој сервер дозволува само најава преку SSO, а тоа Pageturner сè уште не го поддржува. Замолете ја личноста што го води серверот да ја вклучи најавата со лозинка.</string>
-    <string name="audiobookshelf.login.credentials.subtitle">Користете ја вашата сметка на %s.</string>
-    <string name="audiobookshelf.login.credentials.title">Најава</string>
-    <string name="audiobookshelf.login.error.certificate">Вашиот телефон не му верува на сертификатот на овој сервер.</string>
-    <string name="audiobookshelf.login.error.credentials">Корисничкото име или лозинката не се точни.</string>
-    <string name="audiobookshelf.login.error.failed">Најавата не успеа. Обидете се повторно.</string>
-    <string name="audiobookshelf.login.error.not_found">Pageturner не може да пристапи до Audiobookshelf сервер на таа адреса. Дали сте на вистинската мрежа?</string>
-    <string name="audiobookshelf.login.error.not_set_up">Овој сервер сè уште не е поставен. Прво завршете го поставувањето во неговата веб-апликација.</string>
-    <string name="audiobookshelf.login.error.other_account">Ова е друга сметка. За да ја промените сметката, прво одјавете се.</string>
-    <string name="audiobookshelf.login.error.too_old">Pageturner бара Audiobookshelf 2.26 или понова верзија. На овој сервер работи %s.</string>
-    <string name="audiobookshelf.login.error.unreachable">Серверот престана да одговара. Обидете се повторно за момент.</string>
-    <string name="audiobookshelf.login.libraries.action">Додај во мојата библиотека</string>
-    <string name="audiobookshelf.login.libraries.loading">Бараме книги…</string>
-    <string name="audiobookshelf.login.libraries.none">Тука нема библиотеки со аудио книги</string>
-    <string name="audiobookshelf.login.libraries.subtitle">Ќе се појават во вашата библиотека. Пуштете ги веднаш или преземете ги за слушање без интернет.</string>
-    <plurals name="audiobookshelf.login.libraries.title">
-        <item quantity="one">Најдовме %d аудио книга</item>
-        <item quantity="other">Најдовме %d аудио книги</item>
-    </plurals>
-    <plurals name="audiobookshelf.login.library_chip">
-        <item quantity="one">%1$s · %2$d книга</item>
-        <item quantity="other">%1$s · %2$d книги</item>
-    </plurals>
-    <string name="audiobookshelf.login.password">Лозинка</string>
-    <string name="audiobookshelf.login.password.hide">Скриј ја лозинката</string>
-    <string name="audiobookshelf.login.password.show">Прикажи ја лозинката</string>
-    <string name="audiobookshelf.login.username">Корисничко име</string>
-    <string name="audiobookshelf.settings.downloads">Преземања</string>
-    <string name="audiobookshelf.settings.downloads.none">Сè уште нема преземени книги</string>
-    <string name="audiobookshelf.settings.downloads.remove">Отстрани ги сите</string>
-    <string name="audiobookshelf.settings.downloads.used">%s на овој уред</string>
-    <string name="audiobookshelf.settings.libraries">Библиотеки</string>
-    <string name="audiobookshelf.settings.mobile_data">Преземање преку мобилни податоци</string>
-    <string name="audiobookshelf.settings.mobile_data.summary">Инаку преземањата чекаат Wi-Fi</string>
-    <string name="audiobookshelf.settings.sign_in_again">Најави се</string>
-    <string name="audiobookshelf.settings.sign_out">Одјави се</string>
-    <string name="audiobookshelf.settings.signed_in_as">Најавени сте како %s</string>
-    <string name="audiobookshelf.settings.try_again">Пробај повторно</string>
-    <string name="audiobookshelf.sign_out.message">Книгите од серверот и нивните преземања ќе се отстранат од овој уред. Вашиот напредок останува безбеден на серверот.</string>
-    <string name="audiobookshelf.sign_out.title">Да се одјавите од %s?</string>
-    <string name="audiobookshelf.status.connected">Поврзано, вашиот напредок е синхронизиран</string>
-    <string name="audiobookshelf.status.needs_login">Серверот бара повторно да се најавите</string>
-    <string name="audiobookshelf.status.offline">Серверот моментално не е достапен. Преземените книги сè уште може да се слушаат.</string>
-    <string name="audiobookshelf.status.syncing">Се синхронизира…</string>
     <string name="author.wikipedia">Прочитај повеќе на Википедија</string>
     <string name="book.category.action.mark_completed">Обележи како завршена</string>
     <string name="book.category.action.mark_current">Обележи како тековна</string>
@@ -69,25 +11,18 @@
     <string name="book.download.action">Преземи</string>
     <string name="book.download.failed">Преземањето не заврши</string>
     <string name="book.download.progress">%1$s од %2$s</string>
-    <string name="book.download.remove">Отстрани го преземањето</string>
     <string name="book.download.retry">Преземи повторно</string>
     <string name="book.download.stop">Запри го преземањето</string>
-    <string name="book.download.waiting_for_connection">Се чека врска</string>
-    <string name="book.download.waiting_for_wifi">Се чека Wi-Fi</string>
     <string name="book.edit.author.label">Автор</string>
     <string name="book.edit.cover.file">Корица од датотечен систем</string>
     <string name="book.edit.cover.internet">Корица од Интернет</string>
     <string name="book.edit.part.label">Дел</string>
     <string name="book.edit.rename">Преименувај</string>
     <string name="book.edit.series.label">Серијал</string>
-    <string name="book.edit.server.failed">Не успеавме да зачуваме на вашиот сервер. Обидете се повторно.</string>
-    <string name="book.edit.server.not_allowed">Вашата сметка на серверот нема дозвола да менува книги.</string>
     <string name="book.edit.title.label">Наслов</string>
     <string name="book.hide">Скриј од библиотеката</string>
     <string name="book.select">Избери</string>
     <string name="book.show">Прикажи во библиотеката</string>
-    <string name="book.source.device">На овој уред</string>
-    <string name="book.source.server_downloaded">%s · преземено</string>
     <string name="bookmark.action.add_note">Додај белешка</string>
     <string name="bookmark.add_note_hint">Додајте белешка</string>
     <string name="bookmark.added.snackbar">Обележано</string>
@@ -130,6 +65,7 @@
     <string name="common.action.more">Повеќе опции</string>
     <string name="common.action.undo">Врати</string>
     <string name="common.action.save">Зачувај</string>
+    <string name="common.action.try_again">Пробај повторно</string>
     <string name="common.dialog.cancel">Откажи</string>
     <string name="common.dialog.confirm">Намести</string>
     <string name="common.dialog.ok">ОК</string>
@@ -144,6 +80,14 @@
     <string name="cover.search.query.with_author">%1$s од %2$s корица на аудио книга</string>
     <string name="cover.search.query.without_author">%s корица на аудио книга</string>
     <string name="cover.title">Корица</string>
+    <plurals name="download.notification.books">
+        <item quantity="one">Се презема %d книга</item>
+        <item quantity="other">Се преземаат %d книги</item>
+    </plurals>
+    <string name="download.notification.done">Може да се слуша без интернет</string>
+    <string name="download.notification.stop">Запри</string>
+    <string name="download.notification.title">Се презема…</string>
+    <string name="downloads.channel">Преземања</string>
     <plurals name="duration.minutes">
         <item quantity="one">%d минута</item>
         <item quantity="other">%d минути</item>
@@ -152,7 +96,6 @@
         <item quantity="one">%d секунда</item>
         <item quantity="other">%d секунди</item>
     </plurals>
-    <string name="folder.add.action.audiobookshelf">Поврзи го Audiobookshelf</string>
     <string name="folder.add.action.file">Наместо тоа, додај една датотека</string>
     <string name="folder.add.action.folder">Избери фолдер</string>
     <string name="folder.add.action.opds">Преземи од каталог</string>
@@ -246,7 +189,6 @@
     <string name="library.book.ebook">Е-книга</string>
     <string name="library.book.hidden">Скриена</string>
     <string name="library.book.hidden.message">Книгата „%1$s“ е скриена</string>
-    <string name="library.book.offline">Недостапно без интернет</string>
     <string name="library.category.completed.title">Завршени</string>
     <string name="library.category.current.title">Тековни</string>
     <string name="library.category.not_started.title">Непочнати</string>
@@ -261,7 +203,6 @@
     <string name="library.filter.group_by.author">Автор</string>
     <string name="library.filter.group_by.series">Серијал</string>
     <string name="library.filter.hidden_books">Скриени книги</string>
-    <string name="library.filter.not_downloaded">Непреземени</string>
     <string name="library.filter.show">Прикажи</string>
     <string name="library.folders.moved.dialog.message">Сега можете да управувате со фолдерите со книги во Поставки.</string>
     <string name="library.folders.moved.dialog.title">Фолдерите со книги се преместени</string>
@@ -331,15 +272,15 @@
         <item quantity="one">Серијалот е поставен за %d книга</item>
         <item quantity="other">Серијалот е поставен за %d книги</item>
     </plurals>
-    <plurals name="library.selection.server_failed">
-        <item quantity="one">Не успеавме да зачуваме %d книга на вашиот сервер</item>
-        <item quantity="other">Не успеавме да зачуваме %d книги на вашиот сервер</item>
-    </plurals>
     <string name="library.selection.show">Прикажи</string>
     <string name="library.series.hidden.message">Серијалот „%1$s“ е скриен</string>
     <string name="library.storage_permission_bug.action">Дај дозвола</string>
     <string name="library.storage_permission_bug.message">Кај некои уреди, на една системска апликација ѝ недостасува потребната дозвола за пристап до надворешната меморија. Овој пристап му е потребен на Pageturner за да ги вчита вашите аудио книги.</string>
     <string name="library.storage_permission_bug.title">Потребна е дозвола</string>
+    <string name="login.password">Лозинка</string>
+    <string name="login.password.hide">Скриј ја лозинката</string>
+    <string name="login.password.show">Прикажи ја лозинката</string>
+    <string name="login.username">Корисничко име</string>
     <string name="media_session.library.recent">Скорешни</string>
     <string name="media_session.library.root">Сите аудио книги</string>
     <string name="onboarding.action.next">Следно</string>
@@ -662,7 +603,6 @@
     <string name="settings.auto_sleep_timer.start.label">Внеси време за старт</string>
     <string name="settings.auto_sleep_timer.summary">Тајмерот за спиење се вклучува сам кога ќе почнете да слушате меѓу %1$s и %2$s</string>
     <string name="settings.auto_sleep_timer.title">Автоматски тајмер за спиење</string>
-    <string name="settings.library.audiobookshelf.summary">Слушајте ги книгите директно од вашиот сервер</string>
     <string name="settings.library.folders.summary">Управувајте со фолдерите што се скенираат за книги</string>
     <string name="settings.library.layout.grid">Мрежа</string>
     <string name="settings.library.layout.list">Листа</string>

@@ -94,8 +94,8 @@ Pageturner includes the updates of Voice up to November 2026:
 
 - A library that groups series into stacks, with a screen for each series, and can group by author, with author pages.
 - Edit the title, author, series and part of a book, and sync them to your other devices through the library folder.
-- Hide books, series, folders and Audiobookshelf libraries, select several books at once, and mark a whole series as
-  completed or not started yet.
+- Hide books, series and folders, select several books at once, and mark a whole series as completed or not started
+  yet.
 - A search that accepts one typo per word, and Android Auto with search and sections.
 - Tablet layouts, a calmer player, and a switch to turn off cover colors.
 - A sleep timer that starts again when you shake or press play right after it pauses.

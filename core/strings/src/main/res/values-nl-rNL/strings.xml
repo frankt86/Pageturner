@@ -1,63 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="audiobookshelf.download.notification.books">
-        <item quantity="one">%d boek wordt gedownload</item>
-        <item quantity="other">%d boeken worden gedownload</item>
-    </plurals>
-    <string name="audiobookshelf.download.notification.done">Klaar om offline te luisteren</string>
-    <string name="audiobookshelf.download.notification.retry">Opnieuw proberen</string>
-    <string name="audiobookshelf.download.notification.stop">Annuleren</string>
-    <string name="audiobookshelf.download.notification.title">Downloaden…</string>
-    <string name="audiobookshelf.downloads.channel">Downloads</string>
-    <string name="audiobookshelf.login.address.action">Doorgaan</string>
-    <string name="audiobookshelf.login.address.label">Serveradres</string>
-    <string name="audiobookshelf.login.address.subtitle">Luister naar de boeken op je eigen server. Pageturner houdt je plek gelijk op al je apparaten.</string>
-    <string name="audiobookshelf.login.address.title">Audiobookshelf koppelen</string>
-    <string name="audiobookshelf.login.credentials.action">Inloggen</string>
-    <string name="audiobookshelf.login.credentials.no_password">Deze server staat alleen single sign-on toe, en dat kan Pageturner nog niet. Vraag de beheerder van de server om inloggen met een wachtwoord aan te zetten.</string>
-    <string name="audiobookshelf.login.credentials.subtitle">Gebruik je account op %s.</string>
-    <string name="audiobookshelf.login.credentials.title">Inloggen</string>
-    <string name="audiobookshelf.login.error.certificate">Je telefoon vertrouwt het certificaat van deze server niet.</string>
-    <string name="audiobookshelf.login.error.credentials">Gebruikersnaam of wachtwoord klopt niet.</string>
-    <string name="audiobookshelf.login.error.failed">Inloggen is niet gelukt. Probeer het opnieuw.</string>
-    <string name="audiobookshelf.login.error.not_found">Pageturner kan daar geen Audiobookshelf-server bereiken. Zit je op het juiste netwerk?</string>
-    <string name="audiobookshelf.login.error.not_set_up">Deze server is nog niet ingesteld. Rond eerst de installatie af in de web-app.</string>
-    <string name="audiobookshelf.login.error.other_account">Dat is een ander account. Log eerst uit om van account te wisselen.</string>
-    <string name="audiobookshelf.login.error.too_old">Pageturner heeft Audiobookshelf 2.26 of nieuwer nodig. Deze server draait %s.</string>
-    <string name="audiobookshelf.login.error.unreachable">De server reageert niet meer. Probeer het zo nog eens.</string>
-    <string name="audiobookshelf.login.libraries.action">Toevoegen aan bibliotheek</string>
-    <string name="audiobookshelf.login.libraries.loading">Boeken zoeken…</string>
-    <string name="audiobookshelf.login.libraries.none">Hier zijn geen luisterboekbibliotheken</string>
-    <string name="audiobookshelf.login.libraries.subtitle">Ze komen in je bibliotheek. Speel ze meteen af, of download ze om offline te luisteren.</string>
-    <plurals name="audiobookshelf.login.libraries.title">
-        <item quantity="one">We hebben %d luisterboek gevonden</item>
-        <item quantity="other">We hebben %d luisterboeken gevonden</item>
-    </plurals>
-    <plurals name="audiobookshelf.login.library_chip">
-        <item quantity="one">%1$s · %2$d boek</item>
-        <item quantity="other">%1$s · %2$d boeken</item>
-    </plurals>
-    <string name="audiobookshelf.login.password">Wachtwoord</string>
-    <string name="audiobookshelf.login.password.hide">Wachtwoord verbergen</string>
-    <string name="audiobookshelf.login.password.show">Wachtwoord tonen</string>
-    <string name="audiobookshelf.login.username">Gebruikersnaam</string>
-    <string name="audiobookshelf.settings.downloads">Downloads</string>
-    <string name="audiobookshelf.settings.downloads.none">Nog geen boeken gedownload</string>
-    <string name="audiobookshelf.settings.downloads.remove">Alles verwijderen</string>
-    <string name="audiobookshelf.settings.downloads.used">%s op dit apparaat</string>
-    <string name="audiobookshelf.settings.libraries">Bibliotheken</string>
-    <string name="audiobookshelf.settings.mobile_data">Downloaden via mobiele data</string>
-    <string name="audiobookshelf.settings.mobile_data.summary">Anders wachten downloads op wifi</string>
-    <string name="audiobookshelf.settings.sign_in_again">Inloggen</string>
-    <string name="audiobookshelf.settings.sign_out">Uitloggen</string>
-    <string name="audiobookshelf.settings.signed_in_as">Ingelogd als %s</string>
-    <string name="audiobookshelf.settings.try_again">Opnieuw proberen</string>
-    <string name="audiobookshelf.sign_out.message">De boeken en hun downloads verdwijnen van dit apparaat. Je voortgang blijft veilig op de server.</string>
-    <string name="audiobookshelf.sign_out.title">Uitloggen bij %s?</string>
-    <string name="audiobookshelf.status.connected">Verbonden, je voortgang is gesynchroniseerd</string>
-    <string name="audiobookshelf.status.needs_login">De server wil dat je opnieuw inlogt</string>
-    <string name="audiobookshelf.status.offline">De server is nu niet bereikbaar. Gedownloade boeken kun je nog steeds afspelen.</string>
-    <string name="audiobookshelf.status.syncing">Synchroniseren…</string>
     <string name="author.wikipedia">Lees meer op Wikipedia</string>
     <string name="book.category.action.mark_completed">Markeren als voltooid</string>
     <string name="book.category.action.mark_current">Markeren als huidig boek</string>
@@ -69,25 +11,18 @@
     <string name="book.download.action">Downloaden</string>
     <string name="book.download.failed">De download is niet gelukt</string>
     <string name="book.download.progress">%1$s van %2$s</string>
-    <string name="book.download.remove">Download verwijderen</string>
     <string name="book.download.retry">Opnieuw downloaden</string>
     <string name="book.download.stop">Download annuleren</string>
-    <string name="book.download.waiting_for_connection">Wachten op verbinding</string>
-    <string name="book.download.waiting_for_wifi">Wachten op wifi</string>
     <string name="book.edit.author.label">Auteur</string>
     <string name="book.edit.cover.file">Omslag kiezen van bestandssysteem</string>
     <string name="book.edit.cover.internet">Omslag ophalen van internet</string>
     <string name="book.edit.part.label">Deel</string>
     <string name="book.edit.rename">Naam wijzigen</string>
     <string name="book.edit.series.label">Reeks</string>
-    <string name="book.edit.server.failed">Opslaan op je server is niet gelukt. Probeer het nog eens.</string>
-    <string name="book.edit.server.not_allowed">Je account op de server mag geen boeken wijzigen.</string>
     <string name="book.edit.title.label">Titel</string>
     <string name="book.hide">Verbergen uit bibliotheek</string>
     <string name="book.select">Selecteren</string>
     <string name="book.show">Tonen in bibliotheek</string>
-    <string name="book.source.device">Op dit apparaat</string>
-    <string name="book.source.server_downloaded">%s · gedownload</string>
     <string name="bookmark.action.add_note">Notitie toevoegen</string>
     <string name="bookmark.add_note_hint">Voeg een notitie toe</string>
     <string name="bookmark.added.snackbar">De bladwijzer is toegevoegd</string>
@@ -130,6 +65,7 @@
     <string name="common.action.more">Meer opties</string>
     <string name="common.action.undo">Ongedaan maken</string>
     <string name="common.action.save">Opslaan</string>
+    <string name="common.action.try_again">Opnieuw proberen</string>
     <string name="common.dialog.cancel">Annuleren</string>
     <string name="common.dialog.confirm">Instellen</string>
     <string name="common.dialog.ok">OK</string>
@@ -144,6 +80,14 @@
     <string name="cover.search.query.with_author">%1$s door %2$s luisterboekomslag</string>
     <string name="cover.search.query.without_author">%s luisterboekomslag</string>
     <string name="cover.title">Omslag</string>
+    <plurals name="download.notification.books">
+        <item quantity="one">%d boek wordt gedownload</item>
+        <item quantity="other">%d boeken worden gedownload</item>
+    </plurals>
+    <string name="download.notification.done">Klaar om offline te luisteren</string>
+    <string name="download.notification.stop">Annuleren</string>
+    <string name="download.notification.title">Downloaden…</string>
+    <string name="downloads.channel">Downloads</string>
     <plurals name="duration.minutes">
         <item quantity="one">%d minuut</item>
         <item quantity="other">%d minuten</item>
@@ -152,7 +96,6 @@
         <item quantity="one">%d seconde</item>
         <item quantity="other">%d seconden</item>
     </plurals>
-    <string name="folder.add.action.audiobookshelf">Audiobookshelf koppelen</string>
     <string name="folder.add.action.file">Liever één los bestand toevoegen</string>
     <string name="folder.add.action.folder">Kies een map</string>
     <string name="folder.add.action.opds">Downloaden uit een catalogus</string>
@@ -246,7 +189,6 @@
     <string name="library.book.ebook">E-book</string>
     <string name="library.book.hidden">Verborgen</string>
     <string name="library.book.hidden.message">%1$s is verborgen</string>
-    <string name="library.book.offline">Niet offline beschikbaar</string>
     <string name="library.category.completed.title">Voltooid</string>
     <string name="library.category.current.title">Huidig</string>
     <string name="library.category.not_started.title">Nog niet begonnen</string>
@@ -261,7 +203,6 @@
     <string name="library.filter.group_by.author">Auteur</string>
     <string name="library.filter.group_by.series">Reeks</string>
     <string name="library.filter.hidden_books">Verborgen boeken</string>
-    <string name="library.filter.not_downloaded">Niet gedownload</string>
     <string name="library.filter.show">Tonen</string>
     <string name="library.folders.moved.dialog.message">Je kunt boekenmappen nu beheren in Instellingen.</string>
     <string name="library.folders.moved.dialog.title">Boekenmappen verplaatst</string>
@@ -331,15 +272,15 @@
         <item quantity="one">Reeks ingesteld voor %d boek</item>
         <item quantity="other">Reeks ingesteld voor %d boeken</item>
     </plurals>
-    <plurals name="library.selection.server_failed">
-        <item quantity="one">Opslaan van %d boek op je server is niet gelukt</item>
-        <item quantity="other">Opslaan van %d boeken op je server is niet gelukt</item>
-    </plurals>
     <string name="library.selection.show">Tonen</string>
     <string name="library.series.hidden.message">%1$s is verborgen</string>
     <string name="library.storage_permission_bug.action">Toegang geven</string>
     <string name="library.storage_permission_bug.message">Op sommige apparaten mist een systeemapp toegang tot de externe opslag. Pageturner heeft die toegang nodig om je luisterboeken te kunnen lezen.</string>
     <string name="library.storage_permission_bug.title">Toegang vereist</string>
+    <string name="login.password">Wachtwoord</string>
+    <string name="login.password.hide">Wachtwoord verbergen</string>
+    <string name="login.password.show">Wachtwoord tonen</string>
+    <string name="login.username">Gebruikersnaam</string>
     <string name="media_session.library.recent">Recent</string>
     <string name="media_session.library.root">Alle luisterboeken</string>
     <string name="onboarding.action.next">Volgende</string>
@@ -662,7 +603,6 @@
     <string name="settings.auto_sleep_timer.start.label">Starttijd instellen</string>
     <string name="settings.auto_sleep_timer.summary">Start automatisch een slaaptimer wanneer het afspelen begint tussen %1$s en %2$s</string>
     <string name="settings.auto_sleep_timer.title">Automatische slaaptimer</string>
-    <string name="settings.library.audiobookshelf.summary">Stream de boeken op je eigen server</string>
     <string name="settings.library.folders.summary">Beheer mappen die op boeken worden gescand</string>
     <string name="settings.library.layout.grid">Raster</string>
     <string name="settings.library.layout.list">Lijst</string>

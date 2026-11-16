@@ -1,66 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="audiobookshelf.download.notification.books">
-        <item quantity="one">S\'està baixant %d llibre</item>
-        <item quantity="many">S\'estan baixant %d llibres</item>
-        <item quantity="other">S\'estan baixant %d llibres</item>
-    </plurals>
-    <string name="audiobookshelf.download.notification.done">A punt per escoltar sense connexió</string>
-    <string name="audiobookshelf.download.notification.retry">Torna-ho a provar</string>
-    <string name="audiobookshelf.download.notification.stop">Atura</string>
-    <string name="audiobookshelf.download.notification.title">S\'està baixant…</string>
-    <string name="audiobookshelf.downloads.channel">Baixades</string>
-    <string name="audiobookshelf.login.address.action">Continua</string>
-    <string name="audiobookshelf.login.address.label">Adreça del servidor</string>
-    <string name="audiobookshelf.login.address.subtitle">Escolteu els llibres del vostre propi servidor. Pageturner recorda per on aneu a tots els vostres dispositius.</string>
-    <string name="audiobookshelf.login.address.title">Connecta Audiobookshelf</string>
-    <string name="audiobookshelf.login.credentials.action">Inicia la sessió</string>
-    <string name="audiobookshelf.login.credentials.no_password">Aquest servidor només permet l\'inici de sessió únic, que Pageturner encara no admet. Demaneu a qui l\'administra que activi l\'inici de sessió amb contrasenya.</string>
-    <string name="audiobookshelf.login.credentials.subtitle">Feu servir el vostre compte de %s.</string>
-    <string name="audiobookshelf.login.credentials.title">Inicia la sessió</string>
-    <string name="audiobookshelf.login.error.certificate">El vostre telèfon no confia en el certificat d\'aquest servidor.</string>
-    <string name="audiobookshelf.login.error.credentials">El nom d\'usuari o la contrasenya no són correctes.</string>
-    <string name="audiobookshelf.login.error.failed">No s\'ha pogut iniciar la sessió. Torneu-ho a provar.</string>
-    <string name="audiobookshelf.login.error.not_found">Pageturner no troba cap servidor d\'Audiobookshelf en aquesta adreça. Esteu a la xarxa correcta?</string>
-    <string name="audiobookshelf.login.error.not_set_up">Aquest servidor encara no està configurat. Primer acabeu la configuració a la seva aplicació web.</string>
-    <string name="audiobookshelf.login.error.other_account">Aquest és un altre compte. Per canviar de compte, primer tanqueu la sessió.</string>
-    <string name="audiobookshelf.login.error.too_old">Pageturner necessita Audiobookshelf 2.26 o posterior. Aquest servidor té la versió %s.</string>
-    <string name="audiobookshelf.login.error.unreachable">El servidor ha deixat de respondre. Torneu-ho a provar d\'aquí a un moment.</string>
-    <string name="audiobookshelf.login.libraries.action">Afegeix a la meva biblioteca</string>
-    <string name="audiobookshelf.login.libraries.loading">S\'estan cercant llibres…</string>
-    <string name="audiobookshelf.login.libraries.none">Aquí no hi ha biblioteques d\'audiollibres</string>
-    <string name="audiobookshelf.login.libraries.subtitle">S\'afegiran a la vostra biblioteca. Reproduïu-los de seguida o baixeu-los per escoltar-los sense connexió.</string>
-    <plurals name="audiobookshelf.login.libraries.title">
-        <item quantity="one">S\'ha trobat %d audiollibre</item>
-        <item quantity="many">S\'han trobat %d audiollibres</item>
-        <item quantity="other">S\'han trobat %d audiollibres</item>
-    </plurals>
-    <plurals name="audiobookshelf.login.library_chip">
-        <item quantity="one">%1$s · %2$d llibre</item>
-        <item quantity="many">%1$s · %2$d llibres</item>
-        <item quantity="other">%1$s · %2$d llibres</item>
-    </plurals>
-    <string name="audiobookshelf.login.password">Contrasenya</string>
-    <string name="audiobookshelf.login.password.hide">Amaga la contrasenya</string>
-    <string name="audiobookshelf.login.password.show">Mostra la contrasenya</string>
-    <string name="audiobookshelf.login.username">Nom d\'usuari</string>
-    <string name="audiobookshelf.settings.downloads">Baixades</string>
-    <string name="audiobookshelf.settings.downloads.none">Encara no hi ha cap llibre baixat</string>
-    <string name="audiobookshelf.settings.downloads.remove">Suprimeix-les totes</string>
-    <string name="audiobookshelf.settings.downloads.used">%s en aquest dispositiu</string>
-    <string name="audiobookshelf.settings.libraries">Biblioteques</string>
-    <string name="audiobookshelf.settings.mobile_data">Baixa amb dades mòbils</string>
-    <string name="audiobookshelf.settings.mobile_data.summary">Si no, les baixades esperen a tenir Wi-Fi</string>
-    <string name="audiobookshelf.settings.sign_in_again">Inicia la sessió</string>
-    <string name="audiobookshelf.settings.sign_out">Tanca la sessió</string>
-    <string name="audiobookshelf.settings.signed_in_as">Sessió iniciada com a %s</string>
-    <string name="audiobookshelf.settings.try_again">Torna-ho a provar</string>
-    <string name="audiobookshelf.sign_out.message">Els llibres del servidor i les seves baixades se suprimiran d\'aquest dispositiu. El vostre progrés queda desat al servidor.</string>
-    <string name="audiobookshelf.sign_out.title">Voleu tancar la sessió a %s?</string>
-    <string name="audiobookshelf.status.connected">Connexió activa, el vostre progrés està sincronitzat</string>
-    <string name="audiobookshelf.status.needs_login">El servidor us demana que torneu a iniciar la sessió</string>
-    <string name="audiobookshelf.status.offline">Ara no es pot accedir al servidor. Els llibres baixats encara es poden escoltar.</string>
-    <string name="audiobookshelf.status.syncing">S\'està sincronitzant…</string>
     <string name="author.wikipedia">Llegeix-ne més a la Viquipèdia</string>
     <string name="book.category.action.mark_completed">Marca com a completat</string>
     <string name="book.category.action.mark_current">Marca com en curs</string>
@@ -72,25 +11,18 @@
     <string name="book.download.action">Baixa</string>
     <string name="book.download.failed">La baixada no s\'ha completat</string>
     <string name="book.download.progress">%1$s de %2$s</string>
-    <string name="book.download.remove">Suprimeix la baixada</string>
     <string name="book.download.retry">Torna a baixar</string>
     <string name="book.download.stop">Atura la baixada</string>
-    <string name="book.download.waiting_for_connection">En espera de connexió</string>
-    <string name="book.download.waiting_for_wifi">En espera de Wi-Fi</string>
     <string name="book.edit.author.label">Autor</string>
     <string name="book.edit.cover.file">Portada del sistema de fitxers</string>
     <string name="book.edit.cover.internet">Portada d\'Internet</string>
     <string name="book.edit.part.label">Número</string>
     <string name="book.edit.rename">Canvia el nom</string>
     <string name="book.edit.series.label">Sèrie</string>
-    <string name="book.edit.server.failed">No s\'ha pogut desar al vostre servidor. Torneu-ho a provar.</string>
-    <string name="book.edit.server.not_allowed">El vostre compte del servidor no pot canviar llibres.</string>
     <string name="book.edit.title.label">Títol</string>
     <string name="book.hide">Amaga de la biblioteca</string>
     <string name="book.select">Selecciona</string>
     <string name="book.show">Mostra a la biblioteca</string>
-    <string name="book.source.device">En aquest dispositiu</string>
-    <string name="book.source.server_downloaded">%s · baixat</string>
     <string name="bookmark.action.add_note">Afegeix una nota</string>
     <string name="bookmark.add_note_hint">Afegiu una nota</string>
     <string name="bookmark.added.snackbar">S\'ha afegit el punt de llibre</string>
@@ -133,6 +65,7 @@
     <string name="common.action.more">Més opcions</string>
     <string name="common.action.undo">Desfés</string>
     <string name="common.action.save">Desa</string>
+    <string name="common.action.try_again">Torna-ho a provar</string>
     <string name="common.dialog.cancel">Cancel·la</string>
     <string name="common.dialog.confirm">Estableix</string>
     <string name="common.dialog.ok">D\'acord</string>
@@ -147,6 +80,15 @@
     <string name="cover.search.query.with_author">Portada de l\'audiollibre %1$s de %2$s</string>
     <string name="cover.search.query.without_author">Portada de l\'audiollibre %s</string>
     <string name="cover.title">Portada</string>
+    <plurals name="download.notification.books">
+        <item quantity="one">S\'està baixant %d llibre</item>
+        <item quantity="many">S\'estan baixant %d llibres</item>
+        <item quantity="other">S\'estan baixant %d llibres</item>
+    </plurals>
+    <string name="download.notification.done">A punt per escoltar sense connexió</string>
+    <string name="download.notification.stop">Atura</string>
+    <string name="download.notification.title">S\'està baixant…</string>
+    <string name="downloads.channel">Baixades</string>
     <plurals name="duration.minutes">
         <item quantity="one">%d minut</item>
         <item quantity="many">%d minuts</item>
@@ -157,7 +99,6 @@
         <item quantity="many">%d segons</item>
         <item quantity="other">%d segons</item>
     </plurals>
-    <string name="folder.add.action.audiobookshelf">Connecta Audiobookshelf</string>
     <string name="folder.add.action.file">O afegeix un sol fitxer</string>
     <string name="folder.add.action.folder">Tria una carpeta</string>
     <string name="folder.add.action.opds">Baixa d\'un catàleg</string>
@@ -260,7 +201,6 @@
     <string name="library.book.ebook">Llibre electrònic</string>
     <string name="library.book.hidden">Amagat</string>
     <string name="library.book.hidden.message">S\'ha amagat %1$s</string>
-    <string name="library.book.offline">No disponible sense connexió</string>
     <string name="library.category.completed.title">Completat</string>
     <string name="library.category.current.title">En curs</string>
     <string name="library.category.not_started.title">No començat</string>
@@ -275,7 +215,6 @@
     <string name="library.filter.group_by.author">Autor</string>
     <string name="library.filter.group_by.series">Sèrie</string>
     <string name="library.filter.hidden_books">Llibres amagats</string>
-    <string name="library.filter.not_downloaded">No baixats</string>
     <string name="library.filter.show">Mostra</string>
     <string name="library.folders.moved.dialog.message">Ara podeu gestionar les carpetes de llibres a Configuració.</string>
     <string name="library.folders.moved.dialog.title">Les carpetes de llibres han canviat de lloc</string>
@@ -354,16 +293,15 @@
         <item quantity="many">S\'ha definit la sèrie de %d llibres</item>
         <item quantity="other">S\'ha definit la sèrie de %d llibres</item>
     </plurals>
-    <plurals name="library.selection.server_failed">
-        <item quantity="one">No s\'ha pogut desar %d llibre al vostre servidor</item>
-        <item quantity="many">No s\'han pogut desar %d llibres al vostre servidor</item>
-        <item quantity="other">No s\'han pogut desar %d llibres al vostre servidor</item>
-    </plurals>
     <string name="library.selection.show">Mostra</string>
     <string name="library.series.hidden.message">S\'ha amagat %1$s</string>
     <string name="library.storage_permission_bug.action">Concedeix el permís</string>
     <string name="library.storage_permission_bug.message">Per a determinats dispositius, a una aplicació del sistema li falta el permís necessari per accedir a l\'emmagatzematge extern. Aquest accés és essencial perquè Pageturner llegeixi els audiollibres.</string>
     <string name="library.storage_permission_bug.title">Es requereix el permís</string>
+    <string name="login.password">Contrasenya</string>
+    <string name="login.password.hide">Amaga la contrasenya</string>
+    <string name="login.password.show">Mostra la contrasenya</string>
+    <string name="login.username">Nom d\'usuari</string>
     <string name="media_session.library.recent">Recents</string>
     <string name="media_session.library.root">Tots els audiollibres</string>
     <string name="onboarding.action.next">Següent</string>
@@ -691,7 +629,6 @@
     <string name="settings.auto_sleep_timer.start.label">Hora d\'inici</string>
     <string name="settings.auto_sleep_timer.summary">Inicia automàticament el temporitzador de repòs quan la reproducció comença entre les %1$s i les %2$s</string>
     <string name="settings.auto_sleep_timer.title">Temporitzador de repòs automàtic</string>
-    <string name="settings.library.audiobookshelf.summary">Escolteu els llibres del vostre propi servidor</string>
     <string name="settings.library.folders.summary">Gestiona les carpetes on es cerquen llibres</string>
     <string name="settings.library.layout.grid">Quadrícula</string>
     <string name="settings.library.layout.list">Llista</string>

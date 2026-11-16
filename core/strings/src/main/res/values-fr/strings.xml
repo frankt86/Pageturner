@@ -1,66 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation" tools:locale="fr">
-    <plurals name="audiobookshelf.download.notification.books">
-        <item quantity="one">Téléchargement de %d livre</item>
-        <item quantity="many">Téléchargement de %d livres</item>
-        <item quantity="other">Téléchargement de %d livres</item>
-    </plurals>
-    <string name="audiobookshelf.download.notification.done">Prêt à écouter hors connexion</string>
-    <string name="audiobookshelf.download.notification.retry">Réessayer</string>
-    <string name="audiobookshelf.download.notification.stop">Arrêter</string>
-    <string name="audiobookshelf.download.notification.title">Téléchargement…</string>
-    <string name="audiobookshelf.downloads.channel">Téléchargements</string>
-    <string name="audiobookshelf.login.address.action">Continuer</string>
-    <string name="audiobookshelf.login.address.label">Adresse du serveur</string>
-    <string name="audiobookshelf.login.address.subtitle">Écoutez les livres de votre propre serveur. Pageturner synchronise votre progression avec vos autres appareils.</string>
-    <string name="audiobookshelf.login.address.title">Connecter Audiobookshelf</string>
-    <string name="audiobookshelf.login.credentials.action">Se connecter</string>
-    <string name="audiobookshelf.login.credentials.no_password">Ce serveur n\'autorise que l\'authentification unique (SSO), que Pageturner ne prend pas encore en charge. Demandez à la personne qui le gère d\'activer la connexion par mot de passe.</string>
-    <string name="audiobookshelf.login.credentials.subtitle">Utilisez votre compte sur %s.</string>
-    <string name="audiobookshelf.login.credentials.title">Connexion</string>
-    <string name="audiobookshelf.login.error.certificate">Votre téléphone ne fait pas confiance au certificat de ce serveur.</string>
-    <string name="audiobookshelf.login.error.credentials">Nom d\'utilisateur ou mot de passe incorrect.</string>
-    <string name="audiobookshelf.login.error.failed">La connexion a échoué. Réessayez.</string>
-    <string name="audiobookshelf.login.error.not_found">Pageturner ne trouve aucun serveur Audiobookshelf à cette adresse. Êtes-vous sur le bon réseau ?</string>
-    <string name="audiobookshelf.login.error.not_set_up">Ce serveur n\'est pas encore configuré. Terminez d\'abord la configuration dans son application web.</string>
-    <string name="audiobookshelf.login.error.other_account">C\'est un autre compte. Pour changer de compte, déconnectez-vous d\'abord.</string>
-    <string name="audiobookshelf.login.error.too_old">Pageturner nécessite Audiobookshelf 2.26 ou une version ultérieure. Ce serveur utilise la version %s.</string>
-    <string name="audiobookshelf.login.error.unreachable">Le serveur ne répond plus. Réessayez dans un instant.</string>
-    <string name="audiobookshelf.login.libraries.action">Ajouter à ma bibliothèque</string>
-    <string name="audiobookshelf.login.libraries.loading">Recherche de livres…</string>
-    <string name="audiobookshelf.login.libraries.none">Aucune bibliothèque de livres audio ici</string>
-    <string name="audiobookshelf.login.libraries.subtitle">Ils rejoignent votre bibliothèque. Écoutez-les tout de suite ou téléchargez-les pour les écouter hors connexion.</string>
-    <plurals name="audiobookshelf.login.libraries.title">
-        <item quantity="one">%d livre audio trouvé</item>
-        <item quantity="many">%d livres audio trouvés</item>
-        <item quantity="other">%d livres audio trouvés</item>
-    </plurals>
-    <plurals name="audiobookshelf.login.library_chip">
-        <item quantity="one">%1$s · %2$d livre</item>
-        <item quantity="many">%1$s · %2$d livres</item>
-        <item quantity="other">%1$s · %2$d livres</item>
-    </plurals>
-    <string name="audiobookshelf.login.password">Mot de passe</string>
-    <string name="audiobookshelf.login.password.hide">Masquer le mot de passe</string>
-    <string name="audiobookshelf.login.password.show">Afficher le mot de passe</string>
-    <string name="audiobookshelf.login.username">Nom d\'utilisateur</string>
-    <string name="audiobookshelf.settings.downloads">Téléchargements</string>
-    <string name="audiobookshelf.settings.downloads.none">Aucun livre téléchargé pour l\'instant</string>
-    <string name="audiobookshelf.settings.downloads.remove">Tout supprimer</string>
-    <string name="audiobookshelf.settings.downloads.used">%s sur cet appareil</string>
-    <string name="audiobookshelf.settings.libraries">Bibliothèques</string>
-    <string name="audiobookshelf.settings.mobile_data">Télécharger avec les données mobiles</string>
-    <string name="audiobookshelf.settings.mobile_data.summary">Sinon, les téléchargements attendent le Wi-Fi</string>
-    <string name="audiobookshelf.settings.sign_in_again">Se connecter</string>
-    <string name="audiobookshelf.settings.sign_out">Se déconnecter</string>
-    <string name="audiobookshelf.settings.signed_in_as">Compte : %s</string>
-    <string name="audiobookshelf.settings.try_again">Réessayer</string>
-    <string name="audiobookshelf.sign_out.message">Les livres du serveur et leurs téléchargements seront retirés de cet appareil. Votre progression reste en sécurité sur le serveur.</string>
-    <string name="audiobookshelf.sign_out.title">Se déconnecter de %s ?</string>
-    <string name="audiobookshelf.status.connected">Serveur connecté, votre progression est synchronisée</string>
-    <string name="audiobookshelf.status.needs_login">Le serveur vous demande de vous reconnecter</string>
-    <string name="audiobookshelf.status.offline">Impossible de joindre le serveur pour le moment. Vous pouvez toujours écouter les livres téléchargés.</string>
-    <string name="audiobookshelf.status.syncing">Synchronisation…</string>
     <string name="author.wikipedia">En savoir plus sur Wikipédia</string>
     <string name="book.category.action.mark_completed">Marquer comme terminé</string>
     <string name="book.category.action.mark_current">Marquer comme en cours</string>
@@ -72,25 +11,18 @@
     <string name="book.download.action">Télécharger</string>
     <string name="book.download.failed">Le téléchargement n\'a pas abouti</string>
     <string name="book.download.progress">%1$s sur %2$s</string>
-    <string name="book.download.remove">Supprimer le téléchargement</string>
     <string name="book.download.retry">Télécharger à nouveau</string>
     <string name="book.download.stop">Arrêter le téléchargement</string>
-    <string name="book.download.waiting_for_connection">En attente de connexion</string>
-    <string name="book.download.waiting_for_wifi">En attente du Wi-Fi</string>
     <string name="book.edit.author.label">Auteur</string>
     <string name="book.edit.cover.file">Couverture depuis le système de fichiers</string>
     <string name="book.edit.cover.internet">Couverture depuis internet</string>
     <string name="book.edit.part.label">Tome</string>
     <string name="book.edit.rename">Renommer</string>
     <string name="book.edit.series.label">Série</string>
-    <string name="book.edit.server.failed">Impossible d\'enregistrer sur votre serveur. Réessayez.</string>
-    <string name="book.edit.server.not_allowed">Votre compte sur le serveur ne peut pas modifier les livres.</string>
     <string name="book.edit.title.label">Titre</string>
     <string name="book.hide">Masquer de la bibliothèque</string>
     <string name="book.select">Sélectionner</string>
     <string name="book.show">Afficher dans la bibliothèque</string>
-    <string name="book.source.device">Sur cet appareil</string>
-    <string name="book.source.server_downloaded">%s · téléchargé</string>
     <string name="bookmark.action.add_note">Ajouter une note</string>
     <string name="bookmark.add_note_hint">Ajouter une note</string>
     <string name="bookmark.added.snackbar">Marque-page ajouté</string>
@@ -133,6 +65,7 @@
     <string name="common.action.more">Plus d\'options</string>
     <string name="common.action.undo">Annuler</string>
     <string name="common.action.save">Enregistrer</string>
+    <string name="common.action.try_again">Réessayer</string>
     <string name="common.dialog.cancel">Annuler</string>
     <string name="common.dialog.confirm">Définir</string>
     <string name="common.dialog.ok">OK</string>
@@ -147,6 +80,15 @@
     <string name="cover.search.query.with_author">%1$s par %2$s couverture livre audio</string>
     <string name="cover.search.query.without_author">%s couverture livre audio</string>
     <string name="cover.title">Couverture</string>
+    <plurals name="download.notification.books">
+        <item quantity="one">Téléchargement de %d livre</item>
+        <item quantity="many">Téléchargement de %d livres</item>
+        <item quantity="other">Téléchargement de %d livres</item>
+    </plurals>
+    <string name="download.notification.done">Prêt à écouter hors connexion</string>
+    <string name="download.notification.stop">Arrêter</string>
+    <string name="download.notification.title">Téléchargement…</string>
+    <string name="downloads.channel">Téléchargements</string>
     <plurals name="duration.minutes">
         <item quantity="one">%d minute</item>
         <item quantity="many">%d minutes</item>
@@ -157,7 +99,6 @@
         <item quantity="many">%d secondes</item>
         <item quantity="other">%d secondes</item>
     </plurals>
-    <string name="folder.add.action.audiobookshelf">Connecter Audiobookshelf</string>
     <string name="folder.add.action.file">Ajouter plutôt un seul fichier</string>
     <string name="folder.add.action.folder">Choisir un dossier</string>
     <string name="folder.add.action.opds">Télécharger depuis un catalogue</string>
@@ -260,7 +201,6 @@
     <string name="library.book.ebook">Livre numérique</string>
     <string name="library.book.hidden">Masqué</string>
     <string name="library.book.hidden.message">Vous avez masqué %1$s</string>
-    <string name="library.book.offline">Indisponible hors connexion</string>
     <string name="library.category.completed.title">Terminé</string>
     <string name="library.category.current.title">En cours</string>
     <string name="library.category.not_started.title">Pas encore commencé</string>
@@ -275,7 +215,6 @@
     <string name="library.filter.group_by.author">Auteur</string>
     <string name="library.filter.group_by.series">Série</string>
     <string name="library.filter.hidden_books">Livres masqués</string>
-    <string name="library.filter.not_downloaded">Non téléchargés</string>
     <string name="library.filter.show">Afficher</string>
     <string name="library.folders.moved.dialog.message">Vous pouvez désormais gérer les dossiers de livres dans les Paramètres.</string>
     <string name="library.folders.moved.dialog.title">Dossiers de livres déplacés</string>
@@ -354,16 +293,15 @@
         <item quantity="many">Série définie pour %d livres</item>
         <item quantity="other">Série définie pour %d livres</item>
     </plurals>
-    <plurals name="library.selection.server_failed">
-        <item quantity="one">Impossible d\'enregistrer %d livre sur votre serveur</item>
-        <item quantity="many">Impossible d\'enregistrer %d livres sur votre serveur</item>
-        <item quantity="other">Impossible d\'enregistrer %d livres sur votre serveur</item>
-    </plurals>
     <string name="library.selection.show">Afficher</string>
     <string name="library.series.hidden.message">Vous avez masqué %1$s</string>
     <string name="library.storage_permission_bug.action">Accorder la permission</string>
     <string name="library.storage_permission_bug.message">Sur certains appareils, il manque les permissions nécessaires à une application système pour accéder au stockage externe. Cet accès est essentiel pour que Pageturner puisse lire les livres audio.</string>
     <string name="library.storage_permission_bug.title">Permission requise</string>
+    <string name="login.password">Mot de passe</string>
+    <string name="login.password.hide">Masquer le mot de passe</string>
+    <string name="login.password.show">Afficher le mot de passe</string>
+    <string name="login.username">Nom d\'utilisateur</string>
     <string name="media_session.library.recent">Récents</string>
     <string name="media_session.library.root">Tous les livres audio</string>
     <string name="onboarding.action.next">Suivant</string>
@@ -691,7 +629,6 @@
     <string name="settings.auto_sleep_timer.start.label">Heure de début</string>
     <string name="settings.auto_sleep_timer.summary">Démarrer automatiquement la minuterie de mise en veille lorsque la lecture commence entre %1$s et %2$s</string>
     <string name="settings.auto_sleep_timer.title">Minuterie de mise en veille automatique</string>
-    <string name="settings.library.audiobookshelf.summary">Écoutez les livres de votre propre serveur</string>
     <string name="settings.library.folders.summary">Gérer les dossiers analysés pour les livres</string>
     <string name="settings.library.layout.grid">Grille</string>
     <string name="settings.library.layout.list">Liste</string>

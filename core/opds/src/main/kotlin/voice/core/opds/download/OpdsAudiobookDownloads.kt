@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
@@ -34,11 +35,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import okhttp3.Call
-import voice.core.audiobookshelf.ServerDownloads
-import voice.core.audiobookshelf.download.BookDownloadState
-import voice.core.audiobookshelf.download.DownloadProgress
-import voice.core.audiobookshelf.download.ServerDownloadNotifications
-import voice.core.audiobookshelf.http.ServerHttpClient
 import voice.core.common.comparator.NaturalOrderComparator
 import voice.core.data.BookId
 import voice.core.data.CustomMetadata
@@ -53,6 +49,7 @@ import voice.core.opds.feed.OpdsParseException
 import voice.core.opds.feed.OpdsPublication
 import voice.core.opds.feed.isAudioFileName
 import voice.core.opds.feed.parseAudiobookManifest
+import voice.core.opds.http.OpdsHttpClient
 import voice.core.scanner.MediaScanTrigger
 import voice.core.scanner.downloadedAudiobooksFolder
 
@@ -89,6 +86,18 @@ internal class DownloadedAudiobookStore(store: DataStore<List<DownloadedAudioboo
   )
 }
 
+/** Whether Pageturner asked for notifications before a download. It asks once. */
+@SingleIn(AppScope::class)
+internal class AskedForNotificationsStore(store: DataStore<Boolean>) : DataStore<Boolean> by store {
+
+  @Inject
+  constructor(
+    factory: VoiceDataStoreFactory,
+  ) : this(
+    factory.boolean("askedForDownloadNotifications", defaultValue = false),
+  )
+}
+
 private data class AudiobookDownload(
   val name: String,
   val cover: File?,
@@ -99,20 +108,19 @@ private data class AudiobookDownload(
  * Downloads audiobooks from the catalogs. Their files go to a folder of their own in the download
  * folder of the library, where the scan finds the book like every other one there, so the chapters
  * come from the files. The title, author and cover come from the catalog. Audiobooks are large, so
- * a foreground service keeps them downloading with a notification, the same as books from
- * Audiobookshelf.
+ * a foreground service keeps them downloading with a notification.
  */
 @SingleIn(AppScope::class)
 @Inject
 public class OpdsAudiobookDownloads
 internal constructor(
-  private val http: ServerHttpClient,
+  private val http: OpdsHttpClient,
   private val context: Context,
   private val store: DownloadedAudiobookStore,
   private val bookRepository: BookRepository,
   private val mediaScanTrigger: MediaScanTrigger,
-  private val notifications: ServerDownloadNotifications,
-  private val serverDownloads: ServerDownloads,
+  private val notifications: DownloadNotifications,
+  private val askedForNotificationsStore: AskedForNotificationsStore,
   private val downloadFolders: OpdsDownloadFolders,
   private val writer: LibraryFolderWriter,
 ) {
@@ -144,11 +152,14 @@ internal constructor(
    * Whether to ask for notifications before a download, so its progress shows. Pageturner asks
    * once.
    */
-  public suspend fun shouldAskForNotifications(): Boolean =
-    serverDownloads.shouldAskForNotifications()
+  public suspend fun shouldAskForNotifications(): Boolean = !askedForNotificationsStore.data.first()
 
   public suspend fun onAskedForNotifications() {
-    serverDownloads.onAskedForNotifications()
+    askedForNotificationsStore.updateData { true }
+  }
+
+  internal fun onAppVisibilityChange(visible: Boolean) {
+    notifications.appVisible = visible
   }
 
   // the scanner adds the book with what the files say, then it gets the title and author from the
@@ -207,7 +218,7 @@ internal constructor(
               downloads[key]?.copy(state = OpdsDownloadState.Failed) ?: return@update downloads
             downloads + (key to failed)
           }
-          notifications.failed(key.tag, name, cover = null, retry = null)
+          notifications.failed(key.tag, name)
         } else {
           downloads.update { it - key }
         }
@@ -259,13 +270,9 @@ internal constructor(
           DownloadProgress(
             name = download.name,
             cover = download.cover,
-            state =
-              BookDownloadState.Downloading(
-                progress = state.progress ?: 0F,
-                downloadedBytes = state.downloadedBytes,
-                totalBytes = state.totalBytes,
-                waitingFor = null,
-              ),
+            progress = state.progress ?: 0F,
+            downloadedBytes = state.downloadedBytes,
+            totalBytes = state.totalBytes,
           )
         },
       stop = OpdsDownloadService.stopIntent(context),

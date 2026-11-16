@@ -2,7 +2,6 @@
 
 package voice.features.bookOverview.bottomSheet
 
-import android.text.format.Formatter
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
@@ -29,7 +28,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearWavyProgressIndicator
@@ -53,7 +51,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -67,8 +64,6 @@ import androidx.graphics.shapes.RoundedPolygon
 import coil.compose.AsyncImage
 import java.text.NumberFormat
 import kotlinx.coroutines.launch
-import voice.core.audiobookshelf.download.BookDownloadState
-import voice.core.audiobookshelf.download.WaitingFor
 import voice.core.data.BookCategory
 import voice.core.strings.R as StringsR
 import voice.core.ui.MorphShape
@@ -87,10 +82,6 @@ import voice.features.bookOverview.views.CoverShape
 
 private val EditItems =
   listOf(
-    BottomSheetItem.Download,
-    BottomSheetItem.StopDownload,
-    BottomSheetItem.RetryDownload,
-    BottomSheetItem.RemoveDownload,
     BottomSheetItem.Select,
     BottomSheetItem.Edit,
     BottomSheetItem.InternetCover,
@@ -112,9 +103,6 @@ private val StatusOrder =
 @Composable
 internal fun BookActionsContent(
   book: BookOverviewItemViewState,
-  source: BookSource?,
-  download: BookDownloadState?,
-  bookSize: Long,
   category: BookCategory,
   items: List<BottomSheetItem>,
   onItemClick: (BottomSheetItem) -> Unit,
@@ -132,7 +120,6 @@ internal fun BookActionsContent(
   ) {
     BookHeader(
       book = book,
-      source = source,
       modifier = Modifier.entrance(entrance, 0).padding(horizontal = 8.dp),
     )
     Spacer(Modifier.height(24.dp))
@@ -153,11 +140,6 @@ internal fun BookActionsContent(
             shape = segmentedShape(index, edits.size),
             onClick = { onItemClick(item) },
             modifier = Modifier.entrance(entrance, 2 + index),
-            supportingText = item.supportingText(download, bookSize),
-            progress =
-              (download as? BookDownloadState.Downloading)?.progress?.takeIf {
-                item == BottomSheetItem.StopDownload
-              },
           )
         }
       }
@@ -172,7 +154,6 @@ internal fun BookActionsContent(
         onClick = { onItemClick(removal) },
         modifier = Modifier.entrance(entrance, 2 + edits.size),
         titleColor = MaterialTheme.colorScheme.error,
-        supportingText = removal.supportingText(download, bookSize),
       )
     }
   }
@@ -181,7 +162,6 @@ internal fun BookActionsContent(
 @Composable
 private fun BookHeader(
   book: BookOverviewItemViewState,
-  source: BookSource?,
   modifier: Modifier = Modifier,
 ) {
   val colors = MaterialTheme.colorScheme
@@ -214,10 +194,6 @@ private fun BookHeader(
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
         )
-      }
-      if (source != null) {
-        Spacer(Modifier.height(4.dp))
-        SourceLine(source)
       }
       Spacer(Modifier.height(10.dp))
       LinearWavyProgressIndicator(
@@ -255,38 +231,6 @@ private fun BookHeader(
         }
       }
     }
-  }
-}
-
-@Composable
-private fun SourceLine(source: BookSource) {
-  val (icon, text) =
-    when (source) {
-      BookSource.Device ->
-        UiR.drawable.ic_smartphone to stringResource(StringsR.string.book_source_device)
-      is BookSource.Server ->
-        UiR.drawable.ic_dns to
-          when (source.download) {
-            BookSource.Download.None -> source.name
-            BookSource.Download.Done ->
-              stringResource(StringsR.string.book_source_server_downloaded, source.name)
-          }
-    }
-  Row(verticalAlignment = Alignment.CenterVertically) {
-    Icon(
-      painter = painterResource(icon),
-      contentDescription = null,
-      tint = MaterialTheme.colorScheme.onSurfaceVariant,
-      modifier = Modifier.size(16.dp),
-    )
-    Spacer(Modifier.width(6.dp))
-    Text(
-      text = text,
-      style = MaterialTheme.typography.labelMedium,
-      color = MaterialTheme.colorScheme.onSurfaceVariant,
-      maxLines = 1,
-      overflow = TextOverflow.Ellipsis,
-    )
   }
 }
 
@@ -495,12 +439,6 @@ internal fun BottomSheetItem.style(): ActionStyle {
       ActionStyle(MaterialShapes.Clover8Leaf, colors.primaryContainer, colors.onPrimaryContainer)
     BottomSheetItem.DeleteBook ->
       ActionStyle(MaterialShapes.Cookie9Sided, colors.errorContainer, colors.onErrorContainer)
-    BottomSheetItem.Download,
-    BottomSheetItem.StopDownload,
-    BottomSheetItem.RetryDownload ->
-      ActionStyle(MaterialShapes.Sunny, colors.primaryContainer, colors.onPrimaryContainer)
-    BottomSheetItem.RemoveDownload ->
-      ActionStyle(MaterialShapes.Sunny, colors.surfaceContainerHighest, colors.onSurfaceVariant)
     // the shapes and colors of the status picker
     BottomSheetItem.BookCategoryMarkAsNotStarted ->
       ActionStyle(
@@ -524,8 +462,6 @@ internal fun ActionRow(
   modifier: Modifier = Modifier,
   title: String = stringResource(item.titleRes),
   titleColor: Color = MaterialTheme.colorScheme.onSurface,
-  supportingText: String? = null,
-  progress: Float? = null,
 ) {
   val interactionSource = remember { MutableInteractionSource() }
   val pressed by interactionSource.collectIsPressedAsState()
@@ -546,39 +482,21 @@ internal fun ActionRow(
       modifier = Modifier.heightIn(min = 68.dp).padding(horizontal = 12.dp, vertical = 10.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      Box(contentAlignment = Alignment.Center) {
-        ShapedIcon(
-          icon = item.icon,
-          shape = style.shape,
-          containerColor = style.container,
-          contentColor = style.content,
-          size = if (progress != null) 36.dp else 44.dp,
-          shapeRotation = rotation,
-        )
-        if (progress != null) {
-          val animatedProgress by animateFloatAsState(progress, label = "downloadProgress")
-          CircularProgressIndicator(
-            progress = { animatedProgress },
-            modifier = Modifier.size(48.dp),
-            strokeWidth = 3.dp,
-          )
-        }
-      }
+      ShapedIcon(
+        icon = item.icon,
+        shape = style.shape,
+        containerColor = style.container,
+        contentColor = style.content,
+        size = 44.dp,
+        shapeRotation = rotation,
+      )
       Spacer(Modifier.width(16.dp))
-      Column(Modifier.weight(1F)) {
-        Text(
-          text = title,
-          style = MaterialTheme.typography.titleMedium.copy(hyphens = Hyphens.Auto),
-          color = titleColor,
-        )
-        if (supportingText != null) {
-          Text(
-            text = supportingText,
-            style = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum"),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-          )
-        }
-      }
+      Text(
+        modifier = Modifier.weight(1F),
+        text = title,
+        style = MaterialTheme.typography.titleMedium.copy(hyphens = Hyphens.Auto),
+        color = titleColor,
+      )
       Spacer(Modifier.width(8.dp))
       Icon(
         painter = painterResource(UiR.drawable.ic_chevron_right),
@@ -586,44 +504,5 @@ internal fun ActionRow(
         tint = MaterialTheme.colorScheme.onSurfaceVariant,
       )
     }
-  }
-}
-
-@Composable
-private fun BottomSheetItem.supportingText(
-  download: BookDownloadState?,
-  bookSize: Long,
-): String? {
-  val context = LocalContext.current
-  return when (this) {
-    BottomSheetItem.Download ->
-      bookSize.takeIf { it > 0 }?.let { Formatter.formatShortFileSize(context, it) }
-    BottomSheetItem.StopDownload -> {
-      val downloading = download as? BookDownloadState.Downloading ?: return null
-      when (downloading.waitingFor) {
-        WaitingFor.Wifi -> stringResource(StringsR.string.book_download_waiting_for_wifi)
-        WaitingFor.Connection ->
-          stringResource(StringsR.string.book_download_waiting_for_connection)
-        null ->
-          if (downloading.totalBytes > 0) {
-            stringResource(
-              StringsR.string.book_download_progress,
-              Formatter.formatShortFileSize(context, downloading.downloadedBytes),
-              Formatter.formatShortFileSize(context, downloading.totalBytes),
-            )
-          } else {
-            NumberFormat.getPercentInstance().format(downloading.progress)
-          }
-      }
-    }
-    BottomSheetItem.RetryDownload -> stringResource(StringsR.string.book_download_failed)
-    BottomSheetItem.RemoveDownload ->
-      (download as? BookDownloadState.Downloaded)?.let {
-        stringResource(
-          StringsR.string.audiobookshelf_settings_downloads_used,
-          Formatter.formatShortFileSize(context, it.bytes),
-        )
-      }
-    else -> null
   }
 }

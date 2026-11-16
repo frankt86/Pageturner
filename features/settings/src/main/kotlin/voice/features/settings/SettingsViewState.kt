@@ -21,9 +21,6 @@ data class SettingsViewState(
   val showDeveloperMenu: Boolean,
   val folderNames: List<String>,
   val foldersWithoutAccess: Boolean,
-  /** The connected Audiobookshelf server, or null without one. */
-  val audiobookshelfServer: String?,
-  val showAudiobookshelf: Boolean,
 ) {
 
   companion object {
@@ -45,8 +42,6 @@ data class SettingsViewState(
         showDeveloperMenu = true,
         folderNames = listOf("Audiobooks", "Sci-Fi", "Non-Fiction"),
         foldersWithoutAccess = false,
-        audiobookshelfServer = "audiobooks.example.com",
-        showAudiobookshelf = true,
       )
     }
   }

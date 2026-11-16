@@ -24,8 +24,6 @@ import voice.navigation.Origin
 internal fun SelectFolder(
   onBack: () -> Unit,
   onAdd: (FileTypeSelection, Uri) -> Unit,
-  /** Null while connecting a server isn't available. */
-  onConnectAudiobookshelf: (() -> Unit)?,
   /** Null where downloading from a catalog isn't offered. */
   onOpenCatalogs: (() -> Unit)?,
   onFolderPickerCancel: () -> Unit,
@@ -80,7 +78,6 @@ internal fun SelectFolder(
           onFolderPickerCancel()
         },
         onNoPicker = { help = FolderHelp.NoPicker },
-        onConnectAudiobookshelf = onConnectAudiobookshelf,
         onOpenCatalogs = onOpenCatalogs,
       )
     },
@@ -94,7 +91,6 @@ private fun SelectFolderPreview() {
     SelectFolder(
       onBack = {},
       onAdd = { _, _ -> },
-      onConnectAudiobookshelf = {},
       onOpenCatalogs = null,
       onFolderPickerCancel = {},
       onHelpAnswer = {},

@@ -96,7 +96,7 @@ internal fun SelectionEditSheet(
   ModalBottomSheet(
     onDismissRequest = { if (!closing) onDismiss() },
     sheetState = sheetState,
-    // a save on the server can't be called back, so the sheet waits until all books are saved
+    // the sheet waits until all books are saved
     sheetGesturesEnabled = !viewState.saving,
     properties =
       ModalBottomSheetProperties(

@@ -108,8 +108,6 @@ internal fun ListBookRow(
         bookId = book.id,
         cover = book.cover,
         finished = finished,
-        unavailable = book.unavailable,
-        download = book.download,
         ebook = book.isEbook,
         selected = selected,
         modifier = Modifier.size(64.dp),

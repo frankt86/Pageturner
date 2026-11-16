@@ -9,7 +9,6 @@ Pageturner goes online only for these features:
 - **Author pages:** when you open the page of an author, Pageturner gets a short text and a photo of the author from Wikipedia and Wikimedia Commons.
 - **Ebook catalogs:** when you open a catalog or download a book, Pageturner talks to that catalog. This includes the
   free catalogs that come with the app. For a Komga server, Pageturner also sends and gets your reading progress.
-- **Audiobookshelf:** when you connect your own Audiobookshelf server, Pageturner talks to that server only.
 - **Natural voice:** when you pick the natural read-aloud voice, Pageturner downloads it once from GitHub. Reading aloud
   then runs on your phone, and the text of your books stays on it.
 

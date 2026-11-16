@@ -34,7 +34,6 @@ private fun LibraryScreenshot() {
       onShowFoldersClick = {},
       onShowHiddenBooksChange = {},
       onGroupingChange = {},
-      onShowNotDownloadedBooksChange = {},
       onSourceChange = { _, _ -> },
       onSelectionToggle = {},
       onSelectAll = {},

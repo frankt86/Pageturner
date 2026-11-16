@@ -158,7 +158,7 @@ internal fun CatalogEditorSheet(
           onValueChange = { onChange(state.copy(username = it)) },
           enabled = !state.busy,
           singleLine = true,
-          label = { Text(stringResource(StringsR.string.audiobookshelf_login_username)) },
+          label = { Text(stringResource(StringsR.string.login_username)) },
           supportingText = { Text(stringResource(StringsR.string.opds_catalog_credentials_hint)) },
           keyboardOptions =
             KeyboardOptions(
@@ -315,7 +315,7 @@ private fun PasswordField(
     onValueChange = onPasswordChange,
     enabled = enabled,
     singleLine = true,
-    label = { Text(stringResource(StringsR.string.audiobookshelf_login_password)) },
+    label = { Text(stringResource(StringsR.string.login_password)) },
     visualTransformation =
       if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
     trailingIcon = {
@@ -328,9 +328,9 @@ private fun PasswordField(
           contentDescription =
             stringResource(
               if (showPassword) {
-                StringsR.string.audiobookshelf_login_password_hide
+                StringsR.string.login_password_hide
               } else {
-                StringsR.string.audiobookshelf_login_password_show
+                StringsR.string.login_password_show
               },
             ),
         )

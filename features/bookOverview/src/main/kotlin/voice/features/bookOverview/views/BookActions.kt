@@ -1,9 +1,5 @@
 package voice.features.bookOverview.views
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.ModalBottomSheet
@@ -19,8 +15,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
 import androidx.navigation3.runtime.NavEntry
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -112,14 +106,6 @@ private fun BookActions(
       },
     )
 
-  // the download shows its progress in a notification, which needs the permission since Android 13
-  val notificationPermissionLauncher =
-    rememberLauncherForActivityResult(
-      contract = ActivityResultContracts.RequestPermission(),
-      onResult = {},
-    )
-  val context = LocalContext.current
-
   val deleteBookViewState = deleteBookViewModel.state.value
   if (deleteBookViewState != null) {
     CoverTheme(cover = deleteBookViewState.cover) {
@@ -195,9 +181,6 @@ private fun BookActions(
       ) {
         BookActionsContent(
           book = state.book,
-          source = state.source,
-          download = state.download,
-          bookSize = state.bookSize,
           category = state.category,
           items = state.items,
           onItemClick = { item ->
@@ -205,14 +188,6 @@ private fun BookActions(
               if (item == BottomSheetItem.FileCover) {
                 pickingCover = true
                 getContentLauncher.launch("image/*")
-              }
-              if (
-                item == BottomSheetItem.Download &&
-                  state.askForNotifications &&
-                  !context.canPostNotifications()
-              ) {
-                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                bottomSheetViewModel.onAskedForNotifications()
               }
               hideThen(item)
             }
@@ -232,10 +207,4 @@ private fun BookActions(
       }
     }
   }
-}
-
-private fun Context.canPostNotifications(): Boolean {
-  return Build.VERSION.SDK_INT < 33 ||
-    ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
-      PackageManager.PERMISSION_GRANTED
 }

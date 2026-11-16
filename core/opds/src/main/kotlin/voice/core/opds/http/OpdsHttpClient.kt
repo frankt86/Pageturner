@@ -1,4 +1,4 @@
-package voice.core.audiobookshelf.http
+package voice.core.opds.http
 
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -6,13 +6,10 @@ import dev.zacsweers.metro.SingleIn
 import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 
-/**
- * The client for the servers listeners run themselves, shared by Audiobookshelf and the OPDS
- * catalogs.
- */
+/** The client for the catalogs, which often run on servers that listeners run themselves. */
 @SingleIn(AppScope::class)
 @Inject
-public class ServerHttpClient(okHttpClient: OkHttpClient) {
+public class OpdsHttpClient(okHttpClient: OkHttpClient) {
 
   public val client: OkHttpClient =
     okHttpClient

@@ -6,9 +6,6 @@ import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import voice.core.audiobookshelf.ServerBookEdit
-import voice.core.audiobookshelf.ServerEdit
-import voice.core.audiobookshelf.ServerLibrary
 import voice.core.data.BookId
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.EbooksStore
@@ -20,7 +17,6 @@ import voice.features.bookOverview.di.BookActionsScope
 @ContributesIntoSet(BookActionsScope::class)
 class EditBookViewModel(
   private val repo: BookRepository,
-  private val serverLibrary: ServerLibrary,
   private val ebooksStore: EbooksStore,
 ) : BottomSheetItemViewModel {
 
@@ -73,10 +69,6 @@ class EditBookViewModel(
   internal fun onConfirm() {
     val state = _state.value ?: return
     check(state.confirmButtonEnabled)
-    if (state.remote) {
-      saveOnServer(state)
-      return
-    }
     scope.launch {
       // only what the listener changed, so the other name keeps following the files
       repo.updateCustomMetadata(state.bookId) { custom ->
@@ -92,27 +84,5 @@ class EditBookViewModel(
       }
     }
     _state.value = null
-  }
-
-  private fun saveOnServer(state: EditBookState) {
-    if (state.saving) return
-    val seriesChanged = state.series != state.initialSeries || state.part != state.initialPart
-    // only what the listener changed, so the rest stays as the server has it
-    val edit =
-      ServerBookEdit(
-        title = state.title.takeIf { it != state.initialTitle },
-        author = state.author.takeIf { it != state.initialAuthor },
-        series = state.series.takeIf { seriesChanged },
-        part = state.part.takeIf { seriesChanged },
-      )
-    if (edit == ServerBookEdit()) {
-      _state.value = state.copy(serverResult = ServerEdit.Saved)
-      return
-    }
-    _state.value = state.copy(saving = true, serverResult = null)
-    scope.launch {
-      val result = serverLibrary.updateBook(state.bookId, edit)
-      _state.value = _state.value?.copy(saving = false, serverResult = result)
-    }
   }
 }

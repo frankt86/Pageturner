@@ -17,15 +17,14 @@ import voice.core.ui.OnboardingButton
 import voice.features.folderPicker.folderPicker.FileTypeSelection
 
 /**
- * Picking a folder is the way to go: it can hold one book or a whole library. A server is the other
- * way to bring books, and a single file is the exception, so they are quieter.
+ * Picking a folder is the way to go: it can hold one book or a whole library. A catalog is the
+ * other way to bring books, and a single file is the exception, so they are quieter.
  */
 @Composable
 internal fun ColumnScope.ContentTypeChoices(
   onAdd: (FileTypeSelection, Uri) -> Unit,
   onFolderPickerCancel: () -> Unit,
   onNoPicker: () -> Unit,
-  onConnectAudiobookshelf: (() -> Unit)?,
   onOpenCatalogs: (() -> Unit)?,
 ) {
   val openDocumentLauncher =
@@ -53,13 +52,6 @@ internal fun ColumnScope.ContentTypeChoices(
       }
     },
   )
-  if (onConnectAudiobookshelf != null) {
-    OnboardingButton(
-      text = stringResource(StringsR.string.folder_add_action_audiobookshelf),
-      onClick = onConnectAudiobookshelf,
-      primary = false,
-    )
-  }
   if (onOpenCatalogs != null) {
     OnboardingButton(
       text = stringResource(StringsR.string.folder_add_action_opds),

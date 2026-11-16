@@ -12,8 +12,6 @@ import dev.zacsweers.metro.ContributesTo
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import voice.core.audiobookshelf.ServerDownloads
-import voice.core.audiobookshelf.ServerLibrary
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.BookCategory
@@ -31,7 +29,6 @@ import voice.features.bookOverview.overview.CurrentBook
 import voice.features.bookOverview.overview.LibraryBook
 import voice.features.bookOverview.overview.bookId
 import voice.features.bookOverview.overview.inSeries
-import voice.features.bookOverview.overview.rememberServerBookStates
 import voice.features.bookOverview.overview.series
 import voice.features.bookOverview.overview.toItemViewState
 import voice.navigation.Destination
@@ -47,8 +44,6 @@ class SeriesViewModel(
   private val playStateManager: PlayStateManager,
   private val experimentalPlaybackPersistenceFeatureFlag:
     ExperimentalPlaybackPersistenceFeatureFlag,
-  private val serverLibrary: ServerLibrary,
-  private val serverDownloads: ServerDownloads,
   dispatcherProvider: DispatcherProvider,
   @Assisted private val name: String,
 ) {
@@ -71,7 +66,6 @@ class SeriesViewModel(
           ?: return null)
         .id
     val playState = remember { playStateManager.playStateFlow }.collectAsState().value
-    val serverStates = rememberServerBookStates(serverLibrary, serverDownloads)
     val livePlaybackState = livePlaybackState(currentBookId)
     val seriesBooks =
       remember(books, ebooks) {
@@ -120,7 +114,7 @@ class SeriesViewModel(
           SeriesViewState.Book(
             // the header names the author already
             book =
-              book.toItemViewState(serverStates).let {
+              book.toItemViewState().let {
                 if (it.author == series.author) it.copy(author = null) else it
               },
             part = book.seriesPart,

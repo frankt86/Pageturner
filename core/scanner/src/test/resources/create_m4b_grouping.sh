@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# ffmpeg writes the grouping into the ©grp atom, like Audiobookshelf when it embeds a book's series
+# ffmpeg writes the grouping into the ©grp atom, like audiobook tools when they embed a book's series
 ffmpeg \
   -y \
   -f lavfi -i anullsrc=r=22050:cl=mono \

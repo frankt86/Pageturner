@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import voice.core.audiobookshelf.download.BookDownloadState
 import voice.core.common.DispatcherProvider
 import voice.core.data.Book
 import voice.core.data.BookId
@@ -46,7 +45,6 @@ import voice.core.search.BookSearchField
 import voice.core.search.BookSearchResult
 import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
-import voice.features.bookOverview.overview.DownloadBadge
 import voice.features.bookOverview.overview.bookId
 import voice.features.bookOverview.overview.toItemViewState
 import voice.navigation.Destination
@@ -87,8 +85,6 @@ class BookSearchViewModelTest {
       progress = 1F,
       lastOpened = 1,
     )
-  private val unavailable = MutableStateFlow<Set<BookId>>(emptySet())
-  private val downloads = MutableStateFlow<Map<BookId, BookDownloadState>>(emptyMap())
   private val search =
     mockk<BookSearch> {
       coEvery { search(any()) } returns emptyList()
@@ -274,25 +270,6 @@ class BookSearchViewModelTest {
         expected = carrie.toItemViewState().progress,
         actual = state.otherResults.first().progress,
       )
-    }
-  }
-
-  @Test
-  fun `results show downloads and books that are offline`() = runTest {
-    unavailable.value = setOf(shining.id)
-    downloads.value = mapOf(carrie.id to BookDownloadState.Failed)
-    val viewModel = viewModel()
-
-    testState(viewModel) {
-      viewModel.onRecentSearchClick("king")
-
-      val state = awaitState<BookSearchViewState.Results>()
-      assertEquals(expected = true, actual = state.topResult.unavailable)
-      assertEquals(expected = shining.id, actual = state.topResult.id)
-      assertEquals(expected = null, actual = state.topResult.download)
-      val carrieResult = state.otherResults.first { it.id == carrie.id }
-      assertEquals(expected = false, actual = carrieResult.unavailable)
-      assertEquals(expected = DownloadBadge.Failed, actual = carrieResult.download)
     }
   }
 
@@ -509,14 +486,6 @@ class BookSearchViewModelTest {
           MemoryFeatureFlag(experimentalPlaybackPersistence),
         ),
       lastResults = lastResults,
-      serverLibrary =
-        mockk {
-          every { unavailableBooks } returns unavailable
-        },
-      serverDownloads =
-        mockk {
-          every { states } returns downloads
-        },
       ebooksStore = EbooksStore(ebooks),
       dispatcherProvider = dispatcherProvider,
     )

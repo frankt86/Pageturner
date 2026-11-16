@@ -129,7 +129,6 @@ internal fun BookPlayContent(
             clock = clock,
             onSeek = onSeek,
             jumpBack = viewState.jumpBack,
-            unavailable = viewState.unavailable,
             bookPercent =
               if (showBookProgress) null
               else percentFormat.format(viewState.bookProgress.toDouble()),

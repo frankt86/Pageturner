@@ -19,7 +19,6 @@ import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -29,8 +28,6 @@ import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import voice.core.analytics.api.AnalyticsConsentStore
-import voice.core.audiobookshelf.AudiobookshelfFeatureFlag
-import voice.core.audiobookshelf.ServerAccount
 import voice.core.common.AppInfoProvider
 import voice.core.common.DispatcherProvider
 import voice.core.data.folders.AudiobookFolders
@@ -87,12 +84,6 @@ class SettingsViewModelTest {
       every { useGridAsDefault() } returns true
     }
   private val kioskModeFeatureFlag = MemoryFeatureFlag(false)
-  private val audiobookshelfFeatureFlag = MemoryFeatureFlag(false)
-  private val serverName = MutableStateFlow<String?>(null)
-  private val serverAccount =
-    mockk<ServerAccount>(relaxUnitFun = true) {
-      every { serverName } returns this@SettingsViewModelTest.serverName
-    }
   private val dynamicColorAvailability =
     mockk<DynamicColorAvailability> {
       every { isSupported() } returns true
@@ -124,8 +115,6 @@ class SettingsViewModelTest {
       audiobookFolders = audiobookFolders,
       dispatcherProvider =
         DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
-      serverAccount = serverAccount,
-      audiobookshelfFeatureFlag = AudiobookshelfFeatureFlag(audiobookshelfFeatureFlag),
     )
 
   @Test
@@ -253,46 +242,6 @@ class SettingsViewModelTest {
     verify(exactly = 1) {
       navigator.goTo(Destination.FolderPicker)
     }
-  }
-
-  @Test
-  fun `connecting a server is hidden while the feature is off`() = scope.runTest {
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.viewState()
-      }
-      .filterNotNull()
-      .test {
-        assertEquals(expected = false, actual = awaitItem().showAudiobookshelf)
-      }
-  }
-
-  @Test
-  fun `connecting a server shows once the feature is on`() = scope.runTest {
-    audiobookshelfFeatureFlag.value = true
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.viewState()
-      }
-      .filterNotNull()
-      .test {
-        assertEquals(expected = true, actual = awaitItem().showAudiobookshelf)
-      }
-  }
-
-  @Test
-  fun `a connected server stays in the settings while the feature is off`() = scope.runTest {
-    serverName.value = "audiobooks.example.com"
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.viewState()
-      }
-      .filterNotNull()
-      .test {
-        assertEquals(expected = true, actual = awaitItem().showAudiobookshelf)
-      }
   }
 
   @Test

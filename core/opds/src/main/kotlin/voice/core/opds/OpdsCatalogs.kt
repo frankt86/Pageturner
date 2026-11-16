@@ -4,7 +4,7 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import voice.core.audiobookshelf.login.isLocalHost
+import voice.core.opds.http.isLocalHost
 
 @Inject
 public class OpdsCatalogs(

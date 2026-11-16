@@ -1,7 +1,7 @@
-package voice.core.audiobookshelf.login
+package voice.core.opds.http
 
 /** Whether [host] is on the local network or a VPN, where servers often only speak http. */
-public fun isLocalHost(host: String): Boolean {
+internal fun isLocalHost(host: String): Boolean {
   val lower = host.lowercase().removePrefix("[").removeSuffix("]")
   if (lower == "localhost" || '.' !in lower) return true
   if (listOf(".local", ".lan", ".home", ".internal", ".home.arpa").any { lower.endsWith(it) })

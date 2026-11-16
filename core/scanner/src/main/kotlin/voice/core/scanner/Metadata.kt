@@ -83,7 +83,7 @@ internal data class Metadata(
   }
 }
 
-// the series tags Audiobookshelf reads, in its order, each with its part
+// the series tags that audiobook tools write, the first found wins, each with its part
 private val seriesAndPartTags =
   listOf(
     "SERIES" to "SERIES-PART",
@@ -99,9 +99,8 @@ private fun String.firstOfSeveral(): String? = substringBefore(';').trim().ifEmp
 
 private val seriesWithPart = Regex("""^(.+) #([^#\s]+)$""")
 
-// Audiobookshelf writes a book's series into the grouping, like "Cosmere; The Stormlight Archive
-// #2". A grouping
-// without a part is often a genre or "Audiobook", so it doesn't count.
+// audiobook tools write a book's series into the grouping, like "Cosmere; The Stormlight Archive
+// #2". A grouping without a part is often a genre or "Audiobook", so it doesn't count.
 private fun parseGrouping(grouping: String): Pair<String, String>? {
   val match =
     grouping.split(';').firstNotNullOfOrNull { seriesWithPart.find(it.trim()) } ?: return null

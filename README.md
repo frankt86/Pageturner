@@ -6,7 +6,7 @@
 **An audiobook player and ebook reader for Android.**
 
 Pageturner plays your audiobooks, reads your EPUB, PDF and Kindle books, reads them aloud in a natural voice, and
-downloads books from OPDS catalogs, Komga and Audiobookshelf. It is a fork of
+downloads books from OPDS catalogs and Komga. It is a fork of
 [Voice](https://github.com/PaulWoitaschek/Voice) by Paul Woitaschek and merges the updates of Voice.
 
 ## Download
@@ -49,8 +49,8 @@ Pageturner needs Android 9 or newer.
   books by part. See [Series](docs/ebooks.md#series).
 - Group the library by author. An author page lists the author's books and a short text from Wikipedia.
 - Edit the title, author, series and part of a book. Set a cover from the internet or from a file.
-- Select several books to set their series or author, or to hide them. Hide a book, a series, a folder or an
-  Audiobookshelf library. Mark a whole series as completed or not started yet.
+- Select several books to set their series or author, or to hide them. Hide a book, a series or a folder. Mark a whole
+  series as completed or not started yet.
 - The search finds audiobooks and ebooks by title, author and series, and accepts one typo per word.
 - The **Continue reading** card takes you back to the ebook you read last.
 
@@ -92,8 +92,6 @@ See [Ebooks and the Reader](docs/ebooks.md).
 - LibriVox comes with the app too: browse the newest English audiobooks, search them by title or author, and download
   them as MP3 audiobooks with a chapter for each section.
 - Your reading progress syncs both ways with Komga.
-- Stream and download audiobooks from [Audiobookshelf](docs/audiobookshelf.md), with your position and bookmarks in
-  sync.
 
 ### Privacy
 
@@ -108,7 +106,7 @@ See [Ebooks and the Reader](docs/ebooks.md).
 
 The [docs](https://frankt86.github.io/Pageturner/) cover [installing](docs/install.md),
 [organizing your audiobooks](docs/organizing.md), [ebooks and the reader](docs/ebooks.md),
-[ebook catalogs](docs/opds.md), [Audiobookshelf](docs/audiobookshelf.md) and the [FAQ](docs/faq.md). The
+[ebook catalogs](docs/opds.md) and the [FAQ](docs/faq.md). The
 [changelog](CHANGELOG.md) lists what each release has.
 
 Report bugs and ideas as [issues](https://github.com/frankt86/Pageturner/issues/new).

@@ -1,75 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="audiobookshelf.download.notification.books">
-        <item quantity="zero">جارٍ تنزيل %d كتاب</item>
-        <item quantity="one">جارٍ تنزيل %d كتاب</item>
-        <item quantity="two">جارٍ تنزيل %d كتابين</item>
-        <item quantity="few">جارٍ تنزيل %d كتب</item>
-        <item quantity="many">جارٍ تنزيل %d كتابًا</item>
-        <item quantity="other">جارٍ تنزيل %d كتاب</item>
-    </plurals>
-    <string name="audiobookshelf.download.notification.done">جاهز للاستماع بلا اتصال</string>
-    <string name="audiobookshelf.download.notification.retry">إعادة المحاولة</string>
-    <string name="audiobookshelf.download.notification.stop">إيقاف</string>
-    <string name="audiobookshelf.download.notification.title">جارٍ التنزيل…</string>
-    <string name="audiobookshelf.downloads.channel">التنزيلات</string>
-    <string name="audiobookshelf.login.address.action">متابعة</string>
-    <string name="audiobookshelf.login.address.label">عنوان الخادم</string>
-    <string name="audiobookshelf.login.address.subtitle">يمكنك الاستماع إلى الكتب الموجودة على خادمك الخاص، ويُبقي Pageturner موضع استماعك متزامنًا مع أجهزتك الأخرى.</string>
-    <string name="audiobookshelf.login.address.title">ربط Audiobookshelf</string>
-    <string name="audiobookshelf.login.credentials.action">تسجيل الدخول</string>
-    <string name="audiobookshelf.login.credentials.no_password">لا يسمح هذا الخادم إلا بالدخول الموحّد (SSO)، وهو ما لا يدعمه Pageturner بعد. يمكنك طلب تفعيل تسجيل الدخول بكلمة مرور من مسؤول الخادم.</string>
-    <string name="audiobookshelf.login.credentials.subtitle">بحسابك على %s.</string>
-    <string name="audiobookshelf.login.credentials.title">تسجيل الدخول</string>
-    <string name="audiobookshelf.login.error.certificate">هاتفك لا يثق في شهادة هذا الخادم.</string>
-    <string name="audiobookshelf.login.error.credentials">اسم المستخدم أو كلمة المرور غير صحيحة.</string>
-    <string name="audiobookshelf.login.error.failed">لم ينجح تسجيل الدخول. يمكنك المحاولة مجددًا.</string>
-    <string name="audiobookshelf.login.error.not_found">يتعذّر على Pageturner الوصول إلى خادم Audiobookshelf على هذا العنوان. هل هذه هي الشبكة الصحيحة؟</string>
-    <string name="audiobookshelf.login.error.not_set_up">لم يُعدّ هذا الخادم بعد. يلزم أولًا إكمال إعداده من تطبيق الويب الخاص به.</string>
-    <string name="audiobookshelf.login.error.other_account">هذا حساب آخر. لتبديل الحساب، يلزم تسجيل الخروج أولًا.</string>
-    <string name="audiobookshelf.login.error.too_old">يحتاج Pageturner إلى Audiobookshelf 2.26 أو أحدث، وهذا الخادم يعمل بالإصدار %s.</string>
-    <string name="audiobookshelf.login.error.unreachable">توقف الخادم عن الاستجابة. يمكنك المحاولة مجددًا بعد قليل.</string>
-    <string name="audiobookshelf.login.libraries.action">إضافة إلى مكتبتي</string>
-    <string name="audiobookshelf.login.libraries.loading">جارٍ البحث عن كتب…</string>
-    <string name="audiobookshelf.login.libraries.none">لا توجد مكتبات كتب صوتية هنا</string>
-    <string name="audiobookshelf.login.libraries.subtitle">ستنضم إلى مكتبتك. يمكنك تشغيلها فورًا، أو تنزيلها للاستماع بلا اتصال.</string>
-    <plurals name="audiobookshelf.login.libraries.title">
-        <item quantity="zero">وجدنا %d كتاب صوتي</item>
-        <item quantity="one">وجدنا %d كتاب صوتي</item>
-        <item quantity="two">وجدنا %d كتابين صوتيين</item>
-        <item quantity="few">وجدنا %d كتب صوتية</item>
-        <item quantity="many">وجدنا %d كتابًا صوتيًا</item>
-        <item quantity="other">وجدنا %d كتاب صوتي</item>
-    </plurals>
-    <plurals name="audiobookshelf.login.library_chip">
-        <item quantity="zero">%1$s · %2$d كتاب</item>
-        <item quantity="one">%1$s · %2$d كتاب</item>
-        <item quantity="two">%1$s · %2$d كتابان</item>
-        <item quantity="few">%1$s · %2$d كتب</item>
-        <item quantity="many">%1$s · %2$d كتابًا</item>
-        <item quantity="other">%1$s · %2$d كتاب</item>
-    </plurals>
-    <string name="audiobookshelf.login.password">كلمة المرور</string>
-    <string name="audiobookshelf.login.password.hide">إخفاء كلمة المرور</string>
-    <string name="audiobookshelf.login.password.show">إظهار كلمة المرور</string>
-    <string name="audiobookshelf.login.username">اسم المستخدم</string>
-    <string name="audiobookshelf.settings.downloads">التنزيلات</string>
-    <string name="audiobookshelf.settings.downloads.none">لم تُنزَّل أي كتب بعد</string>
-    <string name="audiobookshelf.settings.downloads.remove">إزالة الكل</string>
-    <string name="audiobookshelf.settings.downloads.used">%s على هذا الجهاز</string>
-    <string name="audiobookshelf.settings.libraries">المكتبات</string>
-    <string name="audiobookshelf.settings.mobile_data">التنزيل عبر بيانات الجوّال</string>
-    <string name="audiobookshelf.settings.mobile_data.summary">تنتظر التنزيلات اتصال Wi-Fi</string>
-    <string name="audiobookshelf.settings.sign_in_again">تسجيل الدخول</string>
-    <string name="audiobookshelf.settings.sign_out">تسجيل الخروج</string>
-    <string name="audiobookshelf.settings.signed_in_as">تم تسجيل الدخول باسم %s</string>
-    <string name="audiobookshelf.settings.try_again">إعادة المحاولة</string>
-    <string name="audiobookshelf.sign_out.message">ستُزال كتبه وتنزيلاتها من هذا الجهاز، ويبقى تقدّمك محفوظًا على الخادم.</string>
-    <string name="audiobookshelf.sign_out.title">تسجيل الخروج من %s؟</string>
-    <string name="audiobookshelf.status.connected">متصل، وتقدّمك متزامن</string>
-    <string name="audiobookshelf.status.needs_login">يطلب الخادم تسجيل الدخول مجددًا</string>
-    <string name="audiobookshelf.status.offline">يتعذّر الوصول إلى الخادم حاليًا. لا يزال بالإمكان تشغيل الكتب المنزّلة.</string>
-    <string name="audiobookshelf.status.syncing">جارٍ المزامنة…</string>
     <string name="author.wikipedia">قراءة المزيد في ويكيبيديا</string>
     <string name="book.category.action.mark_completed">وضع علامة «مكتمل»</string>
     <string name="book.category.action.mark_current">وضع علامة «حالي»</string>
@@ -81,25 +11,18 @@
     <string name="book.download.action">تنزيل</string>
     <string name="book.download.failed">لم يكتمل التنزيل</string>
     <string name="book.download.progress">%1$s من %2$s</string>
-    <string name="book.download.remove">إزالة التنزيل</string>
     <string name="book.download.retry">إعادة التنزيل</string>
     <string name="book.download.stop">إيقاف التنزيل</string>
-    <string name="book.download.waiting_for_connection">في انتظار الاتصال</string>
-    <string name="book.download.waiting_for_wifi">في انتظار شبكة Wi-Fi</string>
     <string name="book.edit.author.label">المؤلف</string>
     <string name="book.edit.cover.file">الغلاف من ملفات الجهاز</string>
     <string name="book.edit.cover.internet">الغلاف من الإنترنت</string>
     <string name="book.edit.part.label">الجزء</string>
     <string name="book.edit.rename">إعادة التسمية</string>
     <string name="book.edit.series.label">السلسلة</string>
-    <string name="book.edit.server.failed">تعذّر الحفظ على خادمك. يمكنك المحاولة مجددًا.</string>
-    <string name="book.edit.server.not_allowed">لا يملك حسابك على الخادم صلاحية تعديل الكتب.</string>
     <string name="book.edit.title.label">العنوان</string>
     <string name="book.hide">إخفاء من المكتبة</string>
     <string name="book.select">تحديد</string>
     <string name="book.show">إظهار في المكتبة</string>
-    <string name="book.source.device">على هذا الجهاز</string>
-    <string name="book.source.server_downloaded">تم التنزيل من %s</string>
     <string name="bookmark.action.add_note">إضافة ملاحظة</string>
     <string name="bookmark.add_note_hint">إضافة ملاحظة</string>
     <string name="bookmark.added.snackbar">أضيفت علامة مرجعية</string>
@@ -142,6 +65,7 @@
     <string name="common.action.more">المزيد من الخيارات</string>
     <string name="common.action.undo">تراجع</string>
     <string name="common.action.save">حفظ</string>
+    <string name="common.action.try_again">إعادة المحاولة</string>
     <string name="common.dialog.cancel">إلغاء</string>
     <string name="common.dialog.confirm">تعيين</string>
     <string name="common.dialog.ok">حسنًا</string>
@@ -156,6 +80,18 @@
     <string name="cover.search.query.with_author">غلاف الكتاب الصوتي %1$s من تأليف %2$s</string>
     <string name="cover.search.query.without_author">غلاف الكتاب الصوتي %s</string>
     <string name="cover.title">الغلاف</string>
+    <plurals name="download.notification.books">
+        <item quantity="zero">جارٍ تنزيل %d كتاب</item>
+        <item quantity="one">جارٍ تنزيل %d كتاب</item>
+        <item quantity="two">جارٍ تنزيل %d كتابين</item>
+        <item quantity="few">جارٍ تنزيل %d كتب</item>
+        <item quantity="many">جارٍ تنزيل %d كتابًا</item>
+        <item quantity="other">جارٍ تنزيل %d كتاب</item>
+    </plurals>
+    <string name="download.notification.done">جاهز للاستماع بلا اتصال</string>
+    <string name="download.notification.stop">إيقاف</string>
+    <string name="download.notification.title">جارٍ التنزيل…</string>
+    <string name="downloads.channel">التنزيلات</string>
     <plurals name="duration.minutes">
         <item quantity="zero">%d دقيقة</item>
         <item quantity="one">%d دقيقة</item>
@@ -172,7 +108,6 @@
         <item quantity="many">%d ثانية</item>
         <item quantity="other">%d ثانية</item>
     </plurals>
-    <string name="folder.add.action.audiobookshelf">ربط Audiobookshelf</string>
     <string name="folder.add.action.file">إضافة ملف واحد بدلًا من ذلك</string>
     <string name="folder.add.action.folder">اختيار مجلد</string>
     <string name="folder.add.action.opds">تنزيل من فهرس</string>
@@ -302,7 +237,6 @@
     <string name="library.book.ebook">كتاب إلكتروني</string>
     <string name="library.book.hidden">مخفي</string>
     <string name="library.book.hidden.message">تم إخفاء %1$s</string>
-    <string name="library.book.offline">غير متاح بلا اتصال</string>
     <string name="library.category.completed.title">مكتمل</string>
     <string name="library.category.current.title">الحالي</string>
     <string name="library.category.not_started.title">لم يبدأ بعد</string>
@@ -317,7 +251,6 @@
     <string name="library.filter.group_by.author">المؤلف</string>
     <string name="library.filter.group_by.series">السلسلة</string>
     <string name="library.filter.hidden_books">الكتب المخفية</string>
-    <string name="library.filter.not_downloaded">غير مُنزَّلة</string>
     <string name="library.filter.show">عرض</string>
     <string name="library.folders.moved.dialog.message">يمكنك الآن إدارة مجلدات الكتب من الإعدادات.</string>
     <string name="library.folders.moved.dialog.title">نُقلت مجلدات الكتب</string>
@@ -423,19 +356,15 @@
         <item quantity="many">تم تعيين السلسلة لـ %d كتابًا</item>
         <item quantity="other">تم تعيين السلسلة لـ %d كتاب</item>
     </plurals>
-    <plurals name="library.selection.server_failed">
-        <item quantity="zero">تعذّر حفظ %d كتاب على خادمك</item>
-        <item quantity="one">تعذّر حفظ %d كتاب على خادمك</item>
-        <item quantity="two">تعذّر حفظ %d كتابين على خادمك</item>
-        <item quantity="few">تعذّر حفظ %d كتب على خادمك</item>
-        <item quantity="many">تعذّر حفظ %d كتابًا على خادمك</item>
-        <item quantity="other">تعذّر حفظ %d كتاب على خادمك</item>
-    </plurals>
     <string name="library.selection.show">إظهار</string>
     <string name="library.series.hidden.message">تم إخفاء %1$s</string>
     <string name="library.storage_permission_bug.action">منح الإذن</string>
     <string name="library.storage_permission_bug.message">في بعض الأجهزة، يفتقد أحد تطبيقات النظام الإذن اللازم للوصول إلى وحدة التخزين الخارجية، وهذا الوصول ضروري ليتمكن Pageturner من قراءة كتبك الصوتية.</string>
     <string name="library.storage_permission_bug.title">الإذن مطلوب</string>
+    <string name="login.password">كلمة المرور</string>
+    <string name="login.password.hide">إخفاء كلمة المرور</string>
+    <string name="login.password.show">إظهار كلمة المرور</string>
+    <string name="login.username">اسم المستخدم</string>
     <string name="media_session.library.recent">الحديثة</string>
     <string name="media_session.library.root">كل الكتب الصوتية</string>
     <string name="onboarding.action.next">التالي</string>
@@ -778,7 +707,6 @@
     <string name="settings.auto_sleep_timer.start.label">تعيين وقت البدء</string>
     <string name="settings.auto_sleep_timer.summary">يبدأ مؤقت النوم تلقائيًا عند بدء التشغيل بين %1$s و%2$s</string>
     <string name="settings.auto_sleep_timer.title">مؤقت النوم التلقائي</string>
-    <string name="settings.library.audiobookshelf.summary">بث الكتب من خادمك الخاص</string>
     <string name="settings.library.folders.summary">إدارة المجلدات التي يُبحث فيها عن كتب</string>
     <string name="settings.library.layout.grid">شبكة</string>
     <string name="settings.library.layout.list">قائمة</string>

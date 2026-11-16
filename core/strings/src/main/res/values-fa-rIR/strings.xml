@@ -1,63 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="audiobookshelf.download.notification.books">
-        <item quantity="one">در حال دانلود %d کتاب</item>
-        <item quantity="other">در حال دانلود %d کتاب</item>
-    </plurals>
-    <string name="audiobookshelf.download.notification.done">آمادهٔ گوش دادن آفلاین</string>
-    <string name="audiobookshelf.download.notification.retry">تلاش مجدد</string>
-    <string name="audiobookshelf.download.notification.stop">توقف</string>
-    <string name="audiobookshelf.download.notification.title">در حال دانلود…</string>
-    <string name="audiobookshelf.downloads.channel">دانلودها</string>
-    <string name="audiobookshelf.login.address.action">ادامه</string>
-    <string name="audiobookshelf.login.address.label">نشانی سرور</string>
-    <string name="audiobookshelf.login.address.subtitle">به کتاب‌های سرور خودتان گوش دهید. Pageturner جای شما را با دستگاه‌های دیگرتان هماهنگ نگه می‌دارد.</string>
-    <string name="audiobookshelf.login.address.title">اتصال به Audiobookshelf</string>
-    <string name="audiobookshelf.login.credentials.action">ورود</string>
-    <string name="audiobookshelf.login.credentials.no_password">این سرور فقط ورود یکپارچه (SSO) را می‌پذیرد که Pageturner هنوز از آن پشتیبانی نمی‌کند. از مدیر سرور بخواهید ورود با رمز عبور را فعال کند.</string>
-    <string name="audiobookshelf.login.credentials.subtitle">با حساب خود در %s وارد شوید.</string>
-    <string name="audiobookshelf.login.credentials.title">ورود</string>
-    <string name="audiobookshelf.login.error.certificate">گوشی شما به گواهی این سرور اعتماد ندارد.</string>
-    <string name="audiobookshelf.login.error.credentials">نام کاربری یا رمز عبور درست نیست.</string>
-    <string name="audiobookshelf.login.error.failed">ورود انجام نشد. دوباره امتحان کنید.</string>
-    <string name="audiobookshelf.login.error.not_found">Pageturner نمی‌تواند در این نشانی سرور Audiobookshelf را پیدا کند. به شبکهٔ درست وصل هستید؟</string>
-    <string name="audiobookshelf.login.error.not_set_up">این سرور هنوز راه‌اندازی نشده است. اول راه‌اندازی را در نسخهٔ وب آن تمام کنید.</string>
-    <string name="audiobookshelf.login.error.other_account">این حساب دیگری است. برای تغییر حساب، اول از حساب خارج شوید.</string>
-    <string name="audiobookshelf.login.error.too_old">Pageturner به Audiobookshelf نسخهٔ 2.26 یا جدیدتر نیاز دارد. نسخهٔ این سرور %s است.</string>
-    <string name="audiobookshelf.login.error.unreachable">سرور دیگر پاسخ نمی‌دهد. چند لحظهٔ دیگر دوباره امتحان کنید.</string>
-    <string name="audiobookshelf.login.libraries.action">افزودن به کتابخانهٔ من</string>
-    <string name="audiobookshelf.login.libraries.loading">در حال جستجوی کتاب‌ها…</string>
-    <string name="audiobookshelf.login.libraries.none">اینجا هیچ کتابخانهٔ کتاب صوتی نیست</string>
-    <string name="audiobookshelf.login.libraries.subtitle">این کتاب‌ها به کتابخانهٔ شما اضافه می‌شوند. همین حالا پخششان کنید یا دانلودشان کنید تا آفلاین گوش دهید.</string>
-    <plurals name="audiobookshelf.login.libraries.title">
-        <item quantity="one">%d کتاب صوتی پیدا شد</item>
-        <item quantity="other">%d کتاب صوتی پیدا شد</item>
-    </plurals>
-    <plurals name="audiobookshelf.login.library_chip">
-        <item quantity="one">%1$s · %2$d کتاب</item>
-        <item quantity="other">%1$s · %2$d کتاب</item>
-    </plurals>
-    <string name="audiobookshelf.login.password">رمز عبور</string>
-    <string name="audiobookshelf.login.password.hide">پنهان کردن رمز عبور</string>
-    <string name="audiobookshelf.login.password.show">نمایش رمز عبور</string>
-    <string name="audiobookshelf.login.username">نام کاربری</string>
-    <string name="audiobookshelf.settings.downloads">دانلودها</string>
-    <string name="audiobookshelf.settings.downloads.none">هنوز هیچ کتابی دانلود نشده</string>
-    <string name="audiobookshelf.settings.downloads.remove">حذف همه</string>
-    <string name="audiobookshelf.settings.downloads.used">%s در این دستگاه</string>
-    <string name="audiobookshelf.settings.libraries">کتابخانه‌ها</string>
-    <string name="audiobookshelf.settings.mobile_data">دانلود با دادهٔ تلفن همراه</string>
-    <string name="audiobookshelf.settings.mobile_data.summary">در غیر این صورت، دانلودها منتظر Wi-Fi می‌مانند</string>
-    <string name="audiobookshelf.settings.sign_in_again">ورود</string>
-    <string name="audiobookshelf.settings.sign_out">خروج از حساب</string>
-    <string name="audiobookshelf.settings.signed_in_as">واردشده به‌عنوان %s</string>
-    <string name="audiobookshelf.settings.try_again">تلاش مجدد</string>
-    <string name="audiobookshelf.sign_out.message">کتاب‌های این سرور و دانلودهایشان از این دستگاه حذف می‌شوند. پیشرفت شما روی سرور محفوظ می‌ماند.</string>
-    <string name="audiobookshelf.sign_out.title">از %s خارج می‌شوید؟</string>
-    <string name="audiobookshelf.status.connected">متصل، پیشرفت شما همگام است</string>
-    <string name="audiobookshelf.status.needs_login">سرور می‌خواهد دوباره وارد شوید</string>
-    <string name="audiobookshelf.status.offline">فعلاً دسترسی به سرور ممکن نیست. کتاب‌های دانلودشده همچنان پخش می‌شوند.</string>
-    <string name="audiobookshelf.status.syncing">در حال همگام‌سازی…</string>
     <string name="author.wikipedia">خواندن بیشتر در ویکی‌پدیا</string>
     <string name="book.category.action.mark_completed">علامت زدن به عنوان تمام‌شده</string>
     <string name="book.category.action.mark_current">علامت زدن به عنوان جاری</string>
@@ -69,25 +11,18 @@
     <string name="book.download.action">دانلود</string>
     <string name="book.download.failed">دانلود کامل نشد</string>
     <string name="book.download.progress">%1$s از %2$s</string>
-    <string name="book.download.remove">حذف دانلود</string>
     <string name="book.download.retry">دانلود دوباره</string>
     <string name="book.download.stop">توقف دانلود</string>
-    <string name="book.download.waiting_for_connection">در انتظار اتصال</string>
-    <string name="book.download.waiting_for_wifi">در انتظار Wi-Fi</string>
     <string name="book.edit.author.label">نویسنده</string>
     <string name="book.edit.cover.file">دریافت کاور از داخل سیستم</string>
     <string name="book.edit.cover.internet">دریافت کاور از طریق اینترنت</string>
     <string name="book.edit.part.label">جلد</string>
     <string name="book.edit.rename">تغییر نام</string>
     <string name="book.edit.series.label">مجموعه</string>
-    <string name="book.edit.server.failed">ذخیره در سرورتان انجام نشد. دوباره امتحان کنید.</string>
-    <string name="book.edit.server.not_allowed">حساب شما در سرور اجازهٔ تغییر کتاب‌ها را ندارد.</string>
     <string name="book.edit.title.label">عنوان</string>
     <string name="book.hide">پنهان کردن از کتابخانه</string>
     <string name="book.select">انتخاب</string>
     <string name="book.show">نمایش در کتابخانه</string>
-    <string name="book.source.device">در این دستگاه</string>
-    <string name="book.source.server_downloaded">%s · دانلودشده</string>
     <string name="bookmark.action.add_note">افزودن یادداشت</string>
     <string name="bookmark.add_note_hint">یادداشتی اضافه کنید</string>
     <string name="bookmark.added.snackbar">نشانه‌گذاری انجام شد</string>
@@ -130,6 +65,7 @@
     <string name="common.action.more">گزینه‌های بیشتر</string>
     <string name="common.action.undo">واگرد</string>
     <string name="common.action.save">ذخیره</string>
+    <string name="common.action.try_again">تلاش مجدد</string>
     <string name="common.dialog.cancel">لغو</string>
     <string name="common.dialog.confirm">انتخاب</string>
     <string name="common.dialog.ok">باشه</string>
@@ -144,6 +80,14 @@
     <string name="cover.search.query.with_author">%1$s توسط %2$s کاور کتاب صوتی</string>
     <string name="cover.search.query.without_author">%s کاور کتاب صوتی</string>
     <string name="cover.title">کاور</string>
+    <plurals name="download.notification.books">
+        <item quantity="one">در حال دانلود %d کتاب</item>
+        <item quantity="other">در حال دانلود %d کتاب</item>
+    </plurals>
+    <string name="download.notification.done">آمادهٔ گوش دادن آفلاین</string>
+    <string name="download.notification.stop">توقف</string>
+    <string name="download.notification.title">در حال دانلود…</string>
+    <string name="downloads.channel">دانلودها</string>
     <plurals name="duration.minutes">
         <item quantity="one">%d دقیقه</item>
         <item quantity="other">%d دقیقه</item>
@@ -152,7 +96,6 @@
         <item quantity="one">%d ثانیه</item>
         <item quantity="other">%d ثانیه</item>
     </plurals>
-    <string name="folder.add.action.audiobookshelf">اتصال به Audiobookshelf</string>
     <string name="folder.add.action.file">افزودن یک فایل به‌جای پوشه</string>
     <string name="folder.add.action.folder">انتخاب پوشه</string>
     <string name="folder.add.action.opds">دانلود از یک کاتالوگ</string>
@@ -246,7 +189,6 @@
     <string name="library.book.ebook">کتاب الکترونیکی</string>
     <string name="library.book.hidden">پنهان</string>
     <string name="library.book.hidden.message">کتاب %1$s پنهان شد</string>
-    <string name="library.book.offline">آفلاین در دسترس نیست</string>
     <string name="library.category.completed.title">تمام‌شده</string>
     <string name="library.category.current.title">جاری</string>
     <string name="library.category.not_started.title">هنوز شروع نشده</string>
@@ -261,7 +203,6 @@
     <string name="library.filter.group_by.author">نویسنده</string>
     <string name="library.filter.group_by.series">مجموعه</string>
     <string name="library.filter.hidden_books">کتاب‌های پنهان</string>
-    <string name="library.filter.not_downloaded">دانلودنشده</string>
     <string name="library.filter.show">نمایش</string>
     <string name="library.folders.moved.dialog.message">اکنون می‌توانید پوشه‌های کتاب را در تنظیمات مدیریت کنید.</string>
     <string name="library.folders.moved.dialog.title">پوشه‌های کتاب منتقل شدند</string>
@@ -331,15 +272,15 @@
         <item quantity="one">مجموعهٔ %d کتاب تنظیم شد</item>
         <item quantity="other">مجموعهٔ %d کتاب تنظیم شد</item>
     </plurals>
-    <plurals name="library.selection.server_failed">
-        <item quantity="one">%d کتاب در سرورتان ذخیره نشد</item>
-        <item quantity="other">%d کتاب در سرورتان ذخیره نشد</item>
-    </plurals>
     <string name="library.selection.show">نمایش</string>
     <string name="library.series.hidden.message">مجموعهٔ %1$s پنهان شد</string>
     <string name="library.storage_permission_bug.action">اعطای مجوز</string>
     <string name="library.storage_permission_bug.message">در برخی دستگاه‌ها، یک برنامهٔ سیستمی مجوز لازم برای دسترسی به حافظهٔ خارجی را ندارد. Pageturner برای خواندن کتاب‌های صوتی شما به این دسترسی نیاز دارد.</string>
     <string name="library.storage_permission_bug.title">مجوز لازم است</string>
+    <string name="login.password">رمز عبور</string>
+    <string name="login.password.hide">پنهان کردن رمز عبور</string>
+    <string name="login.password.show">نمایش رمز عبور</string>
+    <string name="login.username">نام کاربری</string>
     <string name="media_session.library.recent">اخیراً پخش‌شده</string>
     <string name="media_session.library.root">همه کتاب های صوتی</string>
     <string name="onboarding.action.next">بعدی</string>
@@ -662,7 +603,6 @@
     <string name="settings.auto_sleep_timer.start.label">زمان شروع</string>
     <string name="settings.auto_sleep_timer.summary">اگر پخش بین %1$s تا %2$s شروع شود، تایمر خواب خودکار روشن می‌شود</string>
     <string name="settings.auto_sleep_timer.title">تایمر خواب خودکار</string>
-    <string name="settings.library.audiobookshelf.summary">کتاب‌های سرور خودتان را آنلاین پخش کنید</string>
     <string name="settings.library.folders.summary">مدیریت پوشه‌هایی که برای کتاب‌ها اسکن می‌شوند</string>
     <string name="settings.library.layout.grid">شبکه</string>
     <string name="settings.library.layout.list">فهرست</string>

@@ -7,7 +7,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Request
-import voice.core.audiobookshelf.http.ServerHttpClient
 import voice.core.logging.api.Logger
 import voice.core.opds.feed.OpdsFeed
 import voice.core.opds.feed.OpdsParseException
@@ -16,6 +15,7 @@ import voice.core.opds.feed.expandSearchTemplate
 import voice.core.opds.feed.inEnglish
 import voice.core.opds.feed.parseFeed
 import voice.core.opds.feed.parseOpenSearchTemplate
+import voice.core.opds.http.OpdsHttpClient
 import voice.core.opds.librivox.LibriVoxClient
 
 public sealed interface FeedResult {
@@ -33,7 +33,7 @@ private const val MAX_SKIPPED_PAGES = 4
 
 @Inject
 public class OpdsClient(
-  private val http: ServerHttpClient,
+  private val http: OpdsHttpClient,
   private val libriVox: LibriVoxClient,
 ) {
 

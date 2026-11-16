@@ -45,8 +45,6 @@ interface SettingsListener {
 
   fun openFolderPicker()
 
-  fun openAudiobookshelf()
-
   fun openOpdsCatalogs()
 
   fun onAppVersionClick()
@@ -95,8 +93,6 @@ interface SettingsListener {
         override fun toggleAnalytics() {}
 
         override fun openFolderPicker() {}
-
-        override fun openAudiobookshelf() {}
 
         override fun openOpdsCatalogs() {}
 

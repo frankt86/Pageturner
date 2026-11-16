@@ -43,8 +43,6 @@ internal fun GridBook(
       bookId = book.id,
       cover = book.cover,
       finished = finished,
-      unavailable = book.unavailable,
-      download = book.download,
       ebook = book.isEbook,
       hidden = book.hidden,
       selected = selected,

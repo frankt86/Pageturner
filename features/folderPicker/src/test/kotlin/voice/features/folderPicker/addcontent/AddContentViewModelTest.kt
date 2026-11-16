@@ -4,10 +4,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyOrder
 import kotlin.test.Test
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import voice.core.analytics.api.Analytics
-import voice.core.common.DispatcherProvider
 import voice.navigation.Destination
 import voice.navigation.Navigator
 import voice.navigation.Origin
@@ -37,14 +35,11 @@ class AddContentViewModelTest {
     verify { navigator.goTo(Destination.Website("https://librivox.org")) }
   }
 
-  private fun TestScope.viewModel() =
+  private fun viewModel() =
     AddContentViewModel(
       audiobookFolders = mockk(),
       navigator = navigator,
-      audiobookshelfFeatureFlag = mockk(),
-      serverAccount = mockk(),
       analytics = analytics,
-      dispatcherProvider = DispatcherProvider(coroutineContext, coroutineContext, coroutineContext),
       origin = Origin.Onboarding,
     )
 }

@@ -1,11 +1,10 @@
-package voice.core.audiobookshelf.download
+package voice.core.opds.download
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -17,68 +16,60 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import java.io.File
 import java.text.NumberFormat
 import kotlin.math.roundToInt
-import voice.core.data.Book
-import voice.core.data.BookId
 import voice.core.playback.notification.MainActivityIntentProvider
 import voice.core.strings.R as StringsR
 
-internal const val DOWNLOAD_NOTIFICATION_ID = 4242
-internal const val DOWNLOAD_CHANNEL_ID = "audiobookshelfDownloads"
+// the id of the channel listeners already have, so their settings for it stay
+private const val DOWNLOAD_CHANNEL_ID = "audiobookshelfDownloads"
 private const val RESULT_NOTIFICATION_ID = 4243
 private const val LIBRARY_REQUEST_CODE = 4244
 private const val COVER_SIZE_PX = 256
 
-/** A book on its way to the device, as the notification shows it. */
-internal data class ActiveDownload(
-  val book: Book,
-  val state: BookDownloadState.Downloading,
+/** A book that downloads, as its notification shows it. */
+internal data class DownloadProgress(
+  val name: String,
+  val cover: File?,
+  val progress: Float,
+  val downloadedBytes: Long,
+  /** The size of the whole book, or 0 when the catalog didn't tell. */
+  val totalBytes: Long,
 )
 
 /**
  * The notifications of the downloads: one with the progress while books download, and one per book
- * once it's ready or failed, for listeners who left Pageturner in the meantime. Books from catalogs
- * download with them too.
+ * once it's ready or failed, for listeners who left Pageturner in the meantime.
  */
 @SingleIn(AppScope::class)
-@ContributesBinding(AppScope::class)
 @Inject
-class DownloadNotifications
-internal constructor(
+internal class DownloadNotifications(
   private val context: Context,
   private val mainActivityIntentProvider: MainActivityIntentProvider,
-) : ServerDownloadNotifications {
+) {
 
   private val notificationManager = NotificationManagerCompat.from(context)
   private val covers = LruCache<String, Bitmap>(8)
   private val percentFormat = NumberFormat.getPercentInstance()
 
-  @Volatile internal var appVisible: Boolean = false
+  @Volatile var appVisible: Boolean = false
 
-  override fun createChannel() {
+  fun createChannel() {
     notificationManager.createNotificationChannel(
       NotificationChannelCompat.Builder(
           DOWNLOAD_CHANNEL_ID,
           NotificationManagerCompat.IMPORTANCE_LOW,
         )
-        .setName(context.getString(StringsR.string.audiobookshelf_downloads_channel))
+        .setName(context.getString(StringsR.string.downloads_channel))
         .build(),
     )
   }
 
-  internal fun progress(downloads: List<ActiveDownload>): Notification {
-    return progress(
-      downloads = downloads.map { DownloadProgress(it.book.name, it.book.cover, it.state) },
-      stop = DownloadActionReceiver.stop(context, downloads.map { it.book.id }),
-    )
-  }
-
-  override fun progress(
+  /** The notification while books download. [stop] is the intent of its button that stops them. */
+  fun progress(
     downloads: List<DownloadProgress>,
     stop: PendingIntent,
   ): Notification {
@@ -93,9 +84,7 @@ internal constructor(
         .setContentIntent(openLibrary())
     if (downloads.isEmpty()) {
       return builder
-        .setContentTitle(
-          context.getString(StringsR.string.audiobookshelf_download_notification_title),
-        )
+        .setContentTitle(context.getString(StringsR.string.download_notification_title))
         .setProgress(0, 0, true)
         .build()
     }
@@ -105,60 +94,42 @@ internal constructor(
     } else {
       builder.setContentTitle(
         context.resources.getQuantityString(
-          StringsR.plurals.audiobookshelf_download_notification_books,
+          StringsR.plurals.download_notification_books,
           downloads.size,
           downloads.size,
         ),
       )
     }
-    val waitingFor = downloads.firstNotNullOfOrNull { it.state.waitingFor }
-    val progress = downloads.map { it.state.progress }.average().toFloat()
-    // a server that doesn't tell the size gets a moving bar instead of one stuck at the start
-    val sizeUnknown = downloads.all { it.state.totalBytes <= 0 && it.state.progress <= 0F }
-    val text =
-      when {
-        waitingFor != null -> waitingText(waitingFor)
-        single != null -> progressText(single.state)
-        else -> downloads.joinToString { it.name }
-      }
+    val progress = downloads.map { it.progress }.average().toFloat()
+    // a catalog that doesn't tell the size gets a moving bar instead of one stuck at the start
+    val sizeUnknown = downloads.all { it.totalBytes <= 0 && it.progress <= 0F }
+    val text = if (single != null) progressText(single) else downloads.joinToString { it.name }
     return builder
       .setContentText(text)
       .setProgress(100, (progress * 100).roundToInt(), sizeUnknown)
-      .addAction(
-        0,
-        context.getString(StringsR.string.audiobookshelf_download_notification_stop),
-        stop,
-      )
+      .addAction(0, context.getString(StringsR.string.download_notification_stop), stop)
       .build()
   }
 
-  internal fun progressText(state: BookDownloadState.Downloading): String {
-    return if (state.totalBytes > 0) {
+  private fun progressText(download: DownloadProgress): String {
+    return if (download.totalBytes > 0) {
       context.getString(
         StringsR.string.book_download_progress,
-        Formatter.formatShortFileSize(context, state.downloadedBytes),
-        Formatter.formatShortFileSize(context, state.totalBytes),
+        Formatter.formatShortFileSize(context, download.downloadedBytes),
+        Formatter.formatShortFileSize(context, download.totalBytes),
       )
-    } else if (state.progress <= 0F && state.downloadedBytes > 0) {
-      Formatter.formatShortFileSize(context, state.downloadedBytes)
+    } else if (download.progress <= 0F && download.downloadedBytes > 0) {
+      Formatter.formatShortFileSize(context, download.downloadedBytes)
     } else {
-      percentFormat.format(state.progress)
+      percentFormat.format(download.progress)
     }
   }
 
-  private fun waitingText(waitingFor: WaitingFor): String =
-    context.getString(
-      when (waitingFor) {
-        WaitingFor.Wifi -> StringsR.string.book_download_waiting_for_wifi
-        WaitingFor.Connection -> StringsR.string.book_download_waiting_for_connection
-      },
-    )
-
-  internal fun downloaded(book: Book) {
-    downloaded(book.id.value, book.name, book.cover)
-  }
-
-  override fun downloaded(
+  /**
+   * Tells that a book is ready, unless Pageturner is open and shows it itself. [tag] tells the books
+   * apart.
+   */
+  fun downloaded(
     tag: String,
     name: String,
     cover: File?,
@@ -169,9 +140,7 @@ internal constructor(
       NotificationCompat.Builder(context, DOWNLOAD_CHANNEL_ID)
         .setSmallIcon(android.R.drawable.stat_sys_download_done)
         .setContentTitle(name)
-        .setContentText(
-          context.getString(StringsR.string.audiobookshelf_download_notification_done),
-        )
+        .setContentText(context.getString(StringsR.string.download_notification_done))
         .setLargeIcon(cover?.let(::cover))
         .setCategory(NotificationCompat.CATEGORY_STATUS)
         .setContentIntent(openLibrary())
@@ -181,49 +150,28 @@ internal constructor(
     )
   }
 
-  internal fun failed(book: Book) {
-    failed(book.id.value, book.name, book.cover, DownloadActionReceiver.retry(context, book.id))
-  }
-
-  override fun failed(
+  /** Tells that a download failed, unless Pageturner is open and shows it itself. */
+  fun failed(
     tag: String,
     name: String,
-    cover: File?,
-    retry: PendingIntent?,
   ) {
     if (appVisible) return
-    val builder =
+    notifyResult(
+      tag,
       NotificationCompat.Builder(context, DOWNLOAD_CHANNEL_ID)
         .setSmallIcon(android.R.drawable.stat_notify_error)
         .setContentTitle(name)
         .setContentText(context.getString(StringsR.string.book_download_failed))
-        .setLargeIcon(cover?.let(::cover))
         .setCategory(NotificationCompat.CATEGORY_ERROR)
         .setContentIntent(openLibrary())
         .setAutoCancel(true)
         .setSilent(true)
-    if (retry != null) {
-      builder.addAction(
-        0,
-        context.getString(StringsR.string.audiobookshelf_download_notification_retry),
-        retry,
-      )
-    }
-    notifyResult(tag, builder.build())
+        .build(),
+    )
   }
 
-  internal fun cancelResult(bookId: BookId) {
-    cancelResult(bookId.value)
-  }
-
-  override fun cancelResult(tag: String) {
+  fun cancelResult(tag: String) {
     notificationManager.cancel(tag, RESULT_NOTIFICATION_ID)
-  }
-
-  internal fun cancelResults() {
-    notificationManager.activeNotifications
-      .filter { it.id == RESULT_NOTIFICATION_ID }
-      .forEach { notificationManager.cancel(it.tag, it.id) }
   }
 
   @SuppressLint("MissingPermission")
@@ -250,7 +198,6 @@ internal constructor(
 
   private fun cover(file: File): Bitmap? {
     if (!file.exists()) return null
-    // the server can change a cover, which rewrites its file
     val key = "${file.path}:${file.lastModified()}"
     covers.get(key)?.let {
       return it
@@ -273,11 +220,3 @@ internal constructor(
     return bitmap
   }
 }
-
-internal fun Intent.withBookIds(bookIds: List<BookId>): Intent =
-  putExtra(EXTRA_BOOK_IDS, bookIds.map { it.value }.toTypedArray())
-
-internal fun Intent.bookIds(): Set<BookId> =
-  getStringArrayExtra(EXTRA_BOOK_IDS).orEmpty().map(::BookId).toSet()
-
-private const val EXTRA_BOOK_IDS = "bookIds"

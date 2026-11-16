@@ -9,7 +9,7 @@ An audiobook player and ebook reader for Android.
 
 Pageturner plays your audiobook files, with resume positions, bookmarks, a sleep timer, playback speed, skip silence
 and Android Auto. It reads your EPUB, PDF and Kindle books, with two pages side by side on an unfolded foldable. It
-reads them aloud in a natural voice, and downloads books from OPDS catalogs, Komga and Audiobookshelf.
+reads them aloud in a natural voice, and downloads books from OPDS catalogs and Komga.
 
 ## Download
 
@@ -70,7 +70,7 @@ Do you install an app from outside Google Play for the first time? See [Install]
   ---
 
   Download ebooks and audiobooks from free catalogs, Calibre-Web, Komga and other [OPDS catalogs](opds.md), with your
-  reading progress in sync with Komga. Stream and download from [Audiobookshelf](audiobookshelf.md).
+  reading progress in sync with Komga.
 
 - :material-update:{ .lg .middle } **Based on Voice**
 
@@ -87,7 +87,6 @@ Do you install an app from outside Google Play for the first time? See [Install]
 - [Organizing Audiobooks](organizing.md): set up your library.
 - [Ebooks and the Reader](ebooks.md): read EPUB, PDF and Kindle books, and have them read aloud.
 - [Ebook catalogs](opds.md): download books from free catalogs and your own server.
-- [Audiobookshelf](audiobookshelf.md): play the books of your audiobook server.
 - [FAQ](faq.md): common questions.
 
 Do you want to contribute? See [Development](development.md) and [Architecture](architecture.md).

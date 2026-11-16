@@ -11,7 +11,6 @@ import kotlinx.serialization.builtins.SetSerializer
 import voice.core.data.Book
 import voice.core.data.Ebook
 import voice.core.data.isIn
-import voice.core.data.isRemote
 import voice.core.datastore.VoiceDataStoreFactory
 
 @Serializable
@@ -19,6 +18,7 @@ sealed interface LibrarySource {
 
   @Serializable @SerialName("folder") data class Folder(val uri: String) : LibrarySource
 
+  // stays readable in the stored hidden sources of listeners who hid a server library
   @Serializable
   @SerialName("serverLibrary")
   data class ServerLibrary(val id: String) : LibrarySource
@@ -41,11 +41,7 @@ class HiddenSourcesStore(store: DataStore<Set<LibrarySource>>) :
 }
 
 internal fun Book.source(folders: List<Uri>): LibrarySource? {
-  return if (id.isRemote) {
-    content.serverLibraryId?.let(LibrarySource::ServerLibrary)
-  } else {
-    folders.firstOrNull { id.isIn(it) }?.let { LibrarySource.Folder(it.toString()) }
-  }
+  return folders.firstOrNull { id.isIn(it) }?.let { LibrarySource.Folder(it.toString()) }
 }
 
 internal fun Ebook.source(folders: List<Uri>): LibrarySource? {

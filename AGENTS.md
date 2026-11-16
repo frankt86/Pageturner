@@ -9,6 +9,10 @@ Pageturner is a modular Android audiobook player and ebook reader, based on Voic
 - Keep complexity low, as every line of code is maintained for years. Build the simplest version that solves the problem listeners actually have. If an edge case would add a lot of code, stored data or a migration, leave it out and name it in the pull request, or ask first.
 - In the Play build, logs from `Logger.d` up go to Crashlytics. Never log names, titles, URIs, ids, server addresses, what the listener typed or whole objects. Log counts, positions and types instead. Pass exceptions as the throwable, don't put them in the message. Use `Logger.nonFatal` only for what should never happen.
 
+## Upstream merges
+
+Every merge of upstream Voice drops the Audiobookshelf integration: the modules `core/audiobookshelf` and `features/audiobookshelf`, the feature and its wiring in other modules, its strings and its docs.
+
 ## Writing style
 
 Write replies to the user, comments, commit messages, pull requests, issues and docs in ASD-STE100 Simplified Technical English: active voice, simple tenses, one word per meaning, noun clusters of three words or fewer, and sentences of 20 words or fewer. UI strings and the store listing follow the translate-strings skill instead.

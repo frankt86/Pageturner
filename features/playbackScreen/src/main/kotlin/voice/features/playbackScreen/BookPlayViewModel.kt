@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import voice.core.audiobookshelf.ServerLibrary
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.Book
@@ -79,7 +78,6 @@ class BookPlayViewModel(
   private val kioskModeFeatureFlag: KioskModeFeatureFlag,
   private val historyRecorder: ListeningHistoryRecorder,
   private val clock: Clock,
-  private val serverLibrary: ServerLibrary,
   private val lastPlaybackSpeedStore: LastPlaybackSpeedStore,
   @Assisted private val bookId: BookId,
 ) {
@@ -157,11 +155,6 @@ class BookPlayViewModel(
         book.currentChapter.chapterMarks.indexOf(currentMark) +
         1
     val lastJump = remember { historyRecorder.lastJump }.collectAsState().value
-    val unavailableBooks = remember {
-      serverLibrary.unavailableBooks
-    }
-      .collectAsState(initial = emptySet())
-      .value
     return BookPlayViewState(
       sleepTimerState = sleepTime.toViewState(),
       playing = isPlaying,
@@ -182,7 +175,6 @@ class BookPlayViewModel(
       chapterSegments = book.chapterSegments(),
       skipSeconds = skipSeconds,
       jumpBack = lastJump?.let { jumpBackViewState(book, it, chapterNumber) },
-      unavailable = book.id in unavailableBooks,
     )
   }
 

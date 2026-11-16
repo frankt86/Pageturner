@@ -137,9 +137,6 @@ private fun EbookActions(uri: Uri) {
       ) {
         BookActionsContent(
           book = state.book,
-          source = null,
-          download = null,
-          bookSize = 0,
           category = state.category,
           items = state.items,
           onItemClick = { item ->
