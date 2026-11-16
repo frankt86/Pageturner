@@ -175,3 +175,41 @@ internal fun nextChunk(
   }
   return start until end
 }
+
+/**
+ * The next sentence to read aloud with the natural voice, which only starts speaking once a passage
+ * is ready. A long sentence is cut after a comma, so the voice can start sooner. Short sentences
+ * stay with the next one, so "Mr." isn't spoken on its own.
+ */
+internal fun nextSentence(
+  text: String,
+  from: Int,
+  maxLength: Int = 200,
+): IntRange? {
+  val chunk = nextChunk(text, from, maxLength) ?: return null
+  var end = chunk.last + 1
+  var index = chunk.first + MIN_SENTENCE_LENGTH - 1
+  while (index < chunk.last) {
+    if (text[index] in SENTENCE_ENDS) {
+      var after = index + 1
+      while (after <= chunk.last && text[after] in CLOSING_MARKS) after++
+      if (after <= chunk.last && text[after].isWhitespace()) {
+        end = after
+        break
+      }
+    }
+    index++
+  }
+  if (end - chunk.first > MAX_CLAUSE_LENGTH) {
+    val limit = chunk.first + MAX_CLAUSE_LENGTH
+    val clauseEnd = CLAUSE_ENDS.maxOf { text.lastIndexOf(it, limit) }
+    if (clauseEnd >= chunk.first + MIN_SENTENCE_LENGTH) end = clauseEnd + 1
+  }
+  return chunk.first until end
+}
+
+private const val MIN_SENTENCE_LENGTH = 10
+private const val MAX_CLAUSE_LENGTH = 80
+private const val SENTENCE_ENDS = ".!?…"
+private const val CLOSING_MARKS = "\"'”’»)]"
+private val CLAUSE_ENDS = listOf(", ", "; ", ": ")
