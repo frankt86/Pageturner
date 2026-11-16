@@ -8,6 +8,12 @@
     <string name="book.delete.dialog.confirm_files">ファイルを削除</string>
     <string name="book.delete.dialog.message">ファイルはデバイスから完全に削除されます。元に戻すことはできません。</string>
     <string name="book.delete.dialog.title">ブックの削除</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="other">%d 冊を削除</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="other">%d 冊を削除できませんでした</item>
+    </plurals>
     <string name="book.download.action">ダウンロード</string>
     <string name="book.download.failed">ダウンロードが完了しませんでした</string>
     <string name="book.download.progress">%2$s 中 %1$s</string>

@@ -9,7 +9,6 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.File
 import java.io.IOException
-import java.security.MessageDigest
 import voice.core.logging.api.Logger
 
 // raise it when the text taken from a book changes, so the books are read anew
@@ -35,17 +34,6 @@ internal fun bookTextKey(
 ): String? {
   if (size == null || size <= 0 || modified == null || modified <= 0) return null
   return "$BOOK_TEXT_VERSION|$uri|$size|$modified"
-}
-
-internal fun bookTextFile(
-  folder: File,
-  uri: String,
-): File {
-  val hash =
-    MessageDigest.getInstance("SHA-256").digest(uri.toByteArray()).joinToString("") {
-      "%02x".format(it)
-    }
-  return File(folder, hash)
 }
 
 internal fun writeBookText(
@@ -142,8 +130,6 @@ internal fun bookTextKey(
     null
   }
 }
-
-internal fun bookTextFolder(context: Context): File = File(context.cacheDir, "book_text")
 
 // writeUTF only takes 64 KB, a chapter can be longer
 private fun DataOutputStream.writeString(value: String) {

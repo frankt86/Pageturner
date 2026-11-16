@@ -49,8 +49,8 @@ Pageturner needs Android 9 or newer.
   books by part. See [Series](docs/ebooks.md#series).
 - Group the library by author. An author page lists the author's books and a short text from Wikipedia.
 - Edit the title, author, series and part of a book. Set a cover from the internet or from a file.
-- Select several books to set their series or author, or to hide them. Hide a book, a series or a folder. Mark a whole
-  series as completed or not started yet.
+- Select several books to set their series or author, to hide them, or to delete them. Hide a book, a series or a
+  folder. Delete an audiobook or an ebook with its files. Mark a whole series as completed or not started yet.
 - The search finds audiobooks and ebooks by title, author and series, and accepts one typo per word.
 - The **Continue reading** card takes you back to the ebook you read last.
 

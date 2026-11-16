@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.State
 import voice.core.data.BookCategory
 import voice.core.data.BookId
+import voice.features.bookOverview.deleteBook.DeleteBookViewState
 import voice.features.bookOverview.select.SelectionEditViewState
 import voice.features.bookOverview.select.SelectionViewState
 
@@ -29,6 +30,7 @@ data class BookOverviewViewState(
   val showFilterIcon: Boolean = false,
   val selection: SelectionViewState? = null,
   val selectionEdit: SelectionEditViewState? = null,
+  val selectionDelete: DeleteBookViewState? = null,
   /** The book in the Continue card: the current audiobook, or an ebook read since it was played. */
   val heroBookId: BookId? = currentBookId,
 ) {

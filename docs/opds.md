@@ -150,11 +150,11 @@ When the folders in your download folder are authors, each book goes into the fo
 Pageturner then looks through your library, finds the downloaded book like any other, and gives it the title, author and cover
 from the catalog. The tick in the catalog and the progress sync with Komga keep working for it.
 
-To remove an ebook, long press it in the library and tap **Hide from library**. Its file stays in the download folder.
-Download it again and the book comes back, with your place in it.
+To take an ebook out of the library, long press it in the library and tap **Hide from library**. Its file stays in the
+download folder. Download it again and the book comes back, with your place in it.
 
-To remove an audiobook, long press it in the library and tap **Delete Book**, like any other audiobook. Its files leave your
-phone.
+To remove a book from your phone, long press it in the library and tap **Delete Book**, like any other book. Its files
+leave your phone, and the book leaves the library.
 
 ## Syncing your progress with Komga
 

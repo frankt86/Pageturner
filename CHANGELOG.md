@@ -20,7 +20,9 @@ Pageturner adds to Voice.
 - Ebooks sit in Current, Not started yet and Completed, like audiobooks.
 - A Continue reading card takes you back to the ebook you read last.
 - Long-press an ebook to mark it, edit its title, author, series and part, set a cover from the internet or from a file,
-  hide it, or select it with other books.
+  hide it, delete it with its file, or select it with other books.
+- Select several books, audiobooks and ebooks together, and delete them with their files. The sheet asks first and shows
+  how many books it deletes.
 - The series and part of an EPUB come from the book. Ebooks and audiobooks of one series share a stack and a series
   screen.
 - The library search finds ebooks, and Browse lists them under their authors and series.

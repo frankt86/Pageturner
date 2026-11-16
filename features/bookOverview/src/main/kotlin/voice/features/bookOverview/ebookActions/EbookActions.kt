@@ -29,6 +29,7 @@ import voice.core.common.rootGraphAs
 import voice.core.ui.CoverTheme
 import voice.features.bookOverview.bottomSheet.BookActionsContent
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
+import voice.features.bookOverview.deleteBook.DeleteBookSheet
 import voice.features.bookOverview.editBook.EditBookSheet
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
@@ -64,7 +65,9 @@ private fun EbookActions(uri: Uri) {
   var showMenu by rememberSaveable { mutableStateOf(true) }
   var pickingCover by rememberSaveable { mutableStateOf(false) }
   fun closeIfDone() {
-    if (!showMenu && !pickingCover && viewModel.editState == null) {
+    if (
+      !showMenu && !pickingCover && viewModel.editState == null && viewModel.deleteState == null
+    ) {
       viewModel.onClose()
     }
   }
@@ -84,6 +87,23 @@ private fun EbookActions(uri: Uri) {
       },
     )
 
+  val deleteState = viewModel.deleteState
+  if (deleteState != null) {
+    CoverTheme(cover = deleteState.cover) {
+      DeleteBookSheet(
+        viewState = deleteState,
+        onDismiss = {
+          viewModel.onDeleteDismiss()
+          closeIfDone()
+        },
+        onConfirmDeletion = {
+          viewModel.onDeleteConfirm()
+          closeIfDone()
+        },
+        onDeleteCheckBoxCheck = viewModel::onDeleteCheckBoxCheck,
+      )
+    }
+  }
   val editState = viewModel.editState
   if (editState != null) {
     CoverTheme(cover = editState.cover) {
@@ -152,6 +172,7 @@ private fun EbookActions(uri: Uri) {
               BottomSheetItem.Hide -> hideThen(viewModel::onHide)
               BottomSheetItem.Show -> hideThen(viewModel::onShow)
               BottomSheetItem.Select -> hideThen(viewModel::onSelect)
+              BottomSheetItem.DeleteBook -> hideThen(viewModel::onDelete)
               else -> Unit
             }
           },

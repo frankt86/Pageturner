@@ -72,6 +72,7 @@ import voice.core.strings.R as StringsR
 import voice.core.ui.PlayButton
 import voice.core.ui.R as UiR
 import voice.core.ui.VoiceTheme
+import voice.features.bookOverview.deleteBook.DeleteBookSheet
 import voice.features.bookOverview.di.BookOverviewGraph
 import voice.features.bookOverview.overview.AuthorEntryViewState
 import voice.features.bookOverview.overview.BookOverviewItemViewState
@@ -187,9 +188,18 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     onSelectionEdit = bookOverviewViewModel::onSelectionEdit,
     onSelectionHide = bookOverviewViewModel::onSelectionHide,
     onSelectionShow = bookOverviewViewModel::onSelectionShow,
+    onSelectionDelete = bookOverviewViewModel::onSelectionDelete,
     snackbarHostState = snackbarHostState,
     modifier = modifier,
   )
+  viewState.selectionDelete?.let { delete ->
+    DeleteBookSheet(
+      viewState = delete,
+      onDismiss = bookOverviewViewModel::onSelectionDeleteDismiss,
+      onConfirmDeletion = bookOverviewViewModel::onSelectionDeleteConfirm,
+      onDeleteCheckBoxCheck = bookOverviewViewModel::onSelectionDeleteCheckBoxCheck,
+    )
+  }
   viewState.selectionEdit?.let { edit ->
     SelectionEditSheet(
       viewState = edit,
@@ -224,6 +234,7 @@ internal fun BookOverview(
   onSelectionEdit: (BookField) -> Unit,
   onSelectionHide: () -> Unit,
   onSelectionShow: () -> Unit,
+  onSelectionDelete: () -> Unit,
   modifier: Modifier = Modifier,
   snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
@@ -341,6 +352,7 @@ internal fun BookOverview(
             onEdit = onSelectionEdit,
             onHide = onSelectionHide,
             onShow = onSelectionShow,
+            onDelete = onSelectionDelete,
           )
         }
       }
@@ -444,6 +456,7 @@ fun BookOverviewPreview(
       onSelectionEdit = {},
       onSelectionHide = {},
       onSelectionShow = {},
+      onSelectionDelete = {},
     )
   }
 }

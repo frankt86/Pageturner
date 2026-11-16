@@ -1,36 +1,26 @@
 package voice.features.bookOverview.deleteBook
 
-import android.app.Application
-import android.content.ContentResolver
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.net.toFile
-import androidx.documentfile.provider.DocumentFile
 import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.BookId
 import voice.core.data.isRemote
 import voice.core.data.repo.BookRepository
 import voice.core.logging.api.Logger
-import voice.core.scanner.MediaScanTrigger
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
 import voice.features.bookOverview.bottomSheet.BottomSheetItemViewModel
 import voice.features.bookOverview.di.BookActionsScope
-import voice.navigation.Destination
-import voice.navigation.Navigator
 
 @SingleIn(BookActionsScope::class)
 @ContributesIntoSet(BookActionsScope::class)
 class DeleteBookViewModel(
-  private val application: Application,
-  private val mediaScanTrigger: MediaScanTrigger,
   private val repo: BookRepository,
-  private val navigator: Navigator,
-  private val dispatcherProvider: DispatcherProvider,
+  private val bookDeleter: BookDeleter,
+  dispatcherProvider: DispatcherProvider,
 ) : BottomSheetItemViewModel {
 
   private val scope = MainScope(dispatcherProvider)
@@ -54,21 +44,12 @@ class DeleteBookViewModel(
 
     _state.value =
       DeleteBookViewState(
-        id = bookId,
+        ids = listOf(bookId),
         name = book?.name,
         cover = book?.coverUrl,
         fileCount = book?.chapters?.size,
         deleteCheckBoxChecked = false,
-        fileToDelete =
-          bookId.toUri().pathSegments.let { segments ->
-            val result = segments.lastOrNull()?.removePrefix("primary:")
-            if (result.isNullOrEmpty()) {
-              Logger.w("Could not determine the file name to show (${segments.size} segments)")
-              segments.joinToString(separator = "\"")
-            } else {
-              result
-            }
-          },
+        fileToDelete = fileToDelete(bookId),
       )
   }
 
@@ -84,37 +65,37 @@ class DeleteBookViewModel(
     val state = _state.value
     if (state != null) {
       check(state.confirmButtonEnabled)
-      scope.launch {
-        val deleted =
-          withContext(dispatcherProvider.io) {
-            val uri = state.id.toUri()
-            // a book downloaded from a catalog is a folder in the app's own storage
-            val file =
-              if (uri.scheme == ContentResolver.SCHEME_FILE) {
-                DocumentFile.fromFile(uri.toFile())
-              } else {
-                DocumentFile.fromSingleUri(application, uri)
-              }
-            file?.delete() == true
-          }
-        if (deleted) {
-          // the player of a deleted book would be left without a book
-          navigator.remove(Destination.Playback(state.id))
-        }
-        mediaScanTrigger.scan(restartIfScanning = true)
-      }
+      scope.launch { bookDeleter.delete(state.ids) }
     }
     _state.value = null
   }
 }
 
+/** The name of the file or folder of the book, as the listener knows it from their files. */
+internal fun fileToDelete(bookId: BookId): String {
+  return bookId.toUri().pathSegments.let { segments ->
+    val result = segments.lastOrNull()?.removePrefix("primary:")
+    if (result.isNullOrEmpty()) {
+      Logger.w("Could not determine the file name to show (${segments.size} segments)")
+      segments.joinToString(separator = "\"")
+    } else {
+      result
+    }
+  }
+}
+
+/**
+ * The books to delete. One book shows its cover, name and file, several books only show how many
+ * they are.
+ */
 data class DeleteBookViewState(
-  val id: BookId,
+  val ids: List<BookId>,
   val name: String?,
   val cover: String?,
   val fileCount: Int?,
   val deleteCheckBoxChecked: Boolean,
-  val fileToDelete: String,
+  val fileToDelete: String?,
+  val bookCount: Int? = null,
 ) {
 
   val confirmButtonEnabled = deleteCheckBoxChecked

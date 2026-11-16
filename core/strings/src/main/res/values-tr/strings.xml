@@ -8,6 +8,14 @@
     <string name="book.delete.dialog.confirm_files">Dosyalarımı sil</string>
     <string name="book.delete.dialog.message">Dosyalar cihazınızdan kalıcı olarak silinir. Geri getiremezsiniz.</string>
     <string name="book.delete.dialog.title">Kitabı sil</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">%d kitabı sil</item>
+        <item quantity="other">%d kitabı sil</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">%d kitap silinemedi</item>
+        <item quantity="other">%d kitap silinemedi</item>
+    </plurals>
     <string name="book.download.action">İndir</string>
     <string name="book.download.failed">İndirme tamamlanamadı</string>
     <string name="book.download.progress">%1$s / %2$s</string>

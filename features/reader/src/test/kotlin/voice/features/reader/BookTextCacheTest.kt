@@ -7,6 +7,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
+import voice.core.ebook.bookTextFile
 
 class BookTextCacheTest {
 

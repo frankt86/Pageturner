@@ -8,6 +8,18 @@
     <string name="book.delete.dialog.confirm_files">Odstranit mé soubory</string>
     <string name="book.delete.dialog.message">Soubory budou z vašeho zařízení trvale odstraněny. Už je nebude možné obnovit.</string>
     <string name="book.delete.dialog.title">Odstranit knihu</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Odstranit %d knihu</item>
+        <item quantity="few">Odstranit %d knihy</item>
+        <item quantity="many">Odstranit %d knih</item>
+        <item quantity="other">Odstranit %d knih</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">%d knihu se nepodařilo odstranit</item>
+        <item quantity="few">%d knihy se nepodařilo odstranit</item>
+        <item quantity="many">%d knih se nepodařilo odstranit</item>
+        <item quantity="other">%d knih se nepodařilo odstranit</item>
+    </plurals>
     <string name="book.download.action">Stáhnout</string>
     <string name="book.download.failed">Stahování se nepodařilo dokončit</string>
     <string name="book.download.progress">%1$s z %2$s</string>

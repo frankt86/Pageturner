@@ -8,6 +8,14 @@
     <string name="book.delete.dialog.confirm_files">Meine Dateien löschen</string>
     <string name="book.delete.dialog.message">Die Dateien werden endgültig von Deinem Gerät gelöscht. Du kannst sie nicht wiederherstellen.</string>
     <string name="book.delete.dialog.title">Buch löschen</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">%d Buch löschen</item>
+        <item quantity="other">%d Bücher löschen</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">%d Buch konnte nicht gelöscht werden</item>
+        <item quantity="other">%d Bücher konnten nicht gelöscht werden</item>
+    </plurals>
     <string name="book.download.action">Herunterladen</string>
     <string name="book.download.failed">Der Download hat nicht geklappt</string>
     <string name="book.download.progress">%1$s von %2$s</string>

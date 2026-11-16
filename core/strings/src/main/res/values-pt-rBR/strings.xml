@@ -8,6 +8,16 @@
     <string name="book.delete.dialog.confirm_files">Apagar meus arquivos</string>
     <string name="book.delete.dialog.message">Os arquivos serão apagados do seu dispositivo para sempre. Você não poderá recuperá-los.</string>
     <string name="book.delete.dialog.title">Apagar livro</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Apagar %d livro</item>
+        <item quantity="many">Apagar %d livros</item>
+        <item quantity="other">Apagar %d livros</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">Não foi possível apagar %d livro</item>
+        <item quantity="many">Não foi possível apagar %d livros</item>
+        <item quantity="other">Não foi possível apagar %d livros</item>
+    </plurals>
     <string name="book.download.action">Baixar</string>
     <string name="book.download.failed">O download não foi concluído</string>
     <string name="book.download.progress">%1$s de %2$s</string>

@@ -8,6 +8,16 @@
     <string name="book.delete.dialog.confirm_files">Eliminar mis archivos</string>
     <string name="book.delete.dialog.message">Los archivos se eliminarán de tu dispositivo para siempre. No podrás recuperarlos.</string>
     <string name="book.delete.dialog.title">Eliminar libro</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Eliminar %d libro</item>
+        <item quantity="many">Eliminar %d libros</item>
+        <item quantity="other">Eliminar %d libros</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">No se pudo eliminar %d libro</item>
+        <item quantity="many">No se pudieron eliminar %d libros</item>
+        <item quantity="other">No se pudieron eliminar %d libros</item>
+    </plurals>
     <string name="book.download.action">Descargar</string>
     <string name="book.download.failed">La descarga no se completó</string>
     <string name="book.download.progress">%1$s de %2$s</string>

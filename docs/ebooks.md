@@ -27,13 +27,18 @@ Long-press an ebook to:
 - **Hide from library**, like an audiobook. The file stays on your phone. The library offers **Undo**, and a small badge
   marks the book when **Hidden books** is on in the library filter. Search still finds it, and **Show in library** brings
   it back,
+- **Delete Book**, like an audiobook. Tick **Delete my files** and tap **Delete**. Pageturner deletes the file from your
+  phone, and the book leaves the library for good. Pageturner also deletes the EPUB it made from a Kindle book, and the
+  text it keeps to open the book faster. You can't undo this. When Pageturner can't delete the file, for example because
+  it may not change the folder, it tells you, and the book stays in the library,
 - **Select** it, to change several books at once, see below.
 
 ## In the library
 
 Ebooks work like audiobooks in the library:
 
-- **Select** several books, audiobooks and ebooks together, to set their series or author, or to hide them.
+- **Select** several books, audiobooks and ebooks together, to set their series or author, to hide them, or to delete
+  them. **Delete** in the toolbar asks first, with the number of books and the **Delete my files** box.
 - **Group by** set to **Author** puts ebooks under the author they show, with that author's audiobooks. The author's
   page lists both, also for an author with only ebooks. Tap an ebook there to read it.
 - **Hide from library** in the sheet of a series hides its ebooks too. **Mark as Completed** and **Mark as not started

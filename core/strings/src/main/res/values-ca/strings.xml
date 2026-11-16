@@ -8,6 +8,16 @@
     <string name="book.delete.dialog.confirm_files">Suprimeix els fitxers</string>
     <string name="book.delete.dialog.message">Els fitxers se suprimiran del dispositiu per sempre. No els podreu recuperar.</string>
     <string name="book.delete.dialog.title">Suprimeix el llibre</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Suprimeix %d llibre</item>
+        <item quantity="many">Suprimeix %d llibres</item>
+        <item quantity="other">Suprimeix %d llibres</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">No s\'ha pogut suprimir %d llibre</item>
+        <item quantity="many">No s\'han pogut suprimir %d llibres</item>
+        <item quantity="other">No s\'han pogut suprimir %d llibres</item>
+    </plurals>
     <string name="book.download.action">Baixa</string>
     <string name="book.download.failed">La baixada no s\'ha completat</string>
     <string name="book.download.progress">%1$s de %2$s</string>

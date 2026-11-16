@@ -8,6 +8,12 @@
     <string name="book.delete.dialog.confirm_files">Hapus berkas saya</string>
     <string name="book.delete.dialog.message">Berkas akan dihapus secara permanen dari perangkat Anda. Berkas tersebut tidak dapat dipulihkan.</string>
     <string name="book.delete.dialog.title">Hapus buku</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="other">Hapus %d buku</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="other">%d buku tidak dapat dihapus</item>
+    </plurals>
     <string name="book.download.action">Unduh</string>
     <string name="book.download.failed">Unduhan tidak selesai</string>
     <string name="book.download.progress">%1$s dari %2$s</string>

@@ -27,6 +27,8 @@ import voice.core.common.DispatcherProvider
 import voice.core.data.Book
 import voice.core.data.BookId
 import voice.core.data.repo.BookRepository
+import voice.core.data.store.EbooksStore
+import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
 import voice.features.bookOverview.chapter
@@ -45,24 +47,34 @@ class DeleteBookViewModelTest {
     )
   private val navigator = mockk<Navigator>(relaxUnitFun = true)
 
+  private val dispatcherProvider =
+    DispatcherProvider(
+      main = dispatcher,
+      io = dispatcher + onIoDispatcher.asContextElement(true),
+      mainImmediate = dispatcher,
+    )
+
   private val viewModel = viewModel(book)
 
-  private fun viewModel(book: Book) =
-    DeleteBookViewModel(
-      application = ApplicationProvider.getApplicationContext(),
-      mediaScanTrigger = mockk(relaxed = true),
+  private fun viewModel(book: Book): DeleteBookViewModel {
+    val application = ApplicationProvider.getApplicationContext<Application>()
+    return DeleteBookViewModel(
       repo =
         mockk<BookRepository> {
           coEvery { get(book.id) } returns book
         },
-      navigator = navigator,
-      dispatcherProvider =
-        DispatcherProvider(
-          main = dispatcher,
-          io = dispatcher + onIoDispatcher.asContextElement(true),
-          mainImmediate = dispatcher,
+      bookDeleter =
+        BookDeleter(
+          application = application,
+          documentDeleter = DocumentFileDeleter(application),
+          ebooksStore = EbooksStore(MemoryDataStore(emptyList())),
+          mediaScanTrigger = mockk(relaxed = true),
+          navigator = navigator,
+          dispatcherProvider = dispatcherProvider,
         ),
+      dispatcherProvider = dispatcherProvider,
     )
+  }
 
   @Test
   fun `the sheet shows how many files get deleted`() =

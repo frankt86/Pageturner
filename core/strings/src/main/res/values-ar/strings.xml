@@ -8,6 +8,22 @@
     <string name="book.delete.dialog.confirm_files">حذف ملفاتي</string>
     <string name="book.delete.dialog.message">يحذف هذا الملفات من جهازك نهائيًا، ولا يمكن استعادتها.</string>
     <string name="book.delete.dialog.title">حذف الكتاب</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="zero">حذف %d كتاب</item>
+        <item quantity="one">حذف %d كتاب</item>
+        <item quantity="two">حذف %d كتابين</item>
+        <item quantity="few">حذف %d كتب</item>
+        <item quantity="many">حذف %d كتابًا</item>
+        <item quantity="other">حذف %d كتاب</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="zero">تعذّر حذف %d كتاب</item>
+        <item quantity="one">تعذّر حذف %d كتاب</item>
+        <item quantity="two">تعذّر حذف %d كتابين</item>
+        <item quantity="few">تعذّر حذف %d كتب</item>
+        <item quantity="many">تعذّر حذف %d كتابًا</item>
+        <item quantity="other">تعذّر حذف %d كتاب</item>
+    </plurals>
     <string name="book.download.action">تنزيل</string>
     <string name="book.download.failed">لم يكتمل التنزيل</string>
     <string name="book.download.progress">%1$s من %2$s</string>

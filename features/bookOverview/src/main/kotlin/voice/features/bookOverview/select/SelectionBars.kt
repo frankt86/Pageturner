@@ -72,6 +72,7 @@ internal fun SelectionToolbar(
   onEdit: (BookField) -> Unit,
   onHide: () -> Unit,
   onShow: () -> Unit,
+  onDelete: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   HorizontalFloatingToolbar(
@@ -103,6 +104,11 @@ internal fun SelectionToolbar(
         onClick = onHide,
       )
     }
+    ToolbarButton(
+      icon = UiR.drawable.ic_delete,
+      label = StringsR.string.common_action_delete,
+      onClick = onDelete,
+    )
   }
 }
 
@@ -155,6 +161,7 @@ private fun SelectionBarsPreview() {
           onEdit = {},
           onHide = {},
           onShow = {},
+          onDelete = {},
           modifier = Modifier.padding(16.dp),
         )
       }

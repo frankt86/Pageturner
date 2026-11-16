@@ -8,6 +8,14 @@
     <string name="book.delete.dialog.confirm_files">Fájlok törlése</string>
     <string name="book.delete.dialog.message">A fájlok véglegesen törlődnek az eszközről. Nem lehet visszaállítani őket.</string>
     <string name="book.delete.dialog.title">Könyv törlése</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">%d könyv törlése</item>
+        <item quantity="other">%d könyv törlése</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">%d könyvet nem sikerült törölni</item>
+        <item quantity="other">%d könyvet nem sikerült törölni</item>
+    </plurals>
     <string name="book.download.action">Letöltés</string>
     <string name="book.download.failed">A letöltés nem fejeződött be</string>
     <string name="book.download.progress">%1$s / %2$s</string>

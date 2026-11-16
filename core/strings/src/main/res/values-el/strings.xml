@@ -8,6 +8,14 @@
     <string name="book.delete.dialog.confirm_files">Διαγραφή των αρχείων μου</string>
     <string name="book.delete.dialog.message">Τα αρχεία θα διαγραφούν οριστικά από τη συσκευή σας. Δεν θα μπορείτε να τα ανακτήσετε.</string>
     <string name="book.delete.dialog.title">Διαγραφή βιβλίου</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Διαγραφή %d βιβλίου</item>
+        <item quantity="other">Διαγραφή %d βιβλίων</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">Δεν ήταν δυνατή η διαγραφή %d βιβλίου</item>
+        <item quantity="other">Δεν ήταν δυνατή η διαγραφή %d βιβλίων</item>
+    </plurals>
     <string name="book.download.action">Λήψη</string>
     <string name="book.download.failed">Η λήψη δεν ολοκληρώθηκε</string>
     <string name="book.download.progress">%1$s από %2$s</string>
