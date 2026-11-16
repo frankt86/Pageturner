@@ -14,6 +14,9 @@ import java.io.File
 import java.net.HttpURLConnection
 import java.net.URI
 import java.util.Locale
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TimeSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -135,8 +138,18 @@ internal class NeuralVoice(context: Context) {
       }
     upcoming = next?.let { Speech(it, speed, speaker) }?.let { it to scope.async { generate(it) } }
     if (audio == null) return false
-    play(audio)
-    return true
+    return play(audio)
+  }
+
+  /** Loads the voice in the background, so the first passage doesn't wait for it. */
+  fun prepare() {
+    scope.launch {
+      mutex.withLock {
+        if (tts == null) {
+          val _ = createTts()
+        }
+      }
+    }
   }
 
   private suspend fun generate(speech: Speech): GeneratedAudio? =
@@ -199,7 +212,8 @@ internal class NeuralVoice(context: Context) {
     }
   }
 
-  private suspend fun play(audio: GeneratedAudio) =
+  /** Returns false if the phone couldn't play [audio]. */
+  private suspend fun play(audio: GeneratedAudio): Boolean =
     withContext(Dispatchers.IO) {
       val track =
         AudioTrack.Builder()
@@ -226,9 +240,10 @@ internal class NeuralVoice(context: Context) {
           )
           .build()
       try {
+        val samples = audio.samples
+        val playing = TimeSource.Monotonic.markNow()
         track.play()
         var offset = 0
-        val samples = audio.samples
         while (offset < samples.size) {
           ensureActive()
           val written =
@@ -238,13 +253,22 @@ internal class NeuralVoice(context: Context) {
               minOf(4096, samples.size - offset),
               AudioTrack.WRITE_BLOCKING,
             )
-          if (written <= 0) break
+          if (written <= 0) {
+            Logger.w("Could not play the voice, error $written")
+            return@withContext false
+          }
           offset += written
         }
-        // the written samples are still in the buffer, wait until they're heard
-        while (track.playbackHeadPosition < samples.size) {
+        // the last samples only play once there is a buffer's worth, silence fills it
+        val silence = FloatArray(track.bufferSizeInFrames)
+        val _ = track.write(silence, 0, silence.size, AudioTrack.WRITE_BLOCKING)
+        val duration = (samples.size * 1000L / audio.sampleRate).milliseconds
+        while (
+          track.playbackHeadPosition < samples.size && playing.elapsedNow() < duration + 2.seconds
+        ) {
           delay(20)
         }
+        true
       } finally {
         track.stop()
         track.release()
