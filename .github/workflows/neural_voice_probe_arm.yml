@@ -1,0 +1,17 @@
+name: Neural voice probe arm
+
+on:
+  push:
+    branches: [ neural-voice-probe ]
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    steps:
+      - run: |
+          uname -a; nproc; free -g
+          ls -l /dev/kvm || true
+          grep -c processor /proc/cpuinfo; grep -m1 Features /proc/cpuinfo
+          ls /usr/local/lib/android/sdk 2>/dev/null || echo no sdk
+          curl -sS https://dl.google.com/android/repository/repository2-3.xml | grep -o 'emulator-linux_aarch64[^<]*' | head -3 || true
