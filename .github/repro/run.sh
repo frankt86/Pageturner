@@ -42,6 +42,7 @@ APP_PID=$(grep -o "Start proc [0-9]*:$PKG/" "$OUT/all.txt" | tail -1 | grep -o "
 echo "pid $APP_PID"
 grep -E "^\S+ \S+ +$APP_PID |lowmemorykiller|lmkd|Process $PKG|has died|am_proc_died|am_kill|tombstone|DEBUG +:|chromium|Render" "$OUT/all.txt" | grep -v Dialer | tail -250
 adb shell ls -la /data/tombstones
+grep -E "ReaderViewModel|ReadiumReader" "$OUT/all.txt" | cut -c1-300
 echo "drive status $status"
 if [ "$status" = 0 ] && ! grep -q "FATAL EXCEPTION" "$OUT/logcat.txt"; then echo "RESULT: the EPUB opened without a crash"; exit 0; fi
 echo "RESULT: crash or failure"

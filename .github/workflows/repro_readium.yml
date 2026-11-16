@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        variant: [ debug ]
+        variant: [ release, debug ]
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/build_setup
@@ -60,6 +60,7 @@ jobs:
           arch: x86_64
           profile: pixel_6
           disable-animations: true
+          ram-size: 4096M
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           script: bash .github/repro/run.sh app.apk out
       - uses: actions/upload-artifact@v7

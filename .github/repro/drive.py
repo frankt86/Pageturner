@@ -107,7 +107,7 @@ if book is None:
   sys.exit(3)
 print("open", book.get("text") or book.get("content-desc"))
 tap(book)
-for i in range(6):
+for i in range(3):
   time.sleep(5)
   screenshot(f"reader{i}")
 nodes, xml = dump()
