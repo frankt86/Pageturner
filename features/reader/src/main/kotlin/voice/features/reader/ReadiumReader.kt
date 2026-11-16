@@ -303,6 +303,10 @@ internal fun ReadiumPages(
         }
       },
     )
+    fragmentManager.commitNow(allowStateLoss = true) {
+      add(container.fragments, fragment, NAVIGATOR_TAG)
+    }
+    // Readium keeps the listener in a view model, which the fragment only has once it is added
     fragment.addDecorationListener(
       HIGHLIGHTS,
       object : DecorableNavigator.Listener {
@@ -314,9 +318,6 @@ internal fun ReadiumPages(
         }
       },
     )
-    fragmentManager.commitNow(allowStateLoss = true) {
-      add(container.fragments, fragment, NAVIGATOR_TAG)
-    }
     navigator = fragment
     turns.navigator = fragment
     turns.view = container
