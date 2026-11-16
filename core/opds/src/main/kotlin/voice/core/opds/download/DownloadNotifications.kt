@@ -126,8 +126,8 @@ internal class DownloadNotifications(
   }
 
   /**
-   * Tells that a book is ready, unless Pageturner is open and shows it itself. [tag] tells the books
-   * apart.
+   * Tells that a book is ready, unless Pageturner is open and shows it itself. [tag] tells the
+   * books apart.
    */
   fun downloaded(
     tag: String,
