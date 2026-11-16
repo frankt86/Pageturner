@@ -11,11 +11,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        variant: [ test63, release, debug ]
+        variant: [ release, debug ]
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/build_setup
         if: matrix.variant != 'test63'
+      - uses: ./.github/actions/generate_baseline_profile
+        if: matrix.variant == 'release'
+        timeout-minutes: 30
+        with:
+          task: :app:generateFreeReleaseBaselineProfile -Pvoice.applicationIdSuffix=.debug
       - name: Get the APK
         run: |
           mkdir -p out

@@ -116,4 +116,7 @@ with open(f"{OUT}/reader.xml", "w") as f:
   f.write(xml)
 top = adb("shell", "dumpsys", "activity", "activities").stdout.decode(errors="replace")
 print("resumed:", [l for l in top.splitlines() if "mResumedActivity" in l or "topResumedActivity" in l])
-print("app alive:", adb("shell", "pidof", PKG).stdout.decode().strip())
+alive = adb("shell", "pidof", PKG).stdout.decode().strip()
+print("app alive:", alive)
+if not alive or not any(PKG in l for l in top.splitlines() if "topResumedActivity" in l):
+  sys.exit(4)

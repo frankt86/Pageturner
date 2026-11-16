@@ -37,4 +37,6 @@ echo "===== app warnings ====="
 PID_LINES=$(grep -iE "readium|Pageturner|voice\." "$OUT/logcat.txt" | tail -100)
 echo "$PID_LINES"
 echo "drive status $status"
-exit 0
+if [ "$status" = 0 ] && ! grep -q "FATAL EXCEPTION" "$OUT/logcat.txt"; then echo "RESULT: the EPUB opened without a crash"; exit 0; fi
+echo "RESULT: crash or failure"
+exit 1
