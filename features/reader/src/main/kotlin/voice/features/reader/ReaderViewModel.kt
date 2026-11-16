@@ -24,6 +24,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -219,6 +220,7 @@ class ReaderViewModel(
     scope.launch {
       naturalReady = withContext(dispatcherProvider.io) { neuralVoice.isDownloaded }
       naturalVoice = naturalVoiceStore.data.first()
+      if (naturalReady && naturalVoice) neuralVoice.prepare()
     }
     scope.launch {
       val stored = store.data.first().firstOrNull { it.uri == uri }
@@ -818,6 +820,7 @@ class ReaderViewModel(
   internal fun onVoiceSelect(natural: Boolean) {
     naturalVoice = natural
     scope.launch { naturalVoiceStore.updateData { natural } }
+    if (natural && naturalReady) neuralVoice.prepare()
     if (natural && !naturalReady && downloadProgress == null) {
       downloadFailed = false
       downloadProgress = 0F
@@ -826,6 +829,7 @@ class ReaderViewModel(
         downloadProgress = null
         naturalReady = ready
         downloadFailed = !ready
+        if (ready && naturalVoice) neuralVoice.prepare()
       }
     }
   }
@@ -893,40 +897,52 @@ class ReaderViewModel(
     return true
   }
 
+  /** Sentences for the natural voice, so it starts speaking soon, longer chunks for the phone's. */
+  private fun nextPassage(
+    text: String,
+    from: Int,
+  ): IntRange? = if (useNaturalVoice) nextSentence(text, from) else nextChunk(text, from)
+
   private suspend fun readAloudFrom(
     book: ReadiumBook,
     speaker: ReadAloud,
   ) {
-    val iterator = book.publication.content(book.locator)?.iterator()
-    var spokeAnything = false
-    while (iterator != null && iterator.hasNext()) {
-      val element = iterator.next() as? Content.TextElement ?: continue
-      val text = element.text
-      var offset = 0
-      while (true) {
-        val chunk = nextChunk(text, offset) ?: break
-        val spoken = text.substring(chunk)
-        // the text around it finds the part of the paragraph to highlight
-        book.readingAloud =
-          element.locator.copy(
-            text =
-              Locator.Text(
-                before =
-                  text.substring((chunk.first - 40).coerceAtLeast(0), chunk.first).ifEmpty { null },
-                highlight = spoken,
-                after =
-                  text
-                    .substring(chunk.last + 1, (chunk.last + 41).coerceAtMost(text.length))
-                    .ifEmpty { null },
-              ),
-          )
-        val next = nextChunk(text, chunk.last + 1)?.let { text.substring(it) }
-        if (!speak(spoken, next, speaker)) return
-        spokeAnything = true
-        offset = chunk.last + 1
+    val passages = flow {
+      val iterator = book.publication.content(book.locator)?.iterator() ?: return@flow
+      while (iterator.hasNext()) {
+        val element = iterator.next() as? Content.TextElement ?: continue
+        val text = element.text
+        var offset = 0
+        while (true) {
+          val chunk = nextPassage(text, offset) ?: break
+          val spoken = text.substring(chunk)
+          // the text around it finds the part of the paragraph to highlight
+          val locator =
+            element.locator.copy(
+              text =
+                Locator.Text(
+                  before =
+                    text.substring((chunk.first - 40).coerceAtLeast(0), chunk.first).ifEmpty {
+                      null
+                    },
+                  highlight = spoken,
+                  after =
+                    text
+                      .substring(chunk.last + 1, (chunk.last + 41).coerceAtMost(text.length))
+                      .ifEmpty { null },
+                ),
+            )
+          emit(Passage(spoken, locator))
+          offset = chunk.last + 1
+        }
       }
     }
-    if (!spokeAnything) {
+    val hadText =
+      speakInTurn(passages) { passage, next ->
+        book.readingAloud = passage.place
+        speak(passage.text, next, speaker)
+      }
+    if (!hadText) {
       messageChannel.trySend(ReaderMessage.NothingToReadAloud)
     }
   }
@@ -935,28 +951,32 @@ class ReaderViewModel(
     content: ReaderContent,
     speaker: ReadAloud,
   ) {
-    var section = position.section
-    var offset = position.offset
-    var spokeAnything = false
-    while (section < content.sectionCount) {
-      val text =
-        when (content) {
-          is ReaderContent.Epub -> content.chapters[section]
-          is ReaderContent.Pdf -> content.pdf.text(section)
+    val passages = flow {
+      var section = position.section
+      var offset = position.offset
+      while (section < content.sectionCount) {
+        val text =
+          when (content) {
+            is ReaderContent.Epub -> content.chapters[section]
+            is ReaderContent.Pdf -> content.pdf.text(section)
+          }
+        while (true) {
+          val chunk = nextPassage(text, offset) ?: break
+          emit(Passage(text.substring(chunk), EbookPosition(section, chunk.first) to chunk))
+          offset = chunk.last + 1
         }
-      while (true) {
-        val chunk = nextChunk(text, offset) ?: break
-        moveTo(EbookPosition(section, chunk.first))
-        readingRange = chunk
-        val next = nextChunk(text, chunk.last + 1)?.let { text.substring(it) }
-        if (!speak(text.substring(chunk), next, speaker)) return
-        spokeAnything = true
-        offset = chunk.last + 1
+        section++
+        offset = 0
       }
-      section++
-      offset = 0
     }
-    if (!spokeAnything) {
+    val hadText =
+      speakInTurn(passages) { passage, next ->
+        val (place, range) = passage.place
+        moveTo(place)
+        readingRange = range
+        speak(passage.text, next, speaker)
+      }
+    if (!hadText) {
       messageChannel.trySend(ReaderMessage.NothingToReadAloud)
     }
   }
