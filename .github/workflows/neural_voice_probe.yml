@@ -24,7 +24,7 @@ jobs:
       - name: Probe
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 33
+          api-level: 30
           target: google_apis
           arch: x86_64
           disable-animations: true
@@ -32,6 +32,7 @@ jobs:
           script: |
             adb logcat -c
             adb logcat -v time > logcat.txt &
+            adb shell getprop ro.product.cpu.abilist; adb shell getprop ro.dalvik.vm.native.bridge
             adb install -r -t $(find features/reader/build/outputs -name "*androidTest*.apk" | head -1)
             adb shell pm list instrumentation
             timeout 50m adb shell am instrument -w -r -e class voice.features.reader.NeuralVoiceProbeTest voice.features.reader.test/androidx.test.runner.AndroidJUnitRunner || true
