@@ -77,10 +77,10 @@ class NeuralVoiceProbeTest {
     assertTrue(downloaded)
     val speaker = naturalSpeakers(Locale.US).first()
     start = SystemClock.elapsedRealtime()
-    val first = withTimeoutOrNull(25.minutes) { voice.speak("Hello there.", "It works.", 1F, speaker) }
+    val first = withTimeoutOrNull(15.minutes) { voice.speak("Hello there.", "It works.", 1F, speaker) }
     Log.i(TAG, "first=$first in ${SystemClock.elapsedRealtime() - start} ms")
     start = SystemClock.elapsedRealtime()
-    val second = withTimeoutOrNull(10.minutes) { voice.speak("It works.", null, 1F, speaker) }
+    val second = withTimeoutOrNull(8.minutes) { voice.speak("It works.", null, 1F, speaker) }
     Log.i(TAG, "second=$second in ${SystemClock.elapsedRealtime() - start} ms")
     assertTrue(first == true && second == true)
   }
