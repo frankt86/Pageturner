@@ -1,0 +1,17 @@
+name: Neural voice probe arm
+
+on:
+  push:
+    branches: [ neural-voice-probe ]
+
+jobs:
+  speed:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - run: |
+          python3 -m venv /tmp/v && /tmp/v/bin/pip install -q sherpa-onnx==1.13.8
+          curl -sSL -o /tmp/k.tar.bz2 https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-int8-multi-lang-v1_0.tar.bz2
+          mkdir -p /tmp/m && tar xjf /tmp/k.tar.bz2 -C /tmp/m
+          /tmp/v/bin/python -I .github/probe/first_audio.py /tmp/m/kokoro-int8-multi-lang-v1_0
