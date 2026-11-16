@@ -93,10 +93,12 @@ deadline = time.time() + 120
 book = None
 while time.time() < deadline:
   nodes, xml = dump()
-  book = find(nodes, r".*Alice.*", PKG) or find(nodes, r"alice", PKG)
+  book = find(nodes, r"(?s).*alice.*", PKG)
   if book is not None:
     break
-  time.sleep(2)
+  print("labels:", [n.get("text") or n.get("content-desc") for n in nodes if n.get("text") or n.get("content-desc")])
+  adb("shell", "input", "swipe", "500", "1800", "500", "800", "300")
+  time.sleep(3)
 screenshot("library")
 with open(f"{OUT}/library.xml", "w") as f:
   f.write(xml)
@@ -109,6 +111,7 @@ for i in range(6):
   time.sleep(5)
   screenshot(f"reader{i}")
 nodes, xml = dump()
+print("reader labels:", [n.get("package") + ":" + (n.get("text") or n.get("content-desc")) for n in nodes if n.get("text") or n.get("content-desc")])
 with open(f"{OUT}/reader.xml", "w") as f:
   f.write(xml)
 top = adb("shell", "dumpsys", "activity", "activities").stdout.decode(errors="replace")
