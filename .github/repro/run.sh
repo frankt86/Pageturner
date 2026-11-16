@@ -36,6 +36,12 @@ grep -n -A80 "FATAL EXCEPTION" "$OUT/logcat.txt" | head -200
 echo "===== app warnings ====="
 PID_LINES=$(grep -iE "readium|Pageturner|voice\." "$OUT/logcat.txt" | tail -100)
 echo "$PID_LINES"
+echo "===== death ====="
+adb logcat -d -b all > "$OUT/all.txt"
+APP_PID=$(grep -o "Start proc [0-9]*:$PKG/" "$OUT/all.txt" | tail -1 | grep -o "[0-9]*" | head -1)
+echo "pid $APP_PID"
+grep -E "^\S+ \S+ +$APP_PID |lowmemorykiller|lmkd|Process $PKG|has died|am_proc_died|am_kill|tombstone|DEBUG +:|chromium|Render" "$OUT/all.txt" | grep -v Dialer | tail -250
+adb shell ls -la /data/tombstones
 echo "drive status $status"
 if [ "$status" = 0 ] && ! grep -q "FATAL EXCEPTION" "$OUT/logcat.txt"; then echo "RESULT: the EPUB opened without a crash"; exit 0; fi
 echo "RESULT: crash or failure"

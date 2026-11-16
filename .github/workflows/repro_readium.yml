@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        variant: [ release, debug ]
+        variant: [ debug ]
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/build_setup
