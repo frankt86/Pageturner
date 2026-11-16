@@ -104,13 +104,11 @@ internal fun SelectionToolbar(
         onClick = onHide,
       )
     }
-    // only an icon, so four actions fit, and the sheet it opens names it
-    IconButton(onClick = onDelete) {
-      Icon(
-        painter = painterResource(UiR.drawable.ic_delete),
-        contentDescription = stringResource(StringsR.string.common_action_delete),
-      )
-    }
+    ToolbarButton(
+      icon = UiR.drawable.ic_delete,
+      label = StringsR.string.common_action_delete,
+      onClick = onDelete,
+    )
   }
 }
 
