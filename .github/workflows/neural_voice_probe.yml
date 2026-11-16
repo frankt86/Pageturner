@@ -37,7 +37,8 @@ jobs:
             adb shell pm list instrumentation
             timeout 50m adb shell am instrument -w -r -e class voice.features.reader.NeuralVoiceProbeTest voice.features.reader.test/androidx.test.runner.AndroidJUnitRunner || true
             sleep 2
-            grep -E "NeuralVoiceProbe|sherpa|onnx|AudioTrack|AndroidRuntime|Pageturner|Could not|linker|nativebridge|TestRunner" logcat.txt | tail -400
+            grep -n "NeuralVoiceProbe" logcat.txt
+            awk '/downloaded=/{f=1} f' logcat.txt | grep -vE "Conscrypt|YouTube|GoogleApiManager|chatty" | head -400
       - uses: actions/upload-artifact@v7
         if: always()
         with:
