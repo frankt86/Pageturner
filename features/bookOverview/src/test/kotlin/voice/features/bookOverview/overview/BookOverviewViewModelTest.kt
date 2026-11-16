@@ -55,6 +55,7 @@ import voice.core.ui.GridMode
 import voice.core.ui.GridModeStore
 import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
+import voice.features.bookOverview.deleteBook.BookDeleter
 import voice.features.bookOverview.hideBook.BookHider
 import voice.features.bookOverview.hideBook.HiddenBooks
 import voice.features.bookOverview.select.BookField
@@ -132,6 +133,7 @@ class BookOverviewViewModelTest {
         bookHider = BookHider(mockk(), emptyEbooks),
         bookSelectionRequests = BookSelectionRequests(),
         selectedBooksEditor = SelectedBooksEditor(mockk(), emptyEbooks),
+        bookDeleter = mockk(),
       )
 
     backgroundScope
@@ -215,6 +217,7 @@ class BookOverviewViewModelTest {
         bookHider = BookHider(mockk(), emptyEbooks),
         bookSelectionRequests = BookSelectionRequests(),
         selectedBooksEditor = SelectedBooksEditor(mockk(), emptyEbooks),
+        bookDeleter = mockk(),
       )
 
     backgroundScope
@@ -1079,6 +1082,33 @@ class BookOverviewViewModelTest {
   }
 
   @Test
+  fun `delete asks first and deletes the selected books once the files are ticked`() = runTest {
+    val first = book(time = 0)
+    val second = book(time = 0)
+    val bookDeleter = mockk<BookDeleter>(relaxUnitFun = true)
+    val viewModel = viewModel(repo = libraryRepo(first, second), bookDeleter = bookDeleter)
+    val state = viewModel.stateIn(backgroundScope)
+    state.first { it.sections.isNotEmpty() }
+
+    viewModel.onSelectionStart(listOf(first.id, second.id))
+    state.first { it.selection?.ids?.size == 2 }
+    viewModel.onSelectionDelete()
+    assertEquals(
+      expected = 2,
+      actual = state.first { it.selectionDelete != null }.selectionDelete?.bookCount,
+    )
+    viewModel.onSelectionDeleteConfirm()
+    coVerify(exactly = 0) { bookDeleter.delete(any()) }
+
+    viewModel.onSelectionDelete()
+    viewModel.onSelectionDeleteCheckBoxCheck(true)
+    viewModel.onSelectionDeleteConfirm()
+
+    state.first { it.selection == null && it.selectionDelete == null }
+    coVerify { bookDeleter.delete(listOf(first.id, second.id)) }
+  }
+
+  @Test
   fun `a series for device books is set, and undo lets them follow their files again`() = runTest {
     val first = book(series = "Sagaa", time = 0)
     val second = book(series = "Saga", time = 0)
@@ -1237,6 +1267,7 @@ class BookOverviewViewModelTest {
     },
     bookSelectionRequests: BookSelectionRequests = BookSelectionRequests(),
     ebooksStore: EbooksStore = EbooksStore(MemoryDataStore(ebooks)),
+    bookDeleter: BookDeleter = mockk(),
   ): BookOverviewViewModel {
     return BookOverviewViewModel(
       repo = repo,
@@ -1276,6 +1307,7 @@ class BookOverviewViewModelTest {
       bookHider = BookHider(repo, ebooksStore),
       bookSelectionRequests = bookSelectionRequests,
       selectedBooksEditor = SelectedBooksEditor(repo, ebooksStore),
+      bookDeleter = bookDeleter,
     )
   }
 

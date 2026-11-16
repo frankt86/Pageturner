@@ -8,6 +8,14 @@
     <string name="book.delete.dialog.confirm_files">எனது கோப்புகளை நீக்கவும்</string>
     <string name="book.delete.dialog.message">கோப்புகள் உங்கள் சாதனத்திலிருந்து நிரந்தரமாக நீக்கப்படும். அவற்றை மீட்டெடுக்க முடியாது.</string>
     <string name="book.delete.dialog.title">புத்தகத்தை நீக்கு</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">%d புத்தகத்தை நீக்கு</item>
+        <item quantity="other">%d புத்தகங்களை நீக்கு</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">%d புத்தகத்தை நீக்க முடியவில்லை</item>
+        <item quantity="other">%d புத்தகங்களை நீக்க முடியவில்லை</item>
+    </plurals>
     <string name="book.download.action">பதிவிறக்கு</string>
     <string name="book.download.failed">பதிவிறக்கம் முடியவில்லை</string>
     <string name="book.download.progress">%2$s இல் %1$s</string>

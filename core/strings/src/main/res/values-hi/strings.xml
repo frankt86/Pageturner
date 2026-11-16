@@ -8,6 +8,14 @@
     <string name="book.delete.dialog.confirm_files">मेरी फ़ाइलें हटाएँ</string>
     <string name="book.delete.dialog.message">इससे फ़ाइलें आपके डिवाइस से हमेशा के लिए हट जाएँगी। उन्हें वापस नहीं लाया जा सकता।</string>
     <string name="book.delete.dialog.title">पुस्तक हटाएँ</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">%d पुस्तक हटाएँ</item>
+        <item quantity="other">%d पुस्तकें हटाएँ</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">%d पुस्तक नहीं हटाई जा सकी</item>
+        <item quantity="other">%d पुस्तकें नहीं हटाई जा सकीं</item>
+    </plurals>
     <string name="book.download.action">डाउनलोड करें</string>
     <string name="book.download.failed">डाउनलोड पूरा नहीं हुआ</string>
     <string name="book.download.progress">%2$s में से %1$s</string>

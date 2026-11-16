@@ -8,6 +8,14 @@
     <string name="book.delete.dialog.confirm_files">Iscantzella sos documentos meos</string>
     <string name="book.delete.dialog.message">Custu iscantzellat pro semper sos documentos dae su dispositivu tuo. No los as a pòdere recuperare.</string>
     <string name="book.delete.dialog.title">Iscantzella su libru</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Iscantzella %d libru</item>
+        <item quantity="other">Iscantzella %d libros</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">No est istadu possìbile iscantzellare %d libru</item>
+        <item quantity="other">No est istadu possìbile iscantzellare %d libros</item>
+    </plurals>
     <string name="book.download.action">Iscàrriga</string>
     <string name="book.download.failed">S\'iscarrigamentu no est acabbadu</string>
     <string name="book.download.progress">%1$s de %2$s</string>

@@ -54,6 +54,8 @@ import voice.core.scanner.MediaScanTrigger
 import voice.core.ui.GridCount
 import voice.core.ui.GridMode
 import voice.core.ui.GridModeStore
+import voice.features.bookOverview.deleteBook.BookDeleter
+import voice.features.bookOverview.deleteBook.DeleteBookViewState
 import voice.features.bookOverview.di.BookOverviewScope
 import voice.features.bookOverview.editBook.toNameSuggestions
 import voice.features.bookOverview.hideBook.BookHider
@@ -96,12 +98,14 @@ class BookOverviewViewModel(
   private val bookHider: BookHider,
   private val bookSelectionRequests: BookSelectionRequests,
   private val selectedBooksEditor: SelectedBooksEditor,
+  private val bookDeleter: BookDeleter,
 ) {
 
   private val scope = MainScope(dispatcherProvider)
   private var dialog by mutableStateOf<BookOverviewViewState.Dialog?>(null)
   private var selection by mutableStateOf<Set<BookId>?>(null)
   private var selectionEdit by mutableStateOf<SelectionEditViewState?>(null)
+  private var selectionDelete by mutableStateOf<DeleteBookViewState?>(null)
 
   // the books on screen, so Select all takes what the listener sees
   private var shownBookIds: Set<BookId> = emptySet()
@@ -320,6 +324,7 @@ class BookOverviewViewModel(
           )
         },
       selectionEdit = selectionEdit,
+      selectionDelete = selectionDelete,
       heroBookId = heroBookId,
     )
   }
@@ -494,6 +499,37 @@ class BookOverviewViewModel(
     scope.launch {
       bookHider.show(ids)
     }
+  }
+
+  internal fun onSelectionDelete() {
+    val ids = selectedIds().toList()
+    if (ids.isEmpty()) return
+    selectionDelete =
+      DeleteBookViewState(
+        ids = ids,
+        name = null,
+        cover = null,
+        fileCount = null,
+        deleteCheckBoxChecked = false,
+        fileToDelete = null,
+        bookCount = ids.size,
+      )
+  }
+
+  internal fun onSelectionDeleteCheckBoxCheck(checked: Boolean) {
+    selectionDelete = selectionDelete?.copy(deleteCheckBoxChecked = checked)
+  }
+
+  internal fun onSelectionDeleteDismiss() {
+    selectionDelete = null
+  }
+
+  internal fun onSelectionDeleteConfirm() {
+    val delete = selectionDelete ?: return
+    selectionDelete = null
+    if (!delete.confirmButtonEnabled) return
+    selection = null
+    scope.launch { bookDeleter.delete(delete.ids) }
   }
 
   internal fun onSelectionEdit(field: BookField) {

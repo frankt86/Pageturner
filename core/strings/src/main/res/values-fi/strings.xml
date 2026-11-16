@@ -8,6 +8,14 @@
     <string name="book.delete.dialog.confirm_files">Poista tiedostoni</string>
     <string name="book.delete.dialog.message">Tiedostot poistetaan laitteeltasi pysyvästi. Et voi palauttaa niitä.</string>
     <string name="book.delete.dialog.title">Poista kirja</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Poista %d kirja</item>
+        <item quantity="other">Poista %d kirjaa</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">%d kirjan poistaminen epäonnistui</item>
+        <item quantity="other">%d kirjan poistaminen epäonnistui</item>
+    </plurals>
     <string name="book.download.action">Lataa</string>
     <string name="book.download.failed">Lataus ei onnistunut</string>
     <string name="book.download.progress">%1$s / %2$s</string>

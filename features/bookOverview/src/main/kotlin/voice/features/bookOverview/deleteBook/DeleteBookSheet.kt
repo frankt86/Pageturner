@@ -109,10 +109,19 @@ internal fun DeleteBookSheet(
           .padding(start = 24.dp, end = 24.dp, bottom = 16.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-      DeleteHero(cover = viewState.cover, armed = armed)
+      DeleteHero(cover = viewState.cover, showCover = viewState.bookCount == null, armed = armed)
       Spacer(Modifier.height(20.dp))
       Text(
-        text = stringResource(StringsR.string.book_delete_dialog_title),
+        text =
+          if (viewState.bookCount == null) {
+            stringResource(StringsR.string.book_delete_dialog_title)
+          } else {
+            pluralStringResource(
+              StringsR.plurals.book_delete_dialog_title_count,
+              viewState.bookCount,
+              viewState.bookCount,
+            )
+          },
         style = MaterialTheme.typography.headlineSmallEmphasized,
         textAlign = TextAlign.Center,
       )
@@ -133,28 +142,30 @@ internal fun DeleteBookSheet(
         color = colors.onSurfaceVariant,
         textAlign = TextAlign.Center,
       )
-      Spacer(Modifier.height(16.dp))
-      Column(
-        modifier =
-          Modifier.fillMaxWidth()
-            .background(colors.surfaceContainerHigh, MaterialTheme.shapes.largeIncreased)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-      ) {
-        Text(
-          text = viewState.fileToDelete,
-          style = MaterialTheme.typography.bodyMedium,
-        )
-        if (viewState.fileCount != null) {
+      if (viewState.fileToDelete != null) {
+        Spacer(Modifier.height(16.dp))
+        Column(
+          modifier =
+            Modifier.fillMaxWidth()
+              .background(colors.surfaceContainerHigh, MaterialTheme.shapes.largeIncreased)
+              .padding(horizontal = 16.dp, vertical = 12.dp),
+        ) {
           Text(
-            text =
-              pluralStringResource(
-                StringsR.plurals.folder_type_file_count,
-                viewState.fileCount,
-                viewState.fileCount,
-              ),
-            style = MaterialTheme.typography.bodySmall,
-            color = colors.onSurfaceVariant,
+            text = viewState.fileToDelete,
+            style = MaterialTheme.typography.bodyMedium,
           )
+          if (viewState.fileCount != null) {
+            Text(
+              text =
+                pluralStringResource(
+                  StringsR.plurals.folder_type_file_count,
+                  viewState.fileCount,
+                  viewState.fileCount,
+                ),
+              style = MaterialTheme.typography.bodySmall,
+              color = colors.onSurfaceVariant,
+            )
+          }
         }
       }
       Spacer(Modifier.height(12.dp))
@@ -233,6 +244,7 @@ internal fun DeleteBookSheet(
 @Composable
 private fun DeleteHero(
   cover: String?,
+  showCover: Boolean,
   armed: Boolean,
 ) {
   val colors = MaterialTheme.colorScheme
@@ -264,28 +276,31 @@ private fun DeleteHero(
     modifier = Modifier.size(width = 136.dp, height = 120.dp),
     contentAlignment = Alignment.Center,
   ) {
-    AsyncImage(
-      modifier =
-        Modifier.size(104.dp)
-          .graphicsLayer {
-            rotationZ = -4F - lean * 6F
-            val scale = 1F - lean * 0.06F
-            scaleX = scale
-            scaleY = scale
-            alpha = 1F - lean * 0.25F
-          }
-          .clip(CoverShape),
-      model = rememberCoverThumbnailRequest(cover),
-      placeholder = ColorPainter(colors.surfaceContainerHighest),
-      error = painterResource(id = UiR.drawable.album_art),
-      contentScale = ContentScale.Crop,
-      contentDescription = null,
-    )
+    if (showCover) {
+      AsyncImage(
+        modifier =
+          Modifier.size(104.dp)
+            .graphicsLayer {
+              rotationZ = -4F - lean * 6F
+              val scale = 1F - lean * 0.06F
+              scaleX = scale
+              scaleY = scale
+              alpha = 1F - lean * 0.25F
+            }
+            .clip(CoverShape),
+        model = rememberCoverThumbnailRequest(cover),
+        placeholder = ColorPainter(colors.surfaceContainerHighest),
+        error = painterResource(id = UiR.drawable.album_art),
+        contentScale = ContentScale.Crop,
+        contentDescription = null,
+      )
+    }
+    // without a cover, the badge stands for all the books
     Box(
       modifier =
-        Modifier.align(Alignment.BottomEnd).size(52.dp).graphicsLayer {
-          rotationZ = shake.value + lean * 20F
-        },
+        Modifier.align(if (showCover) Alignment.BottomEnd else Alignment.Center)
+          .size(if (showCover) 52.dp else 88.dp)
+          .graphicsLayer { rotationZ = shake.value + lean * 20F },
       contentAlignment = Alignment.Center,
     ) {
       Box(
@@ -295,7 +310,7 @@ private fun DeleteHero(
         painter = painterResource(UiR.drawable.ic_delete),
         contentDescription = null,
         tint = colors.onError,
-        modifier = Modifier.size(26.dp),
+        modifier = Modifier.size(if (showCover) 26.dp else 44.dp),
       )
     }
   }

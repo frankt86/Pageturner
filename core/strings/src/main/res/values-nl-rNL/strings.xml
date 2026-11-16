@@ -8,6 +8,14 @@
     <string name="book.delete.dialog.confirm_files">Mijn bestanden verwijderen</string>
     <string name="book.delete.dialog.message">De bestanden worden voorgoed van je apparaat verwijderd. Je kunt ze niet terugkrijgen.</string>
     <string name="book.delete.dialog.title">Boek verwijderen</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">%d boek verwijderen</item>
+        <item quantity="other">%d boeken verwijderen</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">%d boek kon niet worden verwijderd</item>
+        <item quantity="other">%d boeken konden niet worden verwijderd</item>
+    </plurals>
     <string name="book.download.action">Downloaden</string>
     <string name="book.download.failed">De download is niet gelukt</string>
     <string name="book.download.progress">%1$s van %2$s</string>

@@ -8,6 +8,18 @@
     <string name="book.delete.dialog.confirm_files">Vymazať moje súbory</string>
     <string name="book.delete.dialog.message">Súbory sa natrvalo odstránia z vášho zariadenia. Už ich nebude možné obnoviť.</string>
     <string name="book.delete.dialog.title">Vymazať knihu</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Vymazať %d knihu</item>
+        <item quantity="few">Vymazať %d knihy</item>
+        <item quantity="many">Vymazať %d kníh</item>
+        <item quantity="other">Vymazať %d kníh</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">%d knihu sa nepodarilo vymazať</item>
+        <item quantity="few">%d knihy sa nepodarilo vymazať</item>
+        <item quantity="many">%d kníh sa nepodarilo vymazať</item>
+        <item quantity="other">%d kníh sa nepodarilo vymazať</item>
+    </plurals>
     <string name="book.download.action">Stiahnuť</string>
     <string name="book.download.failed">Sťahovanie sa nepodarilo dokončiť</string>
     <string name="book.download.progress">%1$s z %2$s</string>

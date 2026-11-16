@@ -46,6 +46,8 @@ import voice.core.data.ReadiumHighlight
 import voice.core.data.store.EbooksStore
 import voice.core.ebook.PdfOpenException
 import voice.core.ebook.PdfProblem
+import voice.core.ebook.bookTextFile
+import voice.core.ebook.bookTextFolder
 import voice.core.ebook.openPdf
 import voice.core.ebook.parseEpub
 import voice.core.logging.api.Logger

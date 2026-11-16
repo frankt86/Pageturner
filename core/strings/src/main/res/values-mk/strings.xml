@@ -8,6 +8,14 @@
     <string name="book.delete.dialog.confirm_files">Избриши ги моите датотеки</string>
     <string name="book.delete.dialog.message">Ова трајно ги брише датотеките од вашиот уред. Нема да можете да ги вратите.</string>
     <string name="book.delete.dialog.title">Избриши книга</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Избриши %d книга</item>
+        <item quantity="other">Избриши %d книги</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">%d книга не можеше да се избрише</item>
+        <item quantity="other">%d книги не можеа да се избришат</item>
+    </plurals>
     <string name="book.download.action">Преземи</string>
     <string name="book.download.failed">Преземањето не заврши</string>
     <string name="book.download.progress">%1$s од %2$s</string>

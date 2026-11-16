@@ -8,6 +8,16 @@
     <string name="book.delete.dialog.confirm_files">Șterge fișierele mele</string>
     <string name="book.delete.dialog.message">Fișierele vor fi șterse definitiv de pe dispozitivul tău. Nu le vei mai putea recupera.</string>
     <string name="book.delete.dialog.title">Șterge cartea</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Șterge %d carte</item>
+        <item quantity="few">Șterge %d cărți</item>
+        <item quantity="other">Șterge %d de cărți</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">Nu s-a putut șterge %d carte</item>
+        <item quantity="few">Nu s-au putut șterge %d cărți</item>
+        <item quantity="other">Nu s-au putut șterge %d de cărți</item>
+    </plurals>
     <string name="book.download.action">Descarcă</string>
     <string name="book.download.failed">Descărcarea nu s-a finalizat</string>
     <string name="book.download.progress">%1$s din %2$s</string>

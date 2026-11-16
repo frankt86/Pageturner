@@ -8,6 +8,16 @@
     <string name="book.delete.dialog.confirm_files">מחיקת הקבצים שלי</string>
     <string name="book.delete.dialog.message">הקבצים יימחקו לצמיתות מהמכשיר שלכם. לא ניתן יהיה לשחזר אותם.</string>
     <string name="book.delete.dialog.title">מחיקת ספר</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">מחיקת %d ספר</item>
+        <item quantity="two">מחיקת %d ספרים</item>
+        <item quantity="other">מחיקת %d ספרים</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">לא ניתן היה למחוק %d ספר</item>
+        <item quantity="two">לא ניתן היה למחוק %d ספרים</item>
+        <item quantity="other">לא ניתן היה למחוק %d ספרים</item>
+    </plurals>
     <string name="book.download.action">הורדה</string>
     <string name="book.download.failed">ההורדה לא הושלמה</string>
     <string name="book.download.progress">%1$s מתוך %2$s</string>

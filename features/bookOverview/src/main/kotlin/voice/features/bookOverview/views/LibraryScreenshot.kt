@@ -41,6 +41,7 @@ private fun LibraryScreenshot() {
       onSelectionEdit = {},
       onSelectionHide = {},
       onSelectionShow = {},
+      onSelectionDelete = {},
     )
   }
 }

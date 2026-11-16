@@ -8,6 +8,18 @@
     <string name="book.delete.dialog.confirm_files">Удалить файлы</string>
     <string name="book.delete.dialog.message">Файлы будут навсегда удалены с вашего устройства. Восстановить их не получится.</string>
     <string name="book.delete.dialog.title">Удалить книгу</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Удалить %d книгу</item>
+        <item quantity="few">Удалить %d книги</item>
+        <item quantity="many">Удалить %d книг</item>
+        <item quantity="other">Удалить %d книг</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">Не удалось удалить %d книгу</item>
+        <item quantity="few">Не удалось удалить %d книги</item>
+        <item quantity="many">Не удалось удалить %d книг</item>
+        <item quantity="other">Не удалось удалить %d книг</item>
+    </plurals>
     <string name="book.download.action">Скачать</string>
     <string name="book.download.failed">Скачивание не завершилось</string>
     <string name="book.download.progress">%1$s из %2$s</string>

@@ -4,10 +4,18 @@
     <string name="book.category.action.mark_completed">Märgi kuulatuks</string>
     <string name="book.category.action.mark_current">Märgi kuulamisel olevaks</string>
     <string name="book.category.action.mark_not_started">Märgi ootel olevaks</string>
-    <string name="book.delete.bottom_sheet.title">Kustuta heliraamat</string>
+    <string name="book.delete.bottom_sheet.title">Kustuta raamat</string>
     <string name="book.delete.dialog.confirm_files">Kustuta minu failid</string>
     <string name="book.delete.dialog.message">Failid kustutatakse su seadmest jäädavalt. Neid ei saa enam taastada.</string>
-    <string name="book.delete.dialog.title">Kustuta heliraamat</string>
+    <string name="book.delete.dialog.title">Kustuta raamat</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Kustuta %d raamat</item>
+        <item quantity="other">Kustuta %d raamatut</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">%d raamatu kustutamine ei õnnestunud</item>
+        <item quantity="other">%d raamatu kustutamine ei õnnestunud</item>
+    </plurals>
     <string name="book.download.action">Laadi alla</string>
     <string name="book.download.failed">Allalaadimine ei õnnestunud</string>
     <string name="book.download.progress">%1$s / %2$s</string>

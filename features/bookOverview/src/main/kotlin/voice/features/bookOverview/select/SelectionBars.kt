@@ -72,6 +72,7 @@ internal fun SelectionToolbar(
   onEdit: (BookField) -> Unit,
   onHide: () -> Unit,
   onShow: () -> Unit,
+  onDelete: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   HorizontalFloatingToolbar(
@@ -101,6 +102,13 @@ internal fun SelectionToolbar(
         icon = UiR.drawable.ic_visibility_off,
         label = StringsR.string.library_selection_hide,
         onClick = onHide,
+      )
+    }
+    // only an icon, so four actions fit, and the sheet it opens names it
+    IconButton(onClick = onDelete) {
+      Icon(
+        painter = painterResource(UiR.drawable.ic_delete),
+        contentDescription = stringResource(StringsR.string.common_action_delete),
       )
     }
   }
@@ -155,6 +163,7 @@ private fun SelectionBarsPreview() {
           onEdit = {},
           onHide = {},
           onShow = {},
+          onDelete = {},
           modifier = Modifier.padding(16.dp),
         )
       }

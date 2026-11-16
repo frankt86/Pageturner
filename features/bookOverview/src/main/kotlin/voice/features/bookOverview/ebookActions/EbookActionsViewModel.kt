@@ -28,6 +28,9 @@ import voice.core.data.repo.BookRepository
 import voice.core.data.store.EbooksStore
 import voice.core.logging.api.Logger
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
+import voice.features.bookOverview.deleteBook.BookDeleter
+import voice.features.bookOverview.deleteBook.DeleteBookViewState
+import voice.features.bookOverview.deleteBook.fileToDelete
 import voice.features.bookOverview.editBook.EditBookState
 import voice.features.bookOverview.editBook.seriesOfOtherBooks
 import voice.features.bookOverview.hideBook.BookHider
@@ -49,12 +52,16 @@ class EbookActionsViewModel(
   private val dispatcherProvider: DispatcherProvider,
   private val bookHider: BookHider,
   private val bookSelectionRequests: BookSelectionRequests,
+  private val bookDeleter: BookDeleter,
   @Assisted private val uri: Uri,
 ) {
 
   private val scope = MainScope(dispatcherProvider)
 
   internal var editState by mutableStateOf<EditBookState?>(null)
+    private set
+
+  internal var deleteState by mutableStateOf<DeleteBookViewState?>(null)
     private set
 
   /** Null until the book is loaded. */
@@ -73,6 +80,7 @@ class EbookActionsViewModel(
           BottomSheetItem.InternetCover,
           BottomSheetItem.FileCover,
           if (ebook.hidden) BottomSheetItem.Show else BottomSheetItem.Hide,
+          BottomSheetItem.DeleteBook,
         ),
     )
   }
@@ -200,6 +208,34 @@ class EbookActionsViewModel(
 
   internal suspend fun onSelect() {
     bookSelectionRequests.select(listOf(ebook().first().bookId))
+  }
+
+  internal suspend fun onDelete() {
+    val ebook = ebook().first()
+    deleteState =
+      DeleteBookViewState(
+        ids = listOf(ebook.bookId),
+        name = ebook.title,
+        cover = ebook.toItemViewState().cover,
+        fileCount = null,
+        deleteCheckBoxChecked = false,
+        fileToDelete = fileToDelete(ebook.bookId),
+      )
+  }
+
+  internal fun onDeleteCheckBoxCheck(checked: Boolean) {
+    deleteState = deleteState?.copy(deleteCheckBoxChecked = checked)
+  }
+
+  internal fun onDeleteDismiss() {
+    deleteState = null
+  }
+
+  internal fun onDeleteConfirm() {
+    val state = deleteState ?: return
+    deleteState = null
+    if (!state.confirmButtonEnabled) return
+    scope.launch { bookDeleter.delete(state.ids) }
   }
 
   internal fun onClose() {

@@ -8,6 +8,14 @@
     <string name="book.delete.dialog.confirm_files">Slett filene mine</string>
     <string name="book.delete.dialog.message">Filene slettes permanent fra enheten din. Du kan ikke få dem tilbake.</string>
     <string name="book.delete.dialog.title">Slett bok</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Slett %d bok</item>
+        <item quantity="other">Slett %d bøker</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="one">%d bok kunne ikke slettes</item>
+        <item quantity="other">%d bøker kunne ikke slettes</item>
+    </plurals>
     <string name="book.download.action">Last ned</string>
     <string name="book.download.failed">Nedlastingen ble ikke fullført</string>
     <string name="book.download.progress">%1$s av %2$s</string>

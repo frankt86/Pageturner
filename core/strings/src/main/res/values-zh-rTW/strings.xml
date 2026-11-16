@@ -4,10 +4,16 @@
     <string name="book.category.action.mark_completed">標示為已聽完</string>
     <string name="book.category.action.mark_current">標示為收聽中</string>
     <string name="book.category.action.mark_not_started">標示為尚未開始</string>
-    <string name="book.delete.bottom_sheet.title">刪除有聲書</string>
+    <string name="book.delete.bottom_sheet.title">刪除書籍</string>
     <string name="book.delete.dialog.confirm_files">刪除我的檔案</string>
     <string name="book.delete.dialog.message">這會將檔案從你的裝置上永久刪除，而且無法復原。</string>
-    <string name="book.delete.dialog.title">刪除有聲書</string>
+    <string name="book.delete.dialog.title">刪除書籍</string>
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="other">刪除 %d 本書</item>
+    </plurals>
+    <plurals name="book.delete.failed">
+        <item quantity="other">有 %d 本書無法刪除</item>
+    </plurals>
     <string name="book.download.action">下載</string>
     <string name="book.download.failed">下載未完成</string>
     <string name="book.download.progress">%1$s / %2$s</string>

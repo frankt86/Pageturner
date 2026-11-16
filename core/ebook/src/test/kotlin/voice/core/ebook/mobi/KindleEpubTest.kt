@@ -1,10 +1,15 @@
 package voice.core.ebook.mobi
 
+import android.content.Context
+import android.net.Uri
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import java.io.ByteArrayOutputStream
+import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import org.junit.runner.RunWith
 import voice.core.ebook.parseEpub
@@ -33,5 +38,21 @@ class KindleEpubTest {
     assertContentEquals(jpeg, parseEpub(epub.inputStream(), withText = false).cover)
     assertEquals(listOf("Chapter one", "Chapter two"), book.chapters.map { it.title })
     assertEquals(listOf("Hello next", "Chapter two\n\nBye"), book.chapters.map { it.text.trim() })
+  }
+
+  @Test
+  fun `deleting the converted copy of a book keeps the copies of other books`() {
+    val context = ApplicationProvider.getApplicationContext<Context>()
+    val (deleted, kept) =
+      listOf("deleted", "kept").map { name ->
+        Uri.fromFile(File(context.filesDir, "$name.mobi").apply { writeBytes(mobi6()) })
+      }
+    val deletedEpub = kindleEpub(context, deleted)
+    val keptEpub = kindleEpub(context, kept)
+
+    deleteKindleEpub(context, deleted)
+
+    assertFalse(deletedEpub.exists())
+    assertTrue(keptEpub.exists())
   }
 }

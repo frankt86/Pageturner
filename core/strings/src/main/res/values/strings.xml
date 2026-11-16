@@ -16,6 +16,16 @@
     <string name="book.delete.dialog.message">This deletes the files from your device for good. You can\'t get them back.</string>
     <!-- Title for the delete-book confirmation dialog. -->
     <string name="book.delete.dialog.title">Delete Book</string>
+    <!-- Title of the delete sheet for several books selected in the library. %d is the number of books. -->
+    <plurals name="book.delete.dialog.title_count">
+        <item quantity="one">Delete %d book</item>
+        <item quantity="other">Delete %d books</item>
+    </plurals>
+    <!-- Message after deleting books, when the files of some could not be deleted, for example because Pageturner may not change their folder. Those books stay in the library. %d is the number of books. -->
+    <plurals name="book.delete.failed">
+        <item quantity="one">Couldn\'t delete %d book</item>
+        <item quantity="other">Couldn\'t delete %d books</item>
+    </plurals>
     <!-- Action that downloads a book from a catalog. -->
     <string name="book.download.action">Download</string>
     <!-- Shown when the download of a book from a catalog stopped with an error: in the catalog and in a notification. -->

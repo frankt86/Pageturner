@@ -55,6 +55,20 @@ fun deleteStaleKindleEpubs(
   }
 }
 
+/** Deletes the converted copy of the Kindle book at [uri]. */
+fun deleteKindleEpub(
+  context: Context,
+  uri: Uri,
+) {
+  val key = hash(uri.toString())
+  synchronized(lock) {
+    File(context.filesDir, FOLDER)
+      .listFiles()
+      ?.filter { it.name.startsWith("$key-") || it.name == "$key.partial" }
+      ?.forEach { it.delete() }
+  }
+}
+
 private fun fileVersion(
   context: Context,
   uri: Uri,
