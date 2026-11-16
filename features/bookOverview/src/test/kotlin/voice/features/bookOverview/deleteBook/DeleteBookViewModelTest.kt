@@ -47,14 +47,14 @@ class DeleteBookViewModelTest {
     )
   private val navigator = mockk<Navigator>(relaxUnitFun = true)
 
-  private val viewModel = viewModel(book)
-
   private val dispatcherProvider =
     DispatcherProvider(
       main = dispatcher,
       io = dispatcher + onIoDispatcher.asContextElement(true),
       mainImmediate = dispatcher,
     )
+
+  private val viewModel = viewModel(book)
 
   private fun viewModel(book: Book): DeleteBookViewModel {
     val application = ApplicationProvider.getApplicationContext<Application>()
