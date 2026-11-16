@@ -5,13 +5,13 @@ on:
     branches: [ neural-voice-probe ]
 
 jobs:
-  check:
+  speed:
     runs-on: ubuntu-24.04-arm
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
+      - uses: actions/checkout@v7
       - run: |
-          uname -a; nproc; free -g
-          ls -l /dev/kvm || true
-          grep -c processor /proc/cpuinfo; grep -m1 Features /proc/cpuinfo
-          ls /usr/local/lib/android/sdk 2>/dev/null || echo no sdk
-          curl -sS https://dl.google.com/android/repository/repository2-3.xml | grep -o 'emulator-linux_aarch64[^<]*' | head -3 || true
+          python3 -m venv /tmp/v && /tmp/v/bin/pip install -q sherpa-onnx==1.13.8
+          curl -sSL -o /tmp/k.tar.bz2 https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-int8-multi-lang-v1_0.tar.bz2
+          mkdir -p /tmp/m && tar xjf /tmp/k.tar.bz2 -C /tmp/m
+          for n in 4 2; do echo threads=$n; /tmp/v/bin/python -I .github/probe/t.py /tmp/m/kokoro-int8-multi-lang-v1_0 $n; done
