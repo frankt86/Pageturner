@@ -7,7 +7,7 @@ print("valid", cfg.validate())
 s0=time.time(); t = so.OfflineTts(cfg); print("create", time.time()-s0)
 print("sr", t.sample_rate, "speakers", t.num_speakers)
 g = so.GenerationConfig(); g.sid=3; g.speed=1.0; g.extra={"lang":"en-us"}
-s=time.time(); for text in ["Hello there.", "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season."]:
+for text in ["Hello there.", "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season."]:
     for n in [1]:
         s=time.time(); a = t.generate(text, g)
         print("chars", len(text), "audio_s", round(len(a.samples)/a.sample_rate,2), "gen_s", round(time.time()-s,2), flush=True)
