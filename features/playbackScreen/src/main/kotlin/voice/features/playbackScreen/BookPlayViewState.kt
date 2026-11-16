@@ -25,8 +25,6 @@ data class BookPlayViewState(
   val chapterSegments: List<Float>,
   val skipSeconds: Int,
   val jumpBack: JumpBackViewState?,
-  /** A server book that isn't downloaded while the server can't be reached. */
-  val unavailable: Boolean = false,
 ) {
 
   /**

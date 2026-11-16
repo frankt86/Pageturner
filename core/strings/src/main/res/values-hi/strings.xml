@@ -1,63 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="audiobookshelf.download.notification.books">
-        <item quantity="one">%d पुस्तक डाउनलोड हो रही है</item>
-        <item quantity="other">%d पुस्तकें डाउनलोड हो रही हैं</item>
-    </plurals>
-    <string name="audiobookshelf.download.notification.done">ऑफ़लाइन सुनने के लिए तैयार</string>
-    <string name="audiobookshelf.download.notification.retry">फिर से कोशिश करें</string>
-    <string name="audiobookshelf.download.notification.stop">रोकें</string>
-    <string name="audiobookshelf.download.notification.title">डाउनलोड हो रहा है…</string>
-    <string name="audiobookshelf.downloads.channel">डाउनलोड</string>
-    <string name="audiobookshelf.login.address.action">जारी रखें</string>
-    <string name="audiobookshelf.login.address.label">सर्वर का पता</string>
-    <string name="audiobookshelf.login.address.subtitle">अपने खुद के सर्वर की पुस्तकें सुनें। आपकी जगह आपके दूसरे डिवाइस के साथ सिंक रहती है।</string>
-    <string name="audiobookshelf.login.address.title">Audiobookshelf कनेक्ट करें</string>
-    <string name="audiobookshelf.login.credentials.action">साइन इन करें</string>
-    <string name="audiobookshelf.login.credentials.no_password">यह सर्वर सिर्फ़ सिंगल साइन-ऑन की अनुमति देता है, जो अभी Pageturner में नहीं है। सर्वर चलाने वाले व्यक्ति से पासवर्ड से साइन इन चालू करने को कहें।</string>
-    <string name="audiobookshelf.login.credentials.subtitle">%s पर अपने खाते का इस्तेमाल करें।</string>
-    <string name="audiobookshelf.login.credentials.title">साइन इन करें</string>
-    <string name="audiobookshelf.login.error.certificate">आपका फ़ोन इस सर्वर के सर्टिफ़िकेट पर भरोसा नहीं करता।</string>
-    <string name="audiobookshelf.login.error.credentials">उपयोगकर्ता नाम या पासवर्ड सही नहीं है।</string>
-    <string name="audiobookshelf.login.error.failed">साइन इन नहीं हो पाया। फिर से कोशिश करें।</string>
-    <string name="audiobookshelf.login.error.not_found">Pageturner को वहाँ कोई Audiobookshelf सर्वर नहीं मिला। क्या आप सही नेटवर्क पर हैं?</string>
-    <string name="audiobookshelf.login.error.not_set_up">यह सर्वर अभी सेट अप नहीं हुआ है। पहले इसके वेब ऐप में सेटअप पूरा करें।</string>
-    <string name="audiobookshelf.login.error.other_account">यह कोई दूसरा खाता है। खाता बदलने के लिए पहले साइन आउट करें।</string>
-    <string name="audiobookshelf.login.error.too_old">Pageturner को Audiobookshelf 2.26 या उसके बाद का वर्शन चाहिए। इस सर्वर पर %s चल रहा है।</string>
-    <string name="audiobookshelf.login.error.unreachable">सर्वर ने जवाब देना बंद कर दिया। थोड़ी देर में फिर से कोशिश करें।</string>
-    <string name="audiobookshelf.login.libraries.action">मेरी लाइब्रेरी में जोड़ें</string>
-    <string name="audiobookshelf.login.libraries.loading">पुस्तकें ढूँढ रहे हैं…</string>
-    <string name="audiobookshelf.login.libraries.none">यहाँ ऑडियोबुक की कोई लाइब्रेरी नहीं है</string>
-    <string name="audiobookshelf.login.libraries.subtitle">ये आपकी लाइब्रेरी में जुड़ जाती हैं। इन्हें तुरंत चलाएँ या ऑफ़लाइन सुनने के लिए डाउनलोड करें।</string>
-    <plurals name="audiobookshelf.login.libraries.title">
-        <item quantity="one">%d ऑडियोबुक मिली</item>
-        <item quantity="other">%d ऑडियोबुक मिलीं</item>
-    </plurals>
-    <plurals name="audiobookshelf.login.library_chip">
-        <item quantity="one">%1$s · %2$d पुस्तक</item>
-        <item quantity="other">%1$s · %2$d पुस्तकें</item>
-    </plurals>
-    <string name="audiobookshelf.login.password">पासवर्ड</string>
-    <string name="audiobookshelf.login.password.hide">पासवर्ड छिपाएँ</string>
-    <string name="audiobookshelf.login.password.show">पासवर्ड दिखाएँ</string>
-    <string name="audiobookshelf.login.username">उपयोगकर्ता नाम</string>
-    <string name="audiobookshelf.settings.downloads">डाउनलोड</string>
-    <string name="audiobookshelf.settings.downloads.none">अभी तक कोई पुस्तक डाउनलोड नहीं हुई</string>
-    <string name="audiobookshelf.settings.downloads.remove">सभी हटाएँ</string>
-    <string name="audiobookshelf.settings.downloads.used">इस डिवाइस पर %s</string>
-    <string name="audiobookshelf.settings.libraries">लाइब्रेरी</string>
-    <string name="audiobookshelf.settings.mobile_data">मोबाइल डेटा से डाउनलोड करें</string>
-    <string name="audiobookshelf.settings.mobile_data.summary">वरना डाउनलोड वाई-फ़ाई का इंतज़ार करते हैं</string>
-    <string name="audiobookshelf.settings.sign_in_again">साइन इन करें</string>
-    <string name="audiobookshelf.settings.sign_out">साइन आउट करें</string>
-    <string name="audiobookshelf.settings.signed_in_as">%s के तौर पर साइन इन किया गया</string>
-    <string name="audiobookshelf.settings.try_again">फिर से कोशिश करें</string>
-    <string name="audiobookshelf.sign_out.message">इसकी पुस्तकें और उनके डाउनलोड इस डिवाइस से हट जाएँगे। आपकी प्रगति सर्वर पर सुरक्षित रहती है।</string>
-    <string name="audiobookshelf.sign_out.title">%s से साइन आउट करें?</string>
-    <string name="audiobookshelf.status.connected">कनेक्ट है, आपकी प्रगति सिंक है</string>
-    <string name="audiobookshelf.status.needs_login">सर्वर चाहता है कि आप फिर से साइन इन करें</string>
-    <string name="audiobookshelf.status.offline">अभी सर्वर से संपर्क नहीं हो पा रहा है। डाउनलोड की गई पुस्तकें फिर भी चलती हैं।</string>
-    <string name="audiobookshelf.status.syncing">सिंक हो रहा है…</string>
     <string name="author.wikipedia">विकिपीडिया पर और पढ़ें</string>
     <string name="book.category.action.mark_completed">पूर्ण चिह्नित करें</string>
     <string name="book.category.action.mark_current">जारी चिह्नित करें</string>
@@ -69,25 +11,18 @@
     <string name="book.download.action">डाउनलोड करें</string>
     <string name="book.download.failed">डाउनलोड पूरा नहीं हुआ</string>
     <string name="book.download.progress">%2$s में से %1$s</string>
-    <string name="book.download.remove">डाउनलोड हटाएँ</string>
     <string name="book.download.retry">फिर से डाउनलोड करें</string>
     <string name="book.download.stop">डाउनलोड रोकें</string>
-    <string name="book.download.waiting_for_connection">कनेक्शन का इंतज़ार है</string>
-    <string name="book.download.waiting_for_wifi">वाई-फ़ाई का इंतज़ार है</string>
     <string name="book.edit.author.label">लेखक</string>
     <string name="book.edit.cover.file">फ़ाइल सिस्टम से कवर</string>
     <string name="book.edit.cover.internet">इंटरनेट से कवर</string>
     <string name="book.edit.part.label">भाग</string>
     <string name="book.edit.rename">नाम बदलें</string>
     <string name="book.edit.series.label">सीरीज़</string>
-    <string name="book.edit.server.failed">आपके सर्वर पर सहेजा नहीं जा सका। फिर से कोशिश करें।</string>
-    <string name="book.edit.server.not_allowed">सर्वर पर आपके खाते को पुस्तकें बदलने की अनुमति नहीं है।</string>
     <string name="book.edit.title.label">शीर्षक</string>
     <string name="book.hide">लाइब्रेरी से छिपाएँ</string>
     <string name="book.select">चुनें</string>
     <string name="book.show">लाइब्रेरी में दिखाएँ</string>
-    <string name="book.source.device">इस डिवाइस पर</string>
-    <string name="book.source.server_downloaded">%s · डाउनलोड की गई</string>
     <string name="bookmark.action.add_note">नोट जोड़ें</string>
     <string name="bookmark.add_note_hint">नोट जोड़ें</string>
     <string name="bookmark.added.snackbar">बुकमार्क जोड़ा गया</string>
@@ -130,6 +65,7 @@
     <string name="common.action.more">ज़्यादा विकल्प</string>
     <string name="common.action.undo">पहले जैसा करें</string>
     <string name="common.action.save">सहेजें</string>
+    <string name="common.action.try_again">फिर से कोशिश करें</string>
     <string name="common.dialog.cancel">रद्द</string>
     <string name="common.dialog.confirm">सेट करें</string>
     <string name="common.dialog.ok">ठीक है</string>
@@ -144,6 +80,14 @@
     <string name="cover.search.query.with_author">%2$s द्वारा %1$s ऑडियोबुक कवर</string>
     <string name="cover.search.query.without_author">%s ऑडियोबुक कवर</string>
     <string name="cover.title">कवर</string>
+    <plurals name="download.notification.books">
+        <item quantity="one">%d पुस्तक डाउनलोड हो रही है</item>
+        <item quantity="other">%d पुस्तकें डाउनलोड हो रही हैं</item>
+    </plurals>
+    <string name="download.notification.done">ऑफ़लाइन सुनने के लिए तैयार</string>
+    <string name="download.notification.stop">रोकें</string>
+    <string name="download.notification.title">डाउनलोड हो रहा है…</string>
+    <string name="downloads.channel">डाउनलोड</string>
     <plurals name="duration.minutes">
         <item quantity="one">%d मिनट</item>
         <item quantity="other">%d मिनट</item>
@@ -152,7 +96,6 @@
         <item quantity="one">%d सेकंड</item>
         <item quantity="other">%d सेकंड</item>
     </plurals>
-    <string name="folder.add.action.audiobookshelf">Audiobookshelf कनेक्ट करें</string>
     <string name="folder.add.action.file">इसके बजाय एक फ़ाइल जोड़ें</string>
     <string name="folder.add.action.folder">फ़ोल्डर चुनें</string>
     <string name="folder.add.action.opds">कैटलॉग से डाउनलोड करें</string>
@@ -246,7 +189,6 @@
     <string name="library.book.ebook">ई-बुक</string>
     <string name="library.book.hidden">छिपी हुई</string>
     <string name="library.book.hidden.message">%1$s को छिपा दिया गया</string>
-    <string name="library.book.offline">ऑफ़लाइन उपलब्ध नहीं</string>
     <string name="library.category.completed.title">पूर्ण</string>
     <string name="library.category.current.title">जारी</string>
     <string name="library.category.not_started.title">अभी शुरू नहीं</string>
@@ -261,7 +203,6 @@
     <string name="library.filter.group_by.author">लेखक</string>
     <string name="library.filter.group_by.series">सीरीज़</string>
     <string name="library.filter.hidden_books">छिपी हुई पुस्तकें</string>
-    <string name="library.filter.not_downloaded">डाउनलोड नहीं की गईं</string>
     <string name="library.filter.show">दिखाएँ</string>
     <string name="library.folders.moved.dialog.message">पुस्तक फ़ोल्डर अब सेटिंग्स में मैनेज होते हैं।</string>
     <string name="library.folders.moved.dialog.title">पुस्तक फ़ोल्डर की जगह बदल गई</string>
@@ -331,15 +272,15 @@
         <item quantity="one">%d पुस्तक के लिए सीरीज़ सेट की गई</item>
         <item quantity="other">%d पुस्तकों के लिए सीरीज़ सेट की गई</item>
     </plurals>
-    <plurals name="library.selection.server_failed">
-        <item quantity="one">%d पुस्तक को आपके सर्वर पर सहेजा नहीं जा सका</item>
-        <item quantity="other">%d पुस्तकों को आपके सर्वर पर सहेजा नहीं जा सका</item>
-    </plurals>
     <string name="library.selection.show">दिखाएँ</string>
     <string name="library.series.hidden.message">%1$s को छिपा दिया गया</string>
     <string name="library.storage_permission_bug.action">अनुमति प्रदान करें</string>
     <string name="library.storage_permission_bug.message">कुछ डिवाइस पर, एक सिस्टम ऐप के पास बाहरी स्टोरेज तक पहुँचने की ज़रूरी अनुमति नहीं होती। Pageturner को आपकी ऑडियोबुक पढ़ने के लिए यह पहुँच चाहिए।</string>
     <string name="library.storage_permission_bug.title">अनुमति आवश्यक है</string>
+    <string name="login.password">पासवर्ड</string>
+    <string name="login.password.hide">पासवर्ड छिपाएँ</string>
+    <string name="login.password.show">पासवर्ड दिखाएँ</string>
+    <string name="login.username">उपयोगकर्ता नाम</string>
     <string name="media_session.library.recent">हालिया</string>
     <string name="media_session.library.root">सभी ऑडियोबुक</string>
     <string name="onboarding.action.next">अगला</string>
@@ -662,7 +603,6 @@
     <string name="settings.auto_sleep_timer.start.label">शुरू होने का समय सेट करें</string>
     <string name="settings.auto_sleep_timer.summary">%1$s से %2$s के बीच प्लेबैक शुरू होने पर अपने-आप स्लीप-टाइमर शुरू करें</string>
     <string name="settings.auto_sleep_timer.title">ऑटो स्लीप-टाइमर</string>
-    <string name="settings.library.audiobookshelf.summary">अपने खुद के सर्वर से पुस्तकें स्ट्रीम करें</string>
     <string name="settings.library.folders.summary">पुस्तकों के लिए स्कैन किए गए फ़ोल्डर मैनेज करें</string>
     <string name="settings.library.layout.grid">ग्रिड</string>
     <string name="settings.library.layout.list">सूची</string>

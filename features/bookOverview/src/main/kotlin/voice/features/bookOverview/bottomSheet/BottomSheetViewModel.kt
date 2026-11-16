@@ -9,18 +9,12 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import voice.core.audiobookshelf.ServerAccount
-import voice.core.audiobookshelf.ServerDownloads
-import voice.core.audiobookshelf.download.BookDownloadState
 import voice.core.data.Book
 import voice.core.data.BookId
 import voice.core.data.category
-import voice.core.data.isRemote
 import voice.core.data.repo.BookRepository
 import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
 import voice.core.playback.PlayerController
@@ -37,8 +31,6 @@ class BottomSheetViewModel(
   private val bookId: BookId,
   private val viewModels: Set<@JvmSuppressWildcards BottomSheetItemViewModel>,
   private val repo: BookRepository,
-  private val serverAccount: ServerAccount,
-  private val serverDownloads: ServerDownloads,
   private val navigator: Navigator,
   private val playerController: PlayerController,
   private val experimentalPlaybackPersistenceFeatureFlag:
@@ -59,65 +51,15 @@ class BottomSheetViewModel(
           value = viewModels.flatMap { it.items(bookId) }.toSet().sorted()
         }
         .value
-    val server = remember {
-      serverAccount.serverName.map(::ServerName)
-    }
-      .collectAsState(initial = null)
-      .value
-    // the download goes on while the sheet is open
-    val download =
-      if (bookId.isRemote) {
-        remember {
-            serverDownloads.states
-              .map { it[bookId] ?: BookDownloadState.NotDownloaded }
-              .distinctUntilChanged()
-          }
-          .collectAsState(initial = null)
-          .value ?: return null
-      } else {
-        null
-      }
-    val askForNotifications =
-      produceState<Boolean?>(initialValue = null) {
-          value = bookId.isRemote && serverDownloads.shouldAskForNotifications()
-        }
-        .value
     val canSelect = remember { bookSelectionRequests.canSelect }.collectAsState(null).value
-    if (
-      book == null ||
-        items == null ||
-        server == null ||
-        askForNotifications == null ||
-        canSelect == null
-    ) {
+    if (book == null || items == null || canSelect == null) {
       return null
     }
     val select = listOfNotNull(BottomSheetItem.Select.takeIf { canSelect })
     return EditBookBottomSheetState(
       book = book.toItemViewState(),
       category = book.category,
-      items = (items + download?.items().orEmpty() + select).toSet().sorted(),
-      source = source(server.name, download),
-      download = download,
-      bookSize =
-        book.chapters.takeIf { chapters -> chapters.all { it.fileSize > 0 } }?.sumOf { it.fileSize }
-          ?: 0L,
-      askForNotifications = askForNotifications,
-    )
-  }
-
-  // with books only on the device there is nothing to tell apart
-  private fun source(
-    serverName: String?,
-    download: BookDownloadState?,
-  ): BookSource? {
-    if (serverName == null) return null
-    if (!bookId.isRemote) return BookSource.Device
-    return BookSource.Server(
-      name = serverName,
-      download =
-        if (download is BookDownloadState.Downloaded) BookSource.Download.Done
-        else BookSource.Download.None,
+      items = (items + select).toSet().sorted(),
     )
   }
 
@@ -149,10 +91,6 @@ class BottomSheetViewModel(
     scope
       .launch {
         when (item) {
-          BottomSheetItem.Download,
-          BottomSheetItem.RetryDownload -> serverDownloads.download(bookId)
-          BottomSheetItem.StopDownload,
-          BottomSheetItem.RemoveDownload -> serverDownloads.remove(bookId)
           BottomSheetItem.Select -> bookSelectionRequests.select(listOf(bookId))
           else ->
             viewModels.forEach {
@@ -163,24 +101,7 @@ class BottomSheetViewModel(
       .join()
   }
 
-  internal fun onAskedForNotifications() {
-    scope.launch {
-      serverDownloads.onAskedForNotifications()
-    }
-  }
-
   internal fun onClose() {
     navigator.remove(Destination.BookActions(bookId))
   }
 }
-
-private class ServerName(val name: String?)
-
-private fun BookDownloadState.items(): List<BottomSheetItem> =
-  when (this) {
-    BookDownloadState.NotDownloaded -> listOf(BottomSheetItem.Download)
-    is BookDownloadState.Downloading -> listOf(BottomSheetItem.StopDownload)
-    BookDownloadState.Failed ->
-      listOf(BottomSheetItem.RetryDownload, BottomSheetItem.RemoveDownload)
-    is BookDownloadState.Downloaded -> listOf(BottomSheetItem.RemoveDownload)
-  }

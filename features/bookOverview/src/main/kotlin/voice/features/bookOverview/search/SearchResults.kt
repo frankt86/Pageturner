@@ -171,8 +171,6 @@ private fun TopResult(
         bookId = result.id,
         cover = result.cover,
         finished = result.category == BookCategory.FINISHED,
-        unavailable = result.unavailable,
-        download = result.download,
         ebook = result.isEbook,
         modifier = Modifier.size(96.dp),
       )
@@ -274,8 +272,6 @@ private fun SearchResultRow(
         bookId = result.id,
         cover = result.cover,
         finished = result.category == BookCategory.FINISHED,
-        unavailable = result.unavailable,
-        download = result.download,
         ebook = result.isEbook,
         modifier = Modifier.size(56.dp),
       )

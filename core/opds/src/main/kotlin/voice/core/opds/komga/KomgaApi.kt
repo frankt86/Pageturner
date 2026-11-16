@@ -12,15 +12,15 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.coroutines.executeAsync
-import voice.core.audiobookshelf.http.ServerHttpClient
 import voice.core.opds.OpdsCatalog
+import voice.core.opds.http.OpdsHttpClient
 
 /**
  * The parts of Komga's own api that keep the reading progress. It takes the Basic auth of the
  * catalog on every call.
  */
 @Inject
-public class KomgaApi(private val http: ServerHttpClient) {
+public class KomgaApi(private val http: OpdsHttpClient) {
 
   /** Null when the book wasn't read on the server. */
   internal suspend fun bookProgress(

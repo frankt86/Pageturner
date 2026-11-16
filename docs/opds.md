@@ -185,9 +185,9 @@ their place stays in Pageturner.
 
 ## Home servers, VPNs and certificates
 
-Many servers are only reachable at home. Like with Audiobookshelf, Pageturner works with plain `http://` addresses in your
-network, with VPNs like Tailscale or WireGuard, with reverse proxies in a subfolder and with self-signed certificates, once
-you install your certificate authority in the Android settings.
+Many servers are only reachable at home. Pageturner works with plain `http://` addresses in your network, with VPNs like
+Tailscale or WireGuard, with reverse proxies in a subfolder and with self-signed certificates, once you install your
+certificate authority in the Android settings.
 
 You can leave out `http://` or `https://`. Pageturner tries both: plain `http://` first for addresses in your network, like
 `192.168.1.20:25600` or `nas.local`. For a server on the internet, it only tries `https://` when you've entered a

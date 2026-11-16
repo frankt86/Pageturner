@@ -1,63 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="audiobookshelf.download.notification.books">
-        <item quantity="one">Λήψη %d βιβλίου</item>
-        <item quantity="other">Λήψη %d βιβλίων</item>
-    </plurals>
-    <string name="audiobookshelf.download.notification.done">Έτοιμο για ακρόαση εκτός σύνδεσης</string>
-    <string name="audiobookshelf.download.notification.retry">Επανάληψη</string>
-    <string name="audiobookshelf.download.notification.stop">Διακοπή</string>
-    <string name="audiobookshelf.download.notification.title">Λήψη…</string>
-    <string name="audiobookshelf.downloads.channel">Λήψεις</string>
-    <string name="audiobookshelf.login.address.action">Συνέχεια</string>
-    <string name="audiobookshelf.login.address.label">Διεύθυνση διακομιστή</string>
-    <string name="audiobookshelf.login.address.subtitle">Ακούστε τα βιβλία από τον δικό σας διακομιστή. Το Pageturner κρατά το σημείο όπου μείνατε συγχρονισμένο με τις άλλες συσκευές σας.</string>
-    <string name="audiobookshelf.login.address.title">Σύνδεση με το Audiobookshelf</string>
-    <string name="audiobookshelf.login.credentials.action">Σύνδεση</string>
-    <string name="audiobookshelf.login.credentials.no_password">Αυτός ο διακομιστής επιτρέπει μόνο ενιαία σύνδεση (SSO), την οποία το Pageturner δεν υποστηρίζει ακόμη. Ζητήστε από το άτομο που τον διαχειρίζεται να ενεργοποιήσει τη σύνδεση με κωδικό πρόσβασης.</string>
-    <string name="audiobookshelf.login.credentials.subtitle">Χρησιμοποιήστε τον λογαριασμό σας στο %s.</string>
-    <string name="audiobookshelf.login.credentials.title">Σύνδεση</string>
-    <string name="audiobookshelf.login.error.certificate">Το τηλέφωνό σας δεν εμπιστεύεται το πιστοποιητικό αυτού του διακομιστή.</string>
-    <string name="audiobookshelf.login.error.credentials">Λάθος όνομα χρήστη ή κωδικός πρόσβασης.</string>
-    <string name="audiobookshelf.login.error.failed">Η σύνδεση δεν ολοκληρώθηκε. Δοκιμάστε ξανά.</string>
-    <string name="audiobookshelf.login.error.not_found">Το Pageturner δεν βρίσκει διακομιστή Audiobookshelf σε αυτή τη διεύθυνση. Είστε στο σωστό δίκτυο;</string>
-    <string name="audiobookshelf.login.error.not_set_up">Αυτός ο διακομιστής δεν έχει ρυθμιστεί ακόμη. Ολοκληρώστε πρώτα τη ρύθμιση στην εφαρμογή ιστού του.</string>
-    <string name="audiobookshelf.login.error.other_account">Αυτός είναι άλλος λογαριασμός. Για να αλλάξετε λογαριασμό, αποσυνδεθείτε πρώτα.</string>
-    <string name="audiobookshelf.login.error.too_old">Το Pageturner χρειάζεται Audiobookshelf 2.26 ή νεότερο. Αυτός ο διακομιστής έχει την έκδοση %s.</string>
-    <string name="audiobookshelf.login.error.unreachable">Ο διακομιστής σταμάτησε να απαντά. Δοκιμάστε ξανά σε λίγο.</string>
-    <string name="audiobookshelf.login.libraries.action">Προσθήκη στη βιβλιοθήκη μου</string>
-    <string name="audiobookshelf.login.libraries.loading">Αναζήτηση βιβλίων…</string>
-    <string name="audiobookshelf.login.libraries.none">Καμία βιβλιοθήκη ηχητικών βιβλίων εδώ</string>
-    <string name="audiobookshelf.login.libraries.subtitle">Προστίθενται στη βιβλιοθήκη σας. Ακούστε τα αμέσως ή κατεβάστε τα για ακρόαση εκτός σύνδεσης.</string>
-    <plurals name="audiobookshelf.login.libraries.title">
-        <item quantity="one">Βρέθηκε %d ηχητικό βιβλίο</item>
-        <item quantity="other">Βρέθηκαν %d ηχητικά βιβλία</item>
-    </plurals>
-    <plurals name="audiobookshelf.login.library_chip">
-        <item quantity="one">%1$s · %2$d βιβλίο</item>
-        <item quantity="other">%1$s · %2$d βιβλία</item>
-    </plurals>
-    <string name="audiobookshelf.login.password">Κωδικός πρόσβασης</string>
-    <string name="audiobookshelf.login.password.hide">Απόκρυψη κωδικού πρόσβασης</string>
-    <string name="audiobookshelf.login.password.show">Εμφάνιση κωδικού πρόσβασης</string>
-    <string name="audiobookshelf.login.username">Όνομα χρήστη</string>
-    <string name="audiobookshelf.settings.downloads">Λήψεις</string>
-    <string name="audiobookshelf.settings.downloads.none">Δεν έχετε κατεβάσει βιβλία ακόμη</string>
-    <string name="audiobookshelf.settings.downloads.remove">Αφαίρεση όλων</string>
-    <string name="audiobookshelf.settings.downloads.used">%s σε αυτή τη συσκευή</string>
-    <string name="audiobookshelf.settings.libraries">Βιβλιοθήκες</string>
-    <string name="audiobookshelf.settings.mobile_data">Λήψη μέσω δεδομένων κινητής</string>
-    <string name="audiobookshelf.settings.mobile_data.summary">Αλλιώς, οι λήψεις περιμένουν το Wi-Fi</string>
-    <string name="audiobookshelf.settings.sign_in_again">Σύνδεση</string>
-    <string name="audiobookshelf.settings.sign_out">Αποσύνδεση</string>
-    <string name="audiobookshelf.settings.signed_in_as">Συνδεθήκατε ως %s</string>
-    <string name="audiobookshelf.settings.try_again">Επανάληψη</string>
-    <string name="audiobookshelf.sign_out.message">Τα βιβλία του και οι λήψεις τους αφαιρούνται από αυτή τη συσκευή. Η πρόοδός σας μένει ασφαλής στον διακομιστή.</string>
-    <string name="audiobookshelf.sign_out.title">Αποσύνδεση από %s;</string>
-    <string name="audiobookshelf.status.connected">Συνδέθηκε, η πρόοδός σας είναι συγχρονισμένη</string>
-    <string name="audiobookshelf.status.needs_login">Ο διακομιστής ζητά να συνδεθείτε ξανά</string>
-    <string name="audiobookshelf.status.offline">Ο διακομιστής δεν είναι διαθέσιμος αυτήν τη στιγμή. Τα βιβλία που κατεβάσατε παίζουν κανονικά.</string>
-    <string name="audiobookshelf.status.syncing">Συγχρονισμός…</string>
     <string name="author.wikipedia">Περισσότερα στη Βικιπαίδεια</string>
     <string name="book.category.action.mark_completed">Επισήμανση ως ολοκληρωμένο</string>
     <string name="book.category.action.mark_current">Επισήμανση ως τρέχον</string>
@@ -69,25 +11,18 @@
     <string name="book.download.action">Λήψη</string>
     <string name="book.download.failed">Η λήψη δεν ολοκληρώθηκε</string>
     <string name="book.download.progress">%1$s από %2$s</string>
-    <string name="book.download.remove">Αφαίρεση λήψης</string>
     <string name="book.download.retry">Επανάληψη λήψης</string>
     <string name="book.download.stop">Διακοπή λήψης</string>
-    <string name="book.download.waiting_for_connection">Αναμονή για σύνδεση</string>
-    <string name="book.download.waiting_for_wifi">Αναμονή για Wi-Fi</string>
     <string name="book.edit.author.label">Συγγραφέας</string>
     <string name="book.edit.cover.file">Εξώφυλλο από τα αρχεία της συσκευής</string>
     <string name="book.edit.cover.internet">Εξώφυλλο από το Διαδίκτυο</string>
     <string name="book.edit.part.label">Μέρος</string>
     <string name="book.edit.rename">Μετονομασία</string>
     <string name="book.edit.series.label">Σειρά</string>
-    <string name="book.edit.server.failed">Δεν ήταν δυνατή η αποθήκευση στον διακομιστή σας. Δοκιμάστε ξανά.</string>
-    <string name="book.edit.server.not_allowed">Ο λογαριασμός σας στον διακομιστή δεν μπορεί να αλλάζει βιβλία.</string>
     <string name="book.edit.title.label">Τίτλος</string>
     <string name="book.hide">Απόκρυψη από τη βιβλιοθήκη</string>
     <string name="book.select">Επιλογή</string>
     <string name="book.show">Εμφάνιση στη βιβλιοθήκη</string>
-    <string name="book.source.device">Σε αυτή τη συσκευή</string>
-    <string name="book.source.server_downloaded">%s · έγινε λήψη</string>
     <string name="bookmark.action.add_note">Προσθήκη σημείωσης</string>
     <string name="bookmark.add_note_hint">Προσθέστε σημείωση</string>
     <string name="bookmark.added.snackbar">Ο σελιδοδείκτης προστέθηκε</string>
@@ -130,6 +65,7 @@
     <string name="common.action.more">Περισσότερες επιλογές</string>
     <string name="common.action.undo">Αναίρεση</string>
     <string name="common.action.save">Αποθήκευση</string>
+    <string name="common.action.try_again">Επανάληψη</string>
     <string name="common.dialog.cancel">Ακύρωση</string>
     <string name="common.dialog.confirm">Ορισμός</string>
     <string name="common.dialog.ok">OK</string>
@@ -144,6 +80,14 @@
     <string name="cover.search.query.with_author">%1$s %2$s εξώφυλλο ηχητικού βιβλίου</string>
     <string name="cover.search.query.without_author">%s εξώφυλλο ηχητικού βιβλίου</string>
     <string name="cover.title">Εξώφυλλο</string>
+    <plurals name="download.notification.books">
+        <item quantity="one">Λήψη %d βιβλίου</item>
+        <item quantity="other">Λήψη %d βιβλίων</item>
+    </plurals>
+    <string name="download.notification.done">Έτοιμο για ακρόαση εκτός σύνδεσης</string>
+    <string name="download.notification.stop">Διακοπή</string>
+    <string name="download.notification.title">Λήψη…</string>
+    <string name="downloads.channel">Λήψεις</string>
     <plurals name="duration.minutes">
         <item quantity="one">%d λεπτό</item>
         <item quantity="other">%d λεπτά</item>
@@ -152,7 +96,6 @@
         <item quantity="one">%d δευτερόλεπτο</item>
         <item quantity="other">%d δευτερόλεπτα</item>
     </plurals>
-    <string name="folder.add.action.audiobookshelf">Σύνδεση με το Audiobookshelf</string>
     <string name="folder.add.action.file">Προσθήκη μεμονωμένου αρχείου</string>
     <string name="folder.add.action.folder">Επιλογή φακέλου</string>
     <string name="folder.add.action.opds">Λήψη από κατάλογο</string>
@@ -246,7 +189,6 @@
     <string name="library.book.ebook">Ηλεκτρονικό βιβλίο</string>
     <string name="library.book.hidden">Κρυφό</string>
     <string name="library.book.hidden.message">Το βιβλίο «%1$s» αποκρύφθηκε</string>
-    <string name="library.book.offline">Μη διαθέσιμο εκτός σύνδεσης</string>
     <string name="library.category.completed.title">Ολοκληρωμένα</string>
     <string name="library.category.current.title">Τρέχοντα</string>
     <string name="library.category.not_started.title">Μη διαβασμένα</string>
@@ -261,7 +203,6 @@
     <string name="library.filter.group_by.author">Συγγραφέας</string>
     <string name="library.filter.group_by.series">Σειρά</string>
     <string name="library.filter.hidden_books">Κρυφά βιβλία</string>
-    <string name="library.filter.not_downloaded">Χωρίς λήψη</string>
     <string name="library.filter.show">Εμφάνιση</string>
     <string name="library.folders.moved.dialog.message">Μπορείτε πλέον να διαχειρίζεστε τους φακέλους βιβλίων στις Ρυθμίσεις.</string>
     <string name="library.folders.moved.dialog.title">Οι φάκελοι βιβλίων μετακινήθηκαν</string>
@@ -331,15 +272,15 @@
         <item quantity="one">Ορίστηκε σειρά σε %d βιβλίο</item>
         <item quantity="other">Ορίστηκε σειρά σε %d βιβλία</item>
     </plurals>
-    <plurals name="library.selection.server_failed">
-        <item quantity="one">Δεν ήταν δυνατή η αποθήκευση %d βιβλίου στον διακομιστή σας</item>
-        <item quantity="other">Δεν ήταν δυνατή η αποθήκευση %d βιβλίων στον διακομιστή σας</item>
-    </plurals>
     <string name="library.selection.show">Εμφάνιση</string>
     <string name="library.series.hidden.message">Η σειρά «%1$s» αποκρύφθηκε</string>
     <string name="library.storage_permission_bug.action">Παραχώρηση άδειας</string>
     <string name="library.storage_permission_bug.message">Σε ορισμένες συσκευές, σε μια εφαρμογή συστήματος λείπει η άδεια πρόσβασης στον εξωτερικό αποθηκευτικό χώρο. Το Pageturner τη χρειάζεται για να διαβάζει τα ηχητικά σας βιβλία.</string>
     <string name="library.storage_permission_bug.title">Απαιτείται άδεια</string>
+    <string name="login.password">Κωδικός πρόσβασης</string>
+    <string name="login.password.hide">Απόκρυψη κωδικού πρόσβασης</string>
+    <string name="login.password.show">Εμφάνιση κωδικού πρόσβασης</string>
+    <string name="login.username">Όνομα χρήστη</string>
     <string name="media_session.library.recent">Πρόσφατα</string>
     <string name="media_session.library.root">Όλα τα ηχητικά βιβλία</string>
     <string name="onboarding.action.next">Επόμενο</string>
@@ -662,7 +603,6 @@
     <string name="settings.auto_sleep_timer.start.label">Ορισμός ώρας έναρξης</string>
     <string name="settings.auto_sleep_timer.summary">Ο χρονοδιακόπτης ύπνου ξεκινά αυτόματα όταν η αναπαραγωγή αρχίζει μεταξύ %1$s και %2$s</string>
     <string name="settings.auto_sleep_timer.title">Αυτόματος χρονοδιακόπτης ύπνου</string>
-    <string name="settings.library.audiobookshelf.summary">Ακούστε τα βιβλία από τον δικό σας διακομιστή</string>
     <string name="settings.library.folders.summary">Διαχείριση των φακέλων με τα βιβλία σας</string>
     <string name="settings.library.layout.grid">Πλέγμα</string>
     <string name="settings.library.layout.list">Λίστα</string>

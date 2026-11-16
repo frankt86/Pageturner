@@ -52,13 +52,11 @@ internal fun LibraryFilterSheet(
   viewState: BookOverviewViewState,
   onGroupingChange: (LibraryGrouping) -> Unit,
   onShowHiddenBooksChange: (Boolean) -> Unit,
-  onShowNotDownloadedBooksChange: (Boolean) -> Unit,
   onSourceChange: (LibrarySource, Boolean) -> Unit,
   onDismiss: () -> Unit,
 ) {
   // the chips stay while the sheet is open, so one doesn't vanish under the finger
   val showHiddenBooksSwitch = remember { viewState.showHiddenBooksSwitch }
-  val showNotDownloadedBooksSwitch = remember { viewState.showNotDownloadedBooksSwitch }
   ModalBottomSheet(
     onDismissRequest = onDismiss,
     sheetState =
@@ -71,9 +69,7 @@ internal fun LibraryFilterSheet(
       viewState = viewState,
       onGroupingChange = onGroupingChange,
       showHiddenBooksSwitch = showHiddenBooksSwitch,
-      showNotDownloadedBooksSwitch = showNotDownloadedBooksSwitch,
       onShowHiddenBooksChange = onShowHiddenBooksChange,
-      onShowNotDownloadedBooksChange = onShowNotDownloadedBooksChange,
       onSourceChange = onSourceChange,
     )
   }
@@ -84,9 +80,7 @@ private fun LibraryFilterContent(
   viewState: BookOverviewViewState,
   onGroupingChange: (LibraryGrouping) -> Unit,
   showHiddenBooksSwitch: Boolean,
-  showNotDownloadedBooksSwitch: Boolean,
   onShowHiddenBooksChange: (Boolean) -> Unit,
-  onShowNotDownloadedBooksChange: (Boolean) -> Unit,
   onSourceChange: (LibrarySource, Boolean) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -125,7 +119,7 @@ private fun LibraryFilterContent(
         )
       }
     }
-    if (showHiddenBooksSwitch || showNotDownloadedBooksSwitch || viewState.sources.isNotEmpty()) {
+    if (showHiddenBooksSwitch || viewState.sources.isNotEmpty()) {
       Spacer(Modifier.height(24.dp))
       SectionTitle(StringsR.string.library_filter_show)
       Spacer(Modifier.height(8.dp))
@@ -137,11 +131,7 @@ private fun LibraryFilterContent(
           LibraryChip(
             selected = source.shown,
             onClick = { onSourceChange(source.source, !source.shown) },
-            icon =
-              when (source.source) {
-                is LibrarySource.Folder -> UiR.drawable.ic_folder
-                is LibrarySource.ServerLibrary -> UiR.drawable.ic_dns
-              },
+            icon = UiR.drawable.ic_folder,
             label = source.name,
           )
         }
@@ -153,16 +143,6 @@ private fun LibraryFilterContent(
             label =
               stringResource(StringsR.string.library_filter_hidden_books) +
                 " · ${viewState.hiddenBookCount}",
-          )
-        }
-        if (showNotDownloadedBooksSwitch) {
-          LibraryChip(
-            selected = viewState.showNotDownloadedBooks,
-            onClick = { onShowNotDownloadedBooksChange(!viewState.showNotDownloadedBooks) },
-            icon = UiR.drawable.ic_cloud,
-            label =
-              stringResource(StringsR.string.library_filter_not_downloaded) +
-                " · ${viewState.notDownloadedBookCount}",
           )
         }
       }
@@ -208,13 +188,10 @@ private fun LibraryFilterContentPreview() {
   VoiceTheme {
     Surface {
       LibraryFilterContent(
-        viewState =
-          BookOverviewViewState.Loading.copy(hiddenBookCount = 12, notDownloadedBookCount = 30),
+        viewState = BookOverviewViewState.Loading.copy(hiddenBookCount = 12),
         onGroupingChange = {},
         showHiddenBooksSwitch = true,
-        showNotDownloadedBooksSwitch = true,
         onShowHiddenBooksChange = {},
-        onShowNotDownloadedBooksChange = {},
         onSourceChange = { _, _ -> },
       )
     }
@@ -265,12 +242,7 @@ private fun SourcesPreview(
             sources =
               names.mapIndexed { index, name ->
                 LibrarySourceViewState(
-                  source =
-                    if (index % 3 == 2) {
-                      LibrarySource.ServerLibrary(name)
-                    } else {
-                      LibrarySource.Folder(name)
-                    },
+                  source = LibrarySource.Folder(name),
                   name = name,
                   shown = index % 4 != 1,
                 )
@@ -278,9 +250,7 @@ private fun SourcesPreview(
           ),
         onGroupingChange = {},
         showHiddenBooksSwitch = hiddenBookCount > 0,
-        showNotDownloadedBooksSwitch = false,
         onShowHiddenBooksChange = {},
-        onShowNotDownloadedBooksChange = {},
         onSourceChange = { _, _ -> },
       )
     }

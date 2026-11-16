@@ -4,12 +4,7 @@ import android.net.Uri
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
-import kotlinx.coroutines.launch
 import voice.core.analytics.api.Analytics
-import voice.core.audiobookshelf.AudiobookshelfFeatureFlag
-import voice.core.audiobookshelf.ServerAccount
-import voice.core.common.DispatcherProvider
-import voice.core.common.MainScope
 import voice.core.data.folders.AudiobookFolders
 import voice.core.data.folders.FolderType
 import voice.features.folderPicker.folderPicker.FileTypeSelection
@@ -23,10 +18,7 @@ import voice.navigation.Origin
 class AddContentViewModel(
   private val audiobookFolders: AudiobookFolders,
   private val navigator: Navigator,
-  private val audiobookshelfFeatureFlag: AudiobookshelfFeatureFlag,
-  private val serverAccount: ServerAccount,
   private val analytics: Analytics,
-  dispatcherProvider: DispatcherProvider,
   @Assisted private val origin: Origin,
 ) {
 
@@ -57,9 +49,6 @@ class AddContentViewModel(
     }
   }
 
-  internal val canConnectAudiobookshelf: Boolean
-    get() = audiobookshelfFeatureFlag.get()
-
   internal fun onFolderPickerCancel() {
     analytics.event("folder_picker_cancelled")
   }
@@ -77,21 +66,6 @@ class AddContentViewModel(
       FolderHelpAnswer.NoFiles -> "no_files"
       FolderHelpAnswer.NotFound -> "not_found"
       FolderHelpAnswer.OtherApp -> "other_app"
-    }
-  }
-
-  private val scope = MainScope(dispatcherProvider)
-
-  // a connected server is managed in its settings, connecting another one there signs it out first
-  internal fun connectAudiobookshelf() {
-    scope.launch {
-      navigator.goTo(
-        if (serverAccount.isConnected()) {
-          Destination.AudiobookshelfSettings
-        } else {
-          Destination.AudiobookshelfLogin(origin)
-        },
-      )
     }
   }
 

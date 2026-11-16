@@ -143,31 +143,16 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
   }
   LaunchedEffect(bookOverviewViewModel) {
     bookOverviewViewModel.booksEdited.collect { edited ->
-      val failed = edited.failed.size
-      val message =
-        when {
-          edited.notAllowed -> resources.getString(StringsR.string.book_edit_server_not_allowed)
-          failed > 0 ->
-            resources.getQuantityString(
-              StringsR.plurals.library_selection_server_failed,
-              failed,
-              failed,
-            )
-          else -> {
-            val saved =
-              when (edited.field) {
-                BookField.Series -> StringsR.plurals.library_selection_series_saved
-                BookField.Author -> StringsR.plurals.library_selection_author_saved
-              }
-            resources.getQuantityString(saved, edited.count, edited.count)
-          }
+      val saved =
+        when (edited.field) {
+          BookField.Series -> StringsR.plurals.library_selection_series_saved
+          BookField.Author -> StringsR.plurals.library_selection_author_saved
         }
       val result =
         snackbarHostState.showSnackbar(
-          message = message,
-          // the books that were saved can still go back
+          message = resources.getQuantityString(saved, edited.count, edited.count),
           actionLabel = undoLabel.takeIf { edited.count > 0 },
-          duration = if (failed > 0) SnackbarDuration.Long else SnackbarDuration.Short,
+          duration = SnackbarDuration.Short,
         )
       if (result == SnackbarResult.ActionPerformed) {
         bookOverviewViewModel.onUndoEdit(edited)
@@ -195,7 +180,6 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     onShowFoldersClick = bookOverviewViewModel::onShowFoldersClick,
     onShowHiddenBooksChange = bookOverviewViewModel::onShowHiddenBooksChange,
     onGroupingChange = bookOverviewViewModel::onGroupingChange,
-    onShowNotDownloadedBooksChange = bookOverviewViewModel::onShowNotDownloadedBooksChange,
     onSourceChange = bookOverviewViewModel::onSourceChange,
     onSelectionToggle = bookOverviewViewModel::onSelectionToggle,
     onSelectAll = bookOverviewViewModel::onSelectAll,
@@ -233,7 +217,6 @@ internal fun BookOverview(
   onShowFoldersClick: () -> Unit,
   onShowHiddenBooksChange: (Boolean) -> Unit,
   onGroupingChange: (LibraryGrouping) -> Unit,
-  onShowNotDownloadedBooksChange: (Boolean) -> Unit,
   onSourceChange: (LibrarySource, Boolean) -> Unit,
   onSelectionToggle: (List<BookId>) -> Unit,
   onSelectAll: () -> Unit,
@@ -372,7 +355,6 @@ internal fun BookOverview(
       viewState = viewState,
       onGroupingChange = onGroupingChange,
       onShowHiddenBooksChange = onShowHiddenBooksChange,
-      onShowNotDownloadedBooksChange = onShowNotDownloadedBooksChange,
       onSourceChange = onSourceChange,
       onDismiss = { showFilterSheet = false },
     )
@@ -455,7 +437,6 @@ fun BookOverviewPreview(
       onShowFoldersClick = {},
       onShowHiddenBooksChange = {},
       onGroupingChange = {},
-      onShowNotDownloadedBooksChange = {},
       onSourceChange = { _, _ -> },
       onSelectionToggle = {},
       onSelectAll = {},

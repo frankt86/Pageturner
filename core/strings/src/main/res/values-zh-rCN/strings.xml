@@ -1,60 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="audiobookshelf.download.notification.books">
-        <item quantity="other">正在下载 %d 本书</item>
-    </plurals>
-    <string name="audiobookshelf.download.notification.done">可以离线收听了</string>
-    <string name="audiobookshelf.download.notification.retry">重试</string>
-    <string name="audiobookshelf.download.notification.stop">停止</string>
-    <string name="audiobookshelf.download.notification.title">正在下载…</string>
-    <string name="audiobookshelf.downloads.channel">下载</string>
-    <string name="audiobookshelf.login.address.action">继续</string>
-    <string name="audiobookshelf.login.address.label">服务器地址</string>
-    <string name="audiobookshelf.login.address.subtitle">收听您自己服务器上的书。Pageturner 会在您的各台设备间同步收听位置。</string>
-    <string name="audiobookshelf.login.address.title">连接 Audiobookshelf</string>
-    <string name="audiobookshelf.login.credentials.action">登录</string>
-    <string name="audiobookshelf.login.credentials.no_password">此服务器仅允许单点登录，而 Pageturner 暂不支持这种方式。请联系服务器管理员开启密码登录。</string>
-    <string name="audiobookshelf.login.credentials.subtitle">请使用您在 %s 上的账号。</string>
-    <string name="audiobookshelf.login.credentials.title">登录</string>
-    <string name="audiobookshelf.login.error.certificate">您的手机不信任此服务器的证书。</string>
-    <string name="audiobookshelf.login.error.credentials">用户名或密码不正确。</string>
-    <string name="audiobookshelf.login.error.failed">登录失败，请重试。</string>
-    <string name="audiobookshelf.login.error.not_found">Pageturner 无法在该地址连接到 Audiobookshelf 服务器。您连接的网络正确吗？</string>
-    <string name="audiobookshelf.login.error.not_set_up">此服务器尚未完成设置。请先在其网页版中完成设置。</string>
-    <string name="audiobookshelf.login.error.other_account">这是另一个账号。如需切换账号，请先退出登录。</string>
-    <string name="audiobookshelf.login.error.too_old">Pageturner 需要 Audiobookshelf 2.26 或更高版本。此服务器的版本是 %s。</string>
-    <string name="audiobookshelf.login.error.unreachable">服务器停止响应了。请稍后再试。</string>
-    <string name="audiobookshelf.login.libraries.action">添加到我的书库</string>
-    <string name="audiobookshelf.login.libraries.loading">正在查找书籍…</string>
-    <string name="audiobookshelf.login.libraries.none">这里没有有声书库</string>
-    <string name="audiobookshelf.login.libraries.subtitle">这些书会加入您的书库。可以直接播放，也可以下载后离线收听。</string>
-    <plurals name="audiobookshelf.login.libraries.title">
-        <item quantity="other">找到了 %d 本有声书</item>
-    </plurals>
-    <plurals name="audiobookshelf.login.library_chip">
-        <item quantity="other">%1$s · %2$d 本书</item>
-    </plurals>
-    <string name="audiobookshelf.login.password">密码</string>
-    <string name="audiobookshelf.login.password.hide">隐藏密码</string>
-    <string name="audiobookshelf.login.password.show">显示密码</string>
-    <string name="audiobookshelf.login.username">用户名</string>
-    <string name="audiobookshelf.settings.downloads">下载</string>
-    <string name="audiobookshelf.settings.downloads.none">还没有下载任何书</string>
-    <string name="audiobookshelf.settings.downloads.remove">全部移除</string>
-    <string name="audiobookshelf.settings.downloads.used">本设备上占用 %s</string>
-    <string name="audiobookshelf.settings.libraries">书库</string>
-    <string name="audiobookshelf.settings.mobile_data">使用移动数据下载</string>
-    <string name="audiobookshelf.settings.mobile_data.summary">否则将等到连接 Wi-Fi 后再下载</string>
-    <string name="audiobookshelf.settings.sign_in_again">登录</string>
-    <string name="audiobookshelf.settings.sign_out">退出登录</string>
-    <string name="audiobookshelf.settings.signed_in_as">已登录为 %s</string>
-    <string name="audiobookshelf.settings.try_again">重试</string>
-    <string name="audiobookshelf.sign_out.message">其中的书及其下载内容将从此设备移除。您的收听进度会安全保存在服务器上。</string>
-    <string name="audiobookshelf.sign_out.title">要从 %s 退出登录吗？</string>
-    <string name="audiobookshelf.status.connected">已连接，进度已同步</string>
-    <string name="audiobookshelf.status.needs_login">服务器需要您重新登录</string>
-    <string name="audiobookshelf.status.offline">暂时无法连接服务器。已下载的书仍可播放。</string>
-    <string name="audiobookshelf.status.syncing">正在同步…</string>
     <string name="author.wikipedia">在维基百科上了解更多</string>
     <string name="book.category.action.mark_completed">标记为已听完</string>
     <string name="book.category.action.mark_current">标记为在听</string>
@@ -66,25 +11,18 @@
     <string name="book.download.action">下载</string>
     <string name="book.download.failed">下载未完成</string>
     <string name="book.download.progress">%1$s / %2$s</string>
-    <string name="book.download.remove">移除下载</string>
     <string name="book.download.retry">重新下载</string>
     <string name="book.download.stop">停止下载</string>
-    <string name="book.download.waiting_for_connection">正在等待网络连接</string>
-    <string name="book.download.waiting_for_wifi">正在等待 Wi-Fi</string>
     <string name="book.edit.author.label">作者</string>
     <string name="book.edit.cover.file">从本机寻找封面图片</string>
     <string name="book.edit.cover.internet">从互联网寻找封面图片</string>
     <string name="book.edit.part.label">卷</string>
     <string name="book.edit.rename">重命名</string>
     <string name="book.edit.series.label">系列</string>
-    <string name="book.edit.server.failed">无法保存到您的服务器。请重试。</string>
-    <string name="book.edit.server.not_allowed">您在服务器上的账号无权修改书籍。</string>
     <string name="book.edit.title.label">书名</string>
     <string name="book.hide">从书库中隐藏</string>
     <string name="book.select">选择</string>
     <string name="book.show">在书库中显示</string>
-    <string name="book.source.device">在本设备上</string>
-    <string name="book.source.server_downloaded">%s · 已下载</string>
     <string name="bookmark.action.add_note">添加笔记</string>
     <string name="bookmark.add_note_hint">添加笔记</string>
     <string name="bookmark.added.snackbar">已添加书签</string>
@@ -127,6 +65,7 @@
     <string name="common.action.more">更多选项</string>
     <string name="common.action.undo">撤销</string>
     <string name="common.action.save">保存</string>
+    <string name="common.action.try_again">重试</string>
     <string name="common.dialog.cancel">取消</string>
     <string name="common.dialog.confirm">确定</string>
     <string name="common.dialog.ok">确定</string>
@@ -141,13 +80,19 @@
     <string name="cover.search.query.with_author">%2$s《%1$s》有声书封面</string>
     <string name="cover.search.query.without_author">《%s》有声书封面</string>
     <string name="cover.title">封面</string>
+    <plurals name="download.notification.books">
+        <item quantity="other">正在下载 %d 本书</item>
+    </plurals>
+    <string name="download.notification.done">可以离线收听了</string>
+    <string name="download.notification.stop">停止</string>
+    <string name="download.notification.title">正在下载…</string>
+    <string name="downloads.channel">下载</string>
     <plurals name="duration.minutes">
         <item quantity="other">%d 分钟</item>
     </plurals>
     <plurals name="duration.seconds">
         <item quantity="other">%d 秒</item>
     </plurals>
-    <string name="folder.add.action.audiobookshelf">连接 Audiobookshelf</string>
     <string name="folder.add.action.file">改为添加单个文件</string>
     <string name="folder.add.action.folder">选择文件夹</string>
     <string name="folder.add.action.opds">从目录下载</string>
@@ -232,7 +177,6 @@
     <string name="library.book.ebook">电子书</string>
     <string name="library.book.hidden">已隐藏</string>
     <string name="library.book.hidden.message">《%1$s》已隐藏</string>
-    <string name="library.book.offline">离线不可用</string>
     <string name="library.category.completed.title">已听完</string>
     <string name="library.category.current.title">在听</string>
     <string name="library.category.not_started.title">未开始</string>
@@ -247,7 +191,6 @@
     <string name="library.filter.group_by.author">作者</string>
     <string name="library.filter.group_by.series">系列</string>
     <string name="library.filter.hidden_books">已隐藏的书</string>
-    <string name="library.filter.not_downloaded">未下载</string>
     <string name="library.filter.show">显示</string>
     <string name="library.folders.moved.dialog.message">您现在可以在“设置”中管理书籍文件夹。</string>
     <string name="library.folders.moved.dialog.title">书籍文件夹已移动</string>
@@ -308,14 +251,15 @@
     <plurals name="library.selection.series_saved">
         <item quantity="other">已为 %d 本书设置系列</item>
     </plurals>
-    <plurals name="library.selection.server_failed">
-        <item quantity="other">有 %d 本书无法保存到您的服务器</item>
-    </plurals>
     <string name="library.selection.show">显示</string>
     <string name="library.series.hidden.message">《%1$s》已隐藏</string>
     <string name="library.storage_permission_bug.action">给予权限</string>
     <string name="library.storage_permission_bug.message">对于某些设备，系统应用程序缺少访问外部存储的必要权限。此访问对于 Pageturner 读取您的有声书至关重要。</string>
     <string name="library.storage_permission_bug.title">需要权限</string>
+    <string name="login.password">密码</string>
+    <string name="login.password.hide">隐藏密码</string>
+    <string name="login.password.show">显示密码</string>
+    <string name="login.username">用户名</string>
     <string name="media_session.library.recent">最近</string>
     <string name="media_session.library.root">所有有声书</string>
     <string name="onboarding.action.next">下一步</string>
@@ -633,7 +577,6 @@
     <string name="settings.auto_sleep_timer.start.label">设置开始时间</string>
     <string name="settings.auto_sleep_timer.summary">在 %1$s 到 %2$s 之间开始播放时，自动启动睡眠定时器</string>
     <string name="settings.auto_sleep_timer.title">自动睡眠定时器</string>
-    <string name="settings.library.audiobookshelf.summary">在线收听您自己服务器上的书</string>
     <string name="settings.library.folders.summary">管理用于扫描书籍的文件夹</string>
     <string name="settings.library.layout.grid">网格</string>
     <string name="settings.library.layout.list">列表</string>

@@ -177,21 +177,6 @@ sealed interface Destination {
   }
 
   @Serializable
-  data class AudiobookshelfLogin(
-    val origin: Origin,
-    // signs in again after the server declined the stored login
-    val renew: Boolean = false,
-  ) : Compose {
-    override val trackingName: String = "AudiobookshelfLogin"
-  }
-
-  @Serializable
-  data object AudiobookshelfSettings : Compose {
-    override val trackingName: String
-      get() = "AudiobookshelfSettings"
-  }
-
-  @Serializable
   data object OpdsCatalogs : Compose {
     override val trackingName: String
       get() = "OpdsCatalogs"

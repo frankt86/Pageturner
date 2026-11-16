@@ -69,9 +69,9 @@ internal fun PdfPasswordDialog(
               contentDescription =
                 stringResource(
                   if (showPassword) {
-                    StringsR.string.audiobookshelf_login_password_hide
+                    StringsR.string.login_password_hide
                   } else {
-                    StringsR.string.audiobookshelf_login_password_show
+                    StringsR.string.login_password_show
                   },
                 ),
             )

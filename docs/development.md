@@ -213,3 +213,9 @@ To deploy it by hand, dispatch the workflow manually.
 [Dispatch the workflow](https://github.com/frankt86/Pageturner/actions/workflows/deploy_pages.yml)
 
 The `website/` folder holds upstream Voice's Astro website. Pageturner doesn't build or deploy it.
+
+## Upstream Merges
+
+Pageturner merges the updates of upstream [Voice](https://github.com/PaulWoitaschek/Voice). Every upstream merge drops
+the Audiobookshelf integration: the modules `core/audiobookshelf` and `features/audiobookshelf`, the feature and its
+wiring in other modules, its strings and its docs.

@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import okhttp3.Call
-import voice.core.audiobookshelf.http.ServerHttpClient
 import voice.core.data.Ebook
 import voice.core.data.EbookFormat
 import voice.core.data.OpdsSource
@@ -36,6 +35,7 @@ import voice.core.opds.CatalogType
 import voice.core.opds.OpdsCatalog
 import voice.core.opds.feed.OpdsFormat
 import voice.core.opds.feed.OpdsPublication
+import voice.core.opds.http.OpdsHttpClient
 import voice.core.opds.komga.komgaBookId
 import voice.core.scanner.MediaScanTrigger
 
@@ -65,7 +65,7 @@ public sealed interface OpdsDownloadState {
 @Inject
 public class OpdsDownloads
 internal constructor(
-  private val http: ServerHttpClient,
+  private val http: OpdsHttpClient,
   private val ebooksStore: EbooksStore,
   private val context: Context,
   private val downloadFolders: OpdsDownloadFolders,

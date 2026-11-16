@@ -1,69 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="audiobookshelf.download.notification.books">
-        <item quantity="one">Скачивается %d книга</item>
-        <item quantity="few">Скачиваются %d книги</item>
-        <item quantity="many">Скачиваются %d книг</item>
-        <item quantity="other">Скачивается %d книги</item>
-    </plurals>
-    <string name="audiobookshelf.download.notification.done">Можно слушать офлайн</string>
-    <string name="audiobookshelf.download.notification.retry">Повторить</string>
-    <string name="audiobookshelf.download.notification.stop">Остановить</string>
-    <string name="audiobookshelf.download.notification.title">Скачивание…</string>
-    <string name="audiobookshelf.downloads.channel">Загрузки</string>
-    <string name="audiobookshelf.login.address.action">Продолжить</string>
-    <string name="audiobookshelf.login.address.label">Адрес сервера</string>
-    <string name="audiobookshelf.login.address.subtitle">Слушайте книги со своего сервера. Pageturner синхронизирует место, где вы остановились, с другими вашими устройствами.</string>
-    <string name="audiobookshelf.login.address.title">Подключить Audiobookshelf</string>
-    <string name="audiobookshelf.login.credentials.action">Войти</string>
-    <string name="audiobookshelf.login.credentials.no_password">Этот сервер разрешает только единый вход (SSO), а Pageturner его пока не поддерживает. Попросите того, кто управляет сервером, включить вход по паролю.</string>
-    <string name="audiobookshelf.login.credentials.subtitle">Используйте свою учётную запись на %s.</string>
-    <string name="audiobookshelf.login.credentials.title">Вход</string>
-    <string name="audiobookshelf.login.error.certificate">Ваш телефон не доверяет сертификату этого сервера.</string>
-    <string name="audiobookshelf.login.error.credentials">Неверное имя пользователя или пароль.</string>
-    <string name="audiobookshelf.login.error.failed">Не удалось войти. Попробуйте ещё раз.</string>
-    <string name="audiobookshelf.login.error.not_found">Pageturner не находит по этому адресу сервер Audiobookshelf. Вы подключены к нужной сети?</string>
-    <string name="audiobookshelf.login.error.not_set_up">Этот сервер ещё не настроен. Сначала завершите настройку в его веб-приложении.</string>
-    <string name="audiobookshelf.login.error.other_account">Это другая учётная запись. Чтобы сменить учётную запись, сначала выйдите.</string>
-    <string name="audiobookshelf.login.error.too_old">Для Pageturner нужен Audiobookshelf 2.26 или новее. На этом сервере установлена версия %s.</string>
-    <string name="audiobookshelf.login.error.unreachable">Сервер перестал отвечать. Попробуйте ещё раз чуть позже.</string>
-    <string name="audiobookshelf.login.libraries.action">Добавить в библиотеку</string>
-    <string name="audiobookshelf.login.libraries.loading">Ищем книги…</string>
-    <string name="audiobookshelf.login.libraries.none">Здесь нет библиотек аудиокниг</string>
-    <string name="audiobookshelf.login.libraries.subtitle">Они появятся в вашей библиотеке. Слушайте сразу или скачайте, чтобы слушать без интернета.</string>
-    <plurals name="audiobookshelf.login.libraries.title">
-        <item quantity="one">Мы нашли %d аудиокнигу</item>
-        <item quantity="few">Мы нашли %d аудиокниги</item>
-        <item quantity="many">Мы нашли %d аудиокниг</item>
-        <item quantity="other">Мы нашли %d аудиокниг</item>
-    </plurals>
-    <plurals name="audiobookshelf.login.library_chip">
-        <item quantity="one">%1$s · %2$d книга</item>
-        <item quantity="few">%1$s · %2$d книги</item>
-        <item quantity="many">%1$s · %2$d книг</item>
-        <item quantity="other">%1$s · %2$d книг</item>
-    </plurals>
-    <string name="audiobookshelf.login.password">Пароль</string>
-    <string name="audiobookshelf.login.password.hide">Скрыть пароль</string>
-    <string name="audiobookshelf.login.password.show">Показать пароль</string>
-    <string name="audiobookshelf.login.username">Имя пользователя</string>
-    <string name="audiobookshelf.settings.downloads">Загрузки</string>
-    <string name="audiobookshelf.settings.downloads.none">Скачанных книг пока нет</string>
-    <string name="audiobookshelf.settings.downloads.remove">Удалить все</string>
-    <string name="audiobookshelf.settings.downloads.used">%s на этом устройстве</string>
-    <string name="audiobookshelf.settings.libraries">Библиотеки</string>
-    <string name="audiobookshelf.settings.mobile_data">Скачивать через мобильный интернет</string>
-    <string name="audiobookshelf.settings.mobile_data.summary">Иначе скачивание ждёт Wi-Fi</string>
-    <string name="audiobookshelf.settings.sign_in_again">Войти</string>
-    <string name="audiobookshelf.settings.sign_out">Выйти</string>
-    <string name="audiobookshelf.settings.signed_in_as">Вы вошли как %s</string>
-    <string name="audiobookshelf.settings.try_again">Повторить</string>
-    <string name="audiobookshelf.sign_out.message">Книги с этого сервера и их загрузки исчезнут с устройства. Ваш прогресс надёжно сохранится на сервере.</string>
-    <string name="audiobookshelf.sign_out.title">Выйти из %s?</string>
-    <string name="audiobookshelf.status.connected">Подключено, прогресс синхронизирован</string>
-    <string name="audiobookshelf.status.needs_login">Сервер просит войти снова</string>
-    <string name="audiobookshelf.status.offline">Сервер сейчас недоступен. Скачанные книги по-прежнему можно слушать.</string>
-    <string name="audiobookshelf.status.syncing">Синхронизация…</string>
     <string name="author.wikipedia">Подробнее в Википедии</string>
     <string name="book.category.action.mark_completed">Пометить как прослушанную</string>
     <string name="book.category.action.mark_current">Пометить как «Слушаю»</string>
@@ -75,25 +11,18 @@
     <string name="book.download.action">Скачать</string>
     <string name="book.download.failed">Скачивание не завершилось</string>
     <string name="book.download.progress">%1$s из %2$s</string>
-    <string name="book.download.remove">Удалить загрузку</string>
     <string name="book.download.retry">Скачать снова</string>
     <string name="book.download.stop">Остановить скачивание</string>
-    <string name="book.download.waiting_for_connection">Ожидание подключения</string>
-    <string name="book.download.waiting_for_wifi">Ожидание Wi-Fi</string>
     <string name="book.edit.author.label">Автор</string>
     <string name="book.edit.cover.file">Обложка с устройства</string>
     <string name="book.edit.cover.internet">Обложка из интернета</string>
     <string name="book.edit.part.label">Часть</string>
     <string name="book.edit.rename">Переименовать</string>
     <string name="book.edit.series.label">Серия</string>
-    <string name="book.edit.server.failed">Не удалось сохранить на вашем сервере. Попробуйте ещё раз.</string>
-    <string name="book.edit.server.not_allowed">Ваша учётная запись на сервере не может изменять книги.</string>
     <string name="book.edit.title.label">Название</string>
     <string name="book.hide">Скрыть из библиотеки</string>
     <string name="book.select">Выбрать</string>
     <string name="book.show">Показать в библиотеке</string>
-    <string name="book.source.device">На этом устройстве</string>
-    <string name="book.source.server_downloaded">%s · скачано</string>
     <string name="bookmark.action.add_note">Добавить заметку</string>
     <string name="bookmark.add_note_hint">Добавьте заметку</string>
     <string name="bookmark.added.snackbar">Закладка добавлена</string>
@@ -136,6 +65,7 @@
     <string name="common.action.more">Другие параметры</string>
     <string name="common.action.undo">Отменить</string>
     <string name="common.action.save">Сохранить</string>
+    <string name="common.action.try_again">Повторить</string>
     <string name="common.dialog.cancel">Отмена</string>
     <string name="common.dialog.confirm">Установить</string>
     <string name="common.dialog.ok">ОК</string>
@@ -150,6 +80,16 @@
     <string name="cover.search.query.with_author">Обложка аудиокниги %1$s автора %2$s</string>
     <string name="cover.search.query.without_author">Обложка аудиокниги %s</string>
     <string name="cover.title">Обложка</string>
+    <plurals name="download.notification.books">
+        <item quantity="one">Скачивается %d книга</item>
+        <item quantity="few">Скачиваются %d книги</item>
+        <item quantity="many">Скачиваются %d книг</item>
+        <item quantity="other">Скачивается %d книги</item>
+    </plurals>
+    <string name="download.notification.done">Можно слушать офлайн</string>
+    <string name="download.notification.stop">Остановить</string>
+    <string name="download.notification.title">Скачивание…</string>
+    <string name="downloads.channel">Загрузки</string>
     <plurals name="duration.minutes">
         <item quantity="one">%d минута</item>
         <item quantity="few">%d минуты</item>
@@ -162,7 +102,6 @@
         <item quantity="many">%d секунд</item>
         <item quantity="other">%d секунд</item>
     </plurals>
-    <string name="folder.add.action.audiobookshelf">Подключить Audiobookshelf</string>
     <string name="folder.add.action.file">Добавить один файл вместо папки</string>
     <string name="folder.add.action.folder">Выбрать папку</string>
     <string name="folder.add.action.opds">Скачать из каталога</string>
@@ -274,7 +213,6 @@
     <string name="library.book.ebook">Электронная книга</string>
     <string name="library.book.hidden">Скрыта</string>
     <string name="library.book.hidden.message">Книга «%1$s» скрыта</string>
-    <string name="library.book.offline">Недоступно офлайн</string>
     <string name="library.category.completed.title">Прослушанные</string>
     <string name="library.category.current.title">Слушаю</string>
     <string name="library.category.not_started.title">Непрослушанные</string>
@@ -289,7 +227,6 @@
     <string name="library.filter.group_by.author">Автор</string>
     <string name="library.filter.group_by.series">Серия</string>
     <string name="library.filter.hidden_books">Скрытые книги</string>
-    <string name="library.filter.not_downloaded">Не скачанные</string>
     <string name="library.filter.show">Показывать</string>
     <string name="library.folders.moved.dialog.message">Теперь папками с книгами можно управлять в настройках.</string>
     <string name="library.folders.moved.dialog.title">Папки с книгами перенесены</string>
@@ -377,17 +314,15 @@
         <item quantity="many">Серия указана для %d книг</item>
         <item quantity="other">Серия указана для %d книг</item>
     </plurals>
-    <plurals name="library.selection.server_failed">
-        <item quantity="one">Не удалось сохранить %d книгу на вашем сервере</item>
-        <item quantity="few">Не удалось сохранить %d книги на вашем сервере</item>
-        <item quantity="many">Не удалось сохранить %d книг на вашем сервере</item>
-        <item quantity="other">Не удалось сохранить %d книг на вашем сервере</item>
-    </plurals>
     <string name="library.selection.show">Показать</string>
     <string name="library.series.hidden.message">Серия «%1$s» скрыта</string>
     <string name="library.storage_permission_bug.action">Предоставить разрешение</string>
     <string name="library.storage_permission_bug.message">На некоторых устройствах системное приложение не имеет необходимого разрешения для доступа к внешнему хранилищу. Этот доступ необходим для того, чтобы Pageturner мог читать ваши аудиокниги.</string>
     <string name="library.storage_permission_bug.title">Требуется разрешение</string>
+    <string name="login.password">Пароль</string>
+    <string name="login.password.hide">Скрыть пароль</string>
+    <string name="login.password.show">Показать пароль</string>
+    <string name="login.username">Имя пользователя</string>
     <string name="media_session.library.recent">Недавние</string>
     <string name="media_session.library.root">Все аудиокниги</string>
     <string name="onboarding.action.next">Далее</string>
@@ -720,7 +655,6 @@
     <string name="settings.auto_sleep_timer.start.label">Время начала</string>
     <string name="settings.auto_sleep_timer.summary">Запускать таймер сна автоматически, когда воспроизведение начинается между %1$s и %2$s</string>
     <string name="settings.auto_sleep_timer.title">Автоматический таймер сна</string>
-    <string name="settings.library.audiobookshelf.summary">Слушайте книги прямо со своего сервера</string>
     <string name="settings.library.folders.summary">Управление папками, в которых Pageturner ищет книги</string>
     <string name="settings.library.layout.grid">Сетка</string>
     <string name="settings.library.layout.list">Список</string>

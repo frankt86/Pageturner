@@ -17,10 +17,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import voice.core.audiobookshelf.download.BookDownloadState
 import voice.core.common.DispatcherProvider
 import voice.core.data.Book
-import voice.core.data.BookId
 import voice.core.data.Ebook
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.EbooksStore
@@ -177,14 +175,6 @@ class AuthorViewModelTest {
         },
       ebooksStore = EbooksStore(ebooks),
       navigator = navigator,
-      serverLibrary =
-        mockk {
-          every { unavailableBooks } returns MutableStateFlow<Set<BookId>>(emptySet())
-        },
-      serverDownloads =
-        mockk {
-          every { states } returns MutableStateFlow<Map<BookId, BookDownloadState>>(emptyMap())
-        },
       authorInfoLookup = authorInfoLookup,
       dispatcherProvider = dispatcherProvider,
       name = name,

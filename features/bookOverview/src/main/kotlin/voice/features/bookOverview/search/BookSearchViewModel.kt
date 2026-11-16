@@ -26,8 +26,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import voice.core.audiobookshelf.ServerDownloads
-import voice.core.audiobookshelf.ServerLibrary
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.common.comparator.NaturalOrderComparator
@@ -52,12 +50,10 @@ import voice.core.search.BookSearchField
 import voice.core.search.BookSearchResult
 import voice.features.bookOverview.di.BookOverviewScope
 import voice.features.bookOverview.overview.BookOverviewItemViewState
-import voice.features.bookOverview.overview.ServerBookStates
 import voice.features.bookOverview.overview.allLibraryBooks
 import voice.features.bookOverview.overview.bookId
 import voice.features.bookOverview.overview.byAuthor
 import voice.features.bookOverview.overview.category
-import voice.features.bookOverview.overview.rememberServerBookStates
 import voice.features.bookOverview.overview.toItemViewState
 import voice.navigation.Destination
 import voice.navigation.Navigator
@@ -76,8 +72,6 @@ class BookSearchViewModel(
   private val experimentalPlaybackPersistenceFeatureFlag:
     ExperimentalPlaybackPersistenceFeatureFlag,
   private val lastResults: LastBookSearchResults,
-  private val serverLibrary: ServerLibrary,
-  private val serverDownloads: ServerDownloads,
   private val ebooksStore: EbooksStore,
   dispatcherProvider: DispatcherProvider,
 ) {
@@ -119,7 +113,6 @@ class BookSearchViewModel(
     }
       .collectAsState(initial = PlayStateManager.PlayState.Paused)
       .value
-    val serverStates = rememberServerBookStates(serverLibrary, serverDownloads)
 
     val queryText = query.text.toString().trim()
     val results = remember {
@@ -154,12 +147,12 @@ class BookSearchViewModel(
     }
 
     val livePlaybackState = livePlaybackState(currentBookId)
-    val topResult = filtered.first().toViewState(livePlaybackState, serverStates)
+    val topResult = filtered.first().toViewState(livePlaybackState)
     return BookSearchViewState.Results(
       filters = filters(results.results, filter),
       topResult = topResult,
       topResultPlaying = playState == PlayStateManager.PlayState.Playing(topResult.id),
-      otherResults = filtered.drop(1).map { it.toViewState(livePlaybackState, serverStates) },
+      otherResults = filtered.drop(1).map { it.toViewState(livePlaybackState) },
     )
   }
 
@@ -439,12 +432,11 @@ private val TagFields =
 
 private fun BookSearchResult.toViewState(
   livePlaybackState: LivePlaybackState?,
-  serverStates: ServerBookStates,
 ): SearchResultViewState {
   return when (this) {
     is BookSearchResult.Audiobook -> {
       val book = livePlaybackState?.let(book::overlay) ?: book
-      toViewState(book.toItemViewState(serverStates), book.category) { field -> field.text(book) }
+      toViewState(book.toItemViewState(), book.category) { field -> field.text(book) }
     }
     is BookSearchResult.Ebook ->
       toViewState(ebook.toItemViewState(), ebook.category) { field -> field.text(ebook) }
@@ -471,8 +463,6 @@ private fun BookSearchResult.toViewState(
         MatchTag(field, HighlightedText(fieldText, highlights))
       },
     hidden = item.hidden,
-    unavailable = item.unavailable,
-    download = item.download,
     isEbook = item.isEbook,
   )
 }

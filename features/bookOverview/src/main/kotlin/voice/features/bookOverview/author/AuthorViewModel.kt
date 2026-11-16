@@ -18,8 +18,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
-import voice.core.audiobookshelf.ServerDownloads
-import voice.core.audiobookshelf.ServerLibrary
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.BookCategory
@@ -35,7 +33,6 @@ import voice.features.bookOverview.overview.byAuthor
 import voice.features.bookOverview.overview.libraryBooks
 import voice.features.bookOverview.overview.libraryEntries
 import voice.features.bookOverview.overview.mostCommon
-import voice.features.bookOverview.overview.rememberServerBookStates
 import voice.features.bookOverview.overview.toItemViewState
 import voice.features.bookOverview.overview.toStackViewState
 import voice.navigation.Destination
@@ -46,8 +43,6 @@ class AuthorViewModel(
   private val repo: BookRepository,
   private val ebooksStore: EbooksStore,
   private val navigator: Navigator,
-  private val serverLibrary: ServerLibrary,
-  private val serverDownloads: ServerDownloads,
   private val authorInfoLookup: AuthorInfoLookup,
   dispatcherProvider: DispatcherProvider,
   @Assisted private val name: String?,
@@ -68,7 +63,6 @@ class AuthorViewModel(
     val books =
       remember { libraryBooks(repo, ebooksStore) }.collectAsState(initial = null).value
         ?: return null
-    val serverStates = rememberServerBookStates(serverLibrary, serverDownloads)
     val authorInfo = info.collectAsState().value
     val authorBooks = remember(books) { books.byAuthor(name) }
     LaunchedEffect(authorBooks.isEmpty()) {
@@ -85,7 +79,7 @@ class AuthorViewModel(
             is LibraryEntry.Single ->
               AuthorViewState.Entry.Book(
                 // the header names the author already
-                book = entry.book.toItemViewState(serverStates).copy(author = null),
+                book = entry.book.toItemViewState().copy(author = null),
                 finished = entry.book.category == BookCategory.FINISHED,
               )
             is LibraryEntry.Stack ->

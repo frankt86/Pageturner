@@ -1,116 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation" tools:locale="en">
-    <!-- Title of the download notification while several server books download. The notification of a single book shows its title instead. -->
-    <plurals name="audiobookshelf.download.notification.books">
-        <item quantity="one">Downloading %d book</item>
-        <item quantity="other">Downloading %d books</item>
-    </plurals>
-    <!-- Notification text once a server book finished downloading while Pageturner was in the background. The title is the name of the book. -->
-    <string name="audiobookshelf.download.notification.done">Ready to listen offline</string>
-    <!-- Notification button that starts a failed download again. -->
-    <string name="audiobookshelf.download.notification.retry">Try again</string>
-    <!-- Notification button that stops the running downloads and removes what they downloaded so far. -->
-    <string name="audiobookshelf.download.notification.stop">Stop</string>
-    <!-- Title of the download notification for the moment before Pageturner knows which book downloads. -->
-    <string name="audiobookshelf.download.notification.title">Downloading…</string>
-    <!-- Name of the notification channel for books that download from an Audiobookshelf server. -->
-    <string name="audiobookshelf.downloads.channel">Downloads</string>
-    <!-- Primary action on the address step of connecting an Audiobookshelf server. Looks for the server at the typed address. -->
-    <string name="audiobookshelf.login.address.action">Continue</string>
-    <!-- Label of the text field for the address of the Audiobookshelf server, like a domain or an IP address. -->
-    <string name="audiobookshelf.login.address.label">Server address</string>
-    <!-- Example address shown in the empty server address field. -->
-    <string name="audiobookshelf.login.address.placeholder" translatable="false">audiobooks.example.com</string>
-    <!-- Explains on the first step of connecting what an Audiobookshelf server brings: its books, and the listening position kept the same on all devices. -->
-    <string name="audiobookshelf.login.address.subtitle">Listen to the books on your own server. Pageturner keeps your place in step with your other devices.</string>
-    <!-- Title of the first step of connecting an Audiobookshelf server, a self-hosted audiobook server. Audiobookshelf is a product name. -->
-    <string name="audiobookshelf.login.address.title">Connect Audiobookshelf</string>
-    <!-- Primary action on the sign in step, signs in with the username and password. -->
-    <string name="audiobookshelf.login.credentials.action">Sign in</string>
-    <!-- Shown instead of the username and password when the server only allows signing in through single sign-on (OpenID). -->
-    <string name="audiobookshelf.login.credentials.no_password">This server only allows single sign-on, which Pageturner can\'t do yet. Ask whoever runs it to turn on signing in with a password.</string>
-    <!-- Subtitle of the sign in step. %s is the address of the server, like audiobooks.example.com. -->
-    <string name="audiobookshelf.login.credentials.subtitle">Use your account on %s.</string>
-    <!-- Title of the step where the listener signs in to the Audiobookshelf server. -->
-    <string name="audiobookshelf.login.credentials.title">Sign in</string>
-    <!-- Error under the server address when the connection failed because the phone doesn't trust the server's TLS certificate, for example a self-signed one. -->
-    <string name="audiobookshelf.login.error.certificate">Your phone doesn\'t trust this server\'s certificate.</string>
-    <!-- Error under the password field when the username or the password is wrong. -->
-    <string name="audiobookshelf.login.error.credentials">That username or password isn\'t right.</string>
-    <!-- Error under the password field when signing in failed for an unknown reason. -->
-    <string name="audiobookshelf.login.error.failed">Signing in didn\'t work. Try again.</string>
-    <!-- Error under the server address when nothing at that address answered like an Audiobookshelf server. Many servers are only reachable at home or over a VPN. -->
-    <string name="audiobookshelf.login.error.not_found">Pageturner can\'t reach an Audiobookshelf server there. Are you on the right network?</string>
-    <!-- Error under the server address when the server was installed, but its first setup in the web app isn't done. -->
-    <string name="audiobookshelf.login.error.not_set_up">This server isn\'t set up yet. Finish the setup in its web app first.</string>
-    <!-- Shown under the password when signing in again, after the server declined the stored login, with another account than before. Switching accounts takes a sign out first. -->
-    <string name="audiobookshelf.login.error.other_account">That\'s another account. To switch accounts, sign out first.</string>
-    <!-- Error under the server address when the server is too old. %s is the version the server runs, like 2.20.0. -->
-    <string name="audiobookshelf.login.error.too_old">Pageturner needs Audiobookshelf 2.26 or newer. This server runs %s.</string>
-    <!-- Error under the password field when the server stopped answering while signing in. -->
-    <string name="audiobookshelf.login.error.unreachable">The server stopped answering. Try again in a moment.</string>
-    <!-- Primary action on the last step of connecting, adds the books of the chosen libraries to Pageturner's library. -->
-    <string name="audiobookshelf.login.libraries.action">Add to my library</string>
-    <!-- Title while Pageturner loads the libraries of the server after signing in. -->
-    <string name="audiobookshelf.login.libraries.loading">Looking for books…</string>
-    <!-- Title when the server has no audiobook libraries, only podcast ones or none at all. -->
-    <string name="audiobookshelf.login.libraries.none">No audiobook libraries here</string>
-    <!-- Subtitle of the last step of connecting: the books of the server show up in the library and can be streamed or downloaded. -->
-    <string name="audiobookshelf.login.libraries.subtitle">They join your library. Play them right away, or download them to listen offline.</string>
-    <!-- Title of the last step of connecting, with the number of audiobooks in the chosen libraries. -->
-    <plurals name="audiobookshelf.login.libraries.title">
-        <item quantity="one">%d audiobook found</item>
-        <item quantity="other">%d audiobooks found</item>
-    </plurals>
-    <!-- Chip to choose a library of the server. %1$s is the name of the library, %2$d the number of books in it. -->
-    <plurals name="audiobookshelf.login.library_chip">
-        <item quantity="one">%1$s · %2$d book</item>
-        <item quantity="other">%1$s · %2$d books</item>
-    </plurals>
-    <!-- Label of the password field when signing in to the server. -->
-    <string name="audiobookshelf.login.password">Password</string>
-    <!-- Content description of the button that hides the typed password again. -->
-    <string name="audiobookshelf.login.password.hide">Hide password</string>
-    <!-- Content description of the button that shows the typed password. -->
-    <string name="audiobookshelf.login.password.show">Show password</string>
-    <!-- Label of the username field when signing in to the server. -->
-    <string name="audiobookshelf.login.username">Username</string>
-    <!-- Title of the downloads section in the Audiobookshelf settings. -->
-    <string name="audiobookshelf.settings.downloads">Downloads</string>
-    <!-- Shown in the downloads section when no server book is downloaded. -->
-    <string name="audiobookshelf.settings.downloads.none">No books downloaded yet</string>
-    <!-- Action that removes all downloaded server books from the device. They stay on the server. -->
-    <string name="audiobookshelf.settings.downloads.remove">Remove all</string>
-    <!-- How much storage the downloaded server books take. %s is a size like 1.2 GB. -->
-    <string name="audiobookshelf.settings.downloads.used">%s on this device</string>
-    <!-- Title of the section where the listener picks which libraries of the server show up in Pageturner. -->
-    <string name="audiobookshelf.settings.libraries">Libraries</string>
-    <!-- Switch that lets books download over mobile data, not only over Wi-Fi. -->
-    <string name="audiobookshelf.settings.mobile_data">Download over mobile data</string>
-    <!-- Explains the mobile data switch when it is off. -->
-    <string name="audiobookshelf.settings.mobile_data.summary">Otherwise downloads wait for Wi-Fi</string>
-    <!-- Button next to the status when the server declined the stored login and the listener has to sign in again. -->
-    <string name="audiobookshelf.settings.sign_in_again">Sign in</string>
-    <!-- Action that signs out of the Audiobookshelf server and removes its books from Pageturner. -->
-    <string name="audiobookshelf.settings.sign_out">Sign out</string>
-    <!-- Shown under the server address. %s is the username. -->
-    <string name="audiobookshelf.settings.signed_in_as">Signed in as %s</string>
-    <!-- Button next to the offline status that tries to reach the server again. -->
-    <string name="audiobookshelf.settings.try_again">Try again</string>
-    <!-- Message of the sheet that confirms signing out: the books of the server and their downloads are removed from the device, the listening progress stays on the server. -->
-    <string name="audiobookshelf.sign_out.message">Its books and their downloads leave this device. Your progress stays safe on the server.</string>
-    <!-- Title of the sheet that confirms signing out. %s is the address of the server. -->
-    <string name="audiobookshelf.sign_out.title">Sign out of %s?</string>
-    <!-- Status of the server connection when everything works. -->
-    <string name="audiobookshelf.status.connected">Connected, your progress is in sync</string>
-    <!-- Status of the server connection when the server declined the stored login. -->
-    <string name="audiobookshelf.status.needs_login">The server wants you to sign in again</string>
-    <!-- Status of the server connection when it can't be reached, for example without internet or outside the home network. -->
-    <string name="audiobookshelf.status.offline">Can\'t reach the server right now. Downloaded books still play.</string>
-    <!-- Status of the server connection while Pageturner syncs books and progress with it. -->
-    <string name="audiobookshelf.status.syncing">Syncing…</string>
-    <!-- Name of the self-hosted audiobook server. Product name, not translated. -->
-    <string name="audiobookshelf.title" translatable="false">Audiobookshelf</string>
     <!-- Button below the short text about an author on the author's screen. Opens the author's Wikipedia article in the browser. Write Wikipedia the way the language does, e.g. Википедия in Russian. -->
     <string name="author.wikipedia">Read more on Wikipedia</string>
     <!-- Bottom-sheet action for moving a book to the completed category. -->
@@ -127,22 +16,16 @@
     <string name="book.delete.dialog.message">This deletes the files from your device for good. You can\'t get them back.</string>
     <!-- Title for the delete-book confirmation dialog. -->
     <string name="book.delete.dialog.title">Delete Book</string>
-    <!-- Bottom-sheet action that downloads a book from the Audiobookshelf server, so it plays without a connection. -->
+    <!-- Action that downloads a book from a catalog. -->
     <string name="book.download.action">Download</string>
-    <!-- Shown when the download of a server book stopped with an error: in the book actions sheet, in the downloads in the settings and in a notification. -->
+    <!-- Shown when the download of a book from a catalog stopped with an error: in the catalog and in a notification. -->
     <string name="book.download.failed">The download didn\'t finish</string>
-    <!-- How far the download of a server book got. %1$s is the size downloaded so far, %2$s the size of the whole book, like "120 MB of 300 MB". -->
+    <!-- How far the download of a book from a catalog got. %1$s is the size downloaded so far, %2$s the size of the whole book, like "120 MB of 300 MB". -->
     <string name="book.download.progress">%1$s of %2$s</string>
-    <!-- Bottom-sheet action that removes the download of a server book. The book stays in the library and streams again. -->
-    <string name="book.download.remove">Remove download</string>
-    <!-- Action that starts a failed download of a server book again. -->
+    <!-- Action that starts a failed download of a book from a catalog again. -->
     <string name="book.download.retry">Download again</string>
-    <!-- Action that stops the running download of a server book. What it downloaded so far is removed. -->
+    <!-- Action that stops the running download of a book from a catalog. What it downloaded so far is removed. -->
     <string name="book.download.stop">Stop download</string>
-    <!-- Shown while the download of a server book waits, because the phone has no internet connection. -->
-    <string name="book.download.waiting_for_connection">Waiting for a connection</string>
-    <!-- Shown while the download of a server book waits, because downloading over mobile data is off. -->
-    <string name="book.download.waiting_for_wifi">Waiting for Wi-Fi</string>
     <!-- Label for the field with the book's author, in the sheet that edits a book. -->
     <string name="book.edit.author.label">Author</string>
     <!-- Bottom-sheet item for choosing a cover from local files. -->
@@ -155,10 +38,6 @@
     <string name="book.edit.rename">Rename</string>
     <!-- Label for the field with the name of the series the book belongs to, in the sheet that edits a book. -->
     <string name="book.edit.series.label">Series</string>
-    <!-- Error in the sheet that edits a book from an Audiobookshelf server, when saving the edits on the server failed, for example without a connection. The listener's input stays, so they can tap Save again. -->
-    <string name="book.edit.server.failed">Couldn\'t save on your server. Try again.</string>
-    <!-- Error in the sheet that edits a book from an Audiobookshelf server, when the listener's account on the server isn't allowed to change books. Whoever runs the server can allow it. -->
-    <string name="book.edit.server.not_allowed">Your account on the server can\'t change books.</string>
     <!-- Label for the field with the book's title, in the sheet that edits a book. -->
     <string name="book.edit.title.label">Title</string>
     <!-- Action in the book actions sheet. Takes the book out of the library, Continue listening, the widgets and Android Auto, without deleting its files. Search still finds it. Also in the sheet of a series, where it hides all of its books. -->
@@ -167,10 +46,6 @@
     <string name="book.select">Select</string>
     <!-- Action in the book actions sheet of a hidden book. Brings it back into the library. Also in the sheet of a series whose books are all hidden, where it brings all of them back. -->
     <string name="book.show">Show in library</string>
-    <!-- Shown under the title in the book actions sheet for a book whose files are on the phone, once a server is connected too. -->
-    <string name="book.source.device">On this device</string>
-    <!-- Shown under the title in the book actions sheet for a downloaded server book. %s is the address of the server, like audiobooks.example.com. -->
-    <string name="book.source.server_downloaded">%s · downloaded</string>
     <string name="bookmark.action.add_note">Add note</string>
     <string name="bookmark.add_note_hint">Add a note</string>
     <!-- Snackbar message shown after creating a bookmark. -->
@@ -225,6 +100,8 @@
     <!-- Generic remove action in menus. -->
     <!-- Generic action for saving changes. -->
     <string name="common.action.save">Save</string>
+    <!-- Button that tries a failed action again. -->
+    <string name="common.action.try_again">Try again</string>
     <!-- Generic action for dismissing a dialog without applying changes. -->
     <string name="common.dialog.cancel">Cancel</string>
     <!-- Generic confirmation action in dialogs that apply a value. -->
@@ -253,6 +130,19 @@
     <string name="cover.search.query.without_author">%s audiobook cover</string>
     <!-- Generic title for artwork shown for a book or cover editor. -->
     <string name="cover.title">Cover</string>
+    <!-- Title of the download notification while several audiobooks from catalogs download. The notification of a single book shows its title instead. -->
+    <plurals name="download.notification.books">
+        <item quantity="one">Downloading %d book</item>
+        <item quantity="other">Downloading %d books</item>
+    </plurals>
+    <!-- Notification text once an audiobook finished downloading while Pageturner was in the background. The title is the name of the book. -->
+    <string name="download.notification.done">Ready to listen offline</string>
+    <!-- Notification button that stops the running downloads and removes what they downloaded so far. -->
+    <string name="download.notification.stop">Stop</string>
+    <!-- Title of the download notification for the moment before Pageturner knows which book downloads. -->
+    <string name="download.notification.title">Downloading…</string>
+    <!-- Name of the notification channel for audiobooks that download from a catalog. -->
+    <string name="downloads.channel">Downloads</string>
     <!-- Pluralized duration text for sleep timer minutes. -->
     <plurals name="duration.minutes">
         <item quantity="one">%d minute</item>
@@ -263,8 +153,6 @@
         <item quantity="one">%d second</item>
         <item quantity="other">%d seconds</item>
     </plurals>
-    <!-- Action on the add audiobooks screen that connects an Audiobookshelf server instead of picking a folder. Audiobookshelf is a product name. -->
-    <string name="folder.add.action.audiobookshelf">Connect Audiobookshelf</string>
     <!-- Text button on the add content screen for adding one audio file instead of a folder. -->
     <string name="folder.add.action.file">Add a single file instead</string>
     <!-- Main button on the add content screen that opens the system folder picker. Also shown when a picked folder has no audio files. -->
@@ -389,7 +277,7 @@
     <string name="history.source.headset">Headset button</string>
     <string name="history.source.notification">Notification</string>
     <string name="history.source.other_app">Another app</string>
-    <!-- Where a history event came from: the listening position was taken over from another device, through the Audiobookshelf server or a synced library folder. -->
+    <!-- Where a history event came from: the listening position was taken over from another device, through a synced library folder. -->
     <string name="history.source.other_device">Another device</string>
     <string name="history.source.unplugged">Audio disconnected</string>
     <string name="history.source.watch">Watch</string>
@@ -399,7 +287,7 @@
         <item quantity="one">%d series</item>
         <item quantity="other">%d series</item>
     </plurals>
-    <!-- Read out by screen readers for the progress ring on the cover of a server book that downloads. -->
+    <!-- Shown while a book from a catalog downloads, next to its progress. -->
     <string name="library.book.downloading">Downloading</string>
     <!-- Read out by screen readers for the small book badge on the cover of an ebook in the library, which tells ebooks (EPUB, PDF, MOBI and AZW3) apart from audiobooks. -->
     <string name="library.book.ebook">Ebook</string>
@@ -407,8 +295,6 @@
     <string name="library.book.hidden">Hidden</string>
     <!-- Snackbar message after a book was hidden from the library, with a button to undo it. %1$s is the title of the book. -->
     <string name="library.book.hidden.message">%1$s is hidden</string>
-    <!-- Shown for a server book that isn't downloaded while the server can't be reached: on the icon on its cover, and as a small label in the player. Keep it short. -->
-    <string name="library.book.offline">Not available offline</string>
     <!-- Library category header for completed books. -->
     <string name="library.category.completed.title">Completed</string>
     <!-- Library category header for books currently being listened to. -->
@@ -437,8 +323,6 @@
     <string name="library.filter.group_by.series">Series</string>
     <!-- Switch in the library filter sheet that shows the hidden books in the library again, with a "Hidden" label. Below it is how many books are hidden, like "12 books". -->
     <string name="library.filter.hidden_books">Hidden books</string>
-    <!-- Switch in the library filter sheet that shows the server books that aren't downloaded. Turned off, the library only shows books that play without a connection. Below it is how many books aren't downloaded, like "12 books". -->
-    <string name="library.filter.not_downloaded">Not downloaded</string>
     <!-- Heading in the library filter sheet, above switches for which books the library shows. -->
     <string name="library.filter.show">Show</string>
     <!-- Body for the one-time dialog shown from the old book folders shortcut. -->
@@ -550,11 +434,6 @@
         <item quantity="one">Series set for %d book</item>
         <item quantity="other">Series set for %d books</item>
     </plurals>
-    <!-- Snackbar after the listener set the series or author of several selected books, or undid that. Some of the books are from an Audiobookshelf server, and saving them there failed, for example without a connection. %d is the number of books that didn't change on the server. -->
-    <plurals name="library.selection.server_failed">
-        <item quantity="one">Couldn\'t save %d book on your server</item>
-        <item quantity="other">Couldn\'t save %d books on your server</item>
-    </plurals>
     <!-- Short label of a button in the toolbar while selecting books that are all hidden. Brings the selected books back into the library. -->
     <string name="library.selection.show">Show</string>
     <!-- Snackbar message after a series was hidden from the library, with a button to undo it. %1$s is the name of the series. -->
@@ -565,6 +444,14 @@
     <string name="library.storage_permission_bug.message">For certain devices, a system app is missing the necessary permission to access the external storage. This access is essential for Pageturner to read your audiobooks.</string>
     <!-- Title for the card explaining a required storage permission workaround. -->
     <string name="library.storage_permission_bug.title">Permission required</string>
+    <!-- Label of the password field when signing in to a catalog or opening a locked PDF. -->
+    <string name="login.password">Password</string>
+    <!-- Content description of the button that hides the typed password again. -->
+    <string name="login.password.hide">Hide password</string>
+    <!-- Content description of the button that shows the typed password. -->
+    <string name="login.password.show">Show password</string>
+    <!-- Label of the username field when signing in to a catalog. -->
+    <string name="login.username">Username</string>
     <!-- Media browser title for recently played audiobooks. -->
     <string name="media_session.library.recent">Recent</string>
     <!-- Media browser root title for all audiobooks. -->
@@ -1201,8 +1088,6 @@
     <string name="settings.auto_sleep_timer.summary">Start a sleep timer automatically when playback begins between %1$s and %2$s</string>
     <!-- Settings title for automatically starting a sleep timer. -->
     <string name="settings.auto_sleep_timer.title">Automatic Sleep Timer</string>
-    <!-- Summary of the Audiobookshelf row in the library settings when no server is connected. -->
-    <string name="settings.library.audiobookshelf.summary">Stream the books on your own server</string>
     <!-- Summary text for the book folders settings row. Also the subtitle of the book folders screen. Books are audiobooks and ebooks. -->
     <string name="settings.library.folders.summary">Manage folders scanned for books</string>
     <!-- Label of the preview tile that shows the library as a grid of covers. -->

@@ -13,8 +13,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import voice.core.analytics.api.AnalyticsConsentStore
-import voice.core.audiobookshelf.AudiobookshelfFeatureFlag
-import voice.core.audiobookshelf.ServerAccount
 import voice.core.common.AppInfoProvider
 import voice.core.common.DispatcherProvider
 import voice.core.common.FeedbackLinks
@@ -39,7 +37,6 @@ import voice.core.ui.ThemeMode
 import voice.core.ui.ThemeModeStore
 import voice.navigation.Destination
 import voice.navigation.Navigator
-import voice.navigation.Origin
 
 @Inject
 class SettingsViewModel(
@@ -61,8 +58,6 @@ class SettingsViewModel(
   private val dynamicColorAvailability: DynamicColorAvailability,
   private val audiobookFolders: AudiobookFolders,
   private val dispatcherProvider: DispatcherProvider,
-  private val serverAccount: ServerAccount,
-  private val audiobookshelfFeatureFlag: AudiobookshelfFeatureFlag,
 ) : SettingsListener {
 
   private val mainScope = MainScope(dispatcherProvider)
@@ -122,16 +117,6 @@ class SettingsViewModel(
     }
       .collectAsState(initial = null)
       .value
-    val audiobookshelfServer = remember {
-      serverAccount.serverName.map(::AudiobookshelfServerName)
-    }
-      .collectAsState(initial = null)
-      .value
-    val audiobookshelfEnabled = remember {
-      audiobookshelfFeatureFlag.flow.map { it.value }
-    }
-      .collectAsState(initial = null)
-      .value
     val dynamicColorAvailable = remember {
       dynamicColorAvailability.isSupported()
     }
@@ -148,9 +133,7 @@ class SettingsViewModel(
         analyticsEnabled == null ||
         folderNames == null ||
         foldersWithoutAccess == null ||
-        showDeveloperMenu == null ||
-        audiobookshelfServer == null ||
-        audiobookshelfEnabled == null
+        showDeveloperMenu == null
     ) {
       return null
     }
@@ -181,14 +164,8 @@ class SettingsViewModel(
       showDeveloperMenu = showDeveloperMenu,
       folderNames = folderNames,
       foldersWithoutAccess = foldersWithoutAccess,
-      audiobookshelfServer = audiobookshelfServer.name,
-      // a connected server stays reachable, so it can be signed out of
-      showAudiobookshelf = audiobookshelfEnabled || audiobookshelfServer.name != null,
     )
   }
-
-  /** Tells a server that is still loading apart from no server at all. */
-  private data class AudiobookshelfServerName(val name: String?)
 
   private fun folderNames(): Flow<List<String>> {
     if (kioskModeFeatureFlag.get()) {
@@ -296,18 +273,6 @@ class SettingsViewModel(
 
   override fun openFolderPicker() {
     navigator.goTo(Destination.FolderPicker)
-  }
-
-  override fun openAudiobookshelf() {
-    mainScope.launch {
-      navigator.goTo(
-        if (serverAccount.isConnected()) {
-          Destination.AudiobookshelfSettings
-        } else {
-          Destination.AudiobookshelfLogin(Origin.Default)
-        },
-      )
-    }
   }
 
   override fun openOpdsCatalogs() {

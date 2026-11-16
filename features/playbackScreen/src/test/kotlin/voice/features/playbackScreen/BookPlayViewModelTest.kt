@@ -24,13 +24,11 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
-import voice.core.audiobookshelf.ServerLibrary
 import voice.core.common.DispatcherProvider
 import voice.core.data.Book
 import voice.core.data.BookContent
@@ -112,10 +110,6 @@ class BookPlayViewModelTest {
     mockk<CurrentBookResolver> {
       coEvery { book(book.id) } returns book
     }
-  private val serverLibrary =
-    mockk<ServerLibrary>(relaxUnitFun = true) {
-      every { unavailableBooks } returns flowOf(emptySet())
-    }
   private val bookmarkRepository =
     mockk<BookmarkRepo> {
       coEvery { addBookmarkAtBookPosition(book, any()) } returns
@@ -154,7 +148,6 @@ class BookPlayViewModelTest {
       kioskModeFeatureFlag = KioskModeFeatureFlag(MemoryFeatureFlag(false)),
       historyRecorder = historyRecorder,
       clock = clock,
-      serverLibrary = serverLibrary,
       lastPlaybackSpeedStore = LastPlaybackSpeedStore(MemoryDataStore(1F)),
     )
 
@@ -858,7 +851,6 @@ class BookPlayViewModelTest {
       kioskModeFeatureFlag = KioskModeFeatureFlag(MemoryFeatureFlag(kioskMode)),
       historyRecorder = historyRecorder,
       clock = clock,
-      serverLibrary = serverLibrary,
       lastPlaybackSpeedStore = LastPlaybackSpeedStore(MemoryDataStore(lastPlaybackSpeed)),
     )
   }

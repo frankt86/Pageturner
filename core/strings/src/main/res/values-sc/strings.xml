@@ -1,63 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="audiobookshelf.download.notification.books">
-        <item quantity="one">Iscarrighende %d libru</item>
-        <item quantity="other">Iscarrighende %d libros</item>
-    </plurals>
-    <string name="audiobookshelf.download.notification.done">Prontu pro ascurtare chene connessione</string>
-    <string name="audiobookshelf.download.notification.retry">Torra a proare</string>
-    <string name="audiobookshelf.download.notification.stop">Firma</string>
-    <string name="audiobookshelf.download.notification.title">Iscarrighende…</string>
-    <string name="audiobookshelf.downloads.channel">Iscarrigamentos</string>
-    <string name="audiobookshelf.login.address.action">Sighi</string>
-    <string name="audiobookshelf.login.address.label">Indiritzu de su serbidore</string>
-    <string name="audiobookshelf.login.address.subtitle">Ascurta sos libros de su serbidore tuo. Pageturner sincronizat su puntu in ue ses cun sos àteros dispositivos tuos.</string>
-    <string name="audiobookshelf.login.address.title">Connete Audiobookshelf</string>
-    <string name="audiobookshelf.login.credentials.action">Intra</string>
-    <string name="audiobookshelf.login.credentials.no_password">Custu serbidore permitit petzi s\'atzessu ùnicu (single sign-on), chi Pageturner galu non suportat. Pedi a chie lu manìgiat de ativare s\'atzessu cun sa crae.</string>
-    <string name="audiobookshelf.login.credentials.subtitle">Imprea su contu tuo in %s.</string>
-    <string name="audiobookshelf.login.credentials.title">Intra</string>
-    <string name="audiobookshelf.login.error.certificate">Su telèfonu tuo non si fidat de su tzertificadu de custu serbidore.</string>
-    <string name="audiobookshelf.login.error.credentials">Su nùmene de utente o sa crae non sunt curretos.</string>
-    <string name="audiobookshelf.login.error.failed">S\'atzessu no at funtzionadu. Torra a proare.</string>
-    <string name="audiobookshelf.login.error.not_found">Pageturner no agatat perunu serbidore Audiobookshelf in cussu indiritzu. Ses in sa rete giusta?</string>
-    <string name="audiobookshelf.login.error.not_set_up">Custu serbidore no est galu cunfiguradu. In antis acabba sa cunfiguratzione in s\'aplicatzione web sua.</string>
-    <string name="audiobookshelf.login.error.other_account">Custu est un\'àteru contu. Pro cambiare contu, in antis essi.</string>
-    <string name="audiobookshelf.login.error.too_old">Pageturner tenet bisòngiu de Audiobookshelf 2.26 o prus nou. Custu serbidore tenet sa versione %s.</string>
-    <string name="audiobookshelf.login.error.unreachable">Su serbidore non rispondet prus. Torra a proare a pustis de unu momentu.</string>
-    <string name="audiobookshelf.login.libraries.action">Agiunghe a sa biblioteca mea</string>
-    <string name="audiobookshelf.login.libraries.loading">Chirchende libros…</string>
-    <string name="audiobookshelf.login.libraries.none">Peruna biblioteca de audiolibros inoghe</string>
-    <string name="audiobookshelf.login.libraries.subtitle">Intrant in sa biblioteca tua. Ascurta·los deretu, o iscàrriga·los pro los ascurtare chene connessione.</string>
-    <plurals name="audiobookshelf.login.libraries.title">
-        <item quantity="one">%d audiolibru agatadu</item>
-        <item quantity="other">%d audiolibros agatados</item>
-    </plurals>
-    <plurals name="audiobookshelf.login.library_chip">
-        <item quantity="one">%1$s · %2$d libru</item>
-        <item quantity="other">%1$s · %2$d libros</item>
-    </plurals>
-    <string name="audiobookshelf.login.password">Crae</string>
-    <string name="audiobookshelf.login.password.hide">Cua sa crae</string>
-    <string name="audiobookshelf.login.password.show">Mustra sa crae</string>
-    <string name="audiobookshelf.login.username">Nùmene de utente</string>
-    <string name="audiobookshelf.settings.downloads">Iscarrigamentos</string>
-    <string name="audiobookshelf.settings.downloads.none">Galu perunu libru iscarrigadu</string>
-    <string name="audiobookshelf.settings.downloads.remove">Boga totu</string>
-    <string name="audiobookshelf.settings.downloads.used">%s in custu dispositivu</string>
-    <string name="audiobookshelf.settings.libraries">Bibliotecas</string>
-    <string name="audiobookshelf.settings.mobile_data">Iscàrriga cun sos datos mòbiles</string>
-    <string name="audiobookshelf.settings.mobile_data.summary">Si nono, sos iscarrigamentos isetant su Wi-Fi</string>
-    <string name="audiobookshelf.settings.sign_in_again">Intra</string>
-    <string name="audiobookshelf.settings.sign_out">Essi</string>
-    <string name="audiobookshelf.settings.signed_in_as">Atzessu fatu comente %s</string>
-    <string name="audiobookshelf.settings.try_again">Torra a proare</string>
-    <string name="audiobookshelf.sign_out.message">Sos libros de su serbidore e sos iscarrigamentos issoro ant a èssere bogados dae custu dispositivu. Su progressu tuo abarrat sarvadu in su serbidore.</string>
-    <string name="audiobookshelf.sign_out.title">Boles essire dae %s?</string>
-    <string name="audiobookshelf.status.connected">Connessione ativa, su progressu tuo est sincronizadu</string>
-    <string name="audiobookshelf.status.needs_login">Su serbidore ti pedit de torrare a atzèdere</string>
-    <string name="audiobookshelf.status.offline">Su serbidore como non rispondet. Podes ascurtare su matessi sos libros iscarrigados.</string>
-    <string name="audiobookshelf.status.syncing">Sincronizende…</string>
     <string name="author.wikipedia">Leghe de prus in Wikipedia</string>
     <string name="book.category.action.mark_completed">Marca comente acabbadu</string>
     <string name="book.category.action.mark_current">Marca comente in cursu</string>
@@ -69,25 +11,18 @@
     <string name="book.download.action">Iscàrriga</string>
     <string name="book.download.failed">S\'iscarrigamentu no est acabbadu</string>
     <string name="book.download.progress">%1$s de %2$s</string>
-    <string name="book.download.remove">Boga s\'iscarrigamentu</string>
     <string name="book.download.retry">Torra a iscarrigare</string>
     <string name="book.download.stop">Firma s\'iscarrigamentu</string>
-    <string name="book.download.waiting_for_connection">Isetende una connessione</string>
-    <string name="book.download.waiting_for_wifi">Isetende su Wi-Fi</string>
     <string name="book.edit.author.label">Autore</string>
     <string name="book.edit.cover.file">Cobertedda dae su sistema de archìvios</string>
     <string name="book.edit.cover.internet">Cobertedda dae ìnternet</string>
     <string name="book.edit.part.label">Parte</string>
     <string name="book.edit.rename">Càmbia su nùmene</string>
     <string name="book.edit.series.label">Sèrie</string>
-    <string name="book.edit.server.failed">No est istadu possìbile sarvare in su serbidore tuo. Torra a proare.</string>
-    <string name="book.edit.server.not_allowed">Su contu tuo in su serbidore non podet cambiare libros.</string>
     <string name="book.edit.title.label">Tìtulu</string>
     <string name="book.hide">Cua dae sa biblioteca</string>
     <string name="book.select">Seletziona</string>
     <string name="book.show">Mustra in sa biblioteca</string>
-    <string name="book.source.device">In custu dispositivu</string>
-    <string name="book.source.server_downloaded">%s · iscarrigadu</string>
     <string name="bookmark.action.add_note">Agiunghe una nota</string>
     <string name="bookmark.add_note_hint">Agiunghe una nota</string>
     <string name="bookmark.added.snackbar">Sinnalibru agiuntu</string>
@@ -130,6 +65,7 @@
     <string name="common.action.more">Àteras optziones</string>
     <string name="common.action.undo">Annulla</string>
     <string name="common.action.save">Sarva</string>
+    <string name="common.action.try_again">Torra a proare</string>
     <string name="common.dialog.cancel">Annulla</string>
     <string name="common.dialog.confirm">Cunfirma</string>
     <string name="common.dialog.ok">AB</string>
@@ -144,6 +80,14 @@
     <string name="cover.search.query.with_author">Cobertedda de s\'audiolibru %1$s de %2$s</string>
     <string name="cover.search.query.without_author">cobertedda de audiolibru %s</string>
     <string name="cover.title">Cobertedda</string>
+    <plurals name="download.notification.books">
+        <item quantity="one">Iscarrighende %d libru</item>
+        <item quantity="other">Iscarrighende %d libros</item>
+    </plurals>
+    <string name="download.notification.done">Prontu pro ascurtare chene connessione</string>
+    <string name="download.notification.stop">Firma</string>
+    <string name="download.notification.title">Iscarrighende…</string>
+    <string name="downloads.channel">Iscarrigamentos</string>
     <plurals name="duration.minutes">
         <item quantity="one">%d minutu</item>
         <item quantity="other">%d minutos</item>
@@ -152,7 +96,6 @@
         <item quantity="one">%d segundu</item>
         <item quantity="other">%d segundos</item>
     </plurals>
-    <string name="folder.add.action.audiobookshelf">Connete Audiobookshelf</string>
     <string name="folder.add.action.file">Agiunghe imbetzes unu documentu sìngulu</string>
     <string name="folder.add.action.folder">Issèbera una cartella</string>
     <string name="folder.add.action.opds">Iscàrriga dae unu catàlogu</string>
@@ -246,7 +189,6 @@
     <string name="library.book.ebook">Libru eletrònicu</string>
     <string name="library.book.hidden">Cuadu</string>
     <string name="library.book.hidden.message">As cuadu %1$s</string>
-    <string name="library.book.offline">No a disponimentu chene connessione</string>
     <string name="library.category.completed.title">Acabbadu</string>
     <string name="library.category.current.title">In cursu</string>
     <string name="library.category.not_started.title">Galu no incumintzadu</string>
@@ -261,7 +203,6 @@
     <string name="library.filter.group_by.author">Autore</string>
     <string name="library.filter.group_by.series">Sèrie</string>
     <string name="library.filter.hidden_books">Libros cuados</string>
-    <string name="library.filter.not_downloaded">No iscarrigados</string>
     <string name="library.filter.show">Mustra</string>
     <string name="library.folders.moved.dialog.message">Como podes manigiare sas cartellas de libros in sas Impostatziones.</string>
     <string name="library.folders.moved.dialog.title">Cartellas de libros tramudadas</string>
@@ -331,15 +272,15 @@
         <item quantity="one">Sèrie impostada pro %d libru</item>
         <item quantity="other">Sèrie impostada pro %d libros</item>
     </plurals>
-    <plurals name="library.selection.server_failed">
-        <item quantity="one">No est istadu possìbile sarvare %d libru in su serbidore tuo</item>
-        <item quantity="other">No est istadu possìbile sarvare %d libros in su serbidore tuo</item>
-    </plurals>
     <string name="library.selection.show">Mustra</string>
     <string name="library.series.hidden.message">As cuadu %1$s</string>
     <string name="library.storage_permission_bug.action">Dae su permissu</string>
     <string name="library.storage_permission_bug.message">Pro unos cantos dispositivos, un\'aplicatzione de sistema non tenet s\'autorizatzione netzessària pro atzèdere a sa memòria esterna. Bisòngiat a tènnere custu atzessu pro chi Pageturner potzat lèghere sos audiolibros tuos.</string>
     <string name="library.storage_permission_bug.title">Permissu netzessàriu</string>
+    <string name="login.password">Crae</string>
+    <string name="login.password.hide">Cua sa crae</string>
+    <string name="login.password.show">Mustra sa crae</string>
+    <string name="login.username">Nùmene de utente</string>
     <string name="media_session.library.recent">Reghentes</string>
     <string name="media_session.library.root">Totu sos audiolibros</string>
     <string name="onboarding.action.next">Sighi</string>
@@ -662,7 +603,6 @@
     <string name="settings.auto_sleep_timer.start.label">Ora de cumintzu</string>
     <string name="settings.auto_sleep_timer.summary">Allughe unu temporizadore de suspensione cando sa riprodutzione incumintzat intre sas %1$s e sas %2$s</string>
     <string name="settings.auto_sleep_timer.title">Temporizadore de suspensione automàticu</string>
-    <string name="settings.library.audiobookshelf.summary">Ascurta sos libros de su serbidore tuo</string>
     <string name="settings.library.folders.summary">Manìgia sas cartellas in ue Pageturner chircat libros</string>
     <string name="settings.library.layout.grid">Grìllia</string>
     <string name="settings.library.layout.list">Lista</string>

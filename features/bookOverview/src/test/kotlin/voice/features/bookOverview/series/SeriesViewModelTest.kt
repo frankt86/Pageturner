@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import voice.core.audiobookshelf.download.BookDownloadState
 import voice.core.common.DispatcherProvider
 import voice.core.data.Book
 import voice.core.data.BookId
@@ -34,7 +33,6 @@ import voice.core.playback.playstate.PlayStateManager
 import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
 import voice.features.bookOverview.ebook
-import voice.features.bookOverview.overview.DownloadBadge
 import voice.features.bookOverview.overview.bookId
 import voice.features.bookOverview.overview.toItemViewState
 import voice.navigation.Destination
@@ -50,8 +48,6 @@ class SeriesViewModelTest {
   private val currentBookStore = MemoryDataStore<BookId?>(null)
   private val books = MutableStateFlow<List<Book>>(emptyList())
   private val playStateManager = PlayStateManager()
-  private val unavailable = MutableStateFlow<Set<BookId>>(emptySet())
-  private val downloads = MutableStateFlow<Map<BookId, BookDownloadState>>(emptyMap())
   private val ebooks = MemoryDataStore<List<Ebook>>(emptyList())
 
   @Test
@@ -87,23 +83,6 @@ class SeriesViewModelTest {
           ),
         actual = state.books,
       )
-    }
-  }
-
-  @Test
-  fun `the rows show downloads and books that are offline`() = runTest {
-    val first = book(series = "Saga", part = "1")
-    val second = book(series = "Saga", part = "2")
-    books.value = listOf(first, second)
-    unavailable.value = setOf(first.id)
-    downloads.value = mapOf(second.id to BookDownloadState.Failed)
-
-    testState {
-      // the server's states arrive after the books
-      awaitItem()
-      val rows = awaitItem()!!.books.map { it.book }
-      assertEquals(expected = listOf(true, false), actual = rows.map { it.unavailable })
-      assertEquals(expected = listOf(null, DownloadBadge.Failed), actual = rows.map { it.download })
     }
   }
 
@@ -354,14 +333,6 @@ class SeriesViewModelTest {
         ExperimentalPlaybackPersistenceFeatureFlag(
           MemoryFeatureFlag(experimentalPlaybackPersistence),
         ),
-      serverLibrary =
-        mockk {
-          every { unavailableBooks } returns unavailable
-        },
-      serverDownloads =
-        mockk {
-          every { states } returns downloads
-        },
       dispatcherProvider = dispatcherProvider,
       name = "Saga",
     )

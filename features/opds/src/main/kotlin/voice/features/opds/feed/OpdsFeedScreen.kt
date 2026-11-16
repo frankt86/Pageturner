@@ -338,7 +338,7 @@ private fun FeedFooter(
       viewState.loadingMore -> LoadingIndicator(Modifier.size(40.dp))
       viewState.loadMoreFailed ->
         TextButton(onClick = onLoadMore) {
-          Text(stringResource(StringsR.string.audiobookshelf_settings_try_again))
+          Text(stringResource(StringsR.string.common_action_try_again))
         }
       viewState.navigation.isEmpty() && viewState.publications.isEmpty() ->
         Text(
@@ -539,7 +539,7 @@ private fun FeedError(
     )
     Spacer(Modifier.height(16.dp))
     OutlinedButton(onClick = onRetry) {
-      Text(stringResource(StringsR.string.audiobookshelf_settings_try_again))
+      Text(stringResource(StringsR.string.common_action_try_again))
     }
   }
 }

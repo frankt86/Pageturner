@@ -25,7 +25,7 @@ decisions a listener has to make small. The feature set doesn't have to be.
   need a deliberate step, like ticking "Delete my files" first.
 - Never interrupt listening. Prompts such as rating or support wait for a calm moment, ask once, and accept no.
 - No account, no ads, nothing behind a paywall, and the data stays with the listener: on the device, or on their own
-  server, like Audiobookshelf. Voice never runs a server of its own.
+  server, like Komga. Voice never runs a server of its own.
 
 ## Material 3 Expressive
 

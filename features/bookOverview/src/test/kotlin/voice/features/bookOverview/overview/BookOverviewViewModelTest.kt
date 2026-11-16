@@ -15,27 +15,18 @@ import io.mockk.slot
 import io.mockk.verify
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertSame
 import kotlin.time.Instant
-import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
-import voice.core.audiobookshelf.PickedLibrary
-import voice.core.audiobookshelf.ServerBookEdit
-import voice.core.audiobookshelf.ServerDownloads
-import voice.core.audiobookshelf.ServerEdit
-import voice.core.audiobookshelf.ServerLibrary
-import voice.core.audiobookshelf.download.BookDownloadState
 import voice.core.common.AppInfoProvider
 import voice.core.common.DispatcherProvider
 import voice.core.data.Book
@@ -76,16 +67,6 @@ import voice.navigation.Navigator
 class BookOverviewViewModelTest {
 
   private val testDispatcher = UnconfinedTestDispatcher()
-  private val serverLibrary =
-    mockk<ServerLibrary>(relaxUnitFun = true) {
-      every { syncing } returns MutableStateFlow(false)
-      every { unavailableBooks } returns flowOf(emptySet())
-      every { libraries } returns flowOf(emptyList())
-    }
-  private val serverDownloads =
-    mockk<ServerDownloads> {
-      every { states } returns flowOf(emptyMap())
-    }
   // combine yields, and the test dispatcher's scheduler isn't the one runTest advances
   private val dispatcherProvider =
     DispatcherProvider(
@@ -143,17 +124,14 @@ class BookOverviewViewModelTest {
           ExperimentalPlaybackPersistenceFeatureFlag(MemoryFeatureFlag(true)),
         kioskModeFeatureFlag = KioskModeFeatureFlag(MemoryFeatureFlag(false)),
         dispatcherProvider = dispatcherProvider,
-        serverLibrary = serverLibrary,
-        serverDownloads = serverDownloads,
         audiobookFolders = audiobookFolders,
         emptyLibraryTracker = emptyLibraryTracker,
         showHiddenBooksStore = ShowHiddenBooksStore(MemoryDataStore(false)),
         libraryGroupingStore = LibraryGroupingStore(MemoryDataStore(LibraryGrouping.Series)),
-        showNotDownloadedBooksStore = ShowNotDownloadedBooksStore(MemoryDataStore(true)),
         hiddenSourcesStore = HiddenSourcesStore(MemoryDataStore(emptySet())),
         bookHider = BookHider(mockk(), emptyEbooks),
         bookSelectionRequests = BookSelectionRequests(),
-        selectedBooksEditor = SelectedBooksEditor(mockk(), serverLibrary, emptyEbooks),
+        selectedBooksEditor = SelectedBooksEditor(mockk(), emptyEbooks),
       )
 
     backgroundScope
@@ -229,17 +207,14 @@ class BookOverviewViewModelTest {
           ExperimentalPlaybackPersistenceFeatureFlag(MemoryFeatureFlag(false)),
         kioskModeFeatureFlag = KioskModeFeatureFlag(MemoryFeatureFlag(true)),
         dispatcherProvider = dispatcherProvider,
-        serverLibrary = serverLibrary,
-        serverDownloads = serverDownloads,
         audiobookFolders = audiobookFolders,
         emptyLibraryTracker = emptyLibraryTracker,
         showHiddenBooksStore = ShowHiddenBooksStore(MemoryDataStore(false)),
         libraryGroupingStore = LibraryGroupingStore(MemoryDataStore(LibraryGrouping.Series)),
-        showNotDownloadedBooksStore = ShowNotDownloadedBooksStore(MemoryDataStore(true)),
         hiddenSourcesStore = HiddenSourcesStore(MemoryDataStore(emptySet())),
         bookHider = BookHider(mockk(), emptyEbooks),
         bookSelectionRequests = BookSelectionRequests(),
-        selectedBooksEditor = SelectedBooksEditor(mockk(), serverLibrary, emptyEbooks),
+        selectedBooksEditor = SelectedBooksEditor(mockk(), emptyEbooks),
       )
 
     backgroundScope
@@ -413,163 +388,6 @@ class BookOverviewViewModelTest {
             .filterIsInstance<LibraryItem.Series>()
             .associate { it.series.name to it.series.hidden }
         assertEquals(expected = mapOf("Other" to false, "Saga" to true), actual = stacks)
-      }
-  }
-
-  @Test
-  fun `without books that aren't downloaded, the library keeps the ones on the device`() = runTest {
-    val local = book(time = 0)
-    val streamed = book(time = 0, id = BookId("abs://item/streamed"))
-    val hiddenStreamed = book(time = 0, id = BookId("abs://item/hidden"), hidden = true)
-    val downloaded = book(time = 0, id = BookId("abs://item/downloaded"))
-    val downloading = book(time = 0, id = BookId("abs://item/downloading"))
-    val store = MemoryDataStore(true)
-    val viewModel =
-      viewModel(
-        books = listOf(local, streamed, hiddenStreamed, downloaded, downloading),
-        downloadStates =
-          flowOf(
-            mapOf(
-              downloaded.id to BookDownloadState.Downloaded(bytes = 2),
-              downloading.id to
-                BookDownloadState.Downloading(
-                  progress = 0.5F,
-                  downloadedBytes = 1,
-                  totalBytes = 2,
-                  waitingFor = null,
-                ),
-            ),
-          ),
-        showNotDownloadedBooksStore = store,
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        val state = awaitItem()
-        assertEquals(expected = 2, actual = state.notDownloadedBookCount)
-        assertEquals(expected = 1, actual = state.hiddenBookCount)
-        assertEquals(expected = 4, actual = state.keys(BookCategory.NOT_STARTED).size)
-
-        viewModel.onShowNotDownloadedBooksChange(false)
-
-        val filtered = awaitItem()
-        assertEquals(
-          expected = setOf(local.id.value, downloaded.id.value),
-          actual = filtered.keys(BookCategory.NOT_STARTED).toSet(),
-        )
-        assertEquals(expected = 0, actual = filtered.hiddenBookCount)
-        assertEquals(expected = false, actual = store.data.first())
-      }
-  }
-
-  @Test
-  fun `a library with server books waits for their downloads`() = runTest {
-    val downloadStates = MutableStateFlow<Map<BookId, BookDownloadState>?>(null)
-    val downloaded = book(time = 0, id = BookId("abs://item/downloaded"))
-    val viewModel =
-      viewModel(
-        books = listOf(downloaded),
-        downloadStates = downloadStates.filterNotNull(),
-        showNotDownloadedBooksStore = MemoryDataStore(false),
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-
-        downloadStates.value = mapOf(downloaded.id to BookDownloadState.Downloaded(bytes = 1))
-
-        val state = awaitItem()
-        assertEquals(
-          expected = listOf(downloaded.id.value),
-          actual = state.keys(BookCategory.NOT_STARTED),
-        )
-        assertEquals(expected = false, actual = state.showNotDownloadedBooksSwitch)
-      }
-  }
-
-  @Test
-  fun `the current book stays when books that aren't downloaded are filtered out`() = runTest {
-    val current = book(id = BookId("abs://item/current"))
-    val viewModel =
-      viewModel(
-        books = listOf(current),
-        currentBookId = current.id,
-        showNotDownloadedBooksStore = MemoryDataStore(false),
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        val state = awaitItem()
-        assertEquals(expected = current.id, actual = state.hero?.value?.id)
-        assertEquals(expected = 0, actual = state.notDownloadedBookCount)
-      }
-  }
-
-  @Test
-  fun `the continue listening card follows the download of its book`() = runTest {
-    val current = book(id = BookId("abs://item/current"))
-    val downloadStates =
-      MutableStateFlow<Map<BookId, BookDownloadState>>(
-        mapOf(current.id to BookDownloadState.Failed),
-      )
-    val viewModel =
-      viewModel(
-        books = listOf(current),
-        currentBookId = current.id,
-        downloadStates = downloadStates,
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        assertEquals(expected = DownloadBadge.Failed, actual = awaitItem().hero?.value?.download)
-
-        downloadStates.value = mapOf(current.id to BookDownloadState.Downloaded(bytes = 1))
-
-        assertEquals(expected = null, actual = awaitItem().hero?.value?.download)
-      }
-  }
-
-  @Test
-  fun `the download of another book leaves the continue listening card as it is`() = runTest {
-    val current = book(id = BookId("abs://item/current"))
-    val other = book(id = BookId("abs://item/other"))
-    val downloadStates = MutableStateFlow<Map<BookId, BookDownloadState>>(emptyMap())
-    val viewModel =
-      viewModel(
-        books = listOf(current, other),
-        currentBookId = current.id,
-        downloadStates = downloadStates,
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        val hero = awaitItem().hero
-
-        downloadStates.value = mapOf(other.id to BookDownloadState.Downloaded(bytes = 1))
-
-        val state = awaitItem()
-        assertEquals(expected = 0, actual = state.notDownloadedBookCount)
-        assertSame(expected = hero, actual = state.hero)
       }
   }
 
@@ -903,125 +721,6 @@ class BookOverviewViewModelTest {
       }
 
     coVerify { emptyLibraryTracker.track() }
-  }
-
-  @Test
-  fun `a hidden source leaves the library`() = runTest {
-    every { serverLibrary.libraries } returns
-      flowOf(listOf(PickedLibrary("mine", "Mine"), PickedLibrary("kids", "Kids")))
-    val mine = serverBook(libraryId = "mine")
-    val kids = serverBook(libraryId = "kids")
-    val hiddenKids = serverBook(libraryId = "kids", hidden = true)
-    val kidsSource = LibrarySource.ServerLibrary("kids")
-    val viewModel =
-      viewModel(
-        books = listOf(mine, kids, hiddenKids),
-        currentBookId = kids.id,
-        hiddenSourcesStore = MemoryDataStore(setOf(kidsSource)),
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        val state = awaitItem()
-        assertEquals(expected = listOf(mine.id.value), actual = state.keys(BookCategory.CURRENT))
-        assertEquals(expected = null, actual = state.hero)
-        assertEquals(expected = 0, actual = state.hiddenBookCount)
-        assertEquals(
-          expected =
-            listOf(
-              LibrarySourceViewState(
-                LibrarySource.ServerLibrary("mine"),
-                name = "Mine",
-                shown = true,
-              ),
-              LibrarySourceViewState(kidsSource, name = "Kids", shown = false),
-            ),
-          actual = state.sources,
-        )
-      }
-  }
-
-  @Test
-  fun `a single source has no chip`() = runTest {
-    every { serverLibrary.libraries } returns flowOf(listOf(PickedLibrary("mine", "Mine")))
-    val viewModel = viewModel(books = listOf(serverBook(libraryId = "mine")))
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        assertEquals(expected = emptyList(), actual = awaitItem().sources)
-      }
-  }
-
-  @Test
-  fun `every source can be hidden`() = runTest {
-    every { serverLibrary.libraries } returns
-      flowOf(listOf(PickedLibrary("mine", "Mine"), PickedLibrary("kids", "Kids")))
-    val viewModel =
-      viewModel(
-        books = listOf(serverBook(libraryId = "mine"), serverBook(libraryId = "kids")),
-        hiddenSourcesStore =
-          MemoryDataStore(
-            setOf(LibrarySource.ServerLibrary("mine"), LibrarySource.ServerLibrary("kids")),
-          ),
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        val state = awaitItem()
-        assertEquals(expected = emptyList(), actual = state.sections.values.flatten())
-        assertEquals(expected = listOf(false, false), actual = state.sources.map { it.shown })
-      }
-  }
-
-  @Test
-  fun `a book from a removed library shows`() = runTest {
-    every { serverLibrary.libraries } returns
-      flowOf(listOf(PickedLibrary("mine", "Mine"), PickedLibrary("kids", "Kids")))
-    val removed = serverBook(libraryId = "removed")
-    val viewModel =
-      viewModel(
-        books = listOf(removed),
-        hiddenSourcesStore = MemoryDataStore(setOf(LibrarySource.ServerLibrary("removed"))),
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        assertEquals(
-          expected = listOf(removed.id.value),
-          actual = awaitItem().keys(BookCategory.CURRENT),
-        )
-      }
-  }
-
-  @Test
-  fun `switching a source hides and shows it`() = runTest {
-    every { serverLibrary.libraries } returns
-      flowOf(listOf(PickedLibrary("mine", "Mine"), PickedLibrary("kids", "Kids")))
-    val kids = LibrarySource.ServerLibrary("kids")
-    val store = MemoryDataStore<Set<LibrarySource>>(emptySet())
-    val viewModel = viewModel(hiddenSourcesStore = store)
-
-    viewModel.onSourceChange(kids, show = false)
-    assertEquals(expected = setOf(kids), actual = store.data.first())
-
-    viewModel.onSourceChange(kids, show = true)
-    assertEquals(expected = emptySet(), actual = store.data.first())
   }
 
   @Test
@@ -1407,107 +1106,11 @@ class BookOverviewViewModelTest {
     assertEquals(expected = listOf("Saga", "Saga"), actual = repo.all().map { it.series })
     val edited = edits.single()
     assertEquals(expected = 2, actual = edited.count)
-    assertEquals(expected = emptySet(), actual = edited.failed)
 
     viewModel.onUndoEdit(edited)
 
     assertEquals(expected = listOf(null, null), actual = repo.all().map { it.custom.series })
   }
-
-  @Test
-  fun `an author for server books is saved on the server, and failed books stay selected`() =
-    runTest {
-      val saved = serverBook("library").copyMetadata(author = "Old", series = "Saga", part = "2")
-      val failed = serverBook("library")
-      coEvery { serverLibrary.updateBook(saved.id, any()) } returns ServerEdit.Saved
-      coEvery { serverLibrary.updateBook(failed.id, any()) } returns ServerEdit.Failed
-      val repo = libraryRepo(saved, failed)
-      val viewModel = viewModel(repo = repo)
-      val state = viewModel.stateIn(backgroundScope)
-      val edits = mutableListOf<BooksEdited>()
-      backgroundScope.launch(testDispatcher) { viewModel.booksEdited.collect { edits += it } }
-      state.first { it.sections.isNotEmpty() }
-
-      viewModel.onSelectionStart(listOf(saved.id))
-      viewModel.onSelectionToggle(listOf(failed.id))
-      state.first { it.selection?.ids?.size == 2 }
-      viewModel.onSelectionEdit(BookField.Author)
-      state.first { it.selectionEdit != null }
-      viewModel.onSelectionEditSave("New")
-      state.first { it.selectionEdit?.saved == true }
-
-      coVerify {
-        val _ = serverLibrary.updateBook(saved.id, ServerBookEdit(author = "New"))
-      }
-      val edited = edits.single()
-      assertEquals(expected = 1, actual = edited.count)
-      assertEquals(expected = setOf(failed.id), actual = edited.failed)
-      assertEquals(expected = setOf(failed.id), actual = state.value.selection?.ids)
-
-      viewModel.onUndoEdit(edited)
-
-      coVerify {
-        val _ = serverLibrary.updateBook(saved.id, ServerBookEdit(author = "Old"))
-      }
-      coVerify(exactly = 0) {
-        val _ = serverLibrary.updateBook(failed.id, ServerBookEdit(author = null))
-      }
-    }
-
-  @Test
-  fun `after the server declines a book, the others are not sent and the listener learns why`() =
-    runTest {
-      val first = serverBook("library")
-      val second = serverBook("library")
-      coEvery { serverLibrary.updateBook(any(), any()) } returns ServerEdit.NotAllowed
-      val viewModel = viewModel(repo = libraryRepo(first, second))
-      val state = viewModel.stateIn(backgroundScope)
-      val edits = mutableListOf<BooksEdited>()
-      backgroundScope.launch(testDispatcher) { viewModel.booksEdited.collect { edits += it } }
-      state.first { it.sections.isNotEmpty() }
-
-      viewModel.onSelectionStart(listOf(first.id, second.id))
-      viewModel.onSelectionEdit(BookField.Author)
-      state.first { it.selectionEdit != null }
-      viewModel.onSelectionEditSave("New")
-      state.first { it.selectionEdit?.saved == true }
-
-      val edited = edits.single()
-      assertEquals(expected = setOf(first.id, second.id), actual = edited.failed)
-      assertEquals(expected = true, actual = edited.notAllowed)
-      coVerify(exactly = 1) {
-        val _ = serverLibrary.updateBook(any(), any())
-      }
-    }
-
-  @Test
-  fun `an undo that fails on the server selects the books it left, with no undo of its own`() =
-    runTest {
-      val book = serverBook("library")
-      coEvery { serverLibrary.updateBook(book.id, any()) } returns
-        ServerEdit.Saved andThen
-        ServerEdit.Failed
-      val viewModel = viewModel(repo = libraryRepo(book))
-      val state = viewModel.stateIn(backgroundScope)
-      val edits = mutableListOf<BooksEdited>()
-      backgroundScope.launch(testDispatcher) { viewModel.booksEdited.collect { edits += it } }
-      state.first { it.sections.isNotEmpty() }
-
-      viewModel.onSelectionStart(listOf(book.id))
-      viewModel.onSelectionEdit(BookField.Series)
-      state.first { it.selectionEdit != null }
-      viewModel.onSelectionEditSave("Saga")
-      state.first { it.selectionEdit?.saved == true }
-      viewModel.onUndoEdit(edits.single())
-
-      val undone = edits.last()
-      assertEquals(expected = setOf(book.id), actual = undone.failed)
-      assertEquals(expected = 0, actual = undone.count)
-      assertEquals(
-        expected = setOf(book.id),
-        actual = state.first { it.selection != null }.selection?.ids,
-      )
-    }
 
   @Test
   fun `a second edit while the sheet is open keeps the first`() = runTest {
@@ -1566,57 +1169,6 @@ class BookOverviewViewModelTest {
     )
   }
 
-  @Test
-  fun `the undo of a server book sends what the server had, not a local edit`() = runTest {
-    val serverBook = serverBook("library").copyMetadata(author = "Server")
-    val book = serverBook.copy(custom = serverBook.custom.copy(author = "Local"))
-    coEvery { serverLibrary.updateBook(book.id, any()) } returns ServerEdit.Saved
-    val repo = libraryRepo(book)
-    val viewModel = viewModel(repo = repo)
-    val state = viewModel.stateIn(backgroundScope)
-    val edits = mutableListOf<BooksEdited>()
-    backgroundScope.launch(testDispatcher) { viewModel.booksEdited.collect { edits += it } }
-    state.first { it.sections.isNotEmpty() }
-
-    viewModel.onSelectionStart(listOf(book.id))
-    viewModel.onSelectionEdit(BookField.Author)
-    state.first { it.selectionEdit != null }
-    viewModel.onSelectionEditSave("New")
-    state.first { it.selectionEdit?.saved == true }
-    viewModel.onUndoEdit(edits.single())
-
-    coVerify {
-      val _ = serverLibrary.updateBook(book.id, ServerBookEdit(author = "Server"))
-    }
-  }
-
-  @Test
-  fun `a series for server books keeps their part`() = runTest {
-    val book = serverBook("library").copyMetadata(series = null, part = "3")
-    coEvery { serverLibrary.updateBook(book.id, any()) } returns ServerEdit.Saved
-    val repo = libraryRepo(book)
-    val viewModel = viewModel(repo = repo)
-    val state = viewModel.stateIn(backgroundScope)
-    val edits = mutableListOf<BooksEdited>()
-    backgroundScope.launch(testDispatcher) { viewModel.booksEdited.collect { edits += it } }
-    state.first { it.sections.isNotEmpty() }
-
-    viewModel.onSelectionStart(listOf(book.id))
-    viewModel.onSelectionEdit(BookField.Series)
-    state.first { it.selectionEdit != null }
-    viewModel.onSelectionEditSave("Saga")
-    state.first { it.selectionEdit?.saved == true }
-    viewModel.onUndoEdit(edits.single())
-
-    coVerify {
-      val _ = serverLibrary.updateBook(book.id, ServerBookEdit(series = "Saga", part = "3"))
-    }
-    // the server has no "follow the files", so the undo takes the series off
-    coVerify {
-      val _ = serverLibrary.updateBook(book.id, ServerBookEdit(series = "", part = "3"))
-    }
-  }
-
   private fun BookOverviewViewModel.stateIn(
     scope: CoroutineScope,
   ): StateFlow<BookOverviewViewState> =
@@ -1664,14 +1216,6 @@ class BookOverviewViewModelTest {
       .value
   }
 
-  private fun serverBook(
-    libraryId: String,
-    hidden: Boolean = false,
-  ): Book {
-    val book = book(id = BookId("abs://item/${Uuid.random()}"), hidden = hidden)
-    return book.copy(content = book.content.copy(serverLibraryId = libraryId))
-  }
-
   private fun BookOverviewViewState.keys(category: BookCategory): List<String> {
     return sections.getValue(category).map { it.key }
   }
@@ -1687,8 +1231,6 @@ class BookOverviewViewModelTest {
     ebooks: List<Ebook> = emptyList(),
     showHiddenBooksStore: DataStore<Boolean> = MemoryDataStore(false),
     libraryGroupingStore: DataStore<LibraryGrouping> = MemoryDataStore(LibraryGrouping.Series),
-    showNotDownloadedBooksStore: DataStore<Boolean> = MemoryDataStore(true),
-    downloadStates: Flow<Map<BookId, BookDownloadState>> = flowOf(emptyMap()),
     hiddenSourcesStore: DataStore<Set<LibrarySource>> = MemoryDataStore(emptySet()),
     repo: BookRepository = mockk {
       every { flow() } returns MutableStateFlow(books)
@@ -1726,20 +1268,14 @@ class BookOverviewViewModelTest {
         ExperimentalPlaybackPersistenceFeatureFlag(MemoryFeatureFlag(false)),
       kioskModeFeatureFlag = KioskModeFeatureFlag(MemoryFeatureFlag(false)),
       dispatcherProvider = dispatcherProvider,
-      serverLibrary = serverLibrary,
-      serverDownloads =
-        mockk {
-          every { states } returns downloadStates
-        },
       audiobookFolders = audiobookFolders,
       emptyLibraryTracker = emptyLibraryTracker,
       showHiddenBooksStore = ShowHiddenBooksStore(showHiddenBooksStore),
       libraryGroupingStore = LibraryGroupingStore(libraryGroupingStore),
-      showNotDownloadedBooksStore = ShowNotDownloadedBooksStore(showNotDownloadedBooksStore),
       hiddenSourcesStore = HiddenSourcesStore(hiddenSourcesStore),
       bookHider = BookHider(repo, ebooksStore),
       bookSelectionRequests = bookSelectionRequests,
-      selectedBooksEditor = SelectedBooksEditor(repo, serverLibrary, ebooksStore),
+      selectedBooksEditor = SelectedBooksEditor(repo, ebooksStore),
     )
   }
 

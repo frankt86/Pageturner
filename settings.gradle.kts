@@ -129,12 +129,6 @@ include(":core:featureflag")
 
 include(":core:kioskmode")
 
-include(":core:audiobookshelf:api")
-
-include(":core:audiobookshelf:impl")
-
-include(":features:audiobookshelf")
-
 include(":core:foldersync")
 
 include(":core:datastore")

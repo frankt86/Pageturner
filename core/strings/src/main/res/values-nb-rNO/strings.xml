@@ -1,63 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="audiobookshelf.download.notification.books">
-        <item quantity="one">Laster ned %d bok</item>
-        <item quantity="other">Laster ned %d bøker</item>
-    </plurals>
-    <string name="audiobookshelf.download.notification.done">Klar til å lytte uten nett</string>
-    <string name="audiobookshelf.download.notification.retry">Prøv igjen</string>
-    <string name="audiobookshelf.download.notification.stop">Avbryt</string>
-    <string name="audiobookshelf.download.notification.title">Laster ned…</string>
-    <string name="audiobookshelf.downloads.channel">Nedlastinger</string>
-    <string name="audiobookshelf.login.address.action">Fortsett</string>
-    <string name="audiobookshelf.login.address.label">Serveradresse</string>
-    <string name="audiobookshelf.login.address.subtitle">Lytt til bøkene på din egen server. Pageturner holder lytteposisjonen din lik på alle enhetene dine.</string>
-    <string name="audiobookshelf.login.address.title">Koble til Audiobookshelf</string>
-    <string name="audiobookshelf.login.credentials.action">Logg på</string>
-    <string name="audiobookshelf.login.credentials.no_password">Denne serveren tillater bare enkel pålogging (SSO), og det kan ikke Pageturner ennå. Be den som driver serveren, om å slå på pålogging med passord.</string>
-    <string name="audiobookshelf.login.credentials.subtitle">Bruk kontoen din på %s.</string>
-    <string name="audiobookshelf.login.credentials.title">Logg på</string>
-    <string name="audiobookshelf.login.error.certificate">Telefonen din stoler ikke på sertifikatet til denne serveren.</string>
-    <string name="audiobookshelf.login.error.credentials">Brukernavnet eller passordet er feil.</string>
-    <string name="audiobookshelf.login.error.failed">Påloggingen fungerte ikke. Prøv igjen.</string>
-    <string name="audiobookshelf.login.error.not_found">Pageturner når ingen Audiobookshelf-server der. Er du på riktig nettverk?</string>
-    <string name="audiobookshelf.login.error.not_set_up">Denne serveren er ikke satt opp ennå. Fullfør oppsettet i nettappen først.</string>
-    <string name="audiobookshelf.login.error.other_account">Det er en annen konto. Logg av først for å bytte konto.</string>
-    <string name="audiobookshelf.login.error.too_old">Pageturner krever Audiobookshelf 2.26 eller nyere. Denne serveren kjører %s.</string>
-    <string name="audiobookshelf.login.error.unreachable">Serveren sluttet å svare. Prøv igjen om litt.</string>
-    <string name="audiobookshelf.login.libraries.action">Legg til i biblioteket</string>
-    <string name="audiobookshelf.login.libraries.loading">Ser etter bøker…</string>
-    <string name="audiobookshelf.login.libraries.none">Ingen lydbokbiblioteker her</string>
-    <string name="audiobookshelf.login.libraries.subtitle">De havner i biblioteket ditt. Spill dem med en gang, eller last dem ned for å lytte uten nett.</string>
-    <plurals name="audiobookshelf.login.libraries.title">
-        <item quantity="one">Vi fant %d lydbok</item>
-        <item quantity="other">Vi fant %d lydbøker</item>
-    </plurals>
-    <plurals name="audiobookshelf.login.library_chip">
-        <item quantity="one">%1$s · %2$d bok</item>
-        <item quantity="other">%1$s · %2$d bøker</item>
-    </plurals>
-    <string name="audiobookshelf.login.password">Passord</string>
-    <string name="audiobookshelf.login.password.hide">Skjul passord</string>
-    <string name="audiobookshelf.login.password.show">Vis passord</string>
-    <string name="audiobookshelf.login.username">Brukernavn</string>
-    <string name="audiobookshelf.settings.downloads">Nedlastinger</string>
-    <string name="audiobookshelf.settings.downloads.none">Ingen bøker lastet ned ennå</string>
-    <string name="audiobookshelf.settings.downloads.remove">Fjern alle</string>
-    <string name="audiobookshelf.settings.downloads.used">%s på denne enheten</string>
-    <string name="audiobookshelf.settings.libraries">Biblioteker</string>
-    <string name="audiobookshelf.settings.mobile_data">Last ned over mobildata</string>
-    <string name="audiobookshelf.settings.mobile_data.summary">Ellers venter nedlastinger på Wi-Fi</string>
-    <string name="audiobookshelf.settings.sign_in_again">Logg på</string>
-    <string name="audiobookshelf.settings.sign_out">Logg av</string>
-    <string name="audiobookshelf.settings.signed_in_as">Logget på som %s</string>
-    <string name="audiobookshelf.settings.try_again">Prøv igjen</string>
-    <string name="audiobookshelf.sign_out.message">Bøkene og nedlastingene deres forsvinner fra denne enheten. Fremdriften din er trygt lagret på serveren.</string>
-    <string name="audiobookshelf.sign_out.title">Logge av %s?</string>
-    <string name="audiobookshelf.status.connected">Tilkoblet, fremdriften din er synkronisert</string>
-    <string name="audiobookshelf.status.needs_login">Serveren vil at du logger på igjen</string>
-    <string name="audiobookshelf.status.offline">Får ikke kontakt med serveren akkurat nå. Nedlastede bøker kan fortsatt spilles av.</string>
-    <string name="audiobookshelf.status.syncing">Synkroniserer…</string>
     <string name="author.wikipedia">Les mer på Wikipedia</string>
     <string name="book.category.action.mark_completed">Marker som fullført</string>
     <string name="book.category.action.mark_current">Marker som pågående</string>
@@ -69,25 +11,18 @@
     <string name="book.download.action">Last ned</string>
     <string name="book.download.failed">Nedlastingen ble ikke fullført</string>
     <string name="book.download.progress">%1$s av %2$s</string>
-    <string name="book.download.remove">Fjern nedlasting</string>
     <string name="book.download.retry">Last ned på nytt</string>
     <string name="book.download.stop">Avbryt nedlasting</string>
-    <string name="book.download.waiting_for_connection">Venter på tilkobling</string>
-    <string name="book.download.waiting_for_wifi">Venter på Wi-Fi</string>
     <string name="book.edit.author.label">Forfatter</string>
     <string name="book.edit.cover.file">Omslag fra filsystemet</string>
     <string name="book.edit.cover.internet">Omslag fra Internett</string>
     <string name="book.edit.part.label">Del</string>
     <string name="book.edit.rename">Gi nytt navn</string>
     <string name="book.edit.series.label">Serie</string>
-    <string name="book.edit.server.failed">Kunne ikke lagre på serveren din. Prøv igjen.</string>
-    <string name="book.edit.server.not_allowed">Kontoen din på serveren kan ikke endre bøker.</string>
     <string name="book.edit.title.label">Tittel</string>
     <string name="book.hide">Skjul fra biblioteket</string>
     <string name="book.select">Velg</string>
     <string name="book.show">Vis i biblioteket</string>
-    <string name="book.source.device">På denne enheten</string>
-    <string name="book.source.server_downloaded">%s · lastet ned</string>
     <string name="bookmark.action.add_note">Legg til notat</string>
     <string name="bookmark.add_note_hint">Legg til et notat</string>
     <string name="bookmark.added.snackbar">Bokmerke lagt til</string>
@@ -130,6 +65,7 @@
     <string name="common.action.more">Flere alternativer</string>
     <string name="common.action.undo">Angre</string>
     <string name="common.action.save">Lagre</string>
+    <string name="common.action.try_again">Prøv igjen</string>
     <string name="common.dialog.cancel">Avbryt</string>
     <string name="common.dialog.confirm">Sett</string>
     <string name="common.dialog.ok">OK</string>
@@ -144,6 +80,14 @@
     <string name="cover.search.query.with_author">%1$s av %2$s lydbokomslag</string>
     <string name="cover.search.query.without_author">%s lydbokomslag</string>
     <string name="cover.title">Omslag</string>
+    <plurals name="download.notification.books">
+        <item quantity="one">Laster ned %d bok</item>
+        <item quantity="other">Laster ned %d bøker</item>
+    </plurals>
+    <string name="download.notification.done">Klar til å lytte uten nett</string>
+    <string name="download.notification.stop">Avbryt</string>
+    <string name="download.notification.title">Laster ned…</string>
+    <string name="downloads.channel">Nedlastinger</string>
     <plurals name="duration.minutes">
         <item quantity="one">%d minutt</item>
         <item quantity="other">%d minutter</item>
@@ -152,7 +96,6 @@
         <item quantity="one">%d sekund</item>
         <item quantity="other">%d sekunder</item>
     </plurals>
-    <string name="folder.add.action.audiobookshelf">Koble til Audiobookshelf</string>
     <string name="folder.add.action.file">Legg til en enkelt fil i stedet</string>
     <string name="folder.add.action.folder">Velg en mappe</string>
     <string name="folder.add.action.opds">Last ned fra en katalog</string>
@@ -246,7 +189,6 @@
     <string name="library.book.ebook">E-bok</string>
     <string name="library.book.hidden">Skjult</string>
     <string name="library.book.hidden.message">%1$s er skjult</string>
-    <string name="library.book.offline">Ikke tilgjengelig uten nett</string>
     <string name="library.category.completed.title">Fullført</string>
     <string name="library.category.current.title">Pågående</string>
     <string name="library.category.not_started.title">Ikke startet enda</string>
@@ -261,7 +203,6 @@
     <string name="library.filter.group_by.author">Forfatter</string>
     <string name="library.filter.group_by.series">Serie</string>
     <string name="library.filter.hidden_books">Skjulte bøker</string>
-    <string name="library.filter.not_downloaded">Ikke lastet ned</string>
     <string name="library.filter.show">Vis</string>
     <string name="library.folders.moved.dialog.message">Du kan nå administrere bokmapper i Innstillinger.</string>
     <string name="library.folders.moved.dialog.title">Bokmapper flyttet</string>
@@ -331,15 +272,15 @@
         <item quantity="one">Serie endret for %d bok</item>
         <item quantity="other">Serie endret for %d bøker</item>
     </plurals>
-    <plurals name="library.selection.server_failed">
-        <item quantity="one">Kunne ikke lagre %d bok på serveren din</item>
-        <item quantity="other">Kunne ikke lagre %d bøker på serveren din</item>
-    </plurals>
     <string name="library.selection.show">Vis</string>
     <string name="library.series.hidden.message">%1$s er skjult</string>
     <string name="library.storage_permission_bug.action">Innvilg tillatelse</string>
     <string name="library.storage_permission_bug.message">På enkelte enheter mangler en systemapp den nødvendige tillatelsen for å få tilgang til det eksterne lagringsmediet. Denne tilgangen er avgjørende for at Pageturner skal kunne lese lydbøkene dine.</string>
     <string name="library.storage_permission_bug.title">Tillatelse kreves</string>
+    <string name="login.password">Passord</string>
+    <string name="login.password.hide">Skjul passord</string>
+    <string name="login.password.show">Vis passord</string>
+    <string name="login.username">Brukernavn</string>
     <string name="media_session.library.recent">Nylig</string>
     <string name="media_session.library.root">Alle lydbøker</string>
     <string name="onboarding.action.next">Neste</string>
@@ -662,7 +603,6 @@
     <string name="settings.auto_sleep_timer.start.label">Sett starttid</string>
     <string name="settings.auto_sleep_timer.summary">Start innsovningstidsuret automatisk når avspillingen begynner mellom %1$s og %2$s</string>
     <string name="settings.auto_sleep_timer.title">Automatisk innsovningstidsur</string>
-    <string name="settings.library.audiobookshelf.summary">Strøm bøkene fra din egen server</string>
     <string name="settings.library.folders.summary">Administrer mappene Pageturner ser etter bøker i</string>
     <string name="settings.library.layout.grid">Rutenett</string>
     <string name="settings.library.layout.list">Liste</string>
