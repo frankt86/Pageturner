@@ -272,7 +272,7 @@ class SeriesViewModelTest {
   @Test
   fun `the button continues an ebook read last`() = runTest {
     val first =
-      book(series = "Saga", part = "1", time = 1_000, lastPlayedAt = Instant.ofEpochSecond(1))
+      book(series = "Saga", part = "1", time = 1_000, lastPlayedAt = Instant.fromEpochSeconds(1))
     val second = ebook(series = "Saga", part = "2", progress = 0.3F, lastOpened = 2_000)
     books.value = listOf(first)
     ebooks.updateData { listOf(second) }

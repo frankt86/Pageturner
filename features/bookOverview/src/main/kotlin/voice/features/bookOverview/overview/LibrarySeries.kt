@@ -114,7 +114,7 @@ internal sealed interface LibraryBook {
       get() = ebook.category
 
     override val lastActiveAt: Instant
-      get() = Instant.ofEpochMilli(ebook.lastOpened)
+      get() = Instant.fromEpochMilliseconds(ebook.lastOpened)
 
     override val hidden: Boolean
       get() = ebook.hidden
