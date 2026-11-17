@@ -360,7 +360,8 @@ class LibrarySeriesTest {
 
   @Test
   fun `an ebook in progress is the front of its stack`() {
-    val audiobook = finished(series = "Saga", part = "1", lastPlayedAt = Instant.fromEpochSeconds(1))
+    val audiobook =
+      finished(series = "Saga", part = "1", lastPlayedAt = Instant.fromEpochSeconds(1))
     val ebook = ebook(series = "Saga", part = "2", progress = 0.5F, lastOpened = 3_000)
 
     val stack =
