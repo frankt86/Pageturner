@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import voice.core.data.BookId
 import voice.core.kioskmode.KioskModeDemoData
 import voice.core.ui.CoverTheme
@@ -34,7 +35,7 @@ private fun PlayerScreenshot() {
       bookPlayedTime = 10.hours + 25.minutes,
       bookDuration = 14.hours + 28.minutes,
       chapterSegments = List(18) { 1F / 18 },
-      skipSeconds = 20,
+      skipAmount = 20.seconds,
       jumpBack = null,
     )
   VoiceTheme {

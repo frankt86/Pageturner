@@ -15,11 +15,12 @@ agp = "9.5.1"
 ktfmt = "0.65"
 spotless = "8.11.0"
 retrofit = "3.0.0"
-metro = "1.5.2"
+metro = "1.6.0"
 navigation3 = "1.2.1"
 androidx-lifecycle = "2.11.0"
 readium = "3.4.0"
 benchmark = "1.5.0"
+coil = "3.6.3"
 
 [libraries]
 commonsCompress = "org.apache.commons:commons-compress:1.28.0"
@@ -35,7 +36,8 @@ retrofit-core = { module = "com.squareup.retrofit2:retrofit", version.ref = "ret
 retrofit-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofit" }
 retrofit-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofit" }
 robolectric = "org.robolectric:robolectric:4.18"
-coil = "io.coil-kt:coil-compose:2.7.0"
+coil = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 appCompat = "androidx.appcompat:appcompat:1.8.0"
 fragment = "androidx.fragment:fragment-ktx:1.9.0"
 desugarJdkLibs = "com.android.tools:desugar_jdk_libs:2.1.5"
@@ -53,7 +55,7 @@ molecule = "app.cash.molecule:molecule-runtime:2.2.0"
 okhttp = "com.squareup.okhttp3:okhttp-coroutines:5.5.1"
 okhttp-mockwebserver = "com.squareup.okhttp3:mockwebserver3:5.5.1"
 billing = "com.android.billingclient:billing-ktx:9.1.0"
-clikt = "com.github.ajalt.clikt:clikt:5.1.0"
+clikt = "com.github.ajalt.clikt:clikt:5.2.0"
 jebml = "org.jitsi:jebml:2.4.4-6-gb310849"
 jsoup = "org.jsoup:jsoup:1.23.2"
 slf4j-noop = "org.slf4j:slf4j-nop:2.0.20"

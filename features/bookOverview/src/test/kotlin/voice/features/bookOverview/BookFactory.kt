@@ -2,7 +2,7 @@ package voice.features.bookOverview
 
 import android.net.Uri
 import io.mockk.mockk
-import java.time.Instant
+import kotlin.time.Instant
 import kotlin.uuid.Uuid
 import voice.core.data.Book
 import voice.core.data.BookContent
@@ -24,7 +24,7 @@ fun book(
   genre: String? = null,
   series: String? = null,
   part: String? = null,
-  lastPlayedAt: Instant = Instant.EPOCH,
+  lastPlayedAt: Instant = Instant.fromEpochMilliseconds(0),
   id: BookId = BookId(Uuid.random().toString()),
   hidden: Boolean = false,
 ): Book {
@@ -33,7 +33,7 @@ fun book(
       BookContent(
         positionInChapter = time,
         playbackSpeed = 1F,
-        addedAt = Instant.EPOCH,
+        addedAt = Instant.fromEpochMilliseconds(0),
         chapters = chapters.map { it.id },
         currentChapter = currentChapter,
         isActive = true,
@@ -68,7 +68,7 @@ fun chapter(
     id = id,
     name = Uuid.random().toString(),
     duration = duration,
-    fileLastModified = Instant.EPOCH,
+    fileLastModified = Instant.fromEpochMilliseconds(0),
     markData = emptyList(),
     fileSize = 0,
   )

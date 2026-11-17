@@ -638,7 +638,7 @@ private fun heroBookId(
     ebooks.filter { it.category == BookCategory.CURRENT }.maxByOrNull { it.lastOpened }
       ?: return currentBookId
   val playedAt =
-    books.firstOrNull { it.id == currentBookId }?.content?.lastPlayedAt?.toEpochMilli() ?: 0L
+    books.firstOrNull { it.id == currentBookId }?.content?.lastPlayedAt?.toEpochMilliseconds() ?: 0L
   return if (ebook.lastOpened > playedAt) ebook.bookId else currentBookId
 }
 

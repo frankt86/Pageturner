@@ -9,7 +9,7 @@ import androidx.compose.runtime.remember
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
-import java.time.Clock
+import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
@@ -146,8 +146,8 @@ class BookPlayViewModel(
       }
 
     val sleepTime = remember { sleepTimer.state }.collectAsState().value
-    val skipSeconds =
-      remember { seekTimeStore.data }.collectAsState(initial = null).value ?: DEFAULT_SKIP_SECONDS
+    val skipAmount =
+      remember { seekTimeStore.data }.collectAsState(initial = null).value ?: DEFAULT_SKIP_AMOUNT
     val chapterCount = book.chapters.sumOf { it.chapterMarks.count() }
     val hasMoreThanOneChapter = chapterCount > 1
     val chapterNumber =
@@ -173,7 +173,7 @@ class BookPlayViewModel(
       bookPlayedTime = book.position.coerceIn(0L, book.duration).milliseconds,
       bookDuration = book.duration.milliseconds,
       chapterSegments = book.chapterSegments(),
-      skipSeconds = skipSeconds,
+      skipAmount = skipAmount,
       jumpBack = lastJump?.let { jumpBackViewState(book, it, chapterNumber) },
     )
   }
@@ -193,10 +193,10 @@ class BookPlayViewModel(
         chapter.chapterMarks.indexOf(mark) +
         1
     return BookPlayViewState.JumpBackViewState(
-      id = jump.at.toEpochMilli(),
+      id = jump.at.toEpochMilliseconds(),
       time = formatTime(jump.from.time - mark.startMs, mark.durationMs),
       chapterNumber = number.takeIf { it != currentChapterNumber },
-      elapsed = (clock.millis() - jump.at.toEpochMilli()).milliseconds.coerceAtLeast(Duration.ZERO),
+      elapsed = (clock.now() - jump.at).coerceAtLeast(Duration.ZERO),
     )
   }
 
@@ -221,7 +221,7 @@ class BookPlayViewModel(
       bookPlayedTime = 10.hours + 24.minutes + 18.seconds,
       bookDuration = 14.hours + 27.minutes + 33.seconds,
       chapterSegments = List(24) { 1F / 24 },
-      skipSeconds = DEFAULT_SKIP_SECONDS,
+      skipAmount = DEFAULT_SKIP_AMOUNT,
       jumpBack = null,
     )
   }
@@ -232,10 +232,9 @@ class BookPlayViewModel(
 
   fun incrementSleepTime() {
     updateSleepTimeViewState {
-      val customTime = it.customSleepTime
-      val newTime = customTime + 1
+      val newTime = it.customSleepTime + 1.minutes
       sleepTimerPreferenceStore.updateData { preference ->
-        preference.copy(duration = newTime.minutes, autoSleepDuration = newTime.minutes)
+        preference.copy(duration = newTime, autoSleepDuration = newTime)
       }
       SleepTimerViewState(newTime)
     }
@@ -243,19 +242,18 @@ class BookPlayViewModel(
 
   fun decrementSleepTime() {
     updateSleepTimeViewState {
-      val customTime = it.customSleepTime
-      val newTime = (customTime - 1).coerceAtLeast(1)
+      val newTime = (it.customSleepTime - 1.minutes).coerceAtLeast(1.minutes)
       sleepTimerPreferenceStore.updateData { preference ->
-        preference.copy(duration = newTime.minutes, autoSleepDuration = newTime.minutes)
+        preference.copy(duration = newTime, autoSleepDuration = newTime)
       }
       SleepTimerViewState(newTime)
     }
   }
 
-  fun onAcceptSleepTime(time: Int) {
+  fun onAcceptSleepTime(time: Duration) {
     updateSleepTimeViewState {
-      sleepTimer.enable(TimedWithDuration(time.minutes))
-      sleepTimerPreferenceStore.updateData { it.copy(autoSleepDuration = time.minutes) }
+      sleepTimer.enable(TimedWithDuration(time))
+      sleepTimerPreferenceStore.updateData { it.copy(autoSleepDuration = time) }
       null
     }
   }
@@ -276,11 +274,7 @@ class BookPlayViewModel(
         if (current is BookPlayDialogViewState.SleepTimer) {
           update(current.viewState)
         } else {
-          update(
-            SleepTimerViewState(
-              sleepTimerPreferenceStore.data.first().duration.inWholeMinutes.toInt(),
-            ),
-          )
+          update(SleepTimerViewState(sleepTimerPreferenceStore.data.first().duration))
         }
       dialogState.value = updated?.let(BookPlayDialogViewState::SleepTimer)
     }
@@ -442,7 +436,7 @@ class BookPlayViewModel(
 
   /** The jump the pill with [id] was showing, unless a newer jump replaced it. */
   private fun jump(id: Long): Jump? =
-    historyRecorder.lastJump.value?.takeIf { it.at.toEpochMilli() == id }
+    historyRecorder.lastJump.value?.takeIf { it.at.toEpochMilliseconds() == id }
 
   fun seekTo(position: Duration) {
     inOrder {
@@ -464,8 +458,7 @@ class BookPlayViewModel(
           BookPlayDialogViewState.SleepTimer(
             viewState =
               SleepTimerViewState(
-                customSleepTime =
-                  sleepTimerPreferenceStore.data.first().duration.inWholeMinutes.toInt(),
+                customSleepTime = sleepTimerPreferenceStore.data.first().duration,
               ),
           )
       }
@@ -516,7 +509,7 @@ class BookPlayViewModel(
   }
 }
 
-private const val DEFAULT_SKIP_SECONDS = 20
+private val DEFAULT_SKIP_AMOUNT = 20.seconds
 
 private val MAX_VOLUME_GAIN = Decibel(9F)
 

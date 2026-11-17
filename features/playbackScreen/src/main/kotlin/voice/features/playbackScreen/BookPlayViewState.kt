@@ -23,7 +23,7 @@ data class BookPlayViewState(
   val bookPlayedTime: Duration,
   val bookDuration: Duration,
   val chapterSegments: List<Float>,
-  val skipSeconds: Int,
+  val skipAmount: Duration,
   val jumpBack: JumpBackViewState?,
 ) {
 

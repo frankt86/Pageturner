@@ -5,5 +5,6 @@ dependencies {
   implementation(projects.core.opds)
 
   implementation(libs.coil)
+  implementation(libs.coil.network)
   implementation(libs.navigation3.ui)
 }

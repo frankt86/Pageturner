@@ -72,8 +72,11 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation3.runtime.NavEntry
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import coil3.compose.AsyncImage
+import coil3.network.NetworkHeaders
+import coil3.network.httpHeaders
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
@@ -499,7 +502,11 @@ internal fun CatalogCover(
     remember(image, context) {
       ImageRequest.Builder(context)
         .data(image?.url)
-        .apply { image?.authorization?.let { addHeader("Authorization", it) } }
+        .apply {
+          image?.authorization?.let {
+            httpHeaders(NetworkHeaders.Builder().set("Authorization", it).build())
+          }
+        }
         .crossfade(true)
         .build()
     }

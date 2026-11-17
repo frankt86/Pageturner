@@ -247,7 +247,7 @@ class BookOverviewViewModelTest {
         series = "Saga",
         part = "1",
         time = 20_000,
-        lastPlayedAt = java.time.Instant.ofEpochSecond(1),
+        lastPlayedAt = Instant.fromEpochSeconds(1),
       )
     val second =
       book(
@@ -255,10 +255,9 @@ class BookOverviewViewModelTest {
         series = "Saga",
         part = "2",
         time = 1_000,
-        lastPlayedAt = java.time.Instant.ofEpochSecond(3),
+        lastPlayedAt = Instant.fromEpochSeconds(3),
       )
-    val single =
-      book(name = "Single", time = 1_000, lastPlayedAt = java.time.Instant.ofEpochSecond(2))
+    val single = book(name = "Single", time = 1_000, lastPlayedAt = Instant.fromEpochSeconds(2))
     val viewModel = viewModel(books = listOf(first, second, single), currentBookId = second.id)
 
     backgroundScope
@@ -746,7 +745,7 @@ class BookOverviewViewModelTest {
   fun `an ebook read after the current audiobook was played is in the Continue card`() = runTest {
     val book =
       book(name = "Listened", time = 1_000).update {
-        it.copy(lastPlayedAt = java.time.Instant.ofEpochMilli(1_000))
+        it.copy(lastPlayedAt = Instant.fromEpochMilliseconds(1_000))
       }
     val ebook = ebook(lastOpened = 2_000)
     val viewModel =
@@ -774,7 +773,7 @@ class BookOverviewViewModelTest {
     runTest {
       val book =
         book(name = "Listened", time = 1_000).update {
-          it.copy(lastPlayedAt = java.time.Instant.ofEpochMilli(1_000))
+          it.copy(lastPlayedAt = Instant.fromEpochMilliseconds(1_000))
         }
       val reading = ebook(lastOpened = 2_000)
       val notStarted = ebook(lastOpened = 0, progress = 0F)
@@ -811,7 +810,7 @@ class BookOverviewViewModelTest {
           series = "Saga",
           part = "1",
           time = 20_000,
-          lastPlayedAt = java.time.Instant.ofEpochSecond(1),
+          lastPlayedAt = Instant.fromEpochSeconds(1),
         )
       val reading = ebook(lastOpened = 2_000).copy(series = "Saga", customPart = "2")
       val third = ebook(lastOpened = 0, progress = 0F).copy(customSeries = "saga", customPart = "3")
@@ -855,7 +854,7 @@ class BookOverviewViewModelTest {
     runTest {
       val book =
         book(name = "Listened", time = 1_000).update {
-          it.copy(lastPlayedAt = java.time.Instant.ofEpochMilli(3_000))
+          it.copy(lastPlayedAt = Instant.fromEpochMilliseconds(3_000))
         }
       val viewModel =
         viewModel(
