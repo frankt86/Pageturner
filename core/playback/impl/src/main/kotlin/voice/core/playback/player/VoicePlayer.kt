@@ -6,10 +6,9 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import java.time.Instant
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.ZERO
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -146,7 +145,7 @@ class VoicePlayer(
     val source = commandSourceResolver.current()
     val position = player.playbackPosition()
     scope.launch {
-      val skipAmount = seekTimeStore.data.first().seconds
+      val skipAmount = seekTimeStore.data.first()
       recordExternalCommand(source, ListeningEvent.Type.SkipBack, position)
       player.seekBackBy(skipAmount, crossMediaItems = true)
     }
@@ -156,7 +155,7 @@ class VoicePlayer(
     val source = commandSourceResolver.current()
     val position = player.playbackPosition()
     scope.launch {
-      val skipAmount = seekTimeStore.data.first().seconds
+      val skipAmount = seekTimeStore.data.first()
       recordExternalCommand(source, ListeningEvent.Type.SkipForward, position)
 
       val currentPosition =
@@ -267,7 +266,7 @@ class VoicePlayer(
     if (currentPosition > ZERO) {
       scope.launch {
         player.seekBackBy(
-          rewind = autoRewindAmountStore.data.first().seconds,
+          rewind = autoRewindAmountStore.data.first(),
           crossMediaItems = false,
         )
       }
@@ -283,7 +282,7 @@ class VoicePlayer(
     val bookId = player.currentBookId() ?: return
     scope.launch {
       repo.updateBook(bookId) {
-        it.copy(lastPlayedAt = Instant.now())
+        it.copy(lastPlayedAt = Clock.System.now())
       }
     }
   }

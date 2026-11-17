@@ -5,6 +5,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import dev.zacsweers.metro.Inject
 import java.time.LocalTime
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -143,8 +145,8 @@ class SettingsViewModel(
       pureBlack = pureBlack,
       coverColors = coverColors,
       dynamicColorAvailable = dynamicColorAvailable,
-      seekTimeInSeconds = seekTime,
-      autoRewindInSeconds = autoRewindAmount,
+      seekTime = seekTime,
+      autoRewind = autoRewindAmount,
       lockScreenSlider = lockScreenSlider,
       appVersion = appInfoProvider.versionName,
       useGrid =
@@ -224,26 +226,26 @@ class SettingsViewModel(
     }
   }
 
-  override fun seekAmountChanged(seconds: Int) {
+  override fun seekAmountChanged(amount: Duration) {
     mainScope.launch {
-      seekTimeStore.updateData { seconds.coerceIn(SEEK_TIME_RANGE) }
+      seekTimeStore.updateData { amount.coerceIn(SEEK_TIME_RANGE) }
     }
   }
 
-  override fun seekAmountStepped(step: Int) {
+  override fun seekAmountStepped(step: Duration) {
     mainScope.launch {
       // relative to the stored amount, so quick taps add up before the screen catches up
       seekTimeStore.updateData { (it + step).coerceIn(SEEK_TIME_RANGE) }
     }
   }
 
-  override fun autoRewindAmountChanged(seconds: Int) {
+  override fun autoRewindAmountChanged(amount: Duration) {
     mainScope.launch {
-      autoRewindAmountStore.updateData { seconds.coerceIn(AUTO_REWIND_RANGE) }
+      autoRewindAmountStore.updateData { amount.coerceIn(AUTO_REWIND_RANGE) }
     }
   }
 
-  override fun autoRewindAmountStepped(step: Int) {
+  override fun autoRewindAmountStepped(step: Duration) {
     mainScope.launch {
       autoRewindAmountStore.updateData { (it + step).coerceIn(AUTO_REWIND_RANGE) }
     }
@@ -326,5 +328,5 @@ class SettingsViewModel(
   }
 }
 
-internal val SEEK_TIME_RANGE = 3..60
-internal val AUTO_REWIND_RANGE = 0..20
+internal val SEEK_TIME_RANGE = 3.seconds..60.seconds
+internal val AUTO_REWIND_RANGE = 0.seconds..20.seconds

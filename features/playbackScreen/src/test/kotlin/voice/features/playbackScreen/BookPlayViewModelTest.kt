@@ -11,16 +11,15 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyOrder
-import java.time.Clock
-import java.time.Instant
-import java.time.ZoneId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNull
+import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -116,7 +115,7 @@ class BookPlayViewModelTest {
         Bookmark(
           bookId = book.id,
           chapterId = book.currentChapter.id,
-          addedAt = Instant.now(),
+          addedAt = Clock.System.now(),
           id = Bookmark.Id(Uuid.random()),
           time = 0L,
           title = null,
@@ -139,7 +138,7 @@ class BookPlayViewModelTest {
       volumeGainFormatter = mockk(),
       batteryOptimization = mockk(),
       sleepTimerPreferenceStore = SleepTimerPreferenceStore(sleepTimerDataStore),
-      seekTimeStore = SeekTimeStore(MemoryDataStore(20)),
+      seekTimeStore = SeekTimeStore(MemoryDataStore(20.seconds)),
       bookId = book.id,
       dispatcherProvider =
         DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
@@ -153,7 +152,7 @@ class BookPlayViewModelTest {
 
   @Test
   fun sleepTimerValueChanging() = scope.runTest {
-    fun assertDialogSleepTime(expected: Int) {
+    fun assertDialogSleepTime(expected: Duration) {
       assertEquals(
         expected = BookPlayDialogViewState.SleepTimer(SleepTimerViewState(expected)),
         actual = viewModel.dialogState.value,
@@ -162,35 +161,35 @@ class BookPlayViewModelTest {
 
     viewModel.toggleSleepTimer()
     yield()
-    assertDialogSleepTime(5)
+    assertDialogSleepTime(5.minutes)
 
-    suspend fun incrementAndAssert(time: Int) {
+    suspend fun incrementAndAssert(time: Duration) {
       viewModel.incrementSleepTime()
       yield()
       assertDialogSleepTime(time)
     }
 
-    suspend fun decrementAndAssert(time: Int) {
+    suspend fun decrementAndAssert(time: Duration) {
       viewModel.decrementSleepTime()
       yield()
       assertDialogSleepTime(time)
     }
 
-    decrementAndAssert(4)
-    decrementAndAssert(3)
-    decrementAndAssert(2)
-    decrementAndAssert(1)
+    decrementAndAssert(4.minutes)
+    decrementAndAssert(3.minutes)
+    decrementAndAssert(2.minutes)
+    decrementAndAssert(1.minutes)
 
-    decrementAndAssert(1)
+    decrementAndAssert(1.minutes)
 
-    incrementAndAssert(2)
-    incrementAndAssert(3)
+    incrementAndAssert(2.minutes)
+    incrementAndAssert(3.minutes)
   }
 
   @Test
   fun sleepTimerSettingFixedValue() = scope.runTest {
     viewModel.toggleSleepTimer()
-    viewModel.onAcceptSleepTime(10)
+    viewModel.onAcceptSleepTime(10.minutes)
     assertEquals(expected = 5.minutes, actual = sleepTimerDataStore.data.first().duration)
     yield()
     verify(exactly = 1) {
@@ -204,7 +203,7 @@ class BookPlayViewModelTest {
   @Test
   fun deactivateSleepTimer() = scope.runTest {
     viewModel.toggleSleepTimer()
-    viewModel.onAcceptSleepTime(10)
+    viewModel.onAcceptSleepTime(10.minutes)
     viewModel.toggleSleepTimer()
     yield()
     verifyOrder {
@@ -217,7 +216,7 @@ class BookPlayViewModelTest {
   @Test
   fun `the 30-minute preset sets the automatic minutes to 30`() = scope.runTest {
     viewModel.toggleSleepTimer()
-    viewModel.onAcceptSleepTime(30)
+    viewModel.onAcceptSleepTime(30.minutes)
     runCurrent()
 
     assertEquals(expected = 30.minutes, actual = sleepTimerDataStore.data.first().autoSleepDuration)
@@ -246,7 +245,7 @@ class BookPlayViewModelTest {
     scope.runTest {
       sleepTimerDataStore.updateData { it.copy(duration = 24.minutes) }
       viewModel.toggleSleepTimer()
-      viewModel.onAcceptSleepTime(30)
+      viewModel.onAcceptSleepTime(30.minutes)
       runCurrent()
       viewModel.toggleSleepTimer()
       runCurrent()
@@ -285,7 +284,7 @@ class BookPlayViewModelTest {
     runCurrent()
     viewModel.incrementSleepTime()
     runCurrent()
-    viewModel.onAcceptSleepTime(30)
+    viewModel.onAcceptSleepTime(30.minutes)
     runCurrent()
 
     assertEquals(expected = 25.minutes, actual = sleepTimerDataStore.data.first().duration)
@@ -298,7 +297,7 @@ class BookPlayViewModelTest {
     runCurrent()
     viewModel.incrementSleepTime()
     runCurrent()
-    viewModel.onAcceptSleepTime(30)
+    viewModel.onAcceptSleepTime(30.minutes)
     runCurrent()
 
     assertEquals(expected = 30.minutes, actual = sleepTimerDataStore.data.first().autoSleepDuration)
@@ -308,7 +307,7 @@ class BookPlayViewModelTest {
   fun `the 30-minute preset, then end of chapter, keeps the automatic minutes at 30`() =
     scope.runTest {
       viewModel.toggleSleepTimer()
-      viewModel.onAcceptSleepTime(30)
+      viewModel.onAcceptSleepTime(30.minutes)
       runCurrent()
       viewModel.toggleSleepTimer()
       runCurrent()
@@ -645,7 +644,7 @@ class BookPlayViewModelTest {
         expectNoEvents()
         assertEquals(
           expected = newer.id,
-          actual = historyRecorder.lastJump.value?.at?.toEpochMilli(),
+          actual = historyRecorder.lastJump.value?.at?.toEpochMilliseconds(),
         )
       }
   }
@@ -840,7 +839,7 @@ class BookPlayViewModelTest {
       volumeGainFormatter = mockk(),
       batteryOptimization = mockk { coEvery { shouldRequest() } returns false },
       sleepTimerPreferenceStore = SleepTimerPreferenceStore(sleepTimerDataStore),
-      seekTimeStore = SeekTimeStore(MemoryDataStore(20)),
+      seekTimeStore = SeekTimeStore(MemoryDataStore(20.seconds)),
       bookId = book.id,
       dispatcherProvider =
         DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
@@ -856,19 +855,15 @@ class BookPlayViewModelTest {
   }
 }
 
-private class TestClock : Clock() {
+private class TestClock : Clock {
 
   private var instant = Instant.parse("2026-10-07T08:00:00Z")
 
   fun advanceBy(duration: kotlin.time.Duration) {
-    instant = instant.plusMillis(duration.inWholeMilliseconds)
+    instant += duration
   }
 
-  override fun getZone(): ZoneId = ZoneId.of("UTC")
-
-  override fun withZone(zone: ZoneId?): Clock = this
-
-  override fun instant(): Instant = instant
+  override fun now(): Instant = instant
 }
 
 private fun book(
@@ -887,11 +882,11 @@ private fun book(
       BookContent(
         positionInChapter = 2.5.minutes.inWholeMilliseconds,
         playbackSpeed = 1F,
-        addedAt = Instant.ofEpochMilli(addedAtMillis),
+        addedAt = Instant.fromEpochMilliseconds(addedAtMillis),
         chapters = chapters.map { it.id },
         currentChapter = chapters[1].id,
         isActive = true,
-        lastPlayedAt = Instant.ofEpochMilli(lastPlayedAtMillis),
+        lastPlayedAt = Instant.fromEpochMilliseconds(lastPlayedAtMillis),
         skipSilence = false,
         id = id,
         gain = 0F,
@@ -918,7 +913,7 @@ private fun chapter(): Chapter {
   return Chapter(
     id = ChapterId("http://${Uuid.random()}"),
     duration = 5.minutes.inWholeMilliseconds,
-    fileLastModified = Instant.EPOCH,
+    fileLastModified = Instant.fromEpochMilliseconds(0),
     markData =
       listOf(
         MarkData(startMs = 0L, name = "Chapter Start"),

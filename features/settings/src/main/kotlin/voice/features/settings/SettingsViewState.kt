@@ -1,6 +1,8 @@
 package voice.features.settings
 
 import java.time.LocalTime
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 import voice.core.ui.ThemeColorScheme
 import voice.core.ui.ThemeMode
 
@@ -10,8 +12,8 @@ data class SettingsViewState(
   val pureBlack: Boolean,
   val coverColors: Boolean,
   val dynamicColorAvailable: Boolean,
-  val seekTimeInSeconds: Int,
-  val autoRewindInSeconds: Int,
+  val seekTime: Duration,
+  val autoRewind: Duration,
   val lockScreenSlider: Boolean,
   val appVersion: String,
   val useGrid: Boolean,
@@ -31,8 +33,8 @@ data class SettingsViewState(
         pureBlack = false,
         coverColors = true,
         dynamicColorAvailable = true,
-        seekTimeInSeconds = 20,
-        autoRewindInSeconds = 2,
+        seekTime = 20.seconds,
+        autoRewind = 2.seconds,
         lockScreenSlider = true,
         appVersion = "1.2.3",
         useGrid = true,

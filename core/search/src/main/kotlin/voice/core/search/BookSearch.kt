@@ -192,7 +192,7 @@ private fun BookSearchResult.isInProgress(): Boolean =
 // in ms since the epoch
 private fun BookSearchResult.lastActiveAt(): Long =
   when (this) {
-    is BookSearchResult.Audiobook -> book.content.lastPlayedAt.toEpochMilli()
+    is BookSearchResult.Audiobook -> book.content.lastPlayedAt.toEpochMilliseconds()
     is BookSearchResult.Ebook -> ebook.lastOpened
   }
 

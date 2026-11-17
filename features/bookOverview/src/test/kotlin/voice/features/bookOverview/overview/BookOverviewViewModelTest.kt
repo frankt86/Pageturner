@@ -247,7 +247,7 @@ class BookOverviewViewModelTest {
         series = "Saga",
         part = "1",
         time = 20_000,
-        lastPlayedAt = java.time.Instant.ofEpochSecond(1),
+        lastPlayedAt = Instant.fromEpochSeconds(1),
       )
     val second =
       book(
@@ -255,10 +255,9 @@ class BookOverviewViewModelTest {
         series = "Saga",
         part = "2",
         time = 1_000,
-        lastPlayedAt = java.time.Instant.ofEpochSecond(3),
+        lastPlayedAt = Instant.fromEpochSeconds(3),
       )
-    val single =
-      book(name = "Single", time = 1_000, lastPlayedAt = java.time.Instant.ofEpochSecond(2))
+    val single = book(name = "Single", time = 1_000, lastPlayedAt = Instant.fromEpochSeconds(2))
     val viewModel = viewModel(books = listOf(first, second, single), currentBookId = second.id)
 
     backgroundScope

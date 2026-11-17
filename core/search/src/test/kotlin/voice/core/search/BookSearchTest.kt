@@ -5,9 +5,9 @@ import androidx.datastore.core.DataStore
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import java.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Instant
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -163,8 +163,8 @@ class BookSearchTest {
   @Test
   fun `books in progress and recently played come first`() {
     val notStarted = book(name = "Dune", time = 0)
-    val playedLongAgo = book(name = "Dune Messiah", lastPlayedAt = Instant.ofEpochSecond(1))
-    val playedRecently = book(name = "Children of Dune", lastPlayedAt = Instant.ofEpochSecond(2))
+    val playedLongAgo = book(name = "Dune Messiah", lastPlayedAt = Instant.fromEpochSeconds(1))
+    val playedRecently = book(name = "Children of Dune", lastPlayedAt = Instant.fromEpochSeconds(2))
     test(notStarted, playedLongAgo, playedRecently) {
       expectSearchResult("dune", playedRecently, playedLongAgo, notStarted)
     }
