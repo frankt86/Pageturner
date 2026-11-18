@@ -85,6 +85,7 @@ class EpubTest {
     assertContentEquals(cover, book.cover)
     assertEquals("Orbits", book.series)
     assertEquals("1", book.seriesPart)
+    assertEquals(listOf("Launch", "Drift & Return"), book.tocNames)
   }
 
   @Test
