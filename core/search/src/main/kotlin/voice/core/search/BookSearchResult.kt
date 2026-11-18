@@ -9,12 +9,15 @@ sealed interface BookSearchResult {
   val matches: Map<BookSearchField, List<IntRange>>
   val fieldsMatchingAllWords: Set<BookSearchField>
   val score: Int
+  // the chapter that explains why the search found the book, null when the other fields do
+  val chapter: String?
 
   data class Audiobook(
     val book: Book,
     override val matches: Map<BookSearchField, List<IntRange>>,
     override val fieldsMatchingAllWords: Set<BookSearchField>,
     override val score: Int,
+    override val chapter: String? = null,
   ) : BookSearchResult
 
   data class Ebook(
@@ -22,6 +25,7 @@ sealed interface BookSearchResult {
     override val matches: Map<BookSearchField, List<IntRange>>,
     override val fieldsMatchingAllWords: Set<BookSearchField>,
     override val score: Int,
+    override val chapter: String? = null,
   ) : BookSearchResult
 }
 
@@ -30,8 +34,10 @@ enum class BookSearchField {
   Author,
   Series,
   Narrator,
-  Genre;
+  Genre,
+  Chapters;
 
+  // a book has many chapters, which BookSearch gets from its chapter list
   fun text(book: Book): String? {
     val text =
       when (this) {
@@ -40,6 +46,7 @@ enum class BookSearchField {
         Series -> seriesText(book.series, book.part)
         Narrator -> book.content.metadata.narrator
         Genre -> book.content.metadata.genre
+        Chapters -> null
       }
     return text?.takeIf { it.isNotBlank() }
   }
@@ -51,7 +58,8 @@ enum class BookSearchField {
         Author -> ebook.shownAuthor
         Series -> seriesText(ebook.shownSeries, ebook.shownPart)
         Narrator,
-        Genre -> null
+        Genre,
+        Chapters -> null
       }
     return text?.takeIf { it.isNotBlank() }
   }

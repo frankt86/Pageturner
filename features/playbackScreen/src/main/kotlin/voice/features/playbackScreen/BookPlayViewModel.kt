@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import voice.core.analytics.api.Analytics
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.Book
@@ -79,6 +80,7 @@ class BookPlayViewModel(
   private val historyRecorder: ListeningHistoryRecorder,
   private val clock: Clock,
   private val lastPlaybackSpeedStore: LastPlaybackSpeedStore,
+  private val analytics: Analytics,
   @Assisted private val bookId: BookId,
 ) {
 
@@ -414,6 +416,7 @@ class BookPlayViewModel(
           book = book,
           title = null,
         )
+      analytics.event("bookmark_saved", mapOf("from" to "player"))
       viewEffectChannel.trySend(BookPlayViewEffect.BookmarkAdded(bookmark.id))
     }
   }

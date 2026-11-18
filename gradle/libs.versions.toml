@@ -35,7 +35,7 @@ paging-compose = "androidx.paging:paging-compose:3.5.3"
 retrofit-core = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofit" }
 retrofit-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofit" }
-robolectric = "org.robolectric:robolectric:4.18"
+robolectric = "org.robolectric:robolectric:4.18.1"
 coil = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 appCompat = "androidx.appcompat:appcompat:1.8.0"
@@ -55,7 +55,7 @@ molecule = "app.cash.molecule:molecule-runtime:2.2.0"
 okhttp = "com.squareup.okhttp3:okhttp-coroutines:5.5.1"
 okhttp-mockwebserver = "com.squareup.okhttp3:mockwebserver3:5.5.1"
 billing = "com.android.billingclient:billing-ktx:9.1.0"
-clikt = "com.github.ajalt.clikt:clikt:5.2.0"
+clikt = "com.github.ajalt.clikt:clikt:5.2.1"
 jebml = "org.jitsi:jebml:2.4.4-6-gb310849"
 jsoup = "org.jsoup:jsoup:1.23.2"
 slf4j-noop = "org.slf4j:slf4j-nop:2.0.20"
