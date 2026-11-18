@@ -399,6 +399,22 @@ class BookSearchTest {
     }
   }
 
+  @Test
+  fun `an ebook is found by a chapter from its table of contents and shows the chapter`() {
+    val adventures =
+      ebook(name = "The Adventures", author = "Arthur Conan Doyle")
+        .copy(chapterNames = listOf("A Scandal in Bohemia", "The Red-Headed League"))
+    test(ebooks = listOf(adventures)) {
+      expectSearchResult("red headed", adventures)
+      val result = search.search("red headed").single()
+      assertEquals(expected = "The Red-Headed League", actual = result.chapter)
+      assertEquals(
+        expected = setOf(BookSearchField.Chapters),
+        actual = result.fieldsMatchingAllWords,
+      )
+    }
+  }
+
   private val redHeadedLeague =
     book(
       name = "The Adventures",

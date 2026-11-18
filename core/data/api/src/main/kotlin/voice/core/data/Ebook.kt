@@ -56,6 +56,10 @@ public data class Ebook(
   val customPart: String? = null,
   /** The password that opened a locked PDF, so it opens without asking next time. */
   val pdfPassword: String? = null,
+  /** The chapter names from the table of contents, which the search looks through. */
+  val chapterNames: List<String> = emptyList(),
+  // books read before chapter names were, read their file once more
+  val chaptersRead: Boolean = false,
 ) {
 
   val title: String

@@ -180,7 +180,8 @@ class BookSearch(
       ) =
         SearchableBook(
           texts =
-            BookSearchField.entries.mapNotNull { field -> field.text(ebook)?.let { field to it } },
+            BookSearchField.entries.mapNotNull { field -> field.text(ebook)?.let { field to it } } +
+              ebook.chapterNames.map { BookSearchField.Chapters to it },
           fileTexts =
             listOfNotNull(
               ebook.name.takeIf { ebook.customName != null },

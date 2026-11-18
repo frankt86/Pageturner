@@ -57,7 +57,9 @@ internal class EbookScanner(
     store.data
       .first()
       .filter {
-        it.available && (!it.metadataRead || (it.format == EbookFormat.Epub && !it.seriesRead))
+        it.available &&
+          (!it.metadataRead ||
+            (it.format == EbookFormat.Epub && (!it.seriesRead || !it.chaptersRead)))
       }
       .forEach { ebook ->
         val metadata = readMetadata(ebook, withCover = !ebook.metadataRead)
@@ -76,14 +78,21 @@ internal class EbookScanner(
     val cover: String?,
     val series: String? = null,
     val seriesPart: String? = null,
+    val chapterNames: List<String> = emptyList(),
   )
 
   private fun Ebook.withMetadata(metadata: Metadata?): Ebook {
     if (metadataRead) {
-      // a book read before series were, gets only those
+      // a book read before series or chapter names were, gets only those
       return metadata?.let {
-        copy(series = it.series, seriesPart = it.seriesPart, seriesRead = true)
-      } ?: copy(seriesRead = true)
+        copy(
+          series = it.series,
+          seriesPart = it.seriesPart,
+          chapterNames = it.chapterNames,
+          seriesRead = true,
+          chaptersRead = true,
+        )
+      } ?: copy(seriesRead = true, chaptersRead = true)
     }
     // like a name the listener gave, what the catalog said wins over the file
     val fromCatalog = opdsSource != null
@@ -93,8 +102,10 @@ internal class EbookScanner(
       cover = metadata?.cover,
       series = metadata?.series,
       seriesPart = metadata?.seriesPart,
+      chapterNames = metadata?.chapterNames.orEmpty(),
       metadataRead = true,
       seriesRead = true,
+      chaptersRead = true,
     )
   }
 
@@ -118,6 +129,7 @@ internal class EbookScanner(
                     ?.let { bytes -> newCoverFile().apply { writeBytes(bytes) }.absolutePath },
                 series = epub.series,
                 seriesPart = epub.seriesPart,
+                chapterNames = epub.tocNames,
               )
             }
         EbookFormat.Pdf ->

@@ -14,6 +14,8 @@ class EpubBook(
   val cover: ByteArray?,
   val series: String? = null,
   val seriesPart: String? = null,
+  /** The chapter names of the table of contents, in its order. */
+  val tocNames: List<String> = emptyList(),
 )
 
 class EpubChapter(
@@ -36,18 +38,13 @@ fun parseEpub(
   val opfFolder = opfPath.substringBeforeLast('/', missingDelimiterValue = "")
   fun resolve(href: String) = resolvePath(opfFolder, href)
 
+  val tocPath = opf.tocHref?.let(::resolve)
+  val toc = tocPath?.let(::text)
   val chapters =
     if (withText) {
+      val tocFolder = tocPath?.substringBeforeLast('/', missingDelimiterValue = "")
       val titles =
-        opf.tocHref
-          ?.let { tocHref ->
-            val tocPath = resolve(tocHref)
-            val tocFolder = tocPath.substringBeforeLast('/', missingDelimiterValue = "")
-            text(tocPath)?.let { toc ->
-              tocTitles(toc).mapKeys { (href, _) -> resolvePath(tocFolder, href) }
-            }
-          }
-          .orEmpty()
+        toc?.let { tocTitles(it).mapKeys { (href, _) -> resolvePath(tocFolder!!, href) } }.orEmpty()
       opf.spine.mapNotNull { href ->
         val path = resolve(href)
         text(path)
@@ -65,6 +62,7 @@ fun parseEpub(
     cover = opf.coverHref?.let { entries[resolve(it)] },
     series = opf.series,
     seriesPart = opf.seriesPart,
+    tocNames = toc?.let(::tocNames).orEmpty(),
   )
 }
 
@@ -88,7 +86,9 @@ private fun readEntries(
             extension == "opf" ||
             extension == "ncx" ||
             entry.name == "META-INF/container.xml" ||
-            (withText && extension in textExtensions)
+            (withText && extension in textExtensions) ||
+            // the EPUB 3 table of contents, for the chapter names the library searches
+            (extension in textExtensions && entry.name.isLikelyNav())
         if (wanted) {
           put(entry.name, zip.readBytes())
         }
@@ -198,8 +198,27 @@ internal fun seriesPart(index: String): String? {
   return number.stripTrailingZeros().toPlainString()
 }
 
+private fun String.isLikelyNav(): Boolean {
+  val name = substringAfterLast('/').lowercase()
+  return "nav" in name || "toc" in name
+}
+
 /** The chapter titles from an EPUB 3 nav document or an EPUB 2 NCX, by the file they point to. */
 internal fun tocTitles(toc: String): Map<String, String> {
+  return buildMap {
+    tocLinks(toc).forEach { (href, title) ->
+      val file = href.substringBefore('#')
+      if (file.isNotEmpty() && file !in this) put(file, title)
+    }
+  }
+}
+
+/** Every chapter name of an EPUB 3 nav document or an EPUB 2 NCX, sections too, in order. */
+internal fun tocNames(toc: String): List<String> {
+  return tocLinks(toc).map { it.second }.distinct().toList()
+}
+
+private fun tocLinks(toc: String): Sequence<Pair<String, String>> {
   val links =
     if (toc.contains("<navMap", ignoreCase = true)) {
       Regex(
@@ -218,17 +237,15 @@ internal fun tocTitles(toc: String): Map<String, String> {
         .findAll(nav)
         .map { it.groupValues[1] to it.groupValues[2] }
     }
-  return buildMap {
-    links.forEach { (href, label) ->
-      val title =
+  return links
+    .map { (href, label) ->
+      href to
         HtmlCompat.fromHtml(label, HtmlCompat.FROM_HTML_MODE_COMPACT)
           .toString()
           .replace(Regex("\\s+"), " ")
           .trim()
-      val file = href.substringBefore('#')
-      if (title.isNotEmpty() && file.isNotEmpty() && file !in this) put(file, title)
     }
-  }
+    .filter { (_, title) -> title.isNotEmpty() }
 }
 
 internal fun resolvePath(
