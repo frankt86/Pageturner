@@ -76,7 +76,6 @@
     <string name="common.action.try_again">Yritä uudelleen</string>
     <string name="common.dialog.cancel">Peruuta</string>
     <string name="common.dialog.confirm">Aseta</string>
-    <string name="common.dialog.ok">OK</string>
     <string name="common.error.generic.message">Jotakin meni pieleen 😢</string>
     <string name="common.error.generic.retry">Yritä uudelleen</string>
     <string name="cover.crop.hint">Siirrä vetämällä; muuta kokoa nipistämällä tai vetämällä kulmasta.</string>
@@ -212,8 +211,6 @@
     <string name="library.filter.group_by.series">Sarja</string>
     <string name="library.filter.hidden_books">Piilotetut kirjat</string>
     <string name="library.filter.show">Näytä</string>
-    <string name="library.folders.moved.dialog.message">Voit nyt hallita kirjakansioita asetuksissa.</string>
-    <string name="library.folders.moved.dialog.title">Kirjakansiot siirretty</string>
     <string name="library.folders.title">Kirjakansiot</string>
     <string name="library.folders.no_access">Ei pääsyä</string>
     <string name="library.folders.no_access.action">Salli pääsy</string>

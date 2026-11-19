@@ -27,7 +27,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
-import voice.core.common.AppInfoProvider
 import voice.core.common.DispatcherProvider
 import voice.core.data.Book
 import voice.core.data.BookCategory
@@ -105,8 +104,6 @@ class BookOverviewViewModelTest {
             every { livePlaybackStateFlow(currentBook.id) } returns livePlaybackFlow
           },
         currentBookStoreDataStore = CurrentBookStore(MemoryDataStore(currentBook.id)),
-        folderPickerMovedDialogShownStore =
-          FolderPickerMovedDialogShownStore(MemoryDataStore(false)),
         gridModeStore = GridModeStore(MemoryDataStore(GridMode.LIST)),
         ebooksStore = emptyEbooks,
         gridCount =
@@ -114,13 +111,10 @@ class BookOverviewViewModelTest {
             every { useGridAsDefault() } returns false
           },
         navigator = mockk<Navigator>(),
-        appInfoProvider = appInfoProvider(),
         deviceHasStoragePermissionBug =
           mockk<DeviceHasStoragePermissionBug> {
             every { hasBug } returns MutableStateFlow(false)
           },
-        folderPickerInSettingsFeatureFlag =
-          FolderPickerInSettingsFeatureFlag(MemoryFeatureFlag(false)),
         experimentalPlaybackPersistenceFeatureFlag =
           ExperimentalPlaybackPersistenceFeatureFlag(MemoryFeatureFlag(true)),
         kioskModeFeatureFlag = KioskModeFeatureFlag(MemoryFeatureFlag(false)),
@@ -189,8 +183,6 @@ class BookOverviewViewModelTest {
         playStateManager = PlayStateManager(),
         playerController = mockk(),
         currentBookStoreDataStore = CurrentBookStore(MemoryDataStore(null)),
-        folderPickerMovedDialogShownStore =
-          FolderPickerMovedDialogShownStore(MemoryDataStore(false)),
         gridModeStore = GridModeStore(MemoryDataStore(GridMode.LIST)),
         ebooksStore = emptyEbooks,
         gridCount =
@@ -198,13 +190,10 @@ class BookOverviewViewModelTest {
             every { useGridAsDefault() } returns false
           },
         navigator = mockk<Navigator>(),
-        appInfoProvider = appInfoProvider(),
         deviceHasStoragePermissionBug =
           mockk<DeviceHasStoragePermissionBug> {
             every { hasBug } returns MutableStateFlow(false)
           },
-        folderPickerInSettingsFeatureFlag =
-          FolderPickerInSettingsFeatureFlag(MemoryFeatureFlag(false)),
         experimentalPlaybackPersistenceFeatureFlag =
           ExperimentalPlaybackPersistenceFeatureFlag(MemoryFeatureFlag(false)),
         kioskModeFeatureFlag = KioskModeFeatureFlag(MemoryFeatureFlag(true)),
@@ -522,144 +511,6 @@ class BookOverviewViewModelTest {
     verify {
       navigator.goTo(Destination.AuthorActions("Lena Morgan", listOf(first, second)))
     }
-  }
-
-  @Test
-  fun `folder picker icon is hidden when folder picker in settings flag is true`() = runTest {
-    val viewModel =
-      viewModel(
-        folderPickerInSettingsFeatureFlag = MemoryFeatureFlag(true),
-        folderPickerMovedDialogShownStore = MemoryDataStore(false),
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        assertEquals(expected = false, actual = awaitItem().showFolderPickerIcon)
-      }
-  }
-
-  @Test
-  fun `folder picker icon is shown once when flag is false`() = runTest {
-    val viewModel =
-      viewModel(
-        folderPickerInSettingsFeatureFlag = MemoryFeatureFlag(false),
-        folderPickerMovedDialogShownStore = MemoryDataStore(false),
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        assertEquals(expected = true, actual = awaitItem().showFolderPickerIcon)
-      }
-  }
-
-  @Test
-  fun `folder picker icon is hidden when moved dialog was shown`() = runTest {
-    val viewModel =
-      viewModel(
-        folderPickerInSettingsFeatureFlag = MemoryFeatureFlag(false),
-        folderPickerMovedDialogShownStore = MemoryDataStore(true),
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        assertEquals(expected = false, actual = awaitItem().showFolderPickerIcon)
-      }
-  }
-
-  @Test
-  fun `folder picker icon is hidden for installs on migration cutoff date`() = runTest {
-    val viewModel =
-      viewModel(
-        folderPickerInSettingsFeatureFlag = MemoryFeatureFlag(false),
-        folderPickerMovedDialogShownStore = MemoryDataStore(false),
-        appInfoProvider = appInfoProvider(installTime = Instant.parse("2026-06-17T00:00:00Z")),
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        assertEquals(expected = false, actual = awaitItem().showFolderPickerIcon)
-      }
-  }
-
-  @Test
-  fun `folder picker click shows moved dialog instead of navigating`() = runTest {
-    val navigator = mockk<Navigator>(relaxed = true)
-    val viewModel =
-      viewModel(
-        navigator = navigator,
-        folderPickerInSettingsFeatureFlag = MemoryFeatureFlag(false),
-        folderPickerMovedDialogShownStore = MemoryDataStore(false),
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        assertEquals(expected = null, actual = awaitItem().dialog)
-
-        viewModel.onBookFolderClick()
-
-        assertEquals(
-          expected = BookOverviewViewState.Dialog.FolderPickerMovedToSettings,
-          actual = awaitItem().dialog,
-        )
-        verify(exactly = 0) {
-          navigator.goTo(Destination.FolderPicker)
-        }
-      }
-  }
-
-  @Test
-  fun `dismissing moved dialog marks it shown and hides folder picker icon`() = runTest {
-    val folderPickerMovedDialogShownStore = MemoryDataStore(false)
-    val viewModel =
-      viewModel(
-        folderPickerInSettingsFeatureFlag = MemoryFeatureFlag(false),
-        folderPickerMovedDialogShownStore = folderPickerMovedDialogShownStore,
-      )
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        assertEquals(expected = true, actual = awaitItem().showFolderPickerIcon)
-
-        viewModel.onBookFolderClick()
-        assertEquals(
-          expected = BookOverviewViewState.Dialog.FolderPickerMovedToSettings,
-          actual = awaitItem().dialog,
-        )
-
-        viewModel.onFolderPickerMovedDialogDismiss()
-
-        val dismissed = awaitItem()
-        assertEquals(expected = null, actual = dismissed.dialog)
-        if (dismissed.showFolderPickerIcon) {
-          assertEquals(expected = false, actual = awaitItem().showFolderPickerIcon)
-        } else {
-          assertEquals(expected = false, actual = dismissed.showFolderPickerIcon)
-        }
-      }
   }
 
   @Test
@@ -1250,10 +1101,7 @@ class BookOverviewViewModelTest {
   }
 
   private fun viewModel(
-    folderPickerInSettingsFeatureFlag: MemoryFeatureFlag<Boolean> = MemoryFeatureFlag(false),
-    folderPickerMovedDialogShownStore: DataStore<Boolean> = MemoryDataStore(false),
     navigator: Navigator = mockk(),
-    appInfoProvider: AppInfoProvider = appInfoProvider(),
     books: List<Book> = emptyList(),
     currentBookId: BookId? = null,
     scanning: Flow<Boolean> = MutableStateFlow(false),
@@ -1278,8 +1126,6 @@ class BookOverviewViewModelTest {
       playStateManager = PlayStateManager(),
       playerController = mockk(),
       currentBookStoreDataStore = CurrentBookStore(MemoryDataStore(currentBookId)),
-      folderPickerMovedDialogShownStore =
-        FolderPickerMovedDialogShownStore(folderPickerMovedDialogShownStore),
       gridModeStore = GridModeStore(MemoryDataStore(GridMode.LIST)),
       ebooksStore = ebooksStore,
       gridCount =
@@ -1287,13 +1133,10 @@ class BookOverviewViewModelTest {
           every { useGridAsDefault() } returns false
         },
       navigator = navigator,
-      appInfoProvider = appInfoProvider,
       deviceHasStoragePermissionBug =
         mockk<DeviceHasStoragePermissionBug> {
           every { hasBug } returns MutableStateFlow(false)
         },
-      folderPickerInSettingsFeatureFlag =
-        FolderPickerInSettingsFeatureFlag(folderPickerInSettingsFeatureFlag),
       experimentalPlaybackPersistenceFeatureFlag =
         ExperimentalPlaybackPersistenceFeatureFlag(MemoryFeatureFlag(false)),
       kioskModeFeatureFlag = KioskModeFeatureFlag(MemoryFeatureFlag(false)),
@@ -1321,12 +1164,4 @@ class BookOverviewViewModelTest {
       progress = progress,
       lastOpened = lastOpened,
     )
-
-  private fun appInfoProvider(
-    installTime: Instant = Instant.parse("2026-06-16T00:00:00Z"),
-  ): AppInfoProvider {
-    return mockk {
-      every { this@mockk.installTime } returns installTime
-    }
-  }
 }

@@ -116,8 +116,6 @@
     <string name="common.dialog.cancel">Cancel</string>
     <!-- Generic confirmation action in dialogs that apply a value. -->
     <string name="common.dialog.confirm">Set</string>
-    <!-- Generic action for acknowledging a dialog message. -->
-    <string name="common.dialog.ok">OK</string>
     <!-- Generic error message shown when cover search or loading fails. -->
     <string name="common.error.generic.message">Something went wrong 😢</string>
     <!-- Retry action shown after a generic error. -->
@@ -335,10 +333,6 @@
     <string name="library.filter.hidden_books">Hidden books</string>
     <!-- Heading in the library filter sheet, above switches for which books the library shows. -->
     <string name="library.filter.show">Show</string>
-    <!-- Body for the one-time dialog shown from the old book folders shortcut. -->
-    <string name="library.folders.moved.dialog.message">You can now manage book folders in Settings.</string>
-    <!-- Title for the one-time dialog shown from the old book folders shortcut. -->
-    <string name="library.folders.moved.dialog.title">Book folders moved</string>
     <!-- Title for screens and rows that manage the folders with audiobooks and ebooks. -->
     <string name="library.folders.title">Book folders</string>
     <!-- Label on a row of the audiobook folders screen for a folder or file Pageturner can no longer open, for example after a restore from a backup on a new phone. -->
