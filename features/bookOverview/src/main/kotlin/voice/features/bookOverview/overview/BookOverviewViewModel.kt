@@ -140,7 +140,11 @@ class BookOverviewViewModel(
     }
       .collectAsState(initial = null)
       .value
-    val scannerActive = remember { mediaScanner.scannerActive }.collectAsState(initial = false).value
+    val scannerActive = remember {
+      mediaScanner.scannerActive
+    }
+      .collectAsState(initial = false)
+      .value
     val gridMode = remember { gridModeStore.data }.collectAsState(initial = null).value
     val hasFoldersWithoutAccess = remember {
       audiobookFolders.withoutAccess().map { folders -> folders.values.any { it.isNotEmpty() } }
