@@ -80,7 +80,6 @@
     <string name="common.action.try_again">Zkusit znovu</string>
     <string name="common.dialog.cancel">Zrušit</string>
     <string name="common.dialog.confirm">Nastavit</string>
-    <string name="common.dialog.ok">OK</string>
     <string name="common.error.generic.message">Něco se pokazilo 😢</string>
     <string name="common.error.generic.retry">Znovu</string>
     <string name="cover.crop.hint">Přetažením posunete, sevřením prstů nebo tažením za roh změníte velikost.</string>
@@ -240,8 +239,6 @@
     <string name="library.filter.group_by.series">Série</string>
     <string name="library.filter.hidden_books">Skryté knihy</string>
     <string name="library.filter.show">Zobrazit</string>
-    <string name="library.folders.moved.dialog.message">Složky s knihami teď můžete spravovat v Nastavení.</string>
-    <string name="library.folders.moved.dialog.title">Složky s knihami přesunuty</string>
     <string name="library.folders.title">Složky s knihami</string>
     <string name="library.folders.no_access">Bez přístupu</string>
     <string name="library.folders.no_access.action">Povolit přístup</string>

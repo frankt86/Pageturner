@@ -78,7 +78,6 @@
     <string name="common.action.try_again">Tentar novamente</string>
     <string name="common.dialog.cancel">Cancelar</string>
     <string name="common.dialog.confirm">Definir</string>
-    <string name="common.dialog.ok">OK</string>
     <string name="common.error.generic.message">Algo correu mal 😢</string>
     <string name="common.error.generic.retry">Tentar novamente</string>
     <string name="cover.crop.hint">Arraste para mover. Use dois dedos ou puxe um canto para redimensionar.</string>
@@ -226,8 +225,6 @@
     <string name="library.filter.group_by.series">Série</string>
     <string name="library.filter.hidden_books">Livros ocultos</string>
     <string name="library.filter.show">Mostrar</string>
-    <string name="library.folders.moved.dialog.message">Agora pode gerir as pastas de livros nas Definições.</string>
-    <string name="library.folders.moved.dialog.title">Pastas de livros movidas</string>
     <string name="library.folders.title">Pastas de livros</string>
     <string name="library.folders.no_access">Sem acesso</string>
     <string name="library.folders.no_access.action">Permitir acesso</string>

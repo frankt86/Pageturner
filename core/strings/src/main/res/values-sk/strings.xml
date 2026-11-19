@@ -80,7 +80,6 @@
     <string name="common.action.try_again">Skúsiť znovu</string>
     <string name="common.dialog.cancel">Zrušiť</string>
     <string name="common.dialog.confirm">Nastaviť</string>
-    <string name="common.dialog.ok">OK</string>
     <string name="common.error.generic.message">Niečo sa pokazilo 😢</string>
     <string name="common.error.generic.retry">Skúsiť znovu</string>
     <string name="cover.crop.hint">Potiahnutím posuniete, stiahnutím prstov alebo potiahnutím za roh zmeníte veľkosť.</string>
@@ -240,8 +239,6 @@
     <string name="library.filter.group_by.series">Séria</string>
     <string name="library.filter.hidden_books">Skryté knihy</string>
     <string name="library.filter.show">Zobraziť</string>
-    <string name="library.folders.moved.dialog.message">Priečinky s knihami teraz môžete spravovať v nastaveniach.</string>
-    <string name="library.folders.moved.dialog.title">Priečinky s knihami presunuté</string>
     <string name="library.folders.title">Priečinky s knihami</string>
     <string name="library.folders.no_access">Bez prístupu</string>
     <string name="library.folders.no_access.action">Povoliť prístup</string>

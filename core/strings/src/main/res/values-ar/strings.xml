@@ -84,7 +84,6 @@
     <string name="common.action.try_again">إعادة المحاولة</string>
     <string name="common.dialog.cancel">إلغاء</string>
     <string name="common.dialog.confirm">تعيين</string>
-    <string name="common.dialog.ok">حسنًا</string>
     <string name="common.error.generic.message">حدث خطأ ما 😢</string>
     <string name="common.error.generic.retry">إعادة المحاولة</string>
     <string name="cover.crop.hint">يمكنك السحب للتحريك، والضمّ بإصبعين أو سحب إحدى الزوايا لتغيير الحجم.</string>
@@ -268,8 +267,6 @@
     <string name="library.filter.group_by.series">السلسلة</string>
     <string name="library.filter.hidden_books">الكتب المخفية</string>
     <string name="library.filter.show">عرض</string>
-    <string name="library.folders.moved.dialog.message">يمكنك الآن إدارة مجلدات الكتب من الإعدادات.</string>
-    <string name="library.folders.moved.dialog.title">نُقلت مجلدات الكتب</string>
     <string name="library.folders.title">مجلدات الكتب</string>
     <string name="library.folders.no_access">يتعذّر الوصول</string>
     <string name="library.folders.no_access.action">السماح بالوصول</string>

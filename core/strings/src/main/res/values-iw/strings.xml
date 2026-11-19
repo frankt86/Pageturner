@@ -78,7 +78,6 @@
     <string name="common.action.try_again">ניסיון חוזר</string>
     <string name="common.dialog.cancel">ביטול</string>
     <string name="common.dialog.confirm">אישור</string>
-    <string name="common.dialog.ok">אישור</string>
     <string name="common.error.generic.message">משהו השתבש 😢</string>
     <string name="common.error.generic.retry">ניסיון חוזר</string>
     <string name="cover.crop.hint">גררו כדי להזיז; צבטו או גררו פינה כדי לשנות את הגודל.</string>
@@ -226,8 +225,6 @@
     <string name="library.filter.group_by.series">סדרה</string>
     <string name="library.filter.hidden_books">ספרים מוסתרים</string>
     <string name="library.filter.show">הצגה</string>
-    <string name="library.folders.moved.dialog.message">כעת ניתן לנהל את תיקיות הספרים בהגדרות.</string>
-    <string name="library.folders.moved.dialog.title">תיקיות הספרים הועברו</string>
     <string name="library.folders.title">תיקיות ספרים</string>
     <string name="library.folders.no_access">אין גישה</string>
     <string name="library.folders.no_access.action">מתן גישה</string>

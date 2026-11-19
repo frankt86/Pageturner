@@ -76,7 +76,6 @@
     <string name="common.action.try_again">Tekrar dene</string>
     <string name="common.dialog.cancel">İptal</string>
     <string name="common.dialog.confirm">Ayarla</string>
-    <string name="common.dialog.ok">Tamam</string>
     <string name="common.error.generic.message">Bir şeyler ters gitti 😢</string>
     <string name="common.error.generic.retry">Tekrar dene</string>
     <string name="cover.crop.hint">Taşımak için sürükleyin; boyutlandırmak için sıkıştırın veya bir köşeyi sürükleyin.</string>
@@ -212,8 +211,6 @@
     <string name="library.filter.group_by.series">Seri</string>
     <string name="library.filter.hidden_books">Gizli kitaplar</string>
     <string name="library.filter.show">Göster</string>
-    <string name="library.folders.moved.dialog.message">Kitap klasörlerini artık Ayarlar\'da yönetebilirsiniz.</string>
-    <string name="library.folders.moved.dialog.title">Kitap klasörleri taşındı</string>
     <string name="library.folders.title">Kitap klasörleri</string>
     <string name="library.folders.no_access">Erişim yok</string>
     <string name="library.folders.no_access.action">Erişime izin ver</string>
