@@ -26,8 +26,6 @@ private fun LibraryScreenshot() {
       onSeriesLongClick = {},
       onAuthorClick = {},
       onAuthorLongClick = {},
-      onBookFolderClick = {},
-      onFolderPickerMovedDialogDismiss = {},
       onPlayButtonClick = {},
       onSearchClick = {},
       onPermissionBugCardClick = {},
@@ -102,7 +100,5 @@ private fun screenshotState(): BookOverviewViewState {
     isLoading = false,
     showStoragePermissionBugCard = false,
     showFolderAccessBadge = false,
-    showFolderPickerIcon = false,
-    dialog = null,
   )
 }
