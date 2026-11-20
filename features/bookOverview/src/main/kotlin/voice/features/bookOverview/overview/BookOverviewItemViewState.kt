@@ -6,6 +6,7 @@ import java.text.NumberFormat
 import voice.core.data.Book
 import voice.core.data.BookId
 import voice.core.data.Ebook
+import voice.core.data.seriesLine
 import voice.core.logging.api.Logger
 import voice.core.ui.formatTime
 

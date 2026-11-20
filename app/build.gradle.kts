@@ -71,7 +71,6 @@ android {
   productFlavors {
     register("free") {
       dimension = distributionFlavor
-      buildConfigField(type = "Boolean", name = "INCLUDE_ANALYTICS", value = "false")
       pluginManager.withPlugin(libs.plugins.crashlytics.get().pluginId) {
         extensions.configure<CrashlyticsExtension>("firebaseCrashlytics") {
           mappingFileUploadEnabled = false
@@ -80,7 +79,6 @@ android {
     }
     register("play") {
       dimension = distributionFlavor
-      buildConfigField(type = "Boolean", name = "INCLUDE_ANALYTICS", value = "true")
     }
   }
 
@@ -198,6 +196,17 @@ tasks
   .configureEach {
     enabled = false
   }
+
+// LocaleConfigTest reads these files from disk, so a change to them must rerun the tests.
+tasks.withType<Test>().configureEach {
+  inputs
+    .files(
+      file("../core/strings/src/main/res"),
+      file("../fastlane/metadata/android"),
+    )
+    .withPathSensitivity(PathSensitivity.RELATIVE)
+    .withPropertyName("localeConfigTestFiles")
+}
 
 dependencies {
   coreLibraryDesugaring(libs.desugarJdkLibs)

@@ -229,11 +229,18 @@ class BookOverviewViewModel(
         livePlaybackState = { livePlaybackState.value },
       )
 
+    // from all books, so the library offers the same book as the player, also once the completed
+    // book is hidden
+    val upNext =
+      remember(library, currentBook.id, playState) {
+        upNext(library.books, library.ebooks, currentBook.id, playState)
+      }
+    val heroId = upNext?.id ?: heroBookId
     val entries =
-      remember(books, ebooks, heroBookId) {
+      remember(books, ebooks, heroId) {
         // the Continue card shows it
         libraryEntries(books, ebooks).mapValues { (_, entries) ->
-          entries.filterNot { it is LibraryEntry.Single && it.book.id == heroBookId }
+          entries.filterNot { it is LibraryEntry.Single && it.book.id == heroId }
         }
       }
     val authors =
@@ -272,11 +279,18 @@ class BookOverviewViewModel(
           }
           .filterValues { it.isNotEmpty() },
       hero =
-        when (heroBookId) {
-          null -> null
-          currentBookId -> books.find { it.id == heroBookId }?.itemState()
-          else -> ebookStates[heroBookId]
+        when (upNext) {
+          is LibraryBook.Audiobook -> upNext.book.itemState()
+          is LibraryBook.Ebook ->
+            ebookStates[upNext.id] ?: rememberUpdatedState(upNext.ebook.toItemViewState())
+          null ->
+            when (heroBookId) {
+              null -> null
+              currentBookId -> books.find { it.id == heroBookId }?.itemState()
+              else -> ebookStates[heroBookId]
+            }
         },
+      upNext = upNext != null,
       inProgressCount = inProgressCount,
       currentBookId = currentBookId,
       playButtonState =
@@ -285,7 +299,7 @@ class BookOverviewViewModel(
           } else {
             BookOverviewViewState.PlayButtonState.Paused
           }
-          .takeIf { currentBookId != null },
+          .takeIf { currentBookId != null || upNext is LibraryBook.Audiobook },
       showEmptyLibrary = showEmptyLibrary,
       showSearchIcon = library.books.isNotEmpty() || library.ebooks.isNotEmpty(),
       showFilterIcon = library.books.isNotEmpty() || library.ebooks.isNotEmpty(),
@@ -308,7 +322,7 @@ class BookOverviewViewModel(
         },
       selectionEdit = selectionEdit,
       selectionDelete = selectionDelete,
-      heroBookId = heroBookId,
+      heroBookId = heroId,
     )
   }
 
@@ -555,8 +569,16 @@ class BookOverviewViewModel(
 
   private fun selectedIds(): Set<BookId> = selection.orEmpty() intersect shownBookIds
 
-  fun playPause() {
-    playerController.playPause()
+  internal fun onPlayClick(id: BookId) {
+    scope.launch {
+      if (currentBookStoreDataStore.data.first() == id) {
+        playerController.playPause()
+      } else {
+        playerController.pauseIfCurrentBookDifferentFrom(id)
+        currentBookStoreDataStore.updateData { id }
+        playerController.play()
+      }
+    }
   }
 
   fun onShowFoldersClick() {
@@ -608,6 +630,33 @@ private fun heroBookId(
   val playedAt =
     books.firstOrNull { it.id == currentBookId }?.content?.lastPlayedAt?.toEpochMilliseconds() ?: 0L
   return if (ebook.lastOpened > playedAt) ebook.bookId else currentBookId
+}
+
+// the next book of a series, audiobook or ebook, once the book last listened to or read is
+// completed
+private fun upNext(
+  books: List<Book>,
+  ebooks: List<Ebook>,
+  currentBookId: BookId?,
+  playState: PlayStateManager.PlayState,
+): LibraryBook? {
+  val audiobook = books.find { it.id == currentBookId }
+  val ebook = ebooks.filter { it.lastOpened != 0L }.maxByOrNull { it.lastOpened }
+  val playedAt = audiobook?.content?.lastPlayedAt?.toEpochMilliseconds() ?: 0L
+  val last =
+    if (ebook != null && ebook.lastOpened > playedAt) {
+      LibraryBook.Ebook(ebook)
+    } else {
+      audiobook?.let(LibraryBook::Audiobook) ?: return null
+    }
+  // a book counts as completed in its last seconds, and a pause there would rewind it
+  if (
+    last.category != BookCategory.FINISHED ||
+      playState == PlayStateManager.PlayState.Playing(last.id)
+  ) {
+    return null
+  }
+  return (books.map(LibraryBook::Audiobook) + ebooks.map(LibraryBook::Ebook)).nextInSeries(last)
 }
 
 private fun DemoAudiobook.toItemViewState() =

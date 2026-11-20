@@ -29,7 +29,7 @@ system or an ad. This applies to new English strings as well as translations.
 ## Rules
 
 - Translate every new or changed string into every locale in the same PR. CI runs
-  `scripts/check_locale_config.main.kts`, which requires `app/src/main/res/xml/locales_config.xml` to list exactly the
+  `LocaleConfigTest` in the app module, which requires `app/src/main/res/xml/locales_config.xml` to list exactly the
   locales at 100% coverage, so a single missing translation in a complete locale fails the build.
 - A backfill that brings a locale to 100% adds it to `locales_config.xml` with its BCP 47 tag (folder `in` is `id`,
   `iw` is `he`, `pt-rBR` is `pt-BR`), and adds a [store listing](#store-listing).
@@ -64,7 +64,7 @@ system or an ad. This applies to new English strings as well as translations.
 
 The Play Store listing is `title.txt`, `short_description.txt` and `full_description.txt` in
 `fastlane/metadata/android/<code>/`, translated from `en-US/`. Folders use Google Play's language codes (`cs-CZ`,
-`iw-IL`, `no-NO`). `scripts/check_locale_config.main.kts` requires one for every locale in `locales_config.xml`
+`iw-IL`, `no-NO`). `LocaleConfigTest` requires one for every locale in `locales_config.xml`
 except Sardinian, which Google Play doesn't offer. A change to the English texts goes into every
 language in the same PR.
 
@@ -91,5 +91,5 @@ The listing is how listeners find the app: Play search ranks the app on these te
    English text and notes, and tell it to follow this skill.
 4. Verify:
    - `.agents/skills/translate-strings/scripts/missing_translations.main.kts` lists none of your keys and no problems.
-   - `./scripts/check_locale_config.main.kts`
+   - `./gradlew :app:testFreeDebugUnitTest --tests voice.app.LocaleConfigTest`
    - `./gradlew :app:lintFreeDebug`, which catches missing plural quantities and broken format strings.

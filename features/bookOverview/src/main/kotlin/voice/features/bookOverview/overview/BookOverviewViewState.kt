@@ -29,8 +29,12 @@ data class BookOverviewViewState(
   val selection: SelectionViewState? = null,
   val selectionEdit: SelectionEditViewState? = null,
   val selectionDelete: DeleteBookViewState? = null,
-  /** The book in the Continue card: the current audiobook, or an ebook read since it was played. */
+  /**
+   * The book in the Continue card: the current audiobook, an ebook read since it was played, or the
+   * next book of a series once one of them is completed.
+   */
   val heroBookId: BookId? = currentBookId,
+  val upNext: Boolean = false,
 ) {
 
   // a switch only shows once it has something to filter, so a library without it stays as it was

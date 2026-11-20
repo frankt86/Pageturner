@@ -1,7 +1,9 @@
 package voice.features.playbackScreen
 
+import android.net.Uri
 import androidx.compose.runtime.Immutable
 import kotlin.time.Duration
+import voice.core.data.BookId
 import voice.core.playback.misc.Decibel
 
 @Immutable
@@ -25,7 +27,18 @@ data class BookPlayViewState(
   val chapterSegments: List<Float>,
   val skipAmount: Duration,
   val jumpBack: JumpBackViewState?,
+  val upNext: UpNextViewState? = null,
 ) {
+
+  @Immutable
+  data class UpNextViewState(
+    val id: BookId,
+    val title: String,
+    val series: String?,
+    val cover: String?,
+    /** Set when the next book is an ebook, which opens in the reader. */
+    val ebook: Uri? = null,
+  )
 
   /**
    * Offers to undo the last big jump for a few seconds.

@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import java.text.NumberFormat
@@ -45,6 +46,7 @@ import voice.features.bookOverview.overview.BookOverviewItemViewState
 @Composable
 internal fun ContinueListeningCard(
   book: BookOverviewItemViewState,
+  upNext: Boolean,
   playing: Boolean,
   onClick: () -> Unit,
   onLongClick: () -> Unit,
@@ -90,8 +92,11 @@ internal fun ContinueListeningCard(
               Text(
                 text =
                   stringResource(
-                    if (book.isEbook) R.string.library_continue_reading
-                    else R.string.library_continue_listening,
+                    when {
+                      upNext -> R.string.series_up_next
+                      book.isEbook -> R.string.library_continue_reading
+                      else -> R.string.library_continue_listening
+                    },
                   ),
                 style = MaterialTheme.typography.labelLargeEmphasized,
                 color = colors.primary,
@@ -99,7 +104,10 @@ internal fun ContinueListeningCard(
               Spacer(Modifier.height(4.dp))
               Text(
                 text = book.name,
-                style = MaterialTheme.typography.headlineSmallEmphasized.bookText(),
+                style =
+                  MaterialTheme.typography.headlineSmallEmphasized
+                    .bookText()
+                    .copy(hyphens = Hyphens.Auto),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
               )
@@ -118,7 +126,8 @@ internal fun ContinueListeningCard(
                   style = MaterialTheme.typography.bodyMedium.bookText(),
                   color = colors.onSurfaceVariant,
                   maxLines = 1,
-                  overflow = TextOverflow.Ellipsis,
+                  // the part at the end says which book it is
+                  overflow = TextOverflow.MiddleEllipsis,
                 )
               }
             }
