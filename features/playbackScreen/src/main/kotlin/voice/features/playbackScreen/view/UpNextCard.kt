@@ -118,7 +118,7 @@ private fun Words(
 }
 
 @Composable
-private fun PlayCircle(ebook = upNext.ebook != null) {
+private fun PlayCircle(ebook: Boolean) {
   Box(
     modifier =
       Modifier.size(48.dp).background(MaterialTheme.colorScheme.secondaryContainer, CircleShape),
