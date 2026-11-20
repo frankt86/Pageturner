@@ -14,8 +14,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextObfuscationMode
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -28,6 +29,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetValue.Expanded
 import androidx.compose.material3.SheetValue.Hidden
@@ -36,10 +38,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
@@ -54,8 +58,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import voice.core.opds.CatalogType
@@ -309,15 +311,17 @@ private fun PasswordField(
   onDone: () -> Unit,
 ) {
   var showPassword by rememberSaveable { mutableStateOf(false) }
-  OutlinedTextField(
+  val passwordState = rememberTextFieldState(password)
+  LaunchedEffect(passwordState) {
+    snapshotFlow { passwordState.text.toString() }.collect { onPasswordChange(it) }
+  }
+  OutlinedSecureTextField(
     modifier = Modifier.fillMaxWidth().semantics { contentType = ContentType.Password },
-    value = password,
-    onValueChange = onPasswordChange,
+    state = passwordState,
     enabled = enabled,
-    singleLine = true,
     label = { Text(stringResource(StringsR.string.login_password)) },
-    visualTransformation =
-      if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+    textObfuscationMode =
+      if (showPassword) TextObfuscationMode.Visible else TextObfuscationMode.RevealLastTyped,
     trailingIcon = {
       IconButton(onClick = { showPassword = !showPassword }) {
         Icon(
@@ -342,6 +346,6 @@ private fun PasswordField(
         imeAction = ImeAction.Done,
         autoCorrectEnabled = false,
       ),
-    keyboardActions = KeyboardActions(onDone = { onDone() }),
+    onKeyboardAction = { onDone() },
   )
 }

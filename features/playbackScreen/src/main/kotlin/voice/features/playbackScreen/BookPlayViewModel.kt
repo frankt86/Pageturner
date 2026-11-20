@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import java.io.File
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
@@ -17,8 +18,11 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -26,16 +30,25 @@ import kotlinx.coroutines.sync.withLock
 import voice.core.analytics.api.Analytics
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
+import voice.core.common.comparator.NaturalOrderComparator
 import voice.core.data.Book
+import voice.core.data.BookCategory
 import voice.core.data.BookId
 import voice.core.data.Bookmark
+import voice.core.data.Ebook
 import voice.core.data.ListeningEvent
+import voice.core.data.category
 import voice.core.data.displayName
 import voice.core.data.durationMs
 import voice.core.data.markForPosition
+import voice.core.data.nameKey
 import voice.core.data.repo.BookRepository
 import voice.core.data.repo.BookmarkRepo
+import voice.core.data.seriesLine
+import voice.core.data.seriesName
+import voice.core.data.seriesPart
 import voice.core.data.store.CurrentBookStore
+import voice.core.data.store.EbooksStore
 import voice.core.kioskmode.KioskModeDemoData
 import voice.core.kioskmode.KioskModeFeatureFlag
 import voice.core.playback.CurrentBookResolver
@@ -71,7 +84,7 @@ class BookPlayViewModel(
   private val bookmarkRepository: BookmarkRepo,
   private val volumeGainFormatter: VolumeGainFormatter,
   private val batteryOptimization: BatteryOptimization,
-  dispatcherProvider: DispatcherProvider,
+  private val dispatcherProvider: DispatcherProvider,
   private val sleepTimerPreferenceStore: SleepTimerPreferenceStore,
   private val seekTimeStore: SeekTimeStore,
   private val experimentalPlaybackPersistenceFeatureFlag:
@@ -81,6 +94,7 @@ class BookPlayViewModel(
   private val clock: Clock,
   private val lastPlaybackSpeedStore: LastPlaybackSpeedStore,
   private val analytics: Analytics,
+  private val ebooksStore: EbooksStore,
   @Assisted private val bookId: BookId,
 ) {
 
@@ -157,6 +171,21 @@ class BookPlayViewModel(
         book.currentChapter.chapterMarks.indexOf(currentMark) +
         1
     val lastJump = remember { historyRecorder.lastJump }.collectAsState().value
+    // a book counts as completed in its last seconds, and a pause there would rewind it
+    val upNext =
+      if (book.category == BookCategory.FINISHED && !isPlaying) {
+        remember {
+            combine(bookRepository.flow(), ebooksStore.data) { books, ebooks ->
+                books.find { it.id == bookId }?.let { nextInSeries(it, books, ebooks) }
+              }
+              .flowOn(dispatcherProvider.io)
+          }
+          .collectAsState(initial = null)
+          .value
+          ?.takeIf { managerPlayState != PlayStateManager.PlayState.Playing(it.id) }
+      } else {
+        null
+      }
     return BookPlayViewState(
       sleepTimerState = sleepTime.toViewState(),
       playing = isPlaying,
@@ -177,6 +206,7 @@ class BookPlayViewModel(
       chapterSegments = book.chapterSegments(),
       skipAmount = skipAmount,
       jumpBack = lastJump?.let { jumpBackViewState(book, it, chapterNumber) },
+      upNext = upNext,
     )
   }
 
@@ -319,6 +349,21 @@ class BookPlayViewModel(
 
   fun rewind() {
     withSelectedBook { player.rewind() }
+  }
+
+  fun onUpNextClick(upNext: BookPlayViewState.UpNextViewState) {
+    val id = upNext.id
+    if (upNext.ebook != null) {
+      navigator.goTo(Destination.Reader(upNext.ebook))
+      return
+    }
+    inOrder {
+      player.pauseIfCurrentBookDifferentFrom(id)
+      currentBookStoreId.updateData { id }
+      player.play()
+      navigator.goTo(Destination.Playback(id))
+      navigator.remove(Destination.Playback(bookId))
+    }
   }
 
   fun fastForward() {
@@ -530,3 +575,72 @@ private fun SleepTimerState.toViewState(): BookPlayViewState.SleepTimerViewState
     SleepTimerState.Enabled.WithEndOfChapter ->
       BookPlayViewState.SleepTimerViewState.Enabled.WithEndOfChapter
   }
+
+private class SeriesEntry(
+  val part: String?,
+  val name: String,
+  val id: BookId,
+  // null for a book that is completed or hidden, which isn't offered
+  val upNext: BookPlayViewState.UpNextViewState?,
+)
+
+// the order of the series screen
+private val SeriesEntryOrder: Comparator<SeriesEntry> =
+  compareBy<SeriesEntry, String?>(nullsLast(NaturalOrderComparator.stringComparator)) { it.part }
+    .thenBy(NaturalOrderComparator.stringComparator) { it.name }
+    .thenBy { it.id.value }
+
+// the next book of the series that isn't completed, an audiobook or an ebook
+private fun nextInSeries(
+  book: Book,
+  books: List<Book>,
+  ebooks: List<Ebook>,
+): BookPlayViewState.UpNextViewState? {
+  val key = book.seriesName?.let(::nameKey) ?: return null
+  val audiobooks =
+    books
+      .filter { it.seriesName?.let(::nameKey) == key }
+      .map {
+        SeriesEntry(
+          part = it.seriesPart,
+          name = it.name,
+          id = it.id,
+          upNext =
+            BookPlayViewState.UpNextViewState(
+                id = it.id,
+                title = it.name,
+                series = it.seriesLine,
+                cover = it.coverUrl,
+              )
+              .takeIf { _ -> it.category != BookCategory.FINISHED && !it.custom.hidden },
+        )
+      }
+  val seriesEbooks =
+    ebooks
+      .filter { it.available && it.shownSeries?.let(::nameKey) == key }
+      .map {
+        val id = BookId(it.uri.toString())
+        val series = it.shownSeries!!.trim()
+        val part = it.shownPart?.trim()?.takeIf { part -> part.isNotEmpty() }
+        SeriesEntry(
+          part = part,
+          name = it.title,
+          id = id,
+          upNext =
+            BookPlayViewState.UpNextViewState(
+                id = id,
+                title = it.title,
+                series = listOfNotNull(series, part).joinToString(" "),
+                cover = it.shownCover?.let { cover -> File(cover).toURI().toString() },
+                ebook = it.uri,
+              )
+              // like the library, an ebook read to its last page is completed
+              .takeIf { _ -> it.progress < 0.99F && !it.hidden },
+        )
+      }
+  val current = SeriesEntry(book.seriesPart, book.name, book.id, upNext = null)
+  return (audiobooks + seriesEbooks)
+    .filter { it.upNext != null && SeriesEntryOrder.compare(it, current) > 0 }
+    .minWithOrNull(SeriesEntryOrder)
+    ?.upNext
+}

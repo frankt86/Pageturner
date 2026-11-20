@@ -166,7 +166,7 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     onSeriesLongClick = bookOverviewViewModel::onSeriesLongClick,
     onAuthorClick = bookOverviewViewModel::onAuthorClick,
     onAuthorLongClick = bookOverviewViewModel::onAuthorLongClick,
-    onPlayButtonClick = bookOverviewViewModel::playPause,
+    onPlayButtonClick = bookOverviewViewModel::onPlayClick,
     onSearchClick = bookOverviewViewModel::onSearchClick,
     onPermissionBugCardClick = bookOverviewViewModel::onPermissionBugCardClick,
     onShowFoldersClick = bookOverviewViewModel::onShowFoldersClick,
@@ -210,7 +210,7 @@ internal fun BookOverview(
   onSeriesLongClick: (String) -> Unit,
   onAuthorClick: (String?) -> Unit,
   onAuthorLongClick: (AuthorEntryViewState) -> Unit,
-  onPlayButtonClick: () -> Unit,
+  onPlayButtonClick: (BookId) -> Unit,
   onSearchClick: () -> Unit,
   onPermissionBugCardClick: () -> Unit,
   onShowFoldersClick: () -> Unit,
@@ -288,7 +288,7 @@ internal fun BookOverview(
       val playButtonState = viewState.playButtonState
       // an ebook in the Continue card has no play button for the current audiobook
       val heroPlayButtonVisible =
-        gridState.heroPlayButtonVisible() && viewState.heroBookId == viewState.currentBookId
+        gridState.heroPlayButtonVisible() && viewState.hero?.value?.isEbook == false
       AnimatedVisibility(
         visible = playButtonState != null && viewState.selection == null && !heroPlayButtonVisible,
         enter = scaleIn() + fadeIn(),
@@ -296,7 +296,10 @@ internal fun BookOverview(
       ) {
         PlayButton(
           playing = playButtonState == BookOverviewViewState.PlayButtonState.Playing,
-          onClick = onPlayButtonClick,
+          onClick = {
+            val hero = viewState.hero?.value?.takeUnless { it.isEbook }
+            (hero?.id ?: viewState.currentBookId)?.let(onPlayButtonClick)
+          },
           modifier = Modifier.navigationBarsPadding(),
           size = 64.dp,
         )
@@ -500,6 +503,19 @@ internal class BookOverviewPreviewParameterProvider :
         hiddenBookCount = 3,
       ),
       authors,
+      library.copy(
+        hero =
+          mutableStateOf(
+            book()
+              .copy(
+                name = "Interference",
+                series = "The Signal Saga 3",
+                progress = 0F,
+                remainingTime = "08:12:00",
+              ),
+          ),
+        upNext = true,
+      ),
       library.copy(selection = selecting(library)),
       library.copy(layoutMode = BookOverviewLayoutMode.Grid, selection = selecting(library)),
       authors.copy(layoutMode = BookOverviewLayoutMode.Grid, selection = selecting(authors)),

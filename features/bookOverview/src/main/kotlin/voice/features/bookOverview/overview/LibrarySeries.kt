@@ -1,7 +1,6 @@
 package voice.features.bookOverview.overview
 
 import java.io.File
-import java.text.Normalizer
 import kotlin.time.Instant
 import voice.core.common.comparator.NaturalOrderComparator
 import voice.core.data.Book
@@ -9,40 +8,15 @@ import voice.core.data.BookCategory
 import voice.core.data.BookId
 import voice.core.data.Ebook
 import voice.core.data.category
-
-internal fun nameKey(name: String): String? {
-  return Normalizer.normalize(name, Normalizer.Form.NFKD)
-    // accents like the one of ä can go, but in scripts like Devanagari the marks are part of the
-    // letters
-    .filter { it.isLetterOrDigit() || (it.category in Marks && it !in Accents) }
-    .lowercase()
-    .takeIf { it.isNotEmpty() }
-}
-
-private val Marks =
-  setOf(
-    CharCategory.NON_SPACING_MARK,
-    CharCategory.COMBINING_SPACING_MARK,
-    CharCategory.ENCLOSING_MARK,
-  )
-private val Accents = '̀'..'ͯ'
-
-internal val Book.seriesName: String?
-  get() = series.trimmedOrNull()
-
-internal val Book.seriesPart: String?
-  get() = part.trimmedOrNull()
-
-internal val Book.seriesLine: String?
-  get() = seriesLine(seriesName, seriesPart)
+import voice.core.data.nameKey
+import voice.core.data.seriesName
+import voice.core.data.seriesPart
 
 internal val Ebook.seriesLine: String?
-  get() = seriesLine(shownSeries.trimmedOrNull(), shownPart.trimmedOrNull())
-
-private fun seriesLine(
-  name: String?,
-  part: String?,
-): String? = name?.let { listOfNotNull(it, part).joinToString(" ") }
+  get() =
+    shownSeries.trimmedOrNull()?.let { name ->
+      listOfNotNull(name, shownPart.trimmedOrNull()).joinToString(" ")
+    }
 
 private fun String?.trimmedOrNull(): String? = this?.trim()?.takeIf { it.isNotEmpty() }
 
@@ -177,6 +151,18 @@ internal class Series(
 internal fun List<Book>.inSeries(name: String): List<Book> {
   val key = nameKey(name) ?: return emptyList()
   return filter { book -> book.seriesName?.let(::nameKey) == key }
+}
+
+/** The next book of [book]'s series that isn't completed, audiobook or ebook. */
+internal fun List<LibraryBook>.nextInSeries(book: LibraryBook): LibraryBook? {
+  val key = book.seriesName?.let(::nameKey) ?: return null
+  return filter {
+      it.seriesName?.let(::nameKey) == key &&
+        SeriesOrder.compare(it, book) > 0 &&
+        it.category != BookCategory.FINISHED &&
+        !it.hidden
+    }
+    .minWithOrNull(SeriesOrder)
 }
 
 @JvmName("libraryBooksInSeries")

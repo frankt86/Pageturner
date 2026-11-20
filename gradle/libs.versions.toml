@@ -1,5 +1,5 @@
 [versions]
-sdk-compile = "37"
+sdk-compile = "37.2"
 sdk-min = "28"
 sdk-target = "36"
 sdk-robolectric = "35"
@@ -16,8 +16,8 @@ ktfmt = "0.65"
 spotless = "8.11.0"
 retrofit = "3.0.0"
 metro = "1.6.0"
-navigation3 = "1.2.1"
-androidx-lifecycle = "2.11.0"
+navigation3 = "1.2.2"
+androidx-lifecycle = "2.11.1"
 readium = "3.4.0"
 benchmark = "1.5.0"
 coil = "3.6.3"
@@ -99,7 +99,7 @@ readium-shared = { module = "org.readium.kotlin-toolkit:readium-shared", version
 readium-streamer = { module = "org.readium.kotlin-toolkit:readium-streamer", version.ref = "readium" }
 readium-navigator = { module = "org.readium.kotlin-toolkit:readium-navigator", version.ref = "readium" }
 
-compose-bom = "androidx.compose:compose-bom:2026.09.00"
+compose-bom = "androidx.compose:compose-bom:2026.11.01"
 compose-ui-ui = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling-core = { module = "androidx.compose.ui:ui-tooling" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
@@ -110,7 +110,7 @@ compose-ui-testJunit = { module = "androidx.compose.ui:ui-test-junit4" }
 compose-ui-testManifest = { module = "androidx.compose.ui:ui-test-manifest" }
 compose-animation-graphics = { module = "androidx.compose.animation:animation-graphics" }
 compose-animation-animation = { module = "androidx.compose.animation:animation" }
-compose-material3 = { module = "androidx.compose.material3:material3", version = "1.5.0-rc01" }
+compose-material3 = { module = "androidx.compose.material3:material3", version = "1.5.0" }
 compose-activity = "androidx.activity:activity-compose:1.13.0"
 compose-runtime = { module = "androidx.compose.runtime:runtime" }
 navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
