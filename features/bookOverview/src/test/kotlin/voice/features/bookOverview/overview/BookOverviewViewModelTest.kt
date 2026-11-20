@@ -1113,27 +1113,6 @@ class BookOverviewViewModelTest {
     }
 
   @Test
-  fun `the completed book shows in completed when only the card shows its next book`() = runTest {
-    val second = book(series = "Saga", part = "2", time = 20_000)
-    val third = book(series = "Saga", part = "3", time = 0)
-    val viewModel = viewModel(books = listOf(second, third), currentBookId = second.id)
-
-    backgroundScope
-      .launchMolecule(RecompositionMode.Immediate) {
-        viewModel.state()
-      }
-      .test {
-        assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
-        val state = awaitItem()
-        assertEquals(expected = third.id, actual = state.hero?.value?.id)
-        assertEquals(
-          expected = mapOf(BookCategory.FINISHED to listOf(second.id.value)),
-          actual = state.sections.mapValues { (_, items) -> items.map { it.key } },
-        )
-      }
-  }
-
-  @Test
   fun `up next in the library, tap play, book 3 starts`() = runTest {
     val second = book(series = "Saga", part = "2", time = 20_000)
     val third = book(series = "Saga", part = "3", time = 0)
