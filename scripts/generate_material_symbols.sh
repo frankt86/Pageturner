@@ -75,6 +75,7 @@ icon close
 icon cloud
 icon cloud_done
 icon cloud_off
+icon coffee
 icon collections_bookmark
 icon content_cut
 icon contrast mirrored
@@ -85,6 +86,7 @@ icon done
 icon download
 icon download_done
 icon edit
+icon emoji_food_beverage
 icon equalizer rounded filled
 icon error
 icon expand_more
@@ -127,6 +129,7 @@ icon skip_previous
 icon smartphone
 icon sort mirrored
 icon speed
+icon star
 icon swap_horiz
 icon sync
 icon title
