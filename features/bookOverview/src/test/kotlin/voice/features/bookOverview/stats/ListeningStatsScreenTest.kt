@@ -304,7 +304,7 @@ class ListeningStatsScreenTest {
     )
 
     compose.onNodeWithText("Books finished").performScrollTo().assertIsDisplayed()
-    compose.onNodeWithText("3").assertIsDisplayed()
+    compose.onNodeWithText("3").performScrollTo().assertIsDisplayed()
     listOf("Dune", "Emma", "Ulysses").forEach {
       compose.onNodeWithText(it).performScrollTo().assertIsDisplayed()
     }
