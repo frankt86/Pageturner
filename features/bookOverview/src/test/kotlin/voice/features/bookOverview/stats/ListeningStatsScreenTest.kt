@@ -18,6 +18,7 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
+import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import java.time.DayOfWeek
@@ -303,8 +304,10 @@ class ListeningStatsScreenTest {
       ),
     )
 
-    compose.onNodeWithText("Books finished").performScrollTo().assertIsDisplayed()
-    compose.onNodeWithText("3").performScrollTo().assertIsDisplayed()
+    // the shelf is the end of the screen
+    repeat(3) { compose.onRoot().performTouchInput { swipeUp() } }
+    compose.onNodeWithText("Books finished").assertIsDisplayed()
+    compose.onNodeWithText("3").assertIsDisplayed()
     listOf("Dune", "Emma", "Ulysses").forEach {
       compose.onNodeWithText(it).performScrollTo().assertIsDisplayed()
     }
