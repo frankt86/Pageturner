@@ -1,9 +1,11 @@
 package voice.features.bookOverview.stats
 
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.MotionDurationScale
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.test.ComposeUiTestConfig
 import androidx.compose.ui.test.assertHasNoClickAction
 import androidx.compose.ui.test.assertIsDisplayed
@@ -29,6 +31,7 @@ import kotlin.time.Duration.Companion.minutes
 import org.junit.Rule
 import org.junit.runner.RunWith
 import voice.core.data.BookId
+import voice.core.ui.VoiceTheme
 
 @RunWith(AndroidJUnit4::class)
 class ListeningStatsScreenTest {
