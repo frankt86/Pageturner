@@ -306,4 +306,37 @@ class ListeningStatsScreenTest {
       compose.onNodeWithText(it).performScrollTo().assertIsDisplayed()
     }
   }
+
+  private fun setContent(
+    viewState: ListeningStatsViewState,
+    onEarlierClick: () -> Unit = {},
+    onLaterClick: () -> Unit = {},
+    onBookClick: (BookId) -> Unit = {},
+    layoutDirection: LayoutDirection = LayoutDirection.Ltr,
+  ) {
+    setContent(onEarlierClick, onLaterClick, onBookClick, layoutDirection) { viewState }
+  }
+
+  private fun setContent(
+    onEarlierClick: () -> Unit = {},
+    onLaterClick: () -> Unit = {},
+    onBookClick: (BookId) -> Unit = {},
+    layoutDirection: LayoutDirection = LayoutDirection.Ltr,
+    viewState: () -> ListeningStatsViewState,
+  ) {
+    compose.setContent {
+      CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
+        VoiceTheme {
+          ListeningStatsScreen(
+            viewState = viewState(),
+            onCloseClick = {},
+            onKindClick = {},
+            onEarlierClick = onEarlierClick,
+            onLaterClick = onLaterClick,
+            onBookClick = onBookClick,
+          )
+        }
+      }
+    }
+  }
 }
