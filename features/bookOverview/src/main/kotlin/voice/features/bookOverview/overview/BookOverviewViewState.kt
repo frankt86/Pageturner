@@ -2,6 +2,7 @@ package voice.features.bookOverview.overview
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.State
+import kotlin.time.Duration
 import voice.core.data.BookCategory
 import voice.core.data.BookId
 import voice.features.bookOverview.deleteBook.DeleteBookViewState
@@ -35,6 +36,8 @@ data class BookOverviewViewState(
    */
   val heroBookId: BookId? = currentBookId,
   val upNext: Boolean = false,
+  // null while Voice never counted any listening
+  val listenedThisWeek: Duration? = null,
 ) {
 
   // a switch only shows once it has something to filter, so a library without it stays as it was
@@ -120,7 +123,7 @@ internal fun Series.toStackViewState() =
     name = name,
     author = author,
     covers = covers,
-    bookCount = books.size,
+    bookCount = bookCount,
     finishedCount = finishedCount,
     progress = progress,
     category = category,
