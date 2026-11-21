@@ -94,7 +94,6 @@ import voice.core.ui.R as UiR
 import voice.core.ui.VoiceTheme
 import voice.core.ui.animationsEnabled
 import voice.core.ui.bookText
-import voice.core.ui.label
 import voice.core.ui.rememberCoverThumbnailRequest
 import voice.features.bookOverview.views.CoverShape
 import voice.navigation.Destination
@@ -509,6 +508,54 @@ internal fun BookCover(
     Box(modifier.clip(CoverShape).background(MaterialTheme.colorScheme.outlineVariant))
   }
 }
+
+private val previewToday = LocalDate.of(2026, 11, 20)
+
+private val previewWeek =
+  ListeningStatsViewState(
+    period = PeriodKind.Week.period(previewToday, back = 0, DayOfWeek.MONDAY),
+    current = true,
+    canGoBack = true,
+    canGoForward = false,
+    listened = 6.hours + 40.minutes,
+    days = 5,
+    bars = listOf(60, 95, 0, 120, 45, 80, 0).map { it.minutes },
+    countsSince = null,
+    name = ListenerName.NightOwl(percent = 61),
+    wideFact =
+      WideFact.WhenYouListen(
+        List(24) { hour ->
+          when (hour) {
+            in 22..23 -> 70.minutes
+            0 -> 55.minutes
+            7 -> 35.minutes
+            in 17..19 -> 40.minutes
+            else -> Duration.ZERO
+          }
+        },
+      ),
+    smallFacts = listOf(SmallFact.Change(80.minutes), SmallFact.Streak(current = 4, longest = 9)),
+    finished =
+      listOf(
+        FinishedBookViewState(
+          StatsBookViewState(BookId("1"), "Long Way North", null, inLibrary = true),
+          previewToday.minusDays(1),
+        ),
+        FinishedBookViewState(
+          StatsBookViewState(
+            BookId("2"),
+            "The Unlikely Pilgrimage of the Lighthouse Keeper",
+            null,
+            inLibrary = true,
+          ),
+          previewToday.minusDays(2),
+        ),
+        FinishedBookViewState(
+          StatsBookViewState(BookId("3"), "Paper Moons", null, inLibrary = false),
+          previewToday.minusDays(3),
+        ),
+      ),
+  )
 
 @Composable
 @Preview(heightDp = 1400)
