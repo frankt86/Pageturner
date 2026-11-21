@@ -20,6 +20,7 @@ private fun LibraryScreenshot() {
     BookOverview(
       viewState = screenshotState(),
       onSettingsClick = {},
+      onListeningClick = {},
       onBookClick = {},
       onBookLongClick = {},
       onSeriesClick = {},
