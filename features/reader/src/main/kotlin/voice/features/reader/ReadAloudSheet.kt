@@ -28,6 +28,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.text
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import java.text.NumberFormat
 import java.util.Locale
@@ -87,17 +91,19 @@ internal fun ReadAloudSheet(
             onClick = { onVoiceSelect(false) },
           )
         }
+        val speedTitle = stringResource(StringsR.string.reader_voice_speed)
+        val speedText =
+          NumberFormat.getNumberInstance()
+            .apply { maximumFractionDigits = 1 }
+            .format(voice.speechRate) + "×"
         Row(verticalAlignment = Alignment.CenterVertically) {
           Text(
-            text = stringResource(StringsR.string.reader_voice_speed),
+            text = speedTitle,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.weight(1F),
           )
           Text(
-            text =
-              NumberFormat.getNumberInstance()
-                .apply { maximumFractionDigits = 1 }
-                .format(voice.speechRate) + "×",
+            text = speedText,
             style = MaterialTheme.typography.labelLarge,
           )
         }
@@ -108,6 +114,12 @@ internal fun ReadAloudSheet(
             sliderState.value = it
             onSpeechRateChange((it * 10).roundToInt() / 10F)
           },
+          modifier =
+            Modifier.semantics {
+              // TalkBack skips a content description that Compose moves to a child of the slider
+              text = AnnotatedString(speedTitle)
+              stateDescription = speedText
+            },
         )
         Button(
           onClick = onStartClick,

@@ -52,8 +52,8 @@ class AppearanceSectionTest {
     assertEquals("Dynamic color", dynamic.contentDescription)
     assertEquals("android.widget.RadioButton", dynamic.className)
     assertEquals(AccessibilityNodeInfoCompat.CHECKED_STATE_FALSE, dynamic.checked)
-    val selected = palette("Voice blue")
-    assertEquals("Voice blue", selected.contentDescription)
+    val selected = palette("Pageturner blue")
+    assertEquals("Pageturner blue", selected.contentDescription)
     assertEquals(AccessibilityNodeInfoCompat.CHECKED_STATE_TRUE, selected.checked)
   }
 }

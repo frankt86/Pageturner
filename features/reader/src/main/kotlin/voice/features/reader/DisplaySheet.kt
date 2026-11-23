@@ -57,6 +57,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.text
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -995,7 +997,11 @@ internal fun SettingSlider(
         sliderState.value = it
         onValueChange(snap(it))
       },
-      modifier = Modifier.semantics { contentDescription = label },
+      modifier =
+        Modifier.semantics {
+          // TalkBack skips a content description that Compose moves to a child of the slider
+          text = AnnotatedString(label)
+        },
     )
   }
 }
@@ -1026,7 +1032,11 @@ private fun Brightness(
         sliderState.value = it
         onBrightnessChange(it)
       },
-      modifier = Modifier.semantics { contentDescription = label },
+      modifier =
+        Modifier.semantics {
+          // TalkBack skips a content description that Compose moves to a child of the slider
+          text = AnnotatedString(label)
+        },
     )
   }
 }

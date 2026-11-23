@@ -29,8 +29,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.text
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlin.math.abs
@@ -226,6 +228,7 @@ internal fun PageBar(
             if (dragTarget == null) sliderState.value = currentIndex.toFloat()
           }
           val description = stringResource(StringsR.string.reader_go_to_page)
+          val position = stringResource(StringsR.string.reader_page, shown + 1, pageCount)
           val onValueChange = { value: Float ->
             sliderState.value = value
             dragTarget = value.roundToInt()
@@ -254,7 +257,11 @@ internal fun PageBar(
             )
           }
           Box {
-            val sliderModifier = Modifier.semantics { contentDescription = description }
+            val sliderModifier = Modifier.semantics {
+              // TalkBack skips a content description that Compose moves to a child of the slider
+              text = AnnotatedString(description)
+              stateDescription = position
+            }
             if (style == ProgressBarStyle.Bar) {
               Slider(
                 state = sliderState,
