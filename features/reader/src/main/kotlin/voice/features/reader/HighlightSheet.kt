@@ -44,8 +44,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -170,7 +170,8 @@ private fun ColorPicker(
               onClick = { onSelect(color) },
               role = Role.RadioButton,
             )
-            .semantics { contentDescription = name },
+            // with semantics children, Compose moves the name to a made-up child node
+            .clearAndSetSemantics { contentDescription = name },
         contentAlignment = Alignment.Center,
       ) {
         Box(

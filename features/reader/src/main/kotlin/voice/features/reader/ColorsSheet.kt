@@ -59,6 +59,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.text
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
@@ -447,7 +449,11 @@ private fun ColorSlider(
         sliderState.value = it
         onValueChange(it)
       },
-      modifier = Modifier.weight(1F).semantics { contentDescription = label },
+      modifier =
+        Modifier.weight(1F).semantics {
+          // TalkBack skips a content description that Compose moves to a child of the slider
+          text = AnnotatedString(label)
+        },
     )
   }
 }
