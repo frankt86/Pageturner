@@ -717,7 +717,7 @@ private fun Book.result(vararg matches: BookSearchField): BookSearchResult {
 private fun Book.chapterResult(
   chapter: String,
   highlights: List<IntRange>,
-): BookSearchResult {
+): BookSearchResult.Audiobook {
   return BookSearchResult.Audiobook(
     book = this,
     matches = mapOf(BookSearchField.Chapters to highlights),
