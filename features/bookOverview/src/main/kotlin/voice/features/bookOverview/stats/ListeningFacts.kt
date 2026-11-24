@@ -107,7 +107,8 @@ internal fun forecast(
 ): WideFact.Forecast? {
   val days = (ChronoUnit.DAYS.between(firstDay, today) + 1).coerceIn(1, 14)
   val from = today.minusDays(days - 1)
-  val recent = sessions.filter { it.day() in from..today && it.listenedMillis > 0 }
+  // reading has no audio and doesn't bring an audiobook closer to its end
+  val recent = sessions.filter { it.day() in from..today && it.audioMillis > 0 }
   val inProgress =
     books.filter { it.category == BookCategory.CURRENT && !it.custom.hidden }.associateBy { it.id }
   val book =
@@ -153,7 +154,7 @@ internal fun Period.longest(bars: List<Duration>): SmallFact? {
 }
 
 internal fun PeriodStats.saved(): SmallFact.Saved? =
-  SmallFact.Saved(audio - listened, speed).takeIf { speed >= 1.25F && it.saved >= 1.minutes }
+  SmallFact.Saved(audio - played, speed).takeIf { speed >= 1.25F && it.saved >= 1.minutes }
 
 internal fun PeriodStats.longestStretch(): SmallFact.LongestStretch? =
   SmallFact.LongestStretch(longestStretch).takeIf { longestStretch >= 1.hours }

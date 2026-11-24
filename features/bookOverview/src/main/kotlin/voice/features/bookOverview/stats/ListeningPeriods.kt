@@ -62,6 +62,8 @@ internal data class Finish(
 internal data class PeriodStats(
   val listened: Duration,
   val audio: Duration,
+  // the listening without the reading, which has no speed
+  val played: Duration = listened,
   val days: Int,
   val bars: List<Duration>,
   val finished: List<Finish>,
@@ -74,7 +76,7 @@ internal data class PeriodStats(
 ) {
   // the player counts both times apart, so a steady 1.5× can come out as 1.499
   val speed: Float
-    get() = if (listened > Duration.ZERO) (audio / listened * 100).roundToInt() / 100F else 1F
+    get() = if (played > Duration.ZERO) (audio / played * 100).roundToInt() / 100F else 1F
 }
 
 internal fun ListeningSession.day(): LocalDate = localDate(startedAtMillis, utcOffsetSeconds)
@@ -120,6 +122,7 @@ internal fun Period.stats(
   return PeriodStats(
     listened = inPeriod.listened(),
     audio = inPeriod.sumOf { it.audioMillis }.milliseconds,
+    played = inPeriod.filter { it.audioMillis > 0 }.listened(),
     days = listenedDays.size,
     bars = bars,
     finished =

@@ -1,5 +1,6 @@
 package voice.features.bookOverview.stats
 
+import android.net.Uri
 import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
 import app.cash.turbine.TurbineTestContext
@@ -35,10 +36,14 @@ import voice.core.analytics.api.Analytics
 import voice.core.data.Book
 import voice.core.data.BookContent
 import voice.core.data.BookId
+import voice.core.data.Ebook
+import voice.core.data.EbookFormat
 import voice.core.data.ListeningSession
 import voice.core.data.repo.BookContentRepo
 import voice.core.data.repo.BookRepository
 import voice.core.data.repo.ListeningStatsRepo
+import voice.core.data.store.EbooksStore
+import voice.features.bookOverview.MemoryDataStore
 import voice.features.bookOverview.book
 import voice.features.bookOverview.chapter
 import voice.navigation.Destination
@@ -55,6 +60,10 @@ class ListeningStatsViewModelTest {
   private val sessions = MutableStateFlow<List<ListeningSession>>(emptyList())
   private val books = MutableStateFlow<List<Book>>(emptyList())
   private val contents = MutableStateFlow<List<BookContent>>(emptyList())
+  private val ebookUri = mockk<Uri>()
+  private val ebook =
+    Ebook(uri = ebookUri, name = "The Left Hand of Darkness", format = EbookFormat.Epub)
+  private val ebooks = EbooksStore(MemoryDataStore(listOf(ebook)))
   private val navigator = mockk<Navigator>(relaxUnitFun = true)
   private val analytics = mockk<Analytics>(relaxUnitFun = true)
 
@@ -73,6 +82,7 @@ class ListeningStatsViewModelTest {
         mockk<BookContentRepo> {
           every { flow() } returns contents
         },
+      ebooksStore = ebooks,
       weekListening =
         WeekListening(
           repo = statsRepo,
@@ -436,6 +446,44 @@ class ListeningStatsViewModelTest {
       assertNull(finished.cover)
       assertFalse(finished.inLibrary)
       assertEquals(expected = 1.hours, actual = state.listened)
+    }
+
+  @Test
+  fun `an ebook read to its end on Sunday, open the week, the ebook is under Finished, tap it, it opens in the reader`() =
+    runTest {
+      sessions.value =
+        listOf(
+          session(
+            sunday.atHour(9),
+            1.hours,
+            audio = Duration.ZERO,
+            bookId = BookId(ebookUri),
+            reachedEnd = true,
+          ),
+        )
+
+      val finished = state().finished.single()
+      assertEquals(expected = sunday, actual = finished.day)
+      assertEquals(expected = "The Left Hand of Darkness", actual = finished.book.name)
+      assertTrue(finished.book.inLibrary)
+
+      viewModel.onBookClick(finished.book.id)
+      verify { navigator.goTo(Destination.Reader(ebookUri)) }
+    }
+
+  @Test
+  fun `1 h listened and 1 h read today, open the screen, 2 h, and the saved time only from the listening`() =
+    runTest {
+      sessions.value =
+        listOf(
+          session(today.atHour(8), 1.hours, audio = 90.minutes),
+          session(today.atHour(10), 1.hours, audio = Duration.ZERO, bookId = BookId(ebookUri)),
+        )
+
+      assertEquals(expected = 2.hours, actual = state().listened)
+      val stats =
+        PeriodKind.Week.period(today, back = 0, DayOfWeek.MONDAY).stats(sessions.value, emptyList())
+      assertEquals(expected = SmallFact.Saved(30.minutes, speed = 1.5F), actual = stats.saved())
     }
 
   @Test

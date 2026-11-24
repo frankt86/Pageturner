@@ -5,6 +5,7 @@ dependencies {
   implementation(projects.core.ebook)
   implementation(projects.core.opds)
 
+  implementation(libs.lifecycle.compose)
   implementation(libs.navigation3.ui)
   implementation(libs.commonsCompress)
   implementation(libs.fragment)

@@ -88,6 +88,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.navigation3.runtime.NavEntry
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -157,6 +158,10 @@ internal fun ReaderScreen(uri: Uri) {
         viewModel.close()
       }
     }
+  }
+  LifecycleResumeEffect(viewModel) {
+    viewModel.onResume()
+    onPauseOrDispose { viewModel.onPause() }
   }
   val snackbarHostState = remember { SnackbarHostState() }
   val unavailableMessage = stringResource(StringsR.string.reader_read_aloud_unavailable)
