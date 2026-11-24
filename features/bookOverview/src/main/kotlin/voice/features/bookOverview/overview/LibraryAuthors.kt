@@ -15,14 +15,31 @@ internal fun authorKey(author: String?): String? {
 internal val LibraryBook.authorKey: String?
   get() = authorKey(author)
 
+internal fun List<LibraryBook>.byAuthor(name: String?): List<LibraryBook> =
+  byAuthorKey()[authorKey(name)].orEmpty()
+
 // the whole series too, like in the library
-internal fun List<LibraryBook>.byAuthor(name: String?): List<LibraryBook> {
-  val key = authorKey(name)
-  val series =
+internal fun List<LibraryBook>.byAuthorKey(): Map<String?, List<LibraryBook>> {
+  val seriesAuthors =
     series()
-      .filter { series -> series.books.mapNotNull { it.authorKey }.mostCommon() == key }
-      .flatMapTo(HashSet()) { series -> series.books.map { it.id } }
-  return filter { it.authorKey == key || it.id in series }
+      .flatMap { series ->
+        val author = series.books.mapNotNull { it.authorKey }.mostCommon()
+        series.books.map { it.id to author }
+      }
+      .toMap()
+  val authors = LinkedHashMap<String?, MutableList<LibraryBook>>()
+  forEach { book ->
+    val key = book.authorKey
+    authors.getOrPut(key) { mutableListOf() } += book
+    if (book.id in seriesAuthors && seriesAuthors[book.id] != key) {
+      authors.getOrPut(seriesAuthors[book.id]) { mutableListOf() } += book
+    }
+  }
+  return authors
+}
+
+internal fun List<LibraryBook>.authorName(key: String): String? {
+  return filter { it.authorKey == key }.mapNotNull { it.author?.trim() }.mostCommon()
 }
 
 internal class AuthorGroup(

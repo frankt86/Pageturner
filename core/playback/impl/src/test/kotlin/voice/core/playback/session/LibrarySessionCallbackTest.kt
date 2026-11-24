@@ -190,7 +190,7 @@ class LibrarySessionCallbackTest {
       )
     every { mediaItemProvider.mediaItem(book) } returns item
     coEvery { bookSearch.search("tolkien") } returns
-      listOf(BookSearchResult.Audiobook(book, emptyMap(), emptySet(), score = 1))
+      listOf(BookSearchResult.Audiobook(book, emptyMap(), emptyMap(), score = 1))
     val librarySession = mockk<MediaLibrarySession>(relaxed = true)
     val androidAuto = controller(ANDROID_AUTO_PACKAGE, OTHER_UID)
 
