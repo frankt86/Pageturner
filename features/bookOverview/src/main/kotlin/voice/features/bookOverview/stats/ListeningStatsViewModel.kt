@@ -1,5 +1,6 @@
 package voice.features.bookOverview.stats
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.collectAsState
@@ -11,6 +12,7 @@ import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Inject
+import java.io.File
 import java.time.LocalDate
 import java.time.ZoneId
 import kotlin.time.Duration
@@ -20,6 +22,7 @@ import voice.core.data.BookId
 import voice.core.data.repo.BookContentRepo
 import voice.core.data.repo.BookRepository
 import voice.core.data.repo.ListeningStatsRepo
+import voice.core.data.store.EbooksStore
 import voice.navigation.Destination
 import voice.navigation.Navigator
 
@@ -28,6 +31,7 @@ class ListeningStatsViewModel(
   private val statsRepo: ListeningStatsRepo,
   private val bookRepo: BookRepository,
   private val contentRepo: BookContentRepo,
+  private val ebooksStore: EbooksStore,
   private val weekListening: WeekListening,
   private val zone: () -> ZoneId,
   private val navigator: Navigator,
@@ -36,6 +40,9 @@ class ListeningStatsViewModel(
 
   private var kind by mutableStateOf(PeriodKind.Week)
   private var back by mutableIntStateOf(0)
+
+  // a reading session carries the id of the ebook, which opens in the reader
+  private var ebookUris = emptyMap<BookId, Uri>()
 
   init {
     reportPeriod()
@@ -46,8 +53,9 @@ class ListeningStatsViewModel(
     val sessions = remember { statsRepo.sessions() }.collectAsState(initial = null).value
     val contents = remember { contentRepo.flow() }.collectAsState(initial = null).value
     val books = remember { bookRepo.flow() }.collectAsState(initial = null).value
+    val ebooks = remember { ebooksStore.data }.collectAsState(initial = null).value
     val today = remember { weekListening.days() }.collectAsState(initial = null).value
-    if (sessions == null || contents == null || books == null || today == null) {
+    if (sessions == null || contents == null || books == null || ebooks == null || today == null) {
       return null
     }
 
@@ -59,8 +67,18 @@ class ListeningStatsViewModel(
     val stats = remember(period, sessions, finishes) { period.stats(sessions, finishes) }
     val booksById = remember(books) { books.associateBy { it.id } }
     val contentsById = remember(contents) { contents.associateBy { it.id } }
+    val ebooksById = remember(ebooks) { ebooks.associateBy { BookId(it.uri) } }
+    ebookUris = ebooksById.mapValues { it.value.uri }
     fun book(id: BookId): StatsBookViewState? =
       booksById[id]?.toStatsBook()
+        ?: ebooksById[id]?.let {
+          StatsBookViewState(
+            id = id,
+            name = it.title,
+            cover = it.shownCover?.let { cover -> File(cover).toURI().toString() },
+            inLibrary = !it.hidden,
+          )
+        }
         ?: contentsById[id]?.let {
           StatsBookViewState(it.id, it.metadata.name, cover = null, inLibrary = false)
         }
@@ -147,7 +165,8 @@ class ListeningStatsViewModel(
   }
 
   internal fun onBookClick(id: BookId) {
-    navigator.goTo(Destination.Playback(id))
+    val ebook = ebookUris[id]
+    navigator.goTo(if (ebook != null) Destination.Reader(ebook) else Destination.Playback(id))
   }
 
   internal fun onCloseClick() {

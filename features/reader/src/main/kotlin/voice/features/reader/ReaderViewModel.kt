@@ -36,6 +36,7 @@ import org.readium.r2.shared.publication.services.locateProgression
 import org.readium.r2.shared.publication.services.search.search
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
+import voice.core.data.BookId
 import voice.core.data.Ebook
 import voice.core.data.EbookFormat
 import voice.core.data.EbookPosition
@@ -143,8 +144,15 @@ class ReaderViewModel(
   private val navigator: Navigator,
   private val dispatcherProvider: DispatcherProvider,
   private val komgaSync: KomgaSync,
+  private val readingTime: ReadingTimeRecorder,
   @Assisted private val uri: Uri,
 ) {
+
+  private val bookId = BookId(uri)
+
+  // the reading time counts while the reader shows a book
+  private var resumed = false
+  private var readProgress: Float? = null
 
   private val scope = MainScope(dispatcherProvider)
   private var content by mutableStateOf<ReaderContent?>(null)
@@ -284,6 +292,8 @@ class ReaderViewModel(
         null
       }
     position = stored.position
+    readProgress = stored.progress
+    if (resumed) readingTime.opened(bookId, stored.progress)
     bookmarks = stored.bookmarks
     highlights = stored.highlights
     if (book != null) {
@@ -635,6 +645,7 @@ class ReaderViewModel(
     val json = locator.toJsonString()
     val progress = locator.locations.totalProgression?.toFloat()
     locator.locations.totalProgression?.let { measurePace(it) }
+    progress?.let { read(it) }
     val now = System.currentTimeMillis()
     scope.launch {
       store.updateData { ebooks ->
@@ -994,6 +1005,7 @@ class ReaderViewModel(
   ) {
     if (newPosition == position) return
     position = newPosition
+    read(progress)
     val now = System.currentTimeMillis()
     scope.launch {
       store.updateData { ebooks ->
@@ -1020,10 +1032,26 @@ class ReaderViewModel(
     return progress.coerceIn(0F, 1F)
   }
 
+  internal fun onResume() {
+    resumed = true
+    readProgress?.let { readingTime.opened(bookId, it) }
+  }
+
+  internal fun onPause() {
+    resumed = false
+    readingTime.paused()
+  }
+
+  private fun read(progress: Float) {
+    readProgress = progress
+    if (resumed) readingTime.moved(bookId, progress)
+  }
+
   /**
    * Called when the reader leaves for good, not when the window changes size, e.g. when unfolding.
    */
   fun close() {
+    readingTime.paused()
     stopReadingAloud()
     readAloud?.shutdown()
     if (naturalReady) neuralVoice.release()
