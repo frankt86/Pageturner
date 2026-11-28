@@ -24,8 +24,6 @@ import voice.core.data.Ebook
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.CurrentBookStore
 import voice.core.data.store.EbooksStore
-import voice.core.featureflag.MemoryFeatureFlag
-import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
 import voice.core.playback.LivePlaybackState
 import voice.core.playback.PlayerController
 import voice.core.playback.overlay
@@ -168,7 +166,7 @@ class SeriesViewModelTest {
   }
 
   @Test
-  fun `with the experimental persistence, the progress follows playback`() = runTest {
+  fun `the progress follows playback`() = runTest {
     val book = book(series = "Saga", author = "Author", time = 0)
     books.value = listOf(book, book(series = "Saga", author = "Author", time = 0))
     currentBookStore.updateData { book.id }
@@ -182,7 +180,7 @@ class SeriesViewModelTest {
       )
     every { playerController.livePlaybackStateFlow(book.id) } returns flowOf(livePlaybackState)
 
-    testState(experimentalPlaybackPersistence = true) {
+    testState() {
       // the live position arrives after the stored one
       awaitItem()
       val row = awaitItem()!!.books.single { it.book.id == book.id }
@@ -318,7 +316,7 @@ class SeriesViewModelTest {
 
   private fun Book.toItemViewStateWithoutAuthor() = toItemViewState().copy(author = null)
 
-  private fun viewModel(experimentalPlaybackPersistence: Boolean = false): SeriesViewModel {
+  private fun viewModel(): SeriesViewModel {
     return SeriesViewModel(
       repo =
         mockk<BookRepository> {
@@ -329,20 +327,15 @@ class SeriesViewModelTest {
       playerController = playerController,
       currentBookStore = CurrentBookStore(currentBookStore),
       playStateManager = playStateManager,
-      experimentalPlaybackPersistenceFeatureFlag =
-        ExperimentalPlaybackPersistenceFeatureFlag(
-          MemoryFeatureFlag(experimentalPlaybackPersistence),
-        ),
       dispatcherProvider = dispatcherProvider,
       name = "Saga",
     )
   }
 
   private suspend fun TestScope.testState(
-    experimentalPlaybackPersistence: Boolean = false,
     validate: suspend ReceiveTurbine<SeriesViewState?>.() -> Unit,
   ) {
-    val viewModel = viewModel(experimentalPlaybackPersistence)
+    val viewModel = viewModel()
     backgroundScope
       .launchMolecule(RecompositionMode.Immediate) {
         viewModel.viewState()

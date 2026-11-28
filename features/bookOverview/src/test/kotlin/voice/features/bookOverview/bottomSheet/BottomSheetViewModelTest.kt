@@ -30,8 +30,6 @@ import voice.core.data.Book
 import voice.core.data.BookCategory
 import voice.core.data.BookId
 import voice.core.data.repo.BookRepository
-import voice.core.featureflag.MemoryFeatureFlag
-import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
 import voice.core.playback.LivePlaybackState
 import voice.core.playback.PlayerController
 import voice.features.bookOverview.book
@@ -56,7 +54,7 @@ class BottomSheetViewModelTest {
     }
   private val playerController =
     mockk<PlayerController> {
-      every { livePlaybackStateFlow(book.id) } returns livePlaybackState
+      every { livePlaybackStateFlow(any()) } returns livePlaybackState
     }
   private val navigator = mockk<Navigator>(relaxUnitFun = true)
   private val bookSelectionRequests = BookSelectionRequests()
@@ -104,9 +102,9 @@ class BottomSheetViewModelTest {
     }
 
   @Test
-  fun `follows the live position with the experimental persistence`() =
+  fun `follows the live position`() =
     runTest(dispatcher) {
-      viewModel(experimentalPlaybackPersistence = true).test {
+      viewModel().test {
         assertEquals(0F, awaitLoaded().book.progress)
 
         livePlaybackState.value =
@@ -189,7 +187,6 @@ class BottomSheetViewModelTest {
 
   private fun bottomSheetViewModel(
     itemViewModels: Set<BottomSheetItemViewModel> = setOf(itemViewModel),
-    experimentalPlaybackPersistence: Boolean = false,
     bookId: BookId = book.id,
   ) =
     BottomSheetViewModel(
@@ -199,19 +196,13 @@ class BottomSheetViewModelTest {
       navigator = navigator,
       playerController = playerController,
       bookSelectionRequests = bookSelectionRequests,
-      experimentalPlaybackPersistenceFeatureFlag =
-        ExperimentalPlaybackPersistenceFeatureFlag(
-          MemoryFeatureFlag(experimentalPlaybackPersistence),
-        ),
     )
 
   private fun TestScope.viewModel(
-    experimentalPlaybackPersistence: Boolean = false,
     bookId: BookId = book.id,
   ): StateFlow<EditBookBottomSheetState?> {
     val viewModel =
       bottomSheetViewModel(
-        experimentalPlaybackPersistence = experimentalPlaybackPersistence,
         bookId = bookId,
       )
     return backgroundScope.launchMolecule(RecompositionMode.Immediate) {
