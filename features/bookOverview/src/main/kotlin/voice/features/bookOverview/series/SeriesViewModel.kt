@@ -20,7 +20,6 @@ import voice.core.data.Ebook
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.CurrentBookStore
 import voice.core.data.store.EbooksStore
-import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
 import voice.core.playback.LivePlaybackState
 import voice.core.playback.PlayerController
 import voice.core.playback.overlay
@@ -42,8 +41,6 @@ class SeriesViewModel(
   private val playerController: PlayerController,
   private val currentBookStore: CurrentBookStore,
   private val playStateManager: PlayStateManager,
-  private val experimentalPlaybackPersistenceFeatureFlag:
-    ExperimentalPlaybackPersistenceFeatureFlag,
   dispatcherProvider: DispatcherProvider,
   @Assisted private val name: String,
 ) {
@@ -141,13 +138,10 @@ class SeriesViewModel(
     }
   }
 
-  // with the experimental persistence, the stored position of the playing book lags behind
+  // the stored position of the playing book lags behind
   @Composable
   private fun livePlaybackState(currentBookId: BookId?): LivePlaybackState? {
-    val experimentalPlaybackPersistence = remember {
-      experimentalPlaybackPersistenceFeatureFlag.get()
-    }
-    if (!experimentalPlaybackPersistence || currentBookId == null) return null
+    if (currentBookId == null) return null
     return remember(currentBookId) { playerController.livePlaybackStateFlow(currentBookId) }
       .collectAsState(initial = null)
       .value

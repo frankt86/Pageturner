@@ -42,7 +42,6 @@ import voice.core.kioskmode.DemoAudiobook
 import voice.core.kioskmode.KioskModeDemoData
 import voice.core.kioskmode.KioskModeFeatureFlag
 import voice.core.logging.api.Logger
-import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
 import voice.core.playback.LivePlaybackState
 import voice.core.playback.PlayerController
 import voice.core.playback.overlay
@@ -82,8 +81,6 @@ class BookOverviewViewModel(
   private val gridCount: GridCount,
   private val navigator: Navigator,
   private val deviceHasStoragePermissionBug: DeviceHasStoragePermissionBug,
-  private val experimentalPlaybackPersistenceFeatureFlag:
-    ExperimentalPlaybackPersistenceFeatureFlag,
   private val kioskModeFeatureFlag: KioskModeFeatureFlag,
   private val dispatcherProvider: DispatcherProvider,
   private val audiobookFolders: AudiobookFolders,
@@ -219,9 +216,8 @@ class BookOverviewViewModel(
           }
       }
 
-    val experimentalPlaybackPersistence = experimentalPlaybackPersistenceFeatureFlag.get()
     val livePlaybackState: State<LivePlaybackState?> =
-      if (experimentalPlaybackPersistence && currentBookId != null) {
+      if (currentBookId != null) {
         remember(currentBookId) {
             playerController.livePlaybackStateFlow(currentBookId)
           }

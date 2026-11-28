@@ -52,7 +52,6 @@ import voice.core.data.store.EbooksStore
 import voice.core.kioskmode.KioskModeDemoData
 import voice.core.kioskmode.KioskModeFeatureFlag
 import voice.core.playback.CurrentBookResolver
-import voice.core.playback.ExperimentalPlaybackPersistenceFeatureFlag
 import voice.core.playback.LastPlaybackSpeedStore
 import voice.core.playback.PlayerController
 import voice.core.playback.SeekTimeStore
@@ -87,8 +86,6 @@ class BookPlayViewModel(
   private val dispatcherProvider: DispatcherProvider,
   private val sleepTimerPreferenceStore: SleepTimerPreferenceStore,
   private val seekTimeStore: SeekTimeStore,
-  private val experimentalPlaybackPersistenceFeatureFlag:
-    ExperimentalPlaybackPersistenceFeatureFlag,
   private val kioskModeFeatureFlag: KioskModeFeatureFlag,
   private val historyRecorder: ListeningHistoryRecorder,
   private val clock: Clock,
@@ -130,24 +127,14 @@ class BookPlayViewModel(
         .value
         ?.withDefaultSpeed { defaultSpeed ?: return null } ?: return null
 
-    val experimentalPlaybackPersistence = experimentalPlaybackPersistenceFeatureFlag.get()
     val livePlaybackState =
-      if (experimentalPlaybackPersistence) {
-        remember(bookId) { player.livePlaybackStateFlow(bookId) }.collectAsState(null).value
-      } else {
-        null
-      }
+      remember(bookId) { player.livePlaybackStateFlow(bookId) }.collectAsState(null).value
     val managerPlayState by remember {
       playStateManager.playStateFlow
     }
       .collectAsState()
 
-    val book =
-      if (livePlaybackState != null) {
-        persistedBook.overlay(livePlaybackState)
-      } else {
-        persistedBook
-      }
+    val book = livePlaybackState?.let(persistedBook::overlay) ?: persistedBook
     val isPlaying =
       livePlaybackState?.isPlaying
         ?: (managerPlayState == PlayStateManager.PlayState.Playing(bookId))
